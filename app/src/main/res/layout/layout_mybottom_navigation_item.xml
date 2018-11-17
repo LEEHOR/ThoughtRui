@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<RelativeLayout
+    android:layout_gravity="center_vertical"
+    android:layout_width="0dp"
+    android:layout_weight="1"
+    android:layout_height="match_parent">
+    <com.coahr.thoughtrui.widgets.SelectImageView
+        android:id="@+id/iv_one"
+        android:layout_centerHorizontal="true"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:scaleType="fitXY"
+        app:select_src="@mipmap/home_on"
+        android:src="@mipmap/home"/>
+    <TextView
+        android:textSize="@dimen/dp_14"
+        android:id="@+id/tv_one"
+        android:layout_below="@+id/iv_one"
+        android:layout_centerHorizontal="true"
+        android:text="@string/home"
+        android:textColor="@color/gray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</RelativeLayout>
+
+    <RelativeLayout
+        android:layout_gravity="center_vertical"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent">
+        <com.coahr.thoughtrui.widgets.SelectImageView
+            android:id="@+id/iv_two"
+            android:layout_centerHorizontal="true"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:scaleType="fitCenter"
+            app:select_src="@mipmap/upload_on"
+            android:src="@mipmap/upload"/>
+        <TextView
+            android:textSize="@dimen/dp_14"
+            android:id="@+id/tv_two"
+            android:layout_below="@+id/iv_two"
+            android:layout_centerHorizontal="true"
+            android:text="@string/upload"
+            android:textColor="@color/gray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_gravity="center_vertical"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent">
+        <com.coahr.thoughtrui.widgets.SelectImageView
+            android:id="@+id/iv_three"
+            android:layout_centerHorizontal="true"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:scaleType="fitCenter"
+            app:select_src="@mipmap/audit_on"
+            android:src="@mipmap/audit"/>
+        <TextView
+            android:textSize="@dimen/dp_14"
+            android:id="@+id/tv_three"
+            android:layout_below="@+id/iv_three"
+            android:layout_centerHorizontal="true"
+            android:text="@string/audit"
+            android:textColor="@color/gray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_gravity="center_vertical"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent">
+        <com.coahr.thoughtrui.widgets.SelectImageView
+            android:id="@+id/iv_four"
+            android:layout_centerHorizontal="true"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:scaleType="fitCenter"
+            app:select_src="@mipmap/center_on"
+            android:src="@mipmap/center"/>
+        <TextView
+            android:textSize="@dimen/dp_14"
+            android:id="@+id/tv_four"
+            android:layout_below="@+id/iv_four"
+            android:layout_centerHorizontal="true"
+            android:text="@string/center"
+            android:textColor="@color/gray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+</merge>

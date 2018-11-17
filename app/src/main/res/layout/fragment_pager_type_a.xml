@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/material_grey_50"
+    android:orientation="vertical">
+    <com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar
+        android:id="@+id/myTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tittle="题号">
+
+    </com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/quest_title"
+                    android:padding="@dimen/dp_5"
+                    android:textSize="@dimen/dp_14"
+                    android:textColor="@color/material_grey_900"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <RadioGroup
+                    android:id="@+id/radio_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/edge_margin">
+
+                    <RadioButton
+                        android:id="@+id/rbtn_t"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:button="@null"
+                        android:drawableLeft="@drawable/checkbox_beautiful_selector"
+                        android:drawablePadding="@dimen/dp_10"
+                        android:gravity="center_vertical"
+                        android:padding="@dimen/dp_5"
+                        android:textColor="@color/material_grey_800"
+                        android:textSize="@dimen/dp_14" />
+
+                    <RadioButton
+                        android:id="@+id/rbtn_f"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:button="@null"
+                        android:drawableLeft="@drawable/checkbox_beautiful_selector"
+                        android:drawablePadding="@dimen/dp_10"
+                        android:padding="@dimen/dp_5"
+                        android:textColor="@color/material_grey_800"
+                        android:textSize="@dimen/dp_14" />
+                </RadioGroup>
+            </LinearLayout>
+
+            <TextView
+                android:textSize="@dimen/dp_16"
+                android:padding="@dimen/edge_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:background="@color/material_grey_400"
+                android:text="问题说明:" />
+             <TextView
+                 android:id="@+id/project_detail"
+                 android:padding="@dimen/edge_margin"
+                 android:textSize="@dimen/dp_14"
+                 android:textColor="@color/black"
+                 android:background="@color/material_grey_400"
+                 android:visibility="gone"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/material_grey_800"/>
+            <TextView
+                android:padding="@dimen/edge_margin"
+                android:text="访问员说明:"
+                android:textSize="@dimen/dp_16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/material_grey_800"/>
+            <EditText
+                android:id="@+id/user_remark"
+                android:textSize="@dimen/dp_14"
+                android:lines="2"
+                android:hint="@string/remark"
+                android:padding="@dimen/edge_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/material_grey_800"/>
+            <RelativeLayout
+                android:padding="@dimen/edge_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:src="@mipmap/images"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp" />
+                <TextView
+                    android:id="@+id/take_photo"
+                    android:layout_centerVertical="true"
+                    android:textSize="@dimen/dp_14"
+                    android:textColor="@color/material_blue_500"
+                    android:layout_alignParentRight="true"
+                    android:text="点击拍照"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/material_grey_800"/>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/project_imageRecycler"
+                    android:padding="@dimen/dp_10"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

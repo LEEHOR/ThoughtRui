@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.coahr.thoughtrui">
+
+    <!-- 这个权限用于进行网络定位-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+    <!-- 这个权限用于访问GPS定位-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+    <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位-->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
+    <!-- 获取运营商信息，用于支持提供运营商信息相关的接口-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+    <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"></uses-permission>
+    <!-- 用于读取手机当前的状态-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+    <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+
+    <!-- SD卡读取权限，用户写入离线定位数据-->
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"></uses-permission>
+
+    <!-- 外部存储读权限，调试工具加载本地补丁需要 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <!--打开相机-->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <application
+        android:allowBackup="true"
+        android:name=".mvp.Base.BaseApplication"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".mvp.view.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!--中间跳转-->
+        <activity android:name=".mvp.view.ConstantsActivity"/>
+        <!--考勤-->
+        <activity android:name=".mvp.view.attence.AttendanceRootActivity"/>
+        <!--拍照页面-->
+        <activity
+            android:name="cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity"
+            android:screenOrientation="portrait"
+            android:exported="true"
+            android:theme="@style/Theme_Light.Default"/>
+        <!--裁剪页面-->
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme_Light.Default"/>
+        <!--答题-->
+        <activity android:name=".mvp.view.StartProjectActivity"/>
+        <!-- 百度定位AK鉴权 -->
+        <!-- meta-data需要写在application中 -->
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="zRN4LdcsWnyGqEcZdeUC5NdrfWRGIe4f" />  <!-- http://lbsyun.baidu.com/apiconsole/key -->
+        <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote"> </service>
+
+        <!--阿里云热更新-->
+        <meta-data
+            android:name="com.taobao.android.hotfix.IDSECRET"
+            android:value="25246895-1" />
+        <meta-data
+            android:name="com.taobao.android.hotfix.APPSECRET"
+            android:value="ae9c7e03af7eff1738413963c49dc6f8" />
+        <meta-data
+            android:name="com.taobao.android.hotfix.RSASECRET"
+            android:value="MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCP+Qcw+Fo4eS0sBWyEI0DeVxpEes2QX7Fo1Bd9MU/KigDDmdJBa4eSwIwKHE6PzKPKjSiD6kevd3zQk+P4mthOfXWvEeTEARAPQfUh2Yn+/dZYiIIIlIwuFfdYclRIe6gIN/ikQl/I7UChqhNHXii4lAx/EA2E5s7s8mYg0jiBvrwM10ybLPbibCHhI2qfhDV0VZJl/3j6/9QyLizL/oNgcKq2iU9diQnym0i4Du/0H9pjoV+KDYorbFyFPsoxrqynlIQWmhMyARwsrDvEcuaHqN210WLmiU/Lsgs+K7DpKaKl+U0L/+JxVPxaLG4OHaLPY58YSdHwuzUnTRn8glkHAgMBAAECggEAGqLrJq88GeipZ9SVEBlpnfklfffuYkCiFQ/wTJQ7++/uVkH2OW5Ihekjv5cfHdGxl/7nuQg2PQtxRzGlYtBbJqJljH9WAMFllD0SujGCK3ARIQ4YaLf6+2fK/E0itMpT+zlHwjQZfpYOeBp8OJ7+D7AsY7G3npgJPqNWK8pY8//rwPXNX2e6Bm+qtupgchTarV+JaT0XPuSN8SAAc/p57fZDIcxb6gcLMSSzJnMFL2G1lLyg4+ryu08aHAVuff8Ngi2+03D60yJS0o60PlslIHopLJ31ooVb/t5aHh4HgNIkEqD8uMkaHYrc2Exy0R9+4Sr0v10WFEBc2xQOMD/dAQKBgQDE+2Qf7VTaqIWLl1oT2NNBCEA3mLrYQEXyGlY893cUb2KvGnlXOQCnXYh/f+FIkTRGJrgYoCv0U0osXomdosGQnE8a2RLDg6s5lwPHalN98qraa7OZZE2JdHN+OFoguPCupwOk2VCZwR+eObpFM5hp0eh766apXwg9EiwSoOvihwKBgQC7G84KIhescslnuIujUttVn53g5dVfAPQYqC0IYq/jenTjOOyx4+fQIsSIlpKgOHE6SRFxTDsXqkdcJiBQULxZGV6Zasy/Y70cA/xMzizDW0MabzsbvDttEYqqO9g+OrPFosGQF14gSOare5t/R6C7u0BxpWjVexPK+ZlZL9b1gQKBgCzKVOwFlUPbCfLByZO1u+OPsrpxmhrOEpmIb4+RXZxh73iNdoXkykdEN2N2eo17pv1ElJvU3+nAfp80J+qWNZliUYJzVZbre6WutwdDIBUFduAPmVkJu6/DsPdEbQn/w4qTI3r6hx9PEJdz3O0bXE7Dki+LV+wvVbo9RZQ+zyRFAoGARoY+bPdYsPk7DMs0ZsUOQwG8wk4e1IZJexm4j5aS8Uzwzcxg+tQKRhs0tL78WUOs+ekcl/XBuDPIXeVI/LzRoUu8qlrk/aacWvjtmg2ENcYqTsZqIxQZ2gxola2k3h/GLtIf3y3Pnp+bwjr+60SWQuxbZ/qOvxh652CY+lLb1QECgYAS4iG5KNm77NL4V7qurBwMV/bujiIh2IBR5VVXs+DsGfnSca9SRXskzuwyY6wiFbZuEDXt9Ch+szvZUJ1W9NVjTacb5HJJ7L1Py4O0FeLK2gcH9HoxmLKtBdvZKxq9AAZ+IGfQnGNTuRR0+b1R/zvTzvEOz0pawrPo3hfr71h2UA=="/>
+    </application>
+
+</manifest>

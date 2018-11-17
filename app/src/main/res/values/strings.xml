@@ -1,0 +1,39 @@
+<resources>
+
+    <string name="carsuper_exit">再按一次退出程序</string>
+    <string name="app_name">ThoughtRui</string>
+    <string name="recyclerview_item_foot">正在加载...</string>
+    <string name="home">首页</string>
+    <string name="upload">上传</string>
+    <string name="audit">审核</string>
+    <string name="center">个人中心</string>
+    <string name="title">标题</string>
+    <!--首页-->
+    <string name="start_time">开始时间</string>
+    <string name="end_time">结束时间</string>
+    <string name="distance">距离</string>
+    <string name="download">点击下载</string>
+    <!--权限-->
+    <string name="title_dialog">Tips</string>
+    <string name="message_permission_rationale">授予以下权限以继续该程序:\n\n%1$s</string>
+    <string name="message_permission_always_failed">请在设置里给我们一下权限:\n\n%1$s</string>
+    <string name="message_setting_comeback">用户从设置页面返回。</string>
+    <string name="resume">确定</string>
+    <string name="cancel">取消</string>
+    <string name="setting">设置</string>
+    
+    <!--考勤-->
+    <string name="access_cycle">访问周期：</string>
+    <string name="dealer_code">经销商代码：</string>
+    <string name="attence">考勤</string>
+    <string name="history">接触历史</string>
+    <string name="attendance_Time">打卡时间:</string>
+    <string name="attendance_start">开始打卡</string>
+    <string name="attendance_end">结束打卡</string>
+    <string name="relocation">重新定位</string>
+    <string name="attendance_start_time">开始时间</string>
+    <string name="attendance_end_time">结束时间</string>
+
+    <!--访问-->
+    <string name="remark">点击编辑</string>
+</resources>
