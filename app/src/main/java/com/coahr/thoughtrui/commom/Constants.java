@@ -17,8 +17,8 @@ public class Constants {
     public static double Longitude;
     //sessionId
     public static String sessionId;
-    //projectId
-    public static String projectId;
+    //ht_projectId
+    public static String ht_ProjectId;  //服务器端项目id
     //user_id;
     public static String user_id;
     //DbProjectId 数据库中的id
@@ -35,16 +35,23 @@ public class Constants {
     /**
      * 本地存储总目录
      */
-    public static String SAVE_DIR_BASE = SDCARD_PATH.concat("/carsuper/");
-
+    public static String SAVE_DIR_BASE = SDCARD_PATH.concat("/com.thoughtRui.coahr/");
     /**
-     * 图片存储位置
+     *
      */
-    public static String SAVE_DIR_GLIDE_CACHE = SAVE_DIR_BASE.concat("GlideCache/");
+    public static String SAVE_DIR_GLIDE_CACHE=SAVE_DIR_BASE.concat("GlideCache/");
     /**
-     * 图片存储位置
+     * 相机拍摄图片存储位置
      */
-    public static String SAVE_DIR_PHOTO = SAVE_DIR_BASE.concat("photo/");
+    public static String SAVE_DIR_TAKE_PHOTO = SAVE_DIR_BASE.concat("takePhoto/");
+    /**
+     * 工程图片位置
+     */
+    public static String SAVE_DIR_PROJECT_PHOTO = SAVE_DIR_BASE.concat("projectPhoto/");
+    /**
+     * 压缩图片存储位置
+     */
+    public static String SAVE_DIR_ZIP_PHOTO = SAVE_DIR_BASE.concat("zipPhoto/");
     /**
      * 头像存储位置
      */

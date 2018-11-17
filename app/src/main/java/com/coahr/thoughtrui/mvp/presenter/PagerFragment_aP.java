@@ -12,6 +12,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import cn.finalteam.rxgalleryfinal.bean.MediaBean;
+
 /**
  * Created by Leehor
  * on 2018/11/15
@@ -47,14 +49,14 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
     }
 
     @Override
-    public void getImage(int subject_id) {
+    public void getImage(String ht_ProjectId,int position) {
         if (mModle != null) {
-            mModle.getImage(subject_id);
+            mModle.getImage(ht_ProjectId, position);
         }
     }
 
     @Override
-    public void getImageSuccess(List<ImagesDB> imagesDBList) {
+    public void getImageSuccess(List<String> imagesDBList) {
         if (getView() != null) {
             getView().getImageSuccess(imagesDBList);
         }
@@ -68,9 +70,9 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
     }
 
     @Override
-    public void DeleteImage(int imageId,String imageName) {
+    public void DeleteImage(String deleteImagePath) {
         if (mModle != null) {
-            mModle.DeleteImage(imageId,imageName);
+            mModle.DeleteImage(deleteImagePath);
         }
     }
 
@@ -96,9 +98,9 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
     }
 
     @Override
-    public void getAnswerSuccess(List<AnswersDB> answersDBList) {
+    public void getAnswerSuccess(AnswersDB answersDB) {
         if (getView() != null) {
-            getView().getAnswerSuccess(answersDBList);
+            getView().getAnswerSuccess(answersDB);
         }
     }
 
@@ -106,6 +108,48 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
     public void getAnswerFailure() {
         if (getView() != null) {
             getView().getAnswerFailure();
+        }
+    }
+
+    @Override
+    public void saveAnswers(String answers,String remark) {
+        if (mModle != null) {
+            mModle.saveAnswers(answers,remark);
+        }
+    }
+
+    @Override
+    public void saveAnswersSuccess() {
+        if (getView() != null) {
+            getView().saveAnswersSuccess();
+        }
+    }
+
+    @Override
+    public void saveAnswersFailure() {
+        if (getView() != null) {
+            getView().saveAnswersFailure();
+        }
+    }
+
+    @Override
+    public void SaveImages(List<MediaBean> mediaBeanList,String ht_ProjectId,int position) {
+        if (mModle != null) {
+            mModle.SaveImages(mediaBeanList,ht_ProjectId,position);
+        }
+    }
+
+    @Override
+    public void SaveImagesSuccess() {
+        if (getView() != null) {
+            getView().SaveImagesSuccess();
+        }
+    }
+
+    @Override
+    public void SaveImagesFailure() {
+        if (getView() != null) {
+            getView().SaveImagesFailure();
         }
     }
 }

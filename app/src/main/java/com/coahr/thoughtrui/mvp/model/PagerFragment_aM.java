@@ -10,17 +10,23 @@ import com.coahr.thoughtrui.Utils.JDBC.DataBaseWorkAsync;
 import com.coahr.thoughtrui.Utils.JDBC.JDBCDeleteListener;
 import com.coahr.thoughtrui.Utils.JDBC.JDBCSelectMultiListener;
 import com.coahr.thoughtrui.Utils.ScreenUtils;
+import com.coahr.thoughtrui.Utils.StoreSpaceUtils;
+import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.PagerFragment_aC;
 import com.socks.library.KLog;
 
 import org.litepal.crud.DataSupport;
 import org.litepal.crud.callback.FindMultiCallback;
+import org.litepal.crud.callback.SaveCallback;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 
 /**
  * Created by Leehor
@@ -32,22 +38,27 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
     public PagerFragment_aM() {
         super();
     }
-
-
+    private SubjectsDB subjectsDB;
+    private int subjectsDBId;
     @Override
-    public void getSubject(String DbProjectId, final int position) {
+    public void getSubject(final String DbProjectId, final int position) {
         DataBaseWorkAsync.DBSelectByTogether_Where(SubjectsDB.class, new JDBCSelectMultiListener() {
+
+
+
+
             @Override
             public <T> void SelectMulti(List<T> t) {
                 if (t != null && t.size() > 0) {
-                    SubjectsDB subjectsDB = (SubjectsDB) t.get(position);
-                    KLog.d("正在查询",subjectsDB.getHt_id());
+                    subjectsDB = (SubjectsDB) t.get(position);
                     getPresenter().getSubjectSuccess(subjectsDB);
-                    int id = subjectsDB.getId();
-                    getImage(id);
-                    getAnswer(id);
+                    subjectsDBId = subjectsDB.getId();
+                    getImage(DbProjectId, position);
+                    getAnswer(subjectsDBId);
                 } else {
                     getPresenter().getSubjectFailure("0");
+                    getPresenter().getImageFailure();
+                    getPresenter().getAnswerFailure();
                 }
             }
         }, "projectsdb_id=?", DbProjectId);
@@ -55,18 +66,8 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
     }
 
     @Override
-    public void getImage(int subject_id) {
-        DataBaseWorkAsync.DBSelectByTogether_Where(ImagesDB.class, new JDBCSelectMultiListener() {
-            @Override
-            public <T> void SelectMulti(List<T> t) {
-                if (t != null && t.size()>0) {
-                    KLog.d("正在查询","图片");
-                    getPresenter().getImageSuccess((List<ImagesDB>) t);
-                } else {
-                    getPresenter().getImageFailure();
-                }
-            }
-        }, "subjectsdb_id=?",String.valueOf(subject_id));
+    public void getImage(String ht_ProjectId,int position) {
+
     }
 
     @Override
@@ -76,7 +77,7 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
             public <T> void SelectMulti(List<T> t) {
                 if (t != null && t.size()>0) {
                     KLog.d("正在查询","答案");
-                    getPresenter().getAnswerSuccess((List<AnswersDB>) t);
+                    getPresenter().getAnswerSuccess((AnswersDB) t.get(0));
                 } else {
                     getPresenter().getImageFailure();
                 }
@@ -85,22 +86,60 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
     }
 
     @Override
-    public void DeleteImage(int imageId, final String imageName) {
-            DataBaseWorkAsync.DBDeleteById(ImagesDB.class, imageId, new JDBCDeleteListener() {
+    public void DeleteImage(String deleteImagePath) {
+
+    }
+
+    @Override
+    public void saveAnswers(String answers, String remark) {
+        List<AnswersDB> answersList = subjectsDB.getAnswers();
+        if (answersList !=null && answersList.size()>0){ //当前有答案
+            if (answers !=null) {
+                answersList.get(0).setAnswer(answers);
+            }
+            if (remark !=null){
+                answersList.get(0).setRemakes(remark);
+            }
+            answersList.get(0).saveAsync().listen(new SaveCallback() {
                 @Override
-                public void delete(int i) {
-                    if (i>0){
-                        // 找到文件所在的路径并删除该文件
-                        boolean delete = DeleteFileUtil.deleteFile(imageName);
-                        if (delete){
-                            getPresenter().DeleteImageSuccess(imageName);
-                        } else {
-                            getPresenter().DeleteImageFailure(imageName);
-                        }
+                public void onFinish(boolean success) {
+                    if (success) {
+                        getPresenter().saveAnswersSuccess();
                     } else {
-                        getPresenter().DeleteImageFailure(imageName);
+                        getPresenter().saveAnswersFailure();
                     }
                 }
             });
+        } else {
+            AnswersDB answersDB=new AnswersDB();
+            if (answers !=null){
+                answersDB.setAnswer(answers);
+            }
+            if (remark != null) {
+                answersDB.setRemakes(remark);
+            }
+            answersDB.saveAsync().listen(new SaveCallback() {
+                @Override
+                public void onFinish(boolean success) {
+                    if (success) {
+                        getPresenter().saveAnswersSuccess();
+                    } else {
+                        getPresenter().saveAnswersFailure();
+                    }
+                }
+            });
+        }
+
+    }
+
+    @Override
+    public void SaveImages(List<MediaBean> mediaBeanList,String ht_ProjectId,int position) {
+        //获取当前题目下的图片
+        List<String> picturesList = StoreSpaceUtils.getPictures(Constants.SAVE_DIR_PROJECT_PHOTO + position + "/");
+        for (int i = 0; i <mediaBeanList.size() ; i++) {
+            String originalPath = mediaBeanList.get(i).getOriginalPath();
+            KLog.d("保存"+i,originalPath);
+            StoreSpaceUtils.copyFile(originalPath,Constants.SAVE_DIR_PROJECT_PHOTO,StoreSpaceUtils.getE(originalPath,"/"));
+        }
     }
 }

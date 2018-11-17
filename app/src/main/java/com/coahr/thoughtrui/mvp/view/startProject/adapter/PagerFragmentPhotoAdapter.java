@@ -16,19 +16,24 @@ import java.util.List;
  * on 2018/11/16
  * on 10:08
  */
-public class PagerFragmentPhotoAdapter extends BaseQuickAdapter<ImagesDB,BaseViewHolder> {
+public class PagerFragmentPhotoAdapter extends BaseQuickAdapter<String,BaseViewHolder> {
 
    private PagerFragmentPhotoListener listener;
+   private List<String> imageList;
    private boolean isDel=false;
     public PagerFragmentPhotoAdapter() {
         super(R.layout.item_fragment_photo,null);
+    }
+    public void setImageList(List<String> imageList){
+        this.imageList=imageList;
+        notifyDataSetChanged();
     }
     public void setIsDel(boolean isDel){
         this.isDel=isDel;
     }
     @Override
-    protected void convert(BaseViewHolder helper, final ImagesDB item) {
-        Imageloader.loadImage(item.getImagePath(), (ImageView) helper.getView(R.id.photo_image));
+    protected void convert(final BaseViewHolder helper, final String item) {
+        Imageloader.loadImage(item, (ImageView) helper.getView(R.id.photo_image));
         if (isDel){
             helper.getView(R.id.photo_image_de).setVisibility(View.VISIBLE);
         } else {
@@ -38,7 +43,7 @@ public class PagerFragmentPhotoAdapter extends BaseQuickAdapter<ImagesDB,BaseVie
             @Override
             public void onClick(View view) {
                 if (listener != null) {
-                    listener.onClick(item);
+                    listener.onClick(imageList,helper.getAdapterPosition());
                 }
             }
         });
@@ -46,7 +51,7 @@ public class PagerFragmentPhotoAdapter extends BaseQuickAdapter<ImagesDB,BaseVie
             @Override
             public boolean onLongClick(View view) {
                 if (listener != null) {
-                    listener.onLongClick(item);
+                    listener.onLongClick(imageList,helper.getAdapterPosition());
                 }
                 return false;
             }
@@ -55,7 +60,7 @@ public class PagerFragmentPhotoAdapter extends BaseQuickAdapter<ImagesDB,BaseVie
             @Override
             public void onClick(View view) {
                 if (listener != null) {
-                    listener.onDel(item);
+                    listener.onDel(imageList,helper.getAdapterPosition());
                 }
             }
         });

@@ -20,7 +20,7 @@ public interface StartProjectFragmentC {
 
         void getMainDataFailure(String failure);
 
-        void getOfflineSuccess(SubjectsDB subjectsDB);
+        void getOfflineSuccess(int size,String dbProjectId,String ht_projectId);
 
         void getOfflineFailure(int failure);
 
@@ -35,9 +35,9 @@ public interface StartProjectFragmentC {
 
         void getMainDataFailure(String failure);
 
-        void getOfflineDate();
+        void getOfflineDate(String dbProjectId,String ht_projectId);
 
-        void getOfflineSuccess(SubjectsDB subjectsDB);
+        void getOfflineSuccess(int size,String dbProjectId,String ht_projectId);
 
         void getOfflineFailure(int failure);
 
@@ -50,7 +50,7 @@ public interface StartProjectFragmentC {
         void getMainData(Map map);
 
 
-        void getOfflineDate();
+        void getOfflineDate(String dbProjectId,String ht_projectId);
 
     }
 }

@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
+import com.coahr.thoughtrui.mvp.view.startProject.PagerFragment_a;
 import com.socks.library.KLog;
 
 import java.util.ArrayList;
@@ -17,27 +18,26 @@ import java.util.ArrayList;
  */
 public class StartProjectAdapter extends FragmentPagerAdapter {
 
-    ArrayList<BaseChildFragment> fragmentArrayList=new ArrayList<>();
-    public StartProjectAdapter(FragmentManager fm,ArrayList<BaseChildFragment> fragmentArrayList) {
+  private int size;
+  private String DbProjectId;  //本地数据库id
+  private String ht_ProjectId; //服务器端Id
+    public StartProjectAdapter(FragmentManager fm,int size,String DbProjectId,String ht_ProjectId) {
         super(fm);
-        this.fragmentArrayList=fragmentArrayList;
+       this.size=size;
+       this.DbProjectId=DbProjectId;
+       this.ht_ProjectId=ht_ProjectId;
     }
 
 
     @Override
     public Fragment getItem(int i) {
-        if (fragmentArrayList ==null ){
-            return null;
+
+            return PagerFragment_a.newInstance(i,DbProjectId,ht_ProjectId);
         }
-        return fragmentArrayList.get(i);
-    }
 
     @Override
     public int getCount() {
-        if (fragmentArrayList == null ) {
-            return 0;
+
+            return size;
         }
-        KLog.d("个数",fragmentArrayList.size());
-        return fragmentArrayList.size();
-    }
 }

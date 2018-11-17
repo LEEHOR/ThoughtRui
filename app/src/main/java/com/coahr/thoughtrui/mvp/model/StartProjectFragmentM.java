@@ -1,9 +1,13 @@
 package com.coahr.thoughtrui.mvp.model;
 
+import com.coahr.thoughtrui.DBbean.SubjectsDB;
+import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.StartProjectFragmentC;
 import com.coahr.thoughtrui.mvp.model.Bean.QuestionBean;
+import com.coahr.thoughtrui.mvp.view.startProject.PagerFragment_a;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -36,7 +40,12 @@ public class StartProjectFragmentM extends BaseModel<StartProjectFragmentC.Prese
     }
 
     @Override
-    public void getOfflineDate() {
-
+    public void getOfflineDate(String dbProjectId,String ht_projectId) {
+        List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectByTogether_Where(SubjectsDB.class, "projectsdb_id=?", dbProjectId);
+        if (subjectsDBS !=null){
+           getPresenter().getOfflineSuccess(subjectsDBS.size(), dbProjectId,ht_projectId);
+        } else {
+            getPresenter().getOfflineFailure(0);
+        }
     }
 }

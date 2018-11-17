@@ -82,18 +82,14 @@ public class StartProjectFragment extends BaseFragment<StartProjectFragmentC.Pre
         right_lin.setOnClickListener(this);
     }
 
+
     @Override
     public void initData() {
 
         if (getNetWork()) {
             getData();
         } else {
-            if (getAdapter() != null) {
-                project_viewPage.setAdapter(getAdapter());
-                project_viewPage.setCurrentItem(0);
-            } else {
-                showDialog("提示","暂无数据") ;
-            }
+            p.getOfflineDate(Constants.DbProjectId,Constants.ht_ProjectId);
         }
     }
 
@@ -151,39 +147,32 @@ public class StartProjectFragment extends BaseFragment<StartProjectFragmentC.Pre
           /*fragmentArrayList = pagerController.getFragmentArrayList();
           startProjectAdapter.setFragmentArrayList(fragmentArrayList);
           startProjectAdapter.notifyDataSetChanged();*/
-        if (getAdapter() != null) {
-            project_viewPage.setAdapter(getAdapter());
-            project_viewPage.setCurrentItem(0);
-        } else {
-            showDialog("提示","暂无数据") ;
-        }
+       p.getOfflineDate(Constants.DbProjectId,Constants.ht_ProjectId);
     }
 
     @Override
     public void getMainDataFailure(String failure) {
         ToastUtils.showLong( failure);
-        if (getAdapter() != null) {
-            project_viewPage.setAdapter(getAdapter());
-            project_viewPage.setCurrentItem(0);
-        } else {
-            showDialog("提示","暂无数据") ;
-        }
-
+        p.getOfflineDate(Constants.DbProjectId,Constants.ht_ProjectId);
     }
 
     /**
-     * 离线数据
      *
-     * @param subjectsDB
+     * @param size
+     *          题目数量
+     * @param dbProjectId
+     *          项目Id
      */
     @Override
-    public void getOfflineSuccess(SubjectsDB subjectsDB) {
-
+    public void getOfflineSuccess(int size,String dbProjectId,String ht_ProjectId) {
+        startProjectAdapter = new StartProjectAdapter(getChildFragmentManager(),size,dbProjectId,ht_ProjectId);
+        project_viewPage.setAdapter(startProjectAdapter);
+        project_viewPage.setCurrentItem(0);
     }
 
     @Override
     public void getOfflineFailure(int failure) {
-
+        ToastUtils.showLong("没有本地题目");
     }
 
     @Override
@@ -223,7 +212,7 @@ public class StartProjectFragment extends BaseFragment<StartProjectFragmentC.Pre
 
     private void getData() {
         Map<String, Object> map = new HashMap<>();
-        map.put("projectId", Constants.projectId);
+        map.put("projectId", Constants.ht_ProjectId);
         p.getMainData(map);
     }
 
@@ -236,16 +225,7 @@ public class StartProjectFragment extends BaseFragment<StartProjectFragmentC.Pre
         boolean networkAvailable = NetWorkAvailable.isNetworkAvailable(BaseApplication.mContext);
         return networkAvailable;
     }
-    private StartProjectAdapter getAdapter(){
-        pagerController = new PagerController(Constants.DbProjectId, 0);
-        fragmentArrayList = pagerController.getFragmentArrayList();
-        if (fragmentArrayList != null) {
-            startProjectAdapter = new StartProjectAdapter(getChildFragmentManager(),fragmentArrayList);
-            return startProjectAdapter;
-        } else {
-            return null;
-        }
-    }
+
     private void showDialog(String title, String Content) {
         new MaterialDialog.Builder(_mActivity)
                 .title(title)

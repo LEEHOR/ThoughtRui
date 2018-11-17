@@ -64,7 +64,7 @@ public class   ProjectDetailFragment extends BaseFragment implements View.OnClic
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void Event(Event_ProjectDetail messageEvent) {
         if (messageEvent != null) {
-            Constants.projectId=messageEvent.getP_Id();
+            Constants.ht_ProjectId=messageEvent.getP_Id();
           if (messageEvent.isOffline()){  //离线
               Constants.DbProjectId=String.valueOf(messageEvent.getDb_Id());
               KLog.d("1项目id",Constants.DbProjectId);

@@ -44,16 +44,16 @@ public class StartProjectFragmentP extends BasePresenter<StartProjectFragmentC.V
     }
 
     @Override
-    public void getOfflineDate() {
+    public void getOfflineDate(String dbProjectId,String ht_projectId) {
         if (mModle != null) {
-            mModle.getOfflineDate();
+            mModle.getOfflineDate(dbProjectId,ht_projectId);
         }
     }
 
     @Override
-    public void getOfflineSuccess(SubjectsDB subjectsDB) {
+    public void getOfflineSuccess(int size,String dbProjectId,String ht_projectId) {
         if (getView() != null) {
-            getView().getOfflineSuccess(subjectsDB);
+            getView().getOfflineSuccess(size, dbProjectId,ht_projectId);
         }
     }
 

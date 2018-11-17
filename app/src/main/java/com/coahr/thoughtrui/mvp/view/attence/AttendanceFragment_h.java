@@ -68,7 +68,7 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
     //网络请求
     private void getData(){
         Map<String, Object> map = new HashMap<>();
-        map.put("projectId", Constants.projectId);
+        map.put("projectId", Constants.ht_ProjectId);
         map.put("sessionId",Constants.sessionId);
         p.getMainData(map);
     }
