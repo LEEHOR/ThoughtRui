@@ -1,0 +1,7 @@
+Variant: debugAndroidTest
+Config: debug
+Store: C:\AndriodProject\ThoughtRui\app\config\thoughtrui.jks
+Alias: key0
+MD5: 8A:DC:01:A0:74:58:A7:0A:46:3A:5B:E5:98:61:65:CF
+SHA1: 90:37:69:C2:14:27:E2:88:4C:C7:0D:AA:9A:CF:39:35:EE:78:BD:86
+Valid until: 2043年10月31日 星期六
