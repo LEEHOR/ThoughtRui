@@ -42,6 +42,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     private long exitTime = 0;
     private static final long INTERVAL_TIME = 2000;
     private String sessionId;
+    private int page = 0; //当前显示页面
 
     @Override
     public MainActivityC.Presenter getPresenter() {
@@ -72,60 +73,70 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
         myBottomNavigation.setOnTabPositionListener(new MyBottomNavigation.OnTabPositionListener() {
             @Override
             public void onPositionTab(int position) {
-                if (position<=1){
+                if (position <= 1) {
                     showFragment(position);
-
                 }
             }
         });
-        loadMultipleRootFragment(R.id.Root_Fragment, 0, mFragments);
-        if ( sessionId!=null){
-           // loadMultipleRootFragment(R.id.Root_Fragment, 0, mFragments);
-            showFragment(0);
-        } else {
-            Intent intent =new Intent(MainActivity.this,ConstantsActivity.class);
-            intent.putExtra("from",Constants.MainActivityCode);
-            intent.putExtra("to",Constants.loginFragmentCode);
-            intent.putExtra("type",1);
-            startActivityForResult(intent,100);
-        }
+
+
     }
 
     @Override
     public void initData() {
-        if (sessionId !=null) {
-           // p.startLocation();
+        loadMultipleRootFragment(R.id.Root_Fragment, 0, mFragments);
+
+        if (sessionId != null) {
+            showFragment(0);
+        } else {
+            Intent intent = new Intent(MainActivity.this, ConstantsActivity.class);
+            intent.putExtra("from", Constants.MainActivityCode);
+            intent.putExtra("to", Constants.loginFragmentCode);
+            page = 0;
+            startActivityForResult(intent, 100);
         }
     }
+
     private void showFragment(int position) {
-        showHideFragment(mFragments[position], mFragments[bottomNavigationPreposition]);
+        page = position;
+        if (sessionId == null) {
+            Intent intent = new Intent(MainActivity.this, ConstantsActivity.class);
+            intent.putExtra("from", Constants.MainActivityCode);
+            intent.putExtra("to", Constants.loginFragmentCode);
+            startActivityForResult(intent, 100);
+        } else {
+
+            showHideFragment(mFragments[position], mFragments[bottomNavigationPreposition]);
+        }
         myBottomNavigation.beanSelect(position);
         bottomNavigationPreposition = position;
     }
 
     @Override
     public void onLocationSuccess(BDLocation location) {
-        KLog.d("定位成功activity",location.getAddrStr());
-        Toast.makeText(BaseApplication.mContext,location.getAddrStr(),Toast.LENGTH_LONG).show();
+        KLog.d("定位成功activity", location.getAddrStr());
+        Toast.makeText(BaseApplication.mContext, location.getAddrStr(), Toast.LENGTH_LONG).show();
 
     }
 
     @Override
     public void onLocationFailure(int failure) {
-        KLog.d("定位失败activity",failure);
-        Toast.makeText(BaseApplication.mContext,failure+"",Toast.LENGTH_LONG).show();
+        KLog.d("定位失败activity", failure);
+        Toast.makeText(BaseApplication.mContext, failure + "", Toast.LENGTH_LONG).show();
 
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode==100 && requestCode==100){
+        if (resultCode == 100 && requestCode == 100) {
+            sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, "sessionId", null);
             showFragment(0);
-           // p.startLocation();
-            EventBus.getDefault().postSticky(new Event_Main(1,"登陆成功"));
+            // p.startLocation();
+            EventBus.getDefault().postSticky(new Event_Main(1, "登陆成功",page));
         }
     }
+
     @Override
     public void onBackPressedSupport() {
         if ((System.currentTimeMillis() - exitTime) > INTERVAL_TIME) {
@@ -133,10 +144,10 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
             exitTime = System.currentTimeMillis();
         } else {
             finish();
-            if (Constants.isKill){
+            if (Constants.isKill) {
                 ActivityManagerUtils.getInstance().appExit();
             } else {
-                PreferenceUtils.remove(BaseApplication.mContext,Constants.sessionId_key);
+                PreferenceUtils.remove(BaseApplication.mContext, Constants.sessionId_key);
                 android.os.Process.killProcess(android.os.Process.myPid());
             }
         }

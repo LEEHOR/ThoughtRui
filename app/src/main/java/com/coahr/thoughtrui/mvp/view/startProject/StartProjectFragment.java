@@ -1,11 +1,11 @@
 package com.coahr.thoughtrui.mvp.view.startProject;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -20,9 +20,18 @@ import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.StartProjectFragmentC;
+import com.coahr.thoughtrui.mvp.model.Bean.PagePostEvent;
 import com.coahr.thoughtrui.mvp.model.Bean.QuestionBean;
+import com.coahr.thoughtrui.mvp.model.Bean.isCompleteBean;
 import com.coahr.thoughtrui.mvp.presenter.StartProjectFragmentP;
 import com.coahr.thoughtrui.mvp.view.startProject.adapter.StartProjectAdapter;
+import com.coahr.thoughtrui.widgets.CustomScrollViewPager;
+import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
+import com.socks.library.KLog;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,11 +51,9 @@ public class StartProjectFragment extends BaseFragment<StartProjectFragmentC.Pre
     @Inject
     StartProjectFragmentP p;
     @BindView(R.id.project_viewPage)
-    ViewPager project_viewPage;
-    @BindView(R.id.left_lin)
-    LinearLayout left_lin;
-    @BindView(R.id.right_lin)
-    LinearLayout right_lin;
+    CustomScrollViewPager project_viewPage;
+    @BindView(R.id.p_mytitle)
+    MyTittleBar p_mytitle;
 /*    @BindView(R.id.iv_last)
     SelectImageView iv_last;
     @BindView(R.id.iv_next)
@@ -60,6 +67,7 @@ public class StartProjectFragment extends BaseFragment<StartProjectFragmentC.Pre
     private PagerController pagerController;
     private ArrayList<BaseChildFragment> fragmentArrayList;
     private StartProjectAdapter startProjectAdapter;
+    private int subject_size; //题目个数
 
     public static StartProjectFragment newInstance() {
         StartProjectFragment startProjectFragment = new StartProjectFragment();
@@ -77,9 +85,24 @@ public class StartProjectFragment extends BaseFragment<StartProjectFragmentC.Pre
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
     public void initView() {
-        left_lin.setOnClickListener(this);
-        right_lin.setOnClickListener(this);
+        project_viewPage.setScrollable(false);
+
+        p_mytitle.getRightText().setVisibility(View.VISIBLE);
+        p_mytitle.getRightText().setText("题目列表");
+        p_mytitle.getLeftIcon().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialog("提示", "退出答题");
+            }
+        });
+        p_mytitle.getTvTittle().setText("第" + 1 + "题");
     }
 
 
@@ -165,6 +188,7 @@ public class StartProjectFragment extends BaseFragment<StartProjectFragmentC.Pre
      */
     @Override
     public void getOfflineSuccess(int size,String dbProjectId,String ht_ProjectId) {
+        this.subject_size = size;
         startProjectAdapter = new StartProjectAdapter(getChildFragmentManager(),size,dbProjectId,ht_ProjectId);
         project_viewPage.setAdapter(startProjectAdapter);
         project_viewPage.setCurrentItem(0);
@@ -177,14 +201,7 @@ public class StartProjectFragment extends BaseFragment<StartProjectFragmentC.Pre
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.left_lin:
-                setImage_textChange(R.id.left_lin);
-                break;
-            case R.id.right_lin:
-                setImage_textChange(R.id.right_lin);
-                break;
-        }
+
     }
 
     //切换图片和文字颜色
@@ -230,21 +247,69 @@ public class StartProjectFragment extends BaseFragment<StartProjectFragmentC.Pre
         new MaterialDialog.Builder(_mActivity)
                 .title(title)
                 .content(Content)
-                .negativeText("退出")
-                .positiveText("重试")
+                .negativeText("取消")
+                .positiveText("确定")
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
                         dialog.dismiss();
-                        _mActivity.onBackPressed();
+
 
                     }
                 }).onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         dialog.dismiss();
+                _mActivity.onBackPressed();
             }
         }).build().show();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    /**
+     * 获取返回询问数据
+     *
+     * @param isCompleteBean
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void Event(isCompleteBean isCompleteBean) {
+        int isposition = isCompleteBean.getPosition();
+        int isupOrDown = isCompleteBean.getUpOrDown();
+        boolean complete = isCompleteBean.isComplete();
+
+           if (complete){
+               if (isupOrDown == 1){  //上翻页
+                   KLog.d("上翻页"+isposition);
+                   project_viewPage.setCurrentItem(isposition-=1,true);
+                   if (isposition==0){
+                       p_mytitle.getTvTittle().setText("第"+(1)+"题");
+                   } else {
+                       p_mytitle.getTvTittle().setText("第"+(isposition)+"题");
+                   }
+
+               }
+               if (isupOrDown == 2){
+                   KLog.d("下翻页"+isposition);
+                   project_viewPage.setCurrentItem(isposition+=1);
+                   if (isposition==1){
+                       p_mytitle.getTvTittle().setText("第"+(2)+"题");
+                   } else {
+                       p_mytitle.getTvTittle().setText("第"+(isposition+1)+"题");
+                   }
+
+               }
+           } else {
+               ToastUtils.showLong("当前题目未完成");
+           }
+
+
     }
 }

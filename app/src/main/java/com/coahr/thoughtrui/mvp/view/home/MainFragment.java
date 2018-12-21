@@ -1,5 +1,6 @@
 package com.coahr.thoughtrui.mvp.view.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -20,6 +21,8 @@ import com.coahr.thoughtrui.mvp.constract.MyMainFragmentC;
 import com.coahr.thoughtrui.mvp.model.Bean.Event_Main;
 import com.coahr.thoughtrui.mvp.model.Bean.HomeDataList;
 import com.coahr.thoughtrui.mvp.presenter.MyMainFragmentP;
+import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
+import com.coahr.thoughtrui.mvp.view.MainActivity;
 import com.coahr.thoughtrui.mvp.view.home.adapter.MainFragmentViewPageAdapter;
 import com.socks.library.KLog;
 
@@ -92,8 +95,6 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
             if (sessionId !=null){
                 p.startLocation();
             }
-
-
     }
 
     @Override
@@ -233,7 +234,8 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
      */
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void Event(Event_Main messageEvent) {
-        if (messageEvent.getIsLoad()==1){
+        if (messageEvent.getIsLoad()==1 && messageEvent.getPage()==0){
+            sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, "sessionId", null);
             p.startLocation();
         }
     }

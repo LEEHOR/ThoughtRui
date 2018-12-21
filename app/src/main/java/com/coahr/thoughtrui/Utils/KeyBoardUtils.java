@@ -39,7 +39,7 @@ public class KeyBoardUtils {
 
         if (!imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS)) {
             if (!imm.hideSoftInputFromWindow(v.getWindowToken(), 0)) {
-                imm.hideSoftInputFromInputMethod(v.getWindowToken(), 0);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
             }
         }
     }

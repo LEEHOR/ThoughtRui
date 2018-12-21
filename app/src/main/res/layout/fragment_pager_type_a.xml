@@ -3,69 +3,88 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/material_grey_50"
+    android:background="@color/material_grey_10"
     android:orientation="vertical">
-    <com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar
-        android:id="@+id/myTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:tittle="题号">
 
-    </com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar>
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+       >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_5"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingBottom="@dimen/dp_5"
             android:orientation="vertical">
 
-            <LinearLayout
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                app:cardCornerRadius="5dp">
 
-                <TextView
-                    android:id="@+id/quest_title"
-                    android:padding="@dimen/dp_5"
-                    android:textSize="@dimen/dp_14"
-                    android:textColor="@color/material_grey_900"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <RadioGroup
-                    android:id="@+id/radio_group"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="@dimen/edge_margin">
+                    android:orientation="vertical">
 
-                    <RadioButton
-                        android:id="@+id/rbtn_t"
-                        android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/quest_title"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:button="@null"
-                        android:drawableLeft="@drawable/checkbox_beautiful_selector"
-                        android:drawablePadding="@dimen/dp_10"
-                        android:gravity="center_vertical"
                         android:padding="@dimen/dp_5"
-                        android:textColor="@color/material_grey_800"
+                        android:textColor="@color/material_grey_900"
                         android:textSize="@dimen/dp_14" />
 
-                    <RadioButton
-                        android:id="@+id/rbtn_f"
-                        android:layout_width="wrap_content"
+                    <RadioGroup
+                        android:id="@+id/radio_group"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:button="@null"
-                        android:drawableLeft="@drawable/checkbox_beautiful_selector"
-                        android:drawablePadding="@dimen/dp_10"
-                        android:padding="@dimen/dp_5"
-                        android:textColor="@color/material_grey_800"
-                        android:textSize="@dimen/dp_14" />
-                </RadioGroup>
-            </LinearLayout>
+                        android:orientation="vertical"
+                        android:padding="@dimen/edge_margin">
 
+                        <RadioButton
+                            android:id="@+id/rbtn_t"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:button="@null"
+                            android:drawableLeft="@drawable/checkbox_beautiful_selector"
+                            android:drawablePadding="@dimen/dp_10"
+                            android:gravity="center_vertical"
+                            android:padding="@dimen/dp_5"
+                            android:textColor="@color/material_grey_800"
+                            android:textSize="@dimen/dp_14" />
+
+                        <RadioButton
+                            android:id="@+id/rbtn_f"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:button="@null"
+                            android:drawableLeft="@drawable/checkbox_beautiful_selector"
+                            android:drawablePadding="@dimen/dp_10"
+                            android:padding="@dimen/dp_5"
+                            android:textColor="@color/material_grey_800"
+                            android:textSize="@dimen/dp_14" />
+                    </RadioGroup>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <!--访问说明-->
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                app:cardCornerRadius="@dimen/dp_5"
+                app:cardBackgroundColor="@color/material_grey_400">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
             <TextView
                 android:textSize="@dimen/dp_16"
                 android:padding="@dimen/edge_margin"
@@ -73,44 +92,66 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
-                android:background="@color/material_grey_400"
                 android:text="问题说明:" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/material_grey_200" />
              <TextView
                  android:id="@+id/project_detail"
                  android:padding="@dimen/edge_margin"
                  android:textSize="@dimen/dp_14"
                  android:textColor="@color/black"
-                 android:background="@color/material_grey_400"
                  android:visibility="gone"
                  android:layout_width="match_parent"
                  android:layout_height="wrap_content" />
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/material_grey_800"/>
-            <TextView
-                android:padding="@dimen/edge_margin"
-                android:text="访问员说明:"
-                android:textSize="@dimen/dp_16"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/material_grey_800"/>
-            <EditText
-                android:id="@+id/user_remark"
-                android:textSize="@dimen/dp_14"
-                android:lines="2"
-                android:hint="@string/remark"
-                android:padding="@dimen/edge_margin"
-                android:layout_width="match_parent"
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
                 android:layout_height="wrap_content"
-                />
-            <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/material_grey_800"/>
+                android:layout_marginTop="@dimen/dp_10"
+                app:cardCornerRadius="@dimen/dp_5">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/edge_margin"
+                        android:text="访问员说明:"
+                        android:textSize="@dimen/dp_16" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/material_grey_200" />
+
+                    <TextView
+                        android:id="@+id/user_remark"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorPrimary"
+                        android:hint="@string/remark"
+                        android:lines="5"
+                        android:padding="@dimen/edge_margin"
+                        android:textSize="@dimen/dp_14" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+           <android.support.v7.widget.CardView
+               app:cardCornerRadius="@dimen/dp_5"
+               android:layout_marginTop="@dimen/dp_10"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:orientation="vertical">
             <RelativeLayout
                 android:padding="@dimen/edge_margin"
                 android:layout_width="match_parent"
@@ -134,14 +175,74 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/material_grey_800"/>
+                android:background="@color/material_grey_200" />
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/project_imageRecycler"
                     android:padding="@dimen/dp_10"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false">
                 </android.support.v7.widget.RecyclerView>
+               </LinearLayout>
+           </android.support.v7.widget.CardView>
         </LinearLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        android:padding="@dimen/dp_5">
+
+        <LinearLayout
+            android:id="@+id/left_lin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/iv_last"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/last_start_project_iv" />
+
+            <TextView
+                android:id="@+id/tv_last"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:text="上一题"
+                android:textColor="@drawable/last_start_project_tv"
+                android:textSize="@dimen/dp_14" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/right_lin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/iv_next"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/next_start_project_iv" />
+
+            <TextView
+                android:id="@+id/tv_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:text="下一题"
+                android:textColor="@drawable/next_start_project_tv"
+                android:textSize="@dimen/dp_14" />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

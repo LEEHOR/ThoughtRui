@@ -32,7 +32,7 @@ public class StartProjectAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int i) {
 
-            return PagerFragment_a.newInstance(i,DbProjectId,ht_ProjectId);
+            return PagerFragment_a.newInstance(i,DbProjectId,ht_ProjectId,size);
         }
 
     @Override

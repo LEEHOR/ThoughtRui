@@ -161,7 +161,7 @@ public class   ProjectDetailFragment extends BaseFragment implements View.OnClic
      * 跳转到考勤页面
      */
     private void JumpToAttendance(){
-        Intent intent=new Intent(getActivity(),AttendanceRootActivity.class);
+        Intent intent=new Intent(_mActivity,AttendanceRootActivity.class);
         startActivity(intent);
        // start(StartProjectFragment.newInstance());
     }
@@ -169,7 +169,7 @@ public class   ProjectDetailFragment extends BaseFragment implements View.OnClic
      * 跳转到开始访问页面
      */
     private void JumpToStartProject(){
-        Intent intent=new Intent(getActivity(),StartProjectActivity.class);
+        Intent intent=new Intent(_mActivity,StartProjectActivity.class);
         startActivity(intent);
     }
 

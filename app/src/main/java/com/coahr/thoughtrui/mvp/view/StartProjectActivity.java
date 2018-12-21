@@ -32,7 +32,7 @@ public class StartProjectActivity extends BaseSupportActivity {
 
     @Override
     public void onBackPressedSupport() {
-        showDialog("提示","退出答题");
+       showDialog("提示","退出答题");
     }
 
     private void showDialog(String title, String Content) {

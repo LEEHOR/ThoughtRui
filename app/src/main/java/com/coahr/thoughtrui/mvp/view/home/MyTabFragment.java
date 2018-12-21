@@ -180,8 +180,8 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
             tabFAdapter.setAdapter_online(new MyTabFOnLineAdapter.adapter_online() {
                 @Override
                 public void newListClick(HomeDataList.DataBean.newListBean newListBean) {
-                    setDate_onLine_newList(newListBean);
                     JumpToProject();
+                    setDate_onLine_newList(newListBean);
                 }
 
                 @Override
@@ -191,8 +191,8 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
 
                 @Override
                 public void completeClick(HomeDataList.DataBean.CompleteListBean completeListBean) {
-                    setDate_onLine_Complete(completeListBean);
                     JumpToProject();
+                    setDate_onLine_Complete(completeListBean);
                 }
 
                 @Override
@@ -202,8 +202,8 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
 
                 @Override
                 public void unCompleteClick(HomeDataList.DataBean.UnCompleteListBean unCompleteListBean) {
-                    setDate_onLine_unComplete(unCompleteListBean);
                     JumpToProject();
+                    setDate_onLine_unComplete(unCompleteListBean);
                 }
 
                 @Override
@@ -442,6 +442,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
         intent.putExtra("from", Constants.MyTabFragmentCode);
         intent.putExtra("to", Constants.ProjectDetailFragmentCode);
         startActivity(intent);
+        //start(ProjectDetailFragment.newInstance());
     }
 
     /**

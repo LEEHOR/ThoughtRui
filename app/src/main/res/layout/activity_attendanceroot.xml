@@ -4,18 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
-    <com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar
-        android:id="@+id/myTitle"
+    <LinearLayout
+        android:id="@+id/top_line"
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:tittle="考勤">
-    </com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar>
+        android:layout_height="wrap_content">
+        <com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar
+            android:id="@+id/myTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tittle="考勤"/>
+    </LinearLayout>
+
 
     <RelativeLayout
         android:id="@+id/center_top"
-        android:layout_below="@+id/myTitle"
+        android:layout_below="@+id/top_line"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/edge_margin">

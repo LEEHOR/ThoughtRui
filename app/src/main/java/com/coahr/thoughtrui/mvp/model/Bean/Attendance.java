@@ -7,8 +7,9 @@ package com.coahr.thoughtrui.mvp.model.Bean;
  */
 public class Attendance {
 
+
     /**
-     * data : {"Cname":"09:00-17:00","Dname":"武汉仁和胜利车业有限公司","Pname":"SWM斯威汽车形象店运营检核表","areaAddress":"湖北省武汉市江岸区","attendance":{},"classId":"424ad558f1c4499988a4a9cba4c52ed0","closeStatus":0,"code":"C类","count":48,"dealerId":"aca1cfd2b5514f62a576153f16c08802","endTime":1,"latitude":30.662118,"location":"竹叶山中环商贸城C9-11","longitude":114.30359,"notice":"的撒啊实打实打算多阿达撒打算的啊实打实打撒大所啊实打实打撒大所啊实打实打阿萨德啊实打实打算多啊实打实打撒大声地啊实打实打撒打算啊实打实打撒大所","projectId":"e274a447c8e44f4396c031d4e933606e","startTime":1531450950920}
+     * data : {"Cname":"自由班次","Dname":"一汽奥迪武汉客厅店","Pname":"项目B1","areaAddress":"湖北省武汉市东西湖区","attendance":{"endLocationStatus":1,"endTimeStatus":1,"id":"8447e7a9d74745dab932eef5fa5aa6c4","inLat":30.62002,"inLng":114.136886,"inTime":1529383834194,"outLat":30.62002,"outLng":114.136886,"outTime":1529387996985,"startLocationStatus":-1,"startTimeStatus":1},"classId":"bb8e3d0f8cf7461fb1b95395b1034c2b","closeStatus":0,"code":"1111111","count":0,"dealerId":"9952cc55fec14d3b922d7e1d96ba3497","endTime":1,"latitude":30.62002,"location":"武汉客厅","longitude":114.136886,"notice":"","projectId":"c89c42ec8cef4f7794c6fc6920e4365d","startTime":1529032353245}
      * msg : 请求成功
      * result : 1
      */
@@ -43,23 +44,23 @@ public class Attendance {
 
     public static class DataBean {
         /**
-         * Cname : 09:00-17:00
-         * Dname : 武汉仁和胜利车业有限公司
-         * Pname : SWM斯威汽车形象店运营检核表
-         * areaAddress : 湖北省武汉市江岸区
-         * attendance : {}
-         * classId : 424ad558f1c4499988a4a9cba4c52ed0
+         * Cname : 自由班次
+         * Dname : 一汽奥迪武汉客厅店
+         * Pname : 项目B1
+         * areaAddress : 湖北省武汉市东西湖区
+         * attendance : {"endLocationStatus":1,"endTimeStatus":1,"id":"8447e7a9d74745dab932eef5fa5aa6c4","inLat":30.62002,"inLng":114.136886,"inTime":1529383834194,"outLat":30.62002,"outLng":114.136886,"outTime":1529387996985,"startLocationStatus":-1,"startTimeStatus":1}
+         * classId : bb8e3d0f8cf7461fb1b95395b1034c2b
          * closeStatus : 0
-         * code : C类
-         * count : 48
-         * dealerId : aca1cfd2b5514f62a576153f16c08802
+         * code : 1111111
+         * count : 0
+         * dealerId : 9952cc55fec14d3b922d7e1d96ba3497
          * endTime : 1
-         * latitude : 30.662118
-         * location : 竹叶山中环商贸城C9-11
-         * longitude : 114.30359
-         * notice : 的撒啊实打实打算多阿达撒打算的啊实打实打撒大所啊实打实打撒大所啊实打实打阿萨德啊实打实打算多啊实打实打撒大声地啊实打实打撒打算啊实打实打撒大所
-         * projectId : e274a447c8e44f4396c031d4e933606e
-         * startTime : 1531450950920
+         * latitude : 30.62002
+         * location : 武汉客厅
+         * longitude : 114.136886
+         * notice :
+         * projectId : c89c42ec8cef4f7794c6fc6920e4365d
+         * startTime : 1529032353245
          */
 
         private String Cname;
@@ -217,7 +218,119 @@ public class Attendance {
         }
 
         public static class AttendanceBean {
+            /**
+             * endLocationStatus : 1
+             * endTimeStatus : 1
+             * id : 8447e7a9d74745dab932eef5fa5aa6c4
+             * inLat : 30.62002
+             * inLng : 114.136886
+             * inTime : 1529383834194
+             * outLat : 30.62002
+             * outLng : 114.136886
+             * outTime : 1529387996985
+             * startLocationStatus : -1
+             * startTimeStatus : 1
+             */
 
+            private int endLocationStatus;
+            private int endTimeStatus;
+            private String id;
+            private double inLat;
+            private double inLng;
+            private long inTime;
+            private double outLat;
+            private double outLng;
+            private long outTime;
+            private int startLocationStatus;
+            private int startTimeStatus;
+
+            public int getEndLocationStatus() {
+                return endLocationStatus;
+            }
+
+            public void setEndLocationStatus(int endLocationStatus) {
+                this.endLocationStatus = endLocationStatus;
+            }
+
+            public int getEndTimeStatus() {
+                return endTimeStatus;
+            }
+
+            public void setEndTimeStatus(int endTimeStatus) {
+                this.endTimeStatus = endTimeStatus;
+            }
+
+            public String getId() {
+                return id;
+            }
+
+            public void setId(String id) {
+                this.id = id;
+            }
+
+            public double getInLat() {
+                return inLat;
+            }
+
+            public void setInLat(double inLat) {
+                this.inLat = inLat;
+            }
+
+            public double getInLng() {
+                return inLng;
+            }
+
+            public void setInLng(double inLng) {
+                this.inLng = inLng;
+            }
+
+            public long getInTime() {
+                return inTime;
+            }
+
+            public void setInTime(long inTime) {
+                this.inTime = inTime;
+            }
+
+            public double getOutLat() {
+                return outLat;
+            }
+
+            public void setOutLat(double outLat) {
+                this.outLat = outLat;
+            }
+
+            public double getOutLng() {
+                return outLng;
+            }
+
+            public void setOutLng(double outLng) {
+                this.outLng = outLng;
+            }
+
+            public long getOutTime() {
+                return outTime;
+            }
+
+            public void setOutTime(long outTime) {
+                this.outTime = outTime;
+            }
+
+            public int getStartLocationStatus() {
+                return startLocationStatus;
+            }
+
+            public void setStartLocationStatus(int startLocationStatus) {
+                this.startLocationStatus = startLocationStatus;
+            }
+
+            public int getStartTimeStatus() {
+                return startTimeStatus;
+            }
+
+            public void setStartTimeStatus(int startTimeStatus) {
+                this.startTimeStatus = startTimeStatus;
+            }
         }
     }
 }

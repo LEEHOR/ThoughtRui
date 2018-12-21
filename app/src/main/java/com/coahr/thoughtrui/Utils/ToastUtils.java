@@ -2,6 +2,7 @@ package com.coahr.thoughtrui.Utils;
 
 import android.app.Activity;
 
+import android.content.Context;
 import android.view.Gravity;
 
 import android.view.View;
@@ -23,9 +24,9 @@ public class ToastUtils {
 		mToast.show();
 	}
 
-	public static void showShort(Activity activity, String text) {
+	public static void showShort( String text) {
 		if (mToast == null) {
-			mToast = Toast.makeText(activity, text, Toast.LENGTH_SHORT);
+			mToast = Toast.makeText(BaseApplication.mContext, text, Toast.LENGTH_SHORT);
 		} else {
 			mToast.setText(text);
 		}

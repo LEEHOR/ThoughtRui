@@ -27,7 +27,7 @@ public interface PagerFragment_aC {
 
         void getImageFailure();
 
-        void getAnswerSuccess(AnswersDB answersDB);
+        void getAnswerSuccess(String Massage);
 
         void getAnswerFailure();
 
@@ -47,7 +47,7 @@ public interface PagerFragment_aC {
 
      interface Presenter extends BaseContract.Presenter {
 
-        void getSubject(String DbProjectId,int position);
+        void getSubject(String DbProjectId,String ht_ProjectId,int position);
 
         void getSubjectSuccess(SubjectsDB subjectsDB);
 
@@ -65,13 +65,16 @@ public interface PagerFragment_aC {
 
         void DeleteImageFailure(String Massage);
 
-        void getAnswer(int subject_id);
 
-         void getAnswerSuccess(AnswersDB answersDB);
+        void getAnswer(String ht_ProjectId,int position);
+
+         void getAnswerSuccess(String Massage);
 
         void getAnswerFailure();
 
-         void saveAnswers(String answers, String remark);
+
+
+         void saveAnswers(String answers, String remark,String ht_ProjectId,int position);
 
          void saveAnswersSuccess();
 
@@ -88,15 +91,15 @@ public interface PagerFragment_aC {
      interface Model extends BaseContract.Model {
 
 
-         void getSubject(String DbProjectId,int position);
+         void getSubject(String DbProjectId,String ht_ProjectId,int position);
 
         void getImage(String ht_ProjectId,int position);
 
-        void getAnswer(int subject_id);
+        void getAnswer(String ht_ProjectId,int position);
 
          void DeleteImage(String deleteImagePath);
 
-         void saveAnswers(String answers, String remark);
+         void saveAnswers(String answers, String remark,String ht_ProjectId,int position);
 
          void SaveImages(List<MediaBean> mediaBeanList,String ht_ProjectId,int position);
 

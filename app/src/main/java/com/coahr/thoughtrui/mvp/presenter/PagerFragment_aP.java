@@ -28,9 +28,9 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
 
 
     @Override
-    public void getSubject(String DbProjectId, int position) {
+    public void getSubject(String DbProjectId,String ht_ProjectId,int position) {
         if (mModle != null) {
-            mModle.getSubject(DbProjectId,position);
+            mModle.getSubject(DbProjectId,ht_ProjectId,position);
         }
     }
 
@@ -91,16 +91,16 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
     }
 
     @Override
-    public void getAnswer(int subject_id) {
+    public void getAnswer(String ht_ProjectId,int position) {
         if (mModle != null) {
-            mModle.getAnswer(subject_id);
+            mModle.getAnswer(ht_ProjectId,position);
         }
     }
 
     @Override
-    public void getAnswerSuccess(AnswersDB answersDB) {
+    public void getAnswerSuccess(String message) {
         if (getView() != null) {
-            getView().getAnswerSuccess(answersDB);
+            getView().getAnswerSuccess(message);
         }
     }
 
@@ -112,9 +112,9 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
     }
 
     @Override
-    public void saveAnswers(String answers,String remark) {
+    public void saveAnswers(String answers,String remark,String ht_ProjectId,int position) {
         if (mModle != null) {
-            mModle.saveAnswers(answers,remark);
+            mModle.saveAnswers(answers,remark,ht_ProjectId,position);
         }
     }
 

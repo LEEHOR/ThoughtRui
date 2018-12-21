@@ -28,6 +28,8 @@ import me.yokeyword.fragmentation.SupportFragment;
  * on 11:05
  */
 public class AttendanceRootActivity extends BaseSupportActivity {
+    @BindView(R.id.top_line)
+    LinearLayout top_line;
     @BindView(R.id.myTitle)
     MyTittleBar myTitle;
     @BindView(R.id.project_name)
@@ -84,10 +86,13 @@ public class AttendanceRootActivity extends BaseSupportActivity {
         }
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+
     }
 
     @Override
     public void initView() {
+        top_line.setPadding(top_line.getPaddingLeft(), ScreenUtils.getStatusBarHeight(BaseApplication.mContext), top_line.getPaddingRight(), top_line.getPaddingBottom());
+
         left_lin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,7 +123,7 @@ public class AttendanceRootActivity extends BaseSupportActivity {
         iv_select_k.toggle(false);
         tv_select_k.toggle(false);
         loadMultipleRootFragment(R.id.attachment_root, 0, mFragments);
-
+        showFragment(0);
     }
 
     private void showFragment(int position) {

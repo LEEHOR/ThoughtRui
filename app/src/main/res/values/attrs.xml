@@ -25,4 +25,9 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:backgroundDimEnabled">false</item>
     </style>
+<!--输入键盘-->
+    <declare-styleable name="AnFQNumEditText">
+        <attr name="mostCount" format="integer" />
+        <attr name="hint" format="string" />
+    </declare-styleable>
 </resources>

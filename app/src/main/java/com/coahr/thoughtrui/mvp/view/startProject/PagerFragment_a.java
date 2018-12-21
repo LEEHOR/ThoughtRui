@@ -2,12 +2,13 @@ package com.coahr.thoughtrui.mvp.view.startProject;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatDialogFragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -15,24 +16,27 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.coahr.thoughtrui.DBbean.AnswersDB;
-import com.coahr.thoughtrui.DBbean.ImagesDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
-import com.coahr.thoughtrui.Utils.StoreSpaceUtils;
+import com.coahr.thoughtrui.Utils.DensityUtils;
+import com.coahr.thoughtrui.Utils.FileIoUtils.SaveOrGetAnswers;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
-import com.coahr.thoughtrui.mvp.Base.BaseContract;
-import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.PagerFragment_aC;
+import com.coahr.thoughtrui.mvp.model.Bean.PagePostEvent;
+import com.coahr.thoughtrui.mvp.model.Bean.isCompleteBean;
 import com.coahr.thoughtrui.mvp.presenter.PagerFragment_aP;
+import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
 import com.coahr.thoughtrui.mvp.view.startProject.adapter.PagerFragmentPhotoAdapter;
 import com.coahr.thoughtrui.mvp.view.startProject.adapter.PagerFragmentPhotoListener;
-import com.coahr.thoughtrui.mvp.view.startProject.adapter.StartProjectAdapter;
-import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
+import com.coahr.thoughtrui.widgets.AltDialog.EvaluateInputDialogFragment;
 import com.socks.library.KLog;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.util.List;
@@ -46,7 +50,6 @@ import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultDisposable;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
-import cn.finalteam.rxgalleryfinal.ui.fragment.MediaGridFragment;
 
 /**
  * Created by Leehor
@@ -54,7 +57,7 @@ import cn.finalteam.rxgalleryfinal.ui.fragment.MediaGridFragment;
  * on 18:31
  * 单选题类型
  */
-public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presenter> implements PagerFragment_aC.View {
+public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presenter> implements PagerFragment_aC.View,View.OnClickListener {
 
   @Inject
     PagerFragment_aP p;
@@ -69,16 +72,16 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     @BindView(R.id.project_detail)  //描述
     TextView project_detail;
     @BindView(R.id.user_remark)  //题目说明
-    EditText user_remark;
+            TextView user_remark;
     @BindView(R.id.take_photo)  //拍照
     TextView take_photo;
     @BindView(R.id.project_imageRecycler)
     RecyclerView project_imageRecycler;  //图片展示
-
-    @BindView(R.id.myTitle)  //toolbar
-    MyTittleBar myTitle;
-
-    private int position;
+    @BindView(R.id.left_lin)
+    LinearLayout left_lin;    //上翻页
+    @BindView(R.id.right_lin)
+    LinearLayout right_lin;  //下翻页
+    private  int position=0;
     private String dbProjectId;
 
     private int imageSize=0; //图片个数
@@ -87,14 +90,21 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     private boolean isDelete=false; //是否在删除操作
     private SubjectsDB subjectsDB;
     private String ht_projectId;
+    private PhotoAlbumDialogFragment photoAlbumDialogFragment;
+    private SpacesItemDecoration spacesItemDecoration;
+    EvaluateInputDialogFragment dialogFragment = EvaluateInputDialogFragment.newInstance();//评论输入窗口
+    String answers = null;
+    String remark=null;
+    private boolean isAnswer = false, isPhotos = false;
+    private int countSize;
 
-
-    public static PagerFragment_a newInstance(int position, String DbProjectId, String ht_ProjectId) {
+    public static PagerFragment_a newInstance(int position, String DbProjectId, String ht_ProjectId,int countSize) {
         PagerFragment_a pagerFragment_a=new PagerFragment_a();
         Bundle bundle=new Bundle();
         bundle.putInt("position",position);
         bundle.putString("DbProjectId",DbProjectId);
         bundle.putString("ht_ProjectId", ht_ProjectId);
+        bundle.putInt("countSize",countSize);
         pagerFragment_a.setArguments(bundle);
         return pagerFragment_a;
     }
@@ -111,31 +121,52 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
     @Override
     public void initView() {
-        myTitle.getRightText().setVisibility(View.VISIBLE);
-        myTitle.getRightText().setText("题目列表");
-        myTitle.getRightText().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                KLog.d("点击","右侧");
-            }
-        });
 
-        myTitle.getLeftIcon().setOnClickListener(new View.OnClickListener() {
+        take_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showDialog("提示","结束答题");
+                if (take_photo.getText().equals("点击拍照")) {
+                    if (imageSize < 10) {
+                        openMulti((10 - imageSize));
+                    } else {
+                        ToastUtils.showLong("图片数量足够");
+                    }
+                }
+                if (take_photo.getText().equals("取消删除")) {
+                    isDelete = false;
+                    take_photo.setText("点击拍照");
+                    p.getSubject(dbProjectId, ht_projectId, position);
+                }
+
             }
         });
-      take_photo.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (imageSize<10) {
-                openMulti((10-imageSize));
-            } else {
-                ToastUtils.showLong("图片数量足够");
+        dialogFragment.setOnInputCallback(new EvaluateInputDialogFragment.InputCallback() {
+            @Override
+            public void onInputSend(String input, AppCompatDialogFragment dialog) {
+                if (input != null && !input.equals("")) {
+                    KLog.d("输入", input);
+                    user_remark.setText(input);
+                    p.saveAnswers(answers, input, ht_projectId, position + 1);
+                    dialogFragment.dismiss();
+                }
+
+
             }
-        }
-      });
+        });
+        user_remark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogFragment.show(_mActivity.getSupportFragmentManager(), TAG);
+
+            }
+        });
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        spacesItemDecoration = new SpacesItemDecoration(DensityUtils.dp2px(BaseApplication.mContext, 2), DensityUtils.dp2px(BaseApplication.mContext, 2), getResources().getColor(R.color.colorPrimaryDark));
+
     }
 
     @Override
@@ -144,13 +175,25 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         photoManager = new GridLayoutManager(BaseApplication.mContext,5);
         project_imageRecycler.setLayoutManager(photoManager);
         project_imageRecycler.setAdapter(adapter);
+        if (project_imageRecycler.getItemDecorationCount() == 0) {
+            project_imageRecycler.addItemDecoration(spacesItemDecoration);
+        } else {
+            int itemDecorationCount = project_imageRecycler.getItemDecorationCount();
+            for (int i = 1; i < itemDecorationCount; i++) {
+                project_imageRecycler.removeItemDecorationAt(i);
+            }
+
+        }
         position = getArguments().getInt("position");
         dbProjectId = getArguments().getString("DbProjectId");
         ht_projectId = getArguments().getString("ht_ProjectId");
-        myTitle.getTvTittle().setText("第"+(position+1)+"题");
-        p.getSubject(dbProjectId,position);
+        countSize = getArguments().getInt("countSize");
+        KLog.d("参数", position, dbProjectId, ht_projectId);
+        p.getSubject(dbProjectId, ht_projectId, position);
         radio_group.setOnCheckedChangeListener(new RadioGroupListener());
         adapter.setListener(new PagerAdapterListener());
+        left_lin.setOnClickListener(this);
+        right_lin.setOnClickListener(this);
     }
 
     @Override
@@ -171,9 +214,13 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 }
             }
         }
-        KLog.d("题目的id", subjectsDB.getQuota1());
-        project_detail.setText(subjectsDB.getDescription() != null ? subjectsDB.getDescription() : "暂无说明");
-        ToastUtils.showLong("题目获取2" + subjectsDB.getHt_id());
+        String description = subjectsDB.getDescription();
+        if (description != null && !description.equals("")) {
+            project_detail.setVisibility(View.VISIBLE);
+            project_detail.setText(description);
+        } else {
+            project_detail.setVisibility(View.GONE);
+        }
 
     }
 
@@ -184,62 +231,106 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
     @Override
     public void getImageSuccess(List<String> imagePathList) {
-
-        imageSize = imagePathList.size();
-        if (isDelete){
-            adapter.setIsDel(true);
-            adapter.setNewData(imagePathList);
+        KLog.d("图片", imagePathList.size());
+        if (imagePathList.size() > 0) {
+            isPhotos = true;
+            imageSize = imagePathList.size();
+            if (isDelete) {
+                adapter.setIsDel(true);
+                adapter.setNewData(imagePathList);
+                adapter.setImageList(imagePathList);
+            } else {
+                adapter.setIsDel(false);
+                adapter.setNewData(imagePathList);
+                adapter.setImageList(imagePathList);
+            }
         } else {
+            isDelete = false;
             adapter.setIsDel(false);
             adapter.setNewData(imagePathList);
+            adapter.setImageList(imagePathList);
         }
+
     }
 
     @Override
     public void getImageFailure() {
-        KLog.d("获取图片失败1");
+        isDelete = false;
+        isPhotos = true;
     }
 
     @Override
-    public void getAnswerSuccess(AnswersDB answersDB) {
+    public void getAnswerSuccess(String message) {
+        if (message != null) {
+            String[] split = message.split("&");
+            if (split != null && split.length > 0) {
+                for (int i = 0; i < split.length; i++) {
+                    if (i==0) {
+                        String s = split[0];
+                        String string = SaveOrGetAnswers.getString(s, ":");
+                        if (string != null && !string.equals("") && !string.equals("null")) {
+                            answers=string;
+                            isAnswer=true;
+                            if (string.equals("是")){
+                                rbtn_t.toggle();
+                            }
+                            if (string.equals("否")){
+                                rbtn_f.toggle();
+                            }
+                            KLog.d("选择" + string);
+                        }
+                    }
+
+                    if (i==1){
+                          String s1 = split[1];
+                          String string1 = SaveOrGetAnswers.getString(s1, ":");
+                          if (string1 !=null && !string1.equals("") && !string1.equals("null")){
+                              remark=string1;
+                            user_remark.setText(string1);
+                          }
+                    }
+                }
+            }
+        }
 
 
     }
 
     @Override
     public void getAnswerFailure() {
-        KLog.d("获取答案失败1");
+        isAnswer=false;
     }
 
     @Override
     public void DeleteImageSuccess(String Massage) {
-        ToastUtils.showLong("删除"+Massage+"成功");
-        p.getSubject(dbProjectId,position);
+        ToastUtils.showLong(Massage);
+       // p.getSubject(dbProjectId, ht_projectId, position);
+        p.getImage(ht_projectId,position+1);
     }
 
     @Override
     public void DeleteImageFailure(String Massage) {
-            ToastUtils.showLong("删除"+Massage+"失败");
+        ToastUtils.showLong(Massage);
     }
 
     @Override
     public void saveAnswersSuccess() {
-
+        ToastUtils.showShort("答案保存成功");
     }
 
     @Override
     public void saveAnswersFailure() {
-
+        ToastUtils.showShort("答案保存失败");
     }
 
     @Override
     public void SaveImagesSuccess() {
-
+            ToastUtils.showShort("图片保存成功");
     }
 
     @Override
     public void SaveImagesFailure() {
-
+        ToastUtils.showShort("图片保存失败");
     }
 
 
@@ -260,10 +351,8 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
               protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
                   List<MediaBean> mediaBeanList = imageMultipleResultEvent.getResult();
                   if (mediaBeanList != null && mediaBeanList.size() > 0) {
+                      KLog.d(mediaBeanList.get(0).getOriginalPath());
                       p.SaveImages(mediaBeanList,ht_projectId,(position+1));
-                      Log.d("选择图片", "已选择" + imageMultipleResultEvent.getResult().size() + "张图片" );
-                      Toast.makeText(BaseApplication.mContext, "已选择" + imageMultipleResultEvent.getResult().size() + "张图片", Toast.LENGTH_SHORT).show();
-
                   }
               }
 
@@ -276,6 +365,31 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             .openGallery();
     }
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.left_lin:
+                KLog.d("position",position);
+                if (position > 0) {
+                    if (isComplete()) {
+                        EventBus.getDefault().post(new isCompleteBean(true,position,1));
+                    } else {
+                        ToastUtils.showLong("当前题目未完成");
+                    }
+                }
+                break;
+            case R.id.right_lin:
+                if (position < countSize) {
+                    if (isComplete()) {
+                        EventBus.getDefault().post(new isCompleteBean(true,position,2));
+                    } else {
+                        ToastUtils.showLong("当前题目未完成");
+                    }
+                }
+                break;
+        }
+    }
+
     /**
      * 图片监听
      */
@@ -283,21 +397,24 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
         @Override
         public void onClick(List<String> imageList, int position) {
-            PhotoAlbumDialogFragment fragment = PhotoAlbumDialogFragment.newInstance();
-            fragment.setImgList(imageList);
-            fragment.setFirstSeePosition(position);
+            photoAlbumDialogFragment = PhotoAlbumDialogFragment.newInstance();
+            photoAlbumDialogFragment.setImgList(imageList);
+            photoAlbumDialogFragment.setFirstSeePosition(position);
             FragmentManager fragmentManager = getFragmentManager();
-            fragment.show(fragmentManager, TAG);
+            photoAlbumDialogFragment.show(fragmentManager, TAG);
         }
 
         @Override
         public void onLongClick(List<String> imageList, int position) {
+            take_photo.setText("取消删除");
                 adapter.setIsDel(true);
             adapter.setImageList(imageList);
+            adapter.notifyDataSetChanged();
         }
 
         @Override
         public void onDel(List<String> imageList, int position) {
+            isDelete = true;
             p.DeleteImage(imageList.get(position));
         }
     }
@@ -328,8 +445,8 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         @Override
         public void onCheckedChanged(RadioGroup radioGroup, int i) {
             RadioButton button = radio_group.findViewById(i);
-            String answers = null;
-            if (!button.isChecked()) {
+
+            if (!button.isPressed()) {
                 return;
             }
             if (rbtn_t.isChecked()) {
@@ -338,7 +455,8 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             if (rbtn_f.isChecked()) {
                 answers = "否";
             }
-
+            KLog.d("选择", answers);
+            p.saveAnswers(answers, remark, ht_projectId, position + 1);
         }
     }
 
@@ -349,5 +467,25 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
         RxGalleryFinalApi.setImgSaveRxDir(new File(Constants.SAVE_DIR_TAKE_PHOTO));
         RxGalleryFinalApi.setImgSaveRxCropDir(new File(Constants.SAVE_DIR_ZIP_PHOTO));//裁剪会自动生成路径；也可以手动设置裁剪的路径；
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    /**
+     * 判断是否完成
+     *
+     * @return
+     */
+    private boolean isComplete() {
+        if (isPhotos && isAnswer) {
+            return true;
+        }
+        return false;
     }
 }

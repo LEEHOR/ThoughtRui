@@ -2,71 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
+    <com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar
+        android:id="@+id/p_mytitle"
+        app:tittle="题号"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <android.support.v4.view.ViewPager
+    </com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar>
+        <com.coahr.thoughtrui.widgets.CustomScrollViewPager
             android:id="@+id/project_viewPage"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
-        </android.support.v4.view.ViewPager>
+        </com.coahr.thoughtrui.widgets.CustomScrollViewPager>
 
-    <LinearLayout
-        android:padding="@dimen/dp_5"
-        android:background="@color/colorPrimary"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
 
-        <LinearLayout
-            android:id="@+id/left_lin"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/iv_last"
-                android:layout_width="@dimen/dp_20"
-                android:layout_height="@dimen/dp_20"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/last_start_project_iv" />
-
-            <TextView
-                android:id="@+id/tv_last"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:text="上一题"
-                android:textColor="@drawable/last_start_project_tv"
-                android:textSize="@dimen/dp_14" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/right_lin"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-            <ImageView
-                android:id="@+id/iv_next"
-                android:layout_width="@dimen/dp_20"
-                android:layout_height="@dimen/dp_20"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/next_start_project_iv"
-                />
-
-            <TextView
-                android:id="@+id/tv_next"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:text="下一题"
-                android:textColor="@drawable/next_start_project_tv"
-                android:textSize="@dimen/dp_14"
-                />
-        </LinearLayout>
-    </LinearLayout>
 </LinearLayout>

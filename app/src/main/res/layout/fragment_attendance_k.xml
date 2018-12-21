@@ -18,7 +18,7 @@
             android:textSize="@dimen/dp_14" />
 
         <TextView
-            android:id="@+id/tv_start_time"
+            android:id="@+id/tv_startOrEnd_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dp_10"
@@ -63,7 +63,7 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content">
           <RelativeLayout
-              android:id="@+id/tv_push_clock"
+              android:id="@+id/re_push_clock"
               android:layout_gravity="center"
               android:layout_width="150dp"
               android:layout_height="150dp"
@@ -79,7 +79,7 @@
                   android:layout_height="wrap_content" />
               <TextView
                   android:gravity="center"
-                  android:id="@+id/tv_clock"
+                  android:id="@+id/tv_time_clock"
                   android:textSize="@dimen/dp_12"
                   android:textColor="@color/colorPrimary"
                   android:layout_marginTop="@dimen/dp_5"
@@ -90,13 +90,14 @@
           </RelativeLayout>
       </FrameLayout>
     <LinearLayout
+        android:paddingTop="@dimen/dp_5"
+        android:paddingBottom="@dimen/dp_5"
         android:gravity="center_horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <TextView
             android:gravity="center"
-            android:text="dssdsd"
             android:id="@+id/location_message"
             android:textSize="@dimen/dp_12"
             android:textColor="@color/material_grey_550"

@@ -26,7 +26,7 @@ public class PagerFragmentPhotoAdapter extends BaseQuickAdapter<String,BaseViewH
     }
     public void setImageList(List<String> imageList){
         this.imageList=imageList;
-        notifyDataSetChanged();
+
     }
     public void setIsDel(boolean isDel){
         this.isDel=isDel;

@@ -42,7 +42,7 @@ public class AttendanceFM_k extends BaseModel<AttendanceFC_k.Presenter> implemen
     @Override
     public void startLocation() {
       initlocation();
-      getPresenter().startLocation();
+      baiduLocationHelper.startLocation();
     }
 
     @Override

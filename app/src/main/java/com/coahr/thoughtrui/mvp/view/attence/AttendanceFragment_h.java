@@ -4,6 +4,7 @@ import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
+import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.AttendanceFC_h;
 import com.coahr.thoughtrui.mvp.model.Bean.Attendance;
 import com.coahr.thoughtrui.mvp.model.Bean.Event_Attend;
@@ -21,7 +22,7 @@ import javax.inject.Inject;
  * on 2018/11/15
  * on 13:22
  */
-public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Presenter> implements AttendanceFC_h.View {
+public class AttendanceFragment_h extends BaseFragment<AttendanceFC_h.Presenter> implements AttendanceFC_h.View {
     @Inject
     AttendanceFP_h p;
 
@@ -30,8 +31,9 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
         return attendanceFragment_h;
     }
 
+
     @Override
-    public BaseContract.Presenter getPresenter() {
+    public AttendanceFC_h.Presenter getPresenter() {
         return p;
     }
 

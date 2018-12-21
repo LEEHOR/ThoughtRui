@@ -6,15 +6,17 @@ package com.coahr.thoughtrui.mvp.model.Bean;
  * on 13:37
  */
 public class Event_Main {
-    private int isLoad;
-    private String Message;
-
+    private int isLoad;  //登陆状态
+    private String Message; //文字描述
+    private int page;    //当前页面
     public Event_Main() {
+
     }
 
-    public Event_Main(int isLoad, String message) {
+    public Event_Main(int isLoad, String message, int page) {
         this.isLoad = isLoad;
         Message = message;
+        this.page = page;
     }
 
     public int getIsLoad() {
@@ -31,5 +33,13 @@ public class Event_Main {
 
     public void setMessage(String message) {
         Message = message;
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
     }
 }
