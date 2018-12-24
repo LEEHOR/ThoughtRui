@@ -29,4 +29,17 @@ public class TimeUtils {
             return startTime;
         }
     }
+
+    public static String getStingYMDHM(long date){
+        String startTime;
+        if (date == 1){
+            startTime="结束公开";
+            return  startTime;
+        } else {
+            Date d = new Date(date);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            startTime = sdf.format(d);
+            return startTime;
+        }
+    }
 }

@@ -47,7 +47,7 @@ public class Constants {
     /**
      * 工程图片位置
      */
-    public static String SAVE_DIR_PROJECT_PHOTO = SAVE_DIR_BASE.concat("projectPhoto/");
+    public static String SAVE_DIR_PROJECT_Document = SAVE_DIR_BASE.concat("projectDocument/");
     /**
      * 压缩图片存储位置
      */

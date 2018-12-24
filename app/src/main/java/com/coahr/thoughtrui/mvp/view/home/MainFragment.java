@@ -93,28 +93,35 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
     @Override
     public void initData() {
             if (sessionId !=null){
-                p.startLocation();
+                KLog.d("首页定位------3------3-------3------3----3---");
+                p.startLocation(1);
             }
     }
 
     @Override
     public void onLocationSuccess(BDLocation location) {
-        KLog.d("定位成功fragment", location.getAddrStr());
-        Constants.Latitude=location.getLatitude();
-        Constants.Longitude=location.getLongitude();
-        Map<String, Object> map = new HashMap<>();
-        map.put("latitude", Constants.Latitude);
-        map.put("longitude", Constants.Longitude);
-        map.put("sessionId", Constants.sessionId);
-        p.getHomeData(map);
+        KLog.d("首页定位------4------4-------4------4----4---"+"type");
+
+            KLog.d("定位成功fragment", location.getAddrStr());
+            Constants.Latitude = location.getLatitude();
+            Constants.Longitude = location.getLongitude();
+            Map<String, Object> map = new HashMap<>();
+            map.put("latitude", Constants.Latitude);
+            map.put("longitude", Constants.Longitude);
+            map.put("sessionId", Constants.sessionId);
+            KLog.d("首页定位------5------5-------5------5----5---"+"type");
+            p.getHomeData(map);
+
     }
 
     @Override
     public void onLocationFailure(int failure) {
-        if (Constants.location_counts<=3) {
-            Constants.location_counts++;
-             p.startLocation();
-        }
+
+            if (Constants.location_counts <= 3) {
+                Constants.location_counts++;
+                p.startLocation(1);
+            }
+
     }
 
     @Override
@@ -236,7 +243,8 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
     public void Event(Event_Main messageEvent) {
         if (messageEvent.getIsLoad()==1 && messageEvent.getPage()==0){
             sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, "sessionId", null);
-            p.startLocation();
+            p.startLocation(1);
+            KLog.d("首页定位------2----2-------2---------------2");
         }
     }
 }

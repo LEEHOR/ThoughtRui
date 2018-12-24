@@ -20,6 +20,10 @@ public class ApiContact {
     public static final String remark="app/attendance/remark.htm";
     //题目信息接口
     public static final String getSubjects="app/question/list.htm";
+    //考勤打卡
+    public static final String getPushAttendance="app/attendance/signIn.htm";
+    //考勤接触历史
+    public static final String  AttendanceHistory="app/attendance/history.htm";
 
 
 }

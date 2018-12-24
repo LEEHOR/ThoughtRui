@@ -22,7 +22,8 @@ import javax.inject.Inject;
  * on 15:49
  */
 public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implements MyTabFragmentC.Model {
-
+    private  int locationType=3;
+    private int type;
     @Inject
     public MyTabFragmentM() {
         super();
@@ -32,21 +33,30 @@ public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implemen
     private BaiduLocationHelper.OnLocationCallBack onLocationCallBack = new BaiduLocationHelper.OnLocationCallBack() {
         @Override
         public void onLocationSuccess(BDLocation location) {
-            if (getPresenter() != null) {
-                getPresenter().onLocationSuccess(location);
-                baiduLocationHelper.stopLocation();
+            if (locationType ==type){
+                if (getPresenter() != null) {
+                    getPresenter().onLocationSuccess(location);
+                    baiduLocationHelper.stopLocation();
+                }
+                type=0;
             }
+
         }
 
         @Override
         public void onLocationFailure(int locType) {
-            if (getPresenter() != null) {
-                getPresenter().onLocationFailure(locType);
+            if (locationType ==type){
+                if (getPresenter() != null) {
+                    getPresenter().onLocationFailure(locType);
+                }
+                type=0;
             }
+
         }
     };
     @Override
-    public void startLocation() {
+    public void startLocation(int type) {
+        this.type =type;
         initlocation();
         baiduLocationHelper.startLocation();
     }

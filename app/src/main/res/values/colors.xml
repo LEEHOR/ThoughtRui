@@ -52,6 +52,12 @@
     <!--绿色-->
     <color name="green_1">#65cc00</color>
     <color name="green_2">#00b472</color>
-    <!---->
+    <!--红色-->
+    <color name="material_red_300">#f36c60</color>
+    <color name="red_ea3340">#ea3340</color>
+    <color name="red_1">#DC143C</color>
+    <color name="material_red_500">#e51c23</color>
+    <color name="material_red_600">#dd191d</color>
+    <color name="material_red_A700">#e00032</color>
 
 </resources>

@@ -2,8 +2,10 @@ package com.coahr.thoughtrui.mvp.model;
 
 import com.coahr.thoughtrui.mvp.model.Bean.AttendRemark;
 import com.coahr.thoughtrui.mvp.model.Bean.Attendance;
+import com.coahr.thoughtrui.mvp.model.Bean.AttendanceHistory;
 import com.coahr.thoughtrui.mvp.model.Bean.HomeDataList;
 import com.coahr.thoughtrui.mvp.model.Bean.LoginBean;
+import com.coahr.thoughtrui.mvp.model.Bean.PushAttendanceCard;
 import com.coahr.thoughtrui.mvp.model.Bean.QuestionBean;
 
 import java.util.Map;
@@ -69,4 +71,23 @@ public interface ApiService {
     @FormUrlEncoded
     @POST(ApiContact.getSubjects)
     Call<QuestionBean> getSubjects(@FieldMap Map<String, Object> para);
+
+    /**
+     * 考勤打卡
+     * @param para
+     * @return
+     */
+    @FormUrlEncoded
+    @POST(ApiContact.getPushAttendance)
+    Call<PushAttendanceCard> getPushAttendance(@FieldMap Map<String, Object> para);
+
+
+    /**
+     * 考勤历史
+     * @param para
+     * @return
+     */
+    @FormUrlEncoded
+    @POST(ApiContact.AttendanceHistory)
+    Call<AttendanceHistory> AttendanceHistory(@FieldMap Map<String, Object> para);
 }

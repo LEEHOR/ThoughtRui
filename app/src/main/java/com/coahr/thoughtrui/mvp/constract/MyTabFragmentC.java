@@ -35,7 +35,7 @@ public interface MyTabFragmentC {
 
     interface Presenter extends BaseContract.Presenter {
 
-        void startLocation();
+        void startLocation(int type);
 
         void onLocationSuccess(BDLocation location);
 
@@ -63,7 +63,7 @@ public interface MyTabFragmentC {
 
     interface Model extends BaseContract.Model {
 
-        void startLocation();
+        void startLocation(int type);
 
         void getHomeData(Map map);
 

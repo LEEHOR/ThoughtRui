@@ -8,7 +8,10 @@ import android.widget.TextView;
 
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.ScreenUtils;
+import com.coahr.thoughtrui.Utils.TimeUtils;
+import com.coahr.thoughtrui.mvp.Base.BaseActivity;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
+import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.Base.BaseSupportActivity;
 import com.coahr.thoughtrui.mvp.model.Bean.Event_Attend;
 import com.coahr.thoughtrui.widgets.SelectImageView;
@@ -68,7 +71,11 @@ public class AttendanceRootActivity extends BaseSupportActivity {
      */
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void Event(Event_Attend messageEvent) {
-
+        project_name.setText(messageEvent.getProject_name());
+        project_company_name.setText(messageEvent.getProject_companyName());
+        project_company_address.setText(messageEvent.getProject_companyAddress());
+        project_code.setText(messageEvent.getProject_code());
+        tv_start_time.setText(TimeUtils.getStringDate_start(messageEvent.getStart_time())+"～"+TimeUtils.getStringDate_end(messageEvent.getEnd_time()));
     }
     @Override
     public int binLayout() {
@@ -122,11 +129,13 @@ public class AttendanceRootActivity extends BaseSupportActivity {
     public void initData() {
         iv_select_k.toggle(false);
         tv_select_k.toggle(false);
+        //loadRootFragment(R.id.attachment_root, mFragments[0]);
         loadMultipleRootFragment(R.id.attachment_root, 0, mFragments);
         showFragment(0);
     }
 
     private void showFragment(int position) {
+        //replaceFragment(mFragments[position],false);
         showHideFragment(mFragments[position], mFragments[bottomNavigationPreposition]);
         bottomNavigationPreposition = position;
     }

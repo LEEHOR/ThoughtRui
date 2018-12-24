@@ -1,9 +1,11 @@
 package com.coahr.thoughtrui.mvp.constract;
 
 import com.baidu.location.BDLocation;
+import com.coahr.thoughtrui.Utils.BaiDuLocation.BaiduLocationHelper;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.model.Bean.AttendRemark;
 import com.coahr.thoughtrui.mvp.model.Bean.Attendance;
+import com.coahr.thoughtrui.mvp.model.Bean.PushAttendanceCard;
 
 import java.util.Map;
 
@@ -15,9 +17,9 @@ import java.util.Map;
 public interface AttendanceFC_k {
     interface View extends BaseContract.View {
 
-        void onLocationSuccess(BDLocation location);
+        void LocationSuccess(BDLocation location);
 
-        void onLocationFailure(int failure);
+        void LocationFailure(int failure);
 
         void getMainDataSuccess(Attendance attendance);
 
@@ -26,16 +28,24 @@ public interface AttendanceFC_k {
         void sendRemarkSuccess(AttendRemark attendRemark);
 
         void sendRemarkFailure(String failure);
+
+        void LocationContinuouslySuccess(BDLocation location, BaiduLocationHelper baiduLocationHelper);
+
+        void LocationContinuouslyFailure(int failure,BaiduLocationHelper baiduLocationHelper);
+
+        void getPushSuccess(PushAttendanceCard pushAttendanceCard);
+
+        void getPushFail(String failure );
 
     }
 
     interface Presenter extends BaseContract.Presenter {
 
-        void startLocation();
+        void startLocations(int type);
 
-        void onLocationSuccess(BDLocation location);
+        void LocationSuccess(BDLocation location);
 
-        void onLocationFailure(int failure);
+        void LocationFailure(int failure);
 
         void getMainData(Map<String,Object> map);
 
@@ -48,14 +58,28 @@ public interface AttendanceFC_k {
         void sendRemarkSuccess(AttendRemark attendRemark);
 
         void sendRemarkFailure(String failure);
+
+        void LocationContinuouslySuccess(BDLocation location, BaiduLocationHelper baiduLocationHelper);
+
+        void LocationContinuouslyFailure(int failure,BaiduLocationHelper baiduLocationHelper);
+
+        void getPushCard(Map<String,Object> map);
+
+        void getPushSuccess(PushAttendanceCard pushAttendanceCard);
+
+        void getPushFail(String failure );
+
     }
 
     interface Model extends BaseContract.Model {
 
-        void startLocation();
+        void getPushCard(Map<String,Object> map);
+
+        void startLocations(int type);
 
         void getMainData(Map<String,Object> map);
 
         void sendRemark(Map<String,Object> map);
+
     }
 }

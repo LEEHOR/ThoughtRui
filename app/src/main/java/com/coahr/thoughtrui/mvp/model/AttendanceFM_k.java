@@ -6,6 +6,7 @@ import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.AttendanceFC_k;
 import com.coahr.thoughtrui.mvp.model.Bean.AttendRemark;
 import com.coahr.thoughtrui.mvp.model.Bean.Attendance;
+import com.coahr.thoughtrui.mvp.model.Bean.PushAttendanceCard;
 
 import java.util.Map;
 
@@ -21,26 +22,69 @@ public class AttendanceFM_k extends BaseModel<AttendanceFC_k.Presenter> implemen
     public AttendanceFM_k() {
         super();
     }
+
+  private int LocationType = 2;
+  private int  continuously=4;
+  private int type;
   @Inject
   BaiduLocationHelper baiduLocationHelper;
+
   private BaiduLocationHelper.OnLocationCallBack onLocationCallBack = new BaiduLocationHelper.OnLocationCallBack() {
     @Override
     public void onLocationSuccess(BDLocation location) {
-      if (getPresenter() != null) {
-        getPresenter().onLocationSuccess(location);
-        baiduLocationHelper.stopLocation();
+      if (LocationType == type) {
+        if (getPresenter() != null) {
+          getPresenter().LocationSuccess(location);
+          baiduLocationHelper.stopLocation();
+        }
+        type = 0;
       }
+      //连续定位成功
+      if (continuously == type){
+        if (getPresenter() != null) {
+          getPresenter().LocationContinuouslySuccess(location,baiduLocationHelper);
+        }
+      }
+
     }
 
     @Override
     public void onLocationFailure(int locType) {
-      if (getPresenter() != null) {
-        getPresenter().onLocationFailure(locType);
+      if (LocationType == type) {
+        if (getPresenter() != null) {
+          getPresenter().LocationFailure(locType);
+        }
+        type=0;
+      }
+      //连续定位失败
+      if (continuously == type){
+        if (getPresenter() != null) {
+          getPresenter().LocationContinuouslyFailure(locType,baiduLocationHelper);
+        }
       }
     }
   };
-    @Override
-    public void startLocation() {
+
+  @Override
+  public void getPushCard(Map<String, Object> map) {
+    mRxManager.add(createFlowable(new SimpleFlowableOnSubscribe<PushAttendanceCard>(getApiService().getPushAttendance(map)))
+            .subscribeWith(new SimpleDisposableSubscriber<PushAttendanceCard>() {
+      @Override
+      public void _onNext(PushAttendanceCard pushAttendanceCard) {
+        if (getPresenter() != null) {
+          if (pushAttendanceCard.getResult()==1) {
+            getPresenter().getPushSuccess(pushAttendanceCard);
+          }else {
+            getPresenter().getPushFail(pushAttendanceCard.getMsg());
+          }
+        }
+      }
+    }));
+  }
+
+  @Override
+    public void startLocations(int type) {
+      this.type = type;
       initlocation();
       baiduLocationHelper.startLocation();
     }

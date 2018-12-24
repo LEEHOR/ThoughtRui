@@ -1,11 +1,13 @@
 package com.coahr.thoughtrui.mvp.presenter;
 
 import com.baidu.location.BDLocation;
+import com.coahr.thoughtrui.Utils.BaiDuLocation.BaiduLocationHelper;
 import com.coahr.thoughtrui.mvp.Base.BasePresenter;
 import com.coahr.thoughtrui.mvp.constract.AttendanceFC_k;
 import com.coahr.thoughtrui.mvp.model.AttendanceFM_k;
 import com.coahr.thoughtrui.mvp.model.Bean.AttendRemark;
 import com.coahr.thoughtrui.mvp.model.Bean.Attendance;
+import com.coahr.thoughtrui.mvp.model.Bean.PushAttendanceCard;
 import com.coahr.thoughtrui.mvp.view.attence.AttendanceFragment_k;
 
 import java.util.Map;
@@ -25,23 +27,23 @@ public class AttendanceFP_k extends BasePresenter<AttendanceFC_k.View,Attendance
     }
 
     @Override
-    public void startLocation() {
+    public void startLocations( int type) {
         if (mModle != null) {
-            mModle.startLocation();
+            mModle.startLocations(type);
         }
     }
 
     @Override
-    public void onLocationSuccess(BDLocation location) {
+    public void LocationSuccess(BDLocation location) {
         if (getView() != null) {
-            getView().onLocationSuccess(location);
+            getView().LocationSuccess(location);
         }
     }
 
     @Override
-    public void onLocationFailure(int failure) {
+    public void LocationFailure(int failure) {
         if (getView() != null) {
-            getView().onLocationFailure(failure);
+            getView().LocationFailure(failure);
         }
     }
 
@@ -84,6 +86,41 @@ public class AttendanceFP_k extends BasePresenter<AttendanceFC_k.View,Attendance
     public void sendRemarkFailure(String failure) {
         if (getView() != null) {
             getView().sendRemarkFailure(failure);
+        }
+    }
+
+    @Override
+    public void LocationContinuouslySuccess(BDLocation location, BaiduLocationHelper baiduLocationHelper) {
+        if (getView() != null) {
+            getView().LocationContinuouslySuccess(location,baiduLocationHelper);
+        }
+    }
+
+    @Override
+    public void LocationContinuouslyFailure(int failure,BaiduLocationHelper baiduLocationHelper) {
+        if (getView() != null) {
+            getView().LocationContinuouslyFailure(failure,baiduLocationHelper);
+        }
+    }
+
+    @Override
+    public void getPushCard(Map<String, Object> map) {
+        if (mModle != null) {
+            mModle.getPushCard(map);
+        }
+    }
+
+    @Override
+    public void getPushSuccess(PushAttendanceCard pushAttendanceCard) {
+        if (getView() != null) {
+            getView().getPushSuccess(pushAttendanceCard);
+        }
+    }
+
+    @Override
+    public void getPushFail(String failure) {
+        if (getView() != null) {
+            getView().getPushFail(failure);
         }
     }
 }

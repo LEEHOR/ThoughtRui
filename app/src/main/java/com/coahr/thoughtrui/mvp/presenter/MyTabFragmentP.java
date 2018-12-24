@@ -26,9 +26,9 @@ public class MyTabFragmentP extends BasePresenter<MyTabFragmentC.View,MyTabFragm
     }
 
     @Override
-    public void startLocation() {
+    public void startLocation(int type) {
         if (mModle != null) {
-            mModle.startLocation();
+            mModle.startLocation(type);
         }
     }
 

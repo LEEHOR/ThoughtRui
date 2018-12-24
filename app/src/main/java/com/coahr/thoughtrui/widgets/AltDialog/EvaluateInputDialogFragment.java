@@ -38,6 +38,8 @@ public class EvaluateInputDialogFragment extends AppCompatDialogFragment {
     AnFQNumEditText etInput;
     @BindView(R.id.tv_send)
     TextView tvSend;
+    @BindView(R.id.text_count)
+    TextView text_count;
     Unbinder unbinder;
 
     private InputCallback inputCallback;

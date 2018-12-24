@@ -4,6 +4,7 @@ import com.coahr.thoughtrui.mvp.Base.BasePresenter;
 import com.coahr.thoughtrui.mvp.constract.AttendanceFC_h;
 import com.coahr.thoughtrui.mvp.model.AttendanceFM_h;
 import com.coahr.thoughtrui.mvp.model.Bean.Attendance;
+import com.coahr.thoughtrui.mvp.model.Bean.AttendanceHistory;
 import com.coahr.thoughtrui.mvp.view.attence.AttendanceFragment_h;
 
 import java.util.Map;
@@ -40,6 +41,27 @@ public class AttendanceFP_h extends BasePresenter<AttendanceFC_h.View,Attendance
     public void getMainDataFailure(String failure) {
         if (getView() != null) {
             getView().getMainDataFailure(failure);
+        }
+    }
+
+    @Override
+    public void getAttendanceHistory(Map<String, Object> map) {
+        if (mModle != null) {
+            mModle.getAttendanceHistory(map);
+        }
+    }
+
+    @Override
+    public void getAttendanceHistorySuccess(AttendanceHistory history) {
+        if (getView() != null) {
+            getView().getAttendanceHistorySuccess(history);
+        }
+    }
+
+    @Override
+    public void getAttendanceHistoryFailure(String failure) {
+        if (getView() != null) {
+            getView().getAttendanceHistoryFailure(failure);
         }
     }
 

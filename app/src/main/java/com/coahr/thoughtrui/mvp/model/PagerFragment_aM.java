@@ -51,7 +51,7 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
     @Override
     public void getImage(String ht_ProjectId,int position) {
         //获取当前题目下的图片
-        List<String> picturesList = FileIOUtils.getPictures(Constants.SAVE_DIR_PROJECT_PHOTO + ht_ProjectId + "/" + position);
+        List<String> picturesList = FileIOUtils.getPictures(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + position);
         if (picturesList != null) {
             getPresenter().getImageSuccess(picturesList);
         } else {
@@ -61,7 +61,7 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
 
     @Override
     public void getAnswer(String ht_ProjectId,int position) {
-        String s = SaveOrGetAnswers.readFromFile(Constants.SAVE_DIR_PROJECT_PHOTO + ht_ProjectId + "/" + position + "/");
+        String s = SaveOrGetAnswers.readFromFile(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + position + "/");
         if (s != null) {
             getPresenter().getAnswerSuccess(s);
         } else {
@@ -81,7 +81,7 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
 
     @Override
     public void saveAnswers(String answers, String remark,String ht_ProjectId,int position ) {
-        boolean b = SaveOrGetAnswers.saveToFile(Constants.SAVE_DIR_PROJECT_PHOTO + ht_ProjectId + "/" + position + "/", "1答案:"+answers + "&2备注:"+remark, false);
+        boolean b = SaveOrGetAnswers.saveToFile(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + position + "/", "1答案:"+answers + "&2备注:"+remark, false);
         if (b) {
             getPresenter().saveAnswersSuccess();
         } else {
@@ -96,7 +96,7 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
             public void run() {
                 for (int i = 0; i <mediaBeanList.size() ; i++) {
                     String originalPath = mediaBeanList.get(i).getOriginalPath();
-                    FileIOUtils.copyFile(originalPath, Constants.SAVE_DIR_PROJECT_PHOTO + ht_ProjectId + "/" + position + "/", FileIOUtils.getE(originalPath, "/"));
+                    FileIOUtils.copyFile(originalPath, Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + position + "/", FileIOUtils.getE(originalPath, "/"));
                 }
             }
         }).start();

@@ -131,7 +131,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
                     if (isLoad) {
                         getDate();
                     } else {
-                        p.startLocation();
+                        p.startLocation(3);
                     }
                 } else {  //离线数据查询本地
 
@@ -176,7 +176,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
             tab_off_recyclerView.removeItemDecoration(spacesItemDecoration);
         }
         if (isNetworkAvailable()) {  //有网络
-            p.startLocation();
+            p.startLocation(3);
             tabFAdapter.setAdapter_online(new MyTabFOnLineAdapter.adapter_online() {
                 @Override
                 public void newListClick(HomeDataList.DataBean.newListBean newListBean) {

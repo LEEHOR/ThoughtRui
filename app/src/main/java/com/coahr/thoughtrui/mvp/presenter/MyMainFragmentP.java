@@ -27,9 +27,9 @@ public class MyMainFragmentP extends BasePresenter<MyMainFragmentC.View,MyMainFr
     }
 
     @Override
-    public void startLocation() {
+    public void startLocation(int type) {
         if (mModle != null) {
-            mModle.startLocation();
+            mModle.startLocation(type);
         }
     }
 

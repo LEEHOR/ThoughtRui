@@ -15,6 +15,8 @@ import okhttp3.ResponseBody;
  * Created by Leehor
  * on 2018/11/19
  * on 12:59
+ * 百度地图Api线上定位
+ * 根据经纬度获取地址
  */
 public class HttpUtils {
     private static HttpUtilListener listener;

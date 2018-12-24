@@ -31,6 +31,7 @@ public class BaiduLocationHelper {
     }
 
     private void initlocation() {
+        locationCallBacks.clear();
         locationClient = new LocationClient(BaseApplication.mContext);
         // 设置定位条件
         LocationClientOption option = new LocationClientOption();

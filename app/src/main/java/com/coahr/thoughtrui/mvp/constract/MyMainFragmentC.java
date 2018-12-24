@@ -30,7 +30,7 @@ public interface MyMainFragmentC {
 
     interface Presenter extends BaseContract.Presenter {
 
-        void startLocation();
+        void startLocation(int type);
 
         void onLocationSuccess(BDLocation location);
 
@@ -51,7 +51,7 @@ public interface MyMainFragmentC {
 
     interface Model extends BaseContract.Model {
 
-        void startLocation();
+        void startLocation(int type);
 
         void getHomeData(Map map);
 

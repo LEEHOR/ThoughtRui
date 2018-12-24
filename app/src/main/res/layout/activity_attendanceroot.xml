@@ -144,20 +144,19 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:id="@+id/center_scroll"
         android:layout_below="@+id/center_top"
         android:layout_marginBottom="50dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <FrameLayout
-            android:padding="@dimen/edge_margin"
             android:id="@+id/attachment_root"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
         </FrameLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
     <LinearLayout
         android:background="@color/colorPrimary"
         android:layout_alignParentBottom="true"

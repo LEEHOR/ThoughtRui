@@ -27,26 +27,34 @@ public class SaveOrGetAnswers {
       输出流的构造参数1：可以是File对象 也可以是文件路径
       输出流的构造参数2：默认为False=>覆盖内容； true=>追加内容
        */
-        try {
-            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(FilePath + "/AnswerAndRemark.txt", append)));
-            out.newLine();
-            if (append) {
-                out.write("\r\n");
-            }
-            out.write(massage);
-            ToastUtils.showLong("保存成功");
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                    return true;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return false;
+      File filepath=new File(FilePath);
+        if (!filepath.exists()) {
+            filepath.mkdirs();
+        }
+        File file=new File(FilePath+"/AnswerAndRemark.txt");
+        if(!file.exists()) {
+            try {
+                 file.createNewFile();
+                out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(FilePath + "/AnswerAndRemark.txt", append)));
+                out.newLine();
+                if (append) {
+                    out.write("\r\n");
+                }
+                out.write(massage);
+                ToastUtils.showLong("保存成功");
+            } catch (IOException e1) {
+                e1.printStackTrace();
+                ToastUtils.showLong(e1.toString());
+            }finally {
+                if (out != null) {
+                    try {
+                        out.close();
+                        return true;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        ToastUtils.showLong(e.toString());
+                        return false;
+                    }
                 }
             }
         }
