@@ -1,5 +1,6 @@
 package com.coahr.thoughtrui.mvp.view.startProject;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -97,8 +98,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     String remark=null;
     private boolean isAnswer = false, isPhotos = false;
     private int countSize;
-
-    public static PagerFragment_a newInstance(int position, String DbProjectId, String ht_ProjectId,int countSize) {
+    public static PagerFragment_a newInstance(int position, String DbProjectId, String ht_ProjectId, int countSize) {
         PagerFragment_a pagerFragment_a=new PagerFragment_a();
         Bundle bundle=new Bundle();
         bundle.putInt("position",position);

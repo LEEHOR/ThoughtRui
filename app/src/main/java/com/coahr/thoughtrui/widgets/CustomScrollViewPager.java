@@ -11,6 +11,7 @@ import android.view.MotionEvent;
  * Created by Leehor
  * on 2018/11/18
  * on 18:12
+ * 可控滑动的ViewPage
  */
 public class CustomScrollViewPager extends ViewPager {
     //是否可以左右滑动？true 可以，像Android原生ViewPager一样。

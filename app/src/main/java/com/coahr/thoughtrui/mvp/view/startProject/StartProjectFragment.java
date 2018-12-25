@@ -3,9 +3,7 @@ package com.coahr.thoughtrui.mvp.view.startProject;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -20,7 +18,6 @@ import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.StartProjectFragmentC;
-import com.coahr.thoughtrui.mvp.model.Bean.PagePostEvent;
 import com.coahr.thoughtrui.mvp.model.Bean.QuestionBean;
 import com.coahr.thoughtrui.mvp.model.Bean.isCompleteBean;
 import com.coahr.thoughtrui.mvp.presenter.StartProjectFragmentP;
@@ -46,6 +43,7 @@ import butterknife.BindView;
  * Created by Leehor
  * on 2018/11/15
  * on 16:46
+ * 废弃被StartProjectActivity代替
  */
 public class StartProjectFragment extends BaseFragment<StartProjectFragmentC.Presenter> implements StartProjectFragmentC.View, View.OnClickListener {
     @Inject
@@ -54,20 +52,15 @@ public class StartProjectFragment extends BaseFragment<StartProjectFragmentC.Pre
     CustomScrollViewPager project_viewPage;
     @BindView(R.id.p_mytitle)
     MyTittleBar p_mytitle;
-/*    @BindView(R.id.iv_last)
-    SelectImageView iv_last;
-    @BindView(R.id.iv_next)
-    SelectImageView iv_next;
-
-    @BindView(R.id.tv_last)
-    SelectTextView tv_last;
-
-    @BindView(R.id.tv_next)
-    SelectTextView tv_next;*/
+    @BindView(R.id.recorder_model)
+    View recorder_model;
     private PagerController pagerController;
     private ArrayList<BaseChildFragment> fragmentArrayList;
     private StartProjectAdapter startProjectAdapter;
     private int subject_size; //题目个数
+    private View recorder_time;
+    private View tv_start_recorder;
+    private View tv_stop_recorder;
 
     public static StartProjectFragment newInstance() {
         StartProjectFragment startProjectFragment = new StartProjectFragment();
@@ -92,8 +85,11 @@ public class StartProjectFragment extends BaseFragment<StartProjectFragmentC.Pre
 
     @Override
     public void initView() {
+        recorder_model.setVisibility(View.GONE);
+        recorder_time = recorder_model.findViewById(R.id.tv_recorderTime);
+        tv_start_recorder = recorder_model.findViewById(R.id.tv_start_recorder);
+        tv_stop_recorder = recorder_model.findViewById(R.id.tv_stop_recorder);
         project_viewPage.setScrollable(false);
-
         p_mytitle.getRightText().setVisibility(View.VISIBLE);
         p_mytitle.getRightText().setText("题目列表");
         p_mytitle.getLeftIcon().setOnClickListener(new View.OnClickListener() {
@@ -252,10 +248,7 @@ public class StartProjectFragment extends BaseFragment<StartProjectFragmentC.Pre
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-
                         dialog.dismiss();
-
-
                     }
                 }).onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
@@ -309,7 +302,5 @@ public class StartProjectFragment extends BaseFragment<StartProjectFragmentC.Pre
            } else {
                ToastUtils.showLong("当前题目未完成");
            }
-
-
     }
 }

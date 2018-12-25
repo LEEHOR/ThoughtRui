@@ -177,96 +177,98 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
         }
         if (isNetworkAvailable()) {  //有网络
             p.startLocation(3);
-            tabFAdapter.setAdapter_online(new MyTabFOnLineAdapter.adapter_online() {
-                @Override
-                public void newListClick(HomeDataList.DataBean.newListBean newListBean) {
-                    JumpToProject();
-                    setDate_onLine_newList(newListBean);
-                }
-
-                @Override
-                public void newListLongClick(HomeDataList.DataBean.newListBean newListBean) {
-
-                }
-
-                @Override
-                public void completeClick(HomeDataList.DataBean.CompleteListBean completeListBean) {
-                    JumpToProject();
-                    setDate_onLine_Complete(completeListBean);
-                }
-
-                @Override
-                public void completeLongClick(HomeDataList.DataBean.CompleteListBean completeListBean) {
-                    showDialog("已完成", "确定删除", true);
-                }
-
-                @Override
-                public void unCompleteClick(HomeDataList.DataBean.UnCompleteListBean unCompleteListBean) {
-                    JumpToProject();
-                    setDate_onLine_unComplete(unCompleteListBean);
-                }
-
-                @Override
-                public void unCompleteLongClick(HomeDataList.DataBean.UnCompleteListBean unCompleteListBean) {
-                    showDialog("未完成", "确定删除", false);
-                }
-
-                @Override
-                public void unDownLoadClick(HomeDataList.DataBean.newListBean newListBean) {
-                    setDate_onLine_newList(newListBean);
-                }
-
-                @Override
-                public void unDownLoadLongClick(HomeDataList.DataBean.newListBean newListBean) {
-
-                }
-            });
         } else { //无网络
             p.getTypeDate(type);
-
-            myTabFOffLineAdapter.setAdapter_offline(new MyTabFOffLineAdapter.adapter_offline() {
-                @Override
-                public void newListClick(ProjectsDB projectsDB) {
-
-                }
-
-                @Override
-                public void newListLongClick(ProjectsDB projectsDB) {
-
-                }
-
-                @Override
-                public void completeClick(ProjectsDB projectsDB) {
-
-                }
-
-                @Override
-                public void completeLongClick(ProjectsDB projectsDB) {
-
-                }
-
-                @Override
-                public void unCompleteClick(ProjectsDB projectsDB) {
-
-                }
-
-                @Override
-                public void unCompleteLongClick(ProjectsDB projectsDB) {
-
-                }
-
-                @Override
-                public void unDownLoadClick(ProjectsDB projectsDB) {
-
-                }
-
-                @Override
-                public void unDownLoadLongClick(ProjectsDB projectsDB) {
-
-                }
-            });
-
         }
+
+        //有网络adapter监听
+        tabFAdapter.setAdapter_online(new MyTabFOnLineAdapter.adapter_online() {
+            @Override
+            public void newListClick(HomeDataList.DataBean.newListBean newListBean) {
+                JumpToProject();
+                setDate_onLine_newList(newListBean);
+            }
+
+            @Override
+            public void newListLongClick(HomeDataList.DataBean.newListBean newListBean) {
+
+            }
+
+            @Override
+            public void completeClick(HomeDataList.DataBean.CompleteListBean completeListBean) {
+                JumpToProject();
+                setDate_onLine_Complete(completeListBean);
+            }
+
+            @Override
+            public void completeLongClick(HomeDataList.DataBean.CompleteListBean completeListBean) {
+                showDialog("已完成", "确定删除", true);
+            }
+
+            @Override
+            public void unCompleteClick(HomeDataList.DataBean.UnCompleteListBean unCompleteListBean) {
+                JumpToProject();
+                setDate_onLine_unComplete(unCompleteListBean);
+            }
+
+            @Override
+            public void unCompleteLongClick(HomeDataList.DataBean.UnCompleteListBean unCompleteListBean) {
+                showDialog("未完成", "确定删除", false);
+            }
+
+            @Override
+            public void unDownLoadClick(HomeDataList.DataBean.newListBean newListBean) {
+                setDate_onLine_newList(newListBean);
+            }
+
+            @Override
+            public void unDownLoadLongClick(HomeDataList.DataBean.newListBean newListBean) {
+
+            }
+        });
+
+        //无网络adapter监听
+        myTabFOffLineAdapter.setAdapter_offline(new MyTabFOffLineAdapter.adapter_offline() {
+            @Override
+            public void newListClick(ProjectsDB projectsDB) {
+
+            }
+
+            @Override
+            public void newListLongClick(ProjectsDB projectsDB) {
+
+            }
+
+            @Override
+            public void completeClick(ProjectsDB projectsDB) {
+
+            }
+
+            @Override
+            public void completeLongClick(ProjectsDB projectsDB) {
+
+            }
+
+            @Override
+            public void unCompleteClick(ProjectsDB projectsDB) {
+
+            }
+
+            @Override
+            public void unCompleteLongClick(ProjectsDB projectsDB) {
+
+            }
+
+            @Override
+            public void unDownLoadClick(ProjectsDB projectsDB) {
+
+            }
+
+            @Override
+            public void unDownLoadLongClick(ProjectsDB projectsDB) {
+
+            }
+        });
 
     }
 

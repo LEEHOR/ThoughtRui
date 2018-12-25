@@ -65,6 +65,10 @@ public class Constants {
      */
     public static String SAVE_DIR_VOICE = SAVE_DIR_BASE.concat("voice/");
     /**
+     * 语音临时存储位置
+     */
+    public static String SAVE_DIR_VOICE_TEM = SAVE_DIR_BASE.concat("voice_tem/");
+    /**
      * 奔溃存储路径
      */
     public static String SAVE_DIR_CRASH = SAVE_DIR_BASE.concat("crash/");
