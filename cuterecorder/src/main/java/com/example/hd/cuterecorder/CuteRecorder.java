@@ -1,5 +1,6 @@
 package com.example.hd.cuterecorder;
 
+import android.app.Activity;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
@@ -43,6 +44,7 @@ public class CuteRecorder implements AudioManger.AudioStateListener {
                 time++;
                 audioRecordListener.hasRecord(time);
                 audioRecordListener.curVoice(audioManger.getVoiceLevel(VOICE_LEVEL));
+                Log.e("录音时间",time+"");
                 handler.postDelayed(this, 1000);
             }
         }
@@ -54,7 +56,8 @@ public class CuteRecorder implements AudioManger.AudioStateListener {
         this.MIN_TIME = builder.MIN_TIME;
         this.VOICE_LEVEL = builder.VOICE_LEVEL;
 
-        audioManger = AudioManger.getInstance(DIR_PATH);
+        audioManger = AudioManger.getInstance();
+        audioManger.setmDir(DIR_PATH);
         audioManger.setOnAudioStateListener(this);
         handler = new Handler();
 
@@ -100,20 +103,28 @@ public class CuteRecorder implements AudioManger.AudioStateListener {
         audioManger.prepareAudio();
     }
 
-    public void start() {
+    public void start(Activity activity) {
         audioPathList.clear();
         if (!isPrepared) {
             audioManger.prepareAudio();
         }
         audioManger.start();
+       // audioManger.getNotification(activity);
         isRecording = true;
         handler.post(runnable);
+        Log.e("录音控制器","录音开始");
     }
 
     //结束录制
     public void stop() {
         if (time <= MIN_TIME) {
             Log.e("录音控制器","录音室时间太短");
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    FileIOUtils.deleteFile(audioManger.getCurrentFilePath());
+                }
+            }).start();
             audioRecordListener.tooShort();
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -138,6 +149,7 @@ public class CuteRecorder implements AudioManger.AudioStateListener {
         isPrepared = false;
         reset();
         audioManger.setAudioName(null);
+       // audioManger.close_notification();
     }
 
     //暂停录制
@@ -170,7 +182,6 @@ public class CuteRecorder implements AudioManger.AudioStateListener {
     public void  resume(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             audioManger.resume_new();
-            audioManger.start();
             isRecording = true;
             handler.post(runnable);
             audioRecordListener.hasResume(1);
@@ -205,7 +216,16 @@ public class CuteRecorder implements AudioManger.AudioStateListener {
                 }
             }).start();
         }
+        if (audioManger.getCurrentFilePath() != null) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    FileIOUtils.deleteFile(audioManger.getCurrentFilePath());
+                }
+            }).start();
+        }
         reset();
+        audioManger.close_notification();
     }
     //置位
     private void reset() {

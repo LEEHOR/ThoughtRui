@@ -31,11 +31,16 @@ public class SaveOrGetAnswers {
         if (!filepath.exists()) {
             filepath.mkdirs();
         }
-        File file=new File(FilePath+"/AnswerAndRemark.txt");
+        File file = new File(FilePath, "AnswerAndRemark.txt");
         if(!file.exists()) {
             try {
-                 file.createNewFile();
-                out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(FilePath + "/AnswerAndRemark.txt", append)));
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+            try {
+                out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, append)));
                 out.newLine();
                 if (append) {
                     out.write("\r\n");
@@ -57,7 +62,6 @@ public class SaveOrGetAnswers {
                     }
                 }
             }
-        }
         return false;
     }
 

@@ -67,11 +67,13 @@ public class   ProjectDetailFragment extends BaseFragment implements View.OnClic
             Constants.ht_ProjectId=messageEvent.getP_Id();
           if (messageEvent.isOffline()){  //离线
               Constants.DbProjectId=String.valueOf(messageEvent.getDb_Id());
+              Constants.name_Project=messageEvent.getPname();
               KLog.d("1项目id",Constants.DbProjectId);
           } else {                     //在线
               List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectBy_Where(ProjectsDB.class, new String[]{"id"}, "pid=?", messageEvent.getP_Id());
               if (projectsDBS != null && projectsDBS.size()>0) {
                   Constants.DbProjectId=String.valueOf(projectsDBS.get(0).getId());
+                  Constants.name_Project=projectsDBS.get(0).getPname();
               }
               KLog.d("2项目id",Constants.DbProjectId);
           }

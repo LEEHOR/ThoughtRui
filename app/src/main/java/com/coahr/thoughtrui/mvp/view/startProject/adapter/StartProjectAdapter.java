@@ -21,18 +21,20 @@ public class StartProjectAdapter extends FragmentPagerAdapter {
   private int size;
   private String DbProjectId;  //本地数据库id
   private String ht_ProjectId; //服务器端Id
-    public StartProjectAdapter(FragmentManager fm,int size,String DbProjectId,String ht_ProjectId) {
+    private String name_project; //项目名
+    public StartProjectAdapter(FragmentManager fm,int size,String DbProjectId,String ht_ProjectId,String name_project) {
         super(fm);
        this.size=size;
        this.DbProjectId=DbProjectId;
        this.ht_ProjectId=ht_ProjectId;
+       this.name_project=name_project;
     }
 
 
     @Override
     public Fragment getItem(int i) {
 
-            return PagerFragment_a.newInstance(i,DbProjectId,ht_ProjectId,size);
+            return PagerFragment_a.newInstance(i,DbProjectId,ht_ProjectId,size,name_project);
         }
 
     @Override

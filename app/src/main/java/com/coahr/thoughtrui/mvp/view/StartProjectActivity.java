@@ -1,18 +1,25 @@
 package com.coahr.thoughtrui.mvp.view;
 
+import android.content.Intent;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.print.PrinterId;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
+import com.coahr.thoughtrui.Utils.AnimationUtil;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.NetWorkAvailable;
 import com.coahr.thoughtrui.Utils.ScreenUtils;
+import com.coahr.thoughtrui.Utils.TimeUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseActivity;
@@ -20,14 +27,18 @@ import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseSupportActivity;
 import com.coahr.thoughtrui.mvp.constract.StartProjectActivity_C;
+import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_recorderType;
 import com.coahr.thoughtrui.mvp.model.Bean.QuestionBean;
 import com.coahr.thoughtrui.mvp.model.Bean.isCompleteBean;
 import com.coahr.thoughtrui.mvp.presenter.StartProjectActivity_P;
 import com.coahr.thoughtrui.mvp.view.startProject.PagerController;
 import com.coahr.thoughtrui.mvp.view.startProject.StartProjectFragment;
+import com.coahr.thoughtrui.mvp.view.startProject.adapter.AudioListenerComplete;
 import com.coahr.thoughtrui.mvp.view.startProject.adapter.StartProjectAdapter;
 import com.coahr.thoughtrui.widgets.CustomScrollViewPager;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
+import com.example.hd.cuterecorder.AudioManger;
+import com.example.hd.cuterecorder.CuteRecorder;
 import com.socks.library.KLog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -49,7 +60,7 @@ import butterknife.BindView;
  * on 8:28
  * 开始访问页面
  */
-public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Presenter> implements StartProjectActivity_C.View {
+public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Presenter> implements StartProjectActivity_C.View,View.OnClickListener {
     @Inject
     StartProjectActivity_P p;
     @BindView(R.id.project_viewPage)
@@ -58,23 +69,27 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     MyTittleBar p_mytitle;
     @BindView(R.id.recorder_model)
     View recorder_model;
-    /*    @BindView(R.id.iv_last)
-        SelectImageView iv_last;
-        @BindView(R.id.iv_next)
-        SelectImageView iv_next;
 
-        @BindView(R.id.tv_last)
-        SelectTextView tv_last;
-
-        @BindView(R.id.tv_next)
-        SelectTextView tv_next;*/
     private PagerController pagerController;
     private StartProjectAdapter startProjectAdapter;
     private int subject_size; //题目个数
-    private View recorder_time;
-    private View tv_start_recorder;
-    private View tv_stop_recorder;
-
+    private TextView recorder_time;
+    private TextView tv_start_recorder;
+    private TextView tv_stop_recorder;
+    private CuteRecorder cuteRecorder;
+    private Drawable start_recorder_drawable;
+    private Drawable stop_recorder_drawable;
+    private Drawable stoping_recorder_drawable;
+    private Drawable pause_recorder_drawable;
+    private String audioSavePath;
+    private String audioTemSavePath;
+    private String recorderName;
+    private final int RECORDER_START=1;
+    private final int RECORDER_PAUSE=2;
+    private final int RECORDER_RESUME=3;
+    private final int RECORDER_STOP=4;
+    private int recorder_type;
+    public static AudioListenerComplete audioListenerComplete;
     @Override
     public StartProjectActivity_C.Presenter getPresenter() {
         return p;
@@ -91,10 +106,20 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
 
     @Override
     public void initView() {
+        start_recorder_drawable = BaseApplication.mContext.getResources().getDrawable(R.drawable.audio_start, null);
+        stop_recorder_drawable = BaseApplication.mContext.getResources().getDrawable(R.drawable.audio_stop, null);
+        stoping_recorder_drawable = BaseApplication.mContext.getResources().getDrawable(R.drawable.audio_stoping, null);
+        pause_recorder_drawable = BaseApplication.mContext.getResources().getDrawable(R.drawable.audio_pause, null);
+        Rect rect = new Rect(10, 10, 10, 10);
+        start_recorder_drawable.setBounds(rect);
+        stop_recorder_drawable.setBounds(rect);
+        pause_recorder_drawable.setBounds(rect);
         recorder_model.setVisibility(View.GONE);
         recorder_time = recorder_model.findViewById(R.id.tv_recorderTime);
         tv_start_recorder = recorder_model.findViewById(R.id.tv_start_recorder);
         tv_stop_recorder = recorder_model.findViewById(R.id.tv_stop_recorder);
+        tv_start_recorder.setOnClickListener(this);
+        tv_stop_recorder.setOnClickListener(this);
         project_viewPage.setScrollable(false);
         p_mytitle.setPadding(p_mytitle.getPaddingLeft(),
                 ScreenUtils.getStatusBarHeight(BaseApplication.mContext),
@@ -108,6 +133,17 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
             }
         });
         p_mytitle.getTvTittle().setText("第" + 1 + "题");
+
+        //一个小时
+//输出录音文件路径
+//最大音量
+        cuteRecorder = new CuteRecorder.Builder()
+                .maxTime(60 * 60)//一个小时
+                .minTime(3)
+                .outPutDir(Constants.SAVE_DIR_VOICE) //输出录音文件路径
+                .voiceLevel(CuteRecorder.NORMAL)//最大音量
+                .build();
+        cuteRecorder.setOnAudioRecordListener(new recorderListener());
     }
 
     @Override
@@ -195,7 +231,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     @Override
     public void getOfflineSuccess(int size, String dbProjectId, String ht_projectId) {
         this.subject_size = size;
-        startProjectAdapter = new StartProjectAdapter(getSupportFragmentManager(),size,dbProjectId,ht_projectId);
+        startProjectAdapter = new StartProjectAdapter(getSupportFragmentManager(),size,dbProjectId,ht_projectId,Constants.name_Project);
         project_viewPage.setAdapter(startProjectAdapter);
         project_viewPage.setCurrentItem(0);
     }
@@ -243,7 +279,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     }
 
     /**
-     * 获取返回询问数据
+     * 翻页获取返回询问数据
      *
      * @param isCompleteBean
      */
@@ -277,5 +313,139 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         } else {
             ToastUtils.showLong("当前题目未完成");
         }
+    }
+
+    /**
+     * 录音控制
+     *
+     * @param evenBus_recorderType
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void Event_recorder(EvenBus_recorderType evenBus_recorderType) {
+       int type = evenBus_recorderType.getType();
+        audioSavePath = evenBus_recorderType.getAudioSavePath();
+        audioTemSavePath = evenBus_recorderType.getAudioTemSavePath();
+        recorderName = evenBus_recorderType.getRecorderName();
+        updateUi(type);
+    }
+
+    /**
+     * 更新录音图标
+     *
+     * @param type
+     */
+    private void updateUi(final int type) {
+        runOnUiThread(new Runnable() {
+            private Intent intent;
+
+            @Override
+            public void run() {
+                if (type == 1) { //开始录音
+                    AnimationUtil.topMoveToViewLocation_Visible(recorder_model, 300);
+                    //intent = new Intent(StartProjectActivity.this, AudioManger.class);
+                    //开启服务
+                  //  startService(intent);
+                    tv_start_recorder.setCompoundDrawables(pause_recorder_drawable, null, null, null);
+                    tv_stop_recorder.setCompoundDrawables(stoping_recorder_drawable, null, null, null);
+                    tv_start_recorder.setText("暂停录音");
+                    cuteRecorder.setAudioName(recorderName);
+                    cuteRecorder.setOutAudioPath(audioSavePath);
+                    cuteRecorder.setOutTemPath(audioTemSavePath);
+                    cuteRecorder.start(StartProjectActivity.this);
+                    recorder_type=RECORDER_START;
+                }
+                if (type == 2) {  //暂停录音
+                    tv_start_recorder.setCompoundDrawables(start_recorder_drawable, null, null, null);
+                    tv_start_recorder.setText("开始录音");
+                    cuteRecorder.pause();
+                    recorder_type=RECORDER_PAUSE;
+                }
+                if (type == 3) {  //继续录音
+                    tv_start_recorder.setCompoundDrawables(pause_recorder_drawable, null, null, null);
+                    tv_start_recorder.setText("暂停录音");
+                    cuteRecorder.resume();
+                    recorder_type=RECORDER_RESUME;
+                }
+                if (type== 4) {  //停止录音
+                    tv_start_recorder.setCompoundDrawables(start_recorder_drawable, null, null, null);
+                    tv_stop_recorder.setCompoundDrawables(stop_recorder_drawable, null, null, null);
+                    tv_start_recorder.setText("开始录音");
+                   // stopService(intent);
+                    cuteRecorder.stop();
+                    recorder_type=RECORDER_STOP;
+                    TimeUtils.updataTimeFormat(recorder_time, 0);
+                    AnimationUtil.moveToViewTop_Gone(recorder_model, 300);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.tv_start_recorder:
+                if (recorder_type==RECORDER_START){  //开始状态---点击暂停
+                    updateUi(2);
+                } else if (recorder_type==RECORDER_PAUSE){  //暂停状态---点击继续
+                    updateUi(3);
+                } else if (recorder_type==RECORDER_RESUME){  //继续录音状态---点击暂停
+                    updateUi(2);
+                } else if (recorder_type==RECORDER_STOP){  //停止状态---点击开始
+                    updateUi(1);
+                }
+                break;
+            case R.id.tv_stop_recorder:
+                updateUi(4);
+                break;
+        }
+    }
+
+    class recorderListener implements CuteRecorder.AudioRecordListener {
+
+        @Override
+        public void hasRecord(final int seconds) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    KLog.d("录音时长",seconds);
+                    TimeUtils.updataTimeFormat(recorder_time, seconds*1000);
+                }
+            });
+        }
+
+        @Override
+        public void finish(int seconds, String filePath) {
+            KLog.d("录音文件1", filePath);
+            if (audioListenerComplete != null) {
+                audioListenerComplete.AudioSuccess(filePath);
+                KLog.d("录音文件2", filePath);
+            }
+
+        }
+
+        @Override
+        public void tooShort() {
+            KLog.d("录音时间太短");
+        }
+
+        @Override
+        public void curVoice(int voice) {
+
+        }
+
+        @Override
+        public void hasPause(int SDK_INT, String audioPath) {
+
+            KLog.d("录音时间暂停", SDK_INT, audioPath);
+        }
+
+        @Override
+        public void hasResume(int SDK_INT) {
+            KLog.d("录音时间继续", SDK_INT);
+        }
+    }
+
+    public static void setAudioListenerComplete(AudioListenerComplete audioListenerComplete) {
+        StartProjectActivity.audioListenerComplete = audioListenerComplete;
     }
 }

@@ -1,5 +1,7 @@
 package com.coahr.thoughtrui.mvp.presenter;
 
+import android.app.Activity;
+
 import com.coahr.thoughtrui.DBbean.AnswersDB;
 import com.coahr.thoughtrui.DBbean.ImagesDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
@@ -28,9 +30,9 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
 
 
     @Override
-    public void getSubject(String DbProjectId,String ht_ProjectId,int position) {
+    public void getSubject(String DbProjectId, String ht_ProjectId, int position, Activity activity) {
         if (mModle != null) {
-            mModle.getSubject(DbProjectId,ht_ProjectId,position);
+            mModle.getSubject(DbProjectId,ht_ProjectId,position,activity);
         }
     }
 
@@ -49,9 +51,9 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
     }
 
     @Override
-    public void getImage(String ht_ProjectId,int position) {
+    public void getImage(String ht_ProjectId,int position, Activity activity) {
         if (mModle != null) {
-            mModle.getImage(ht_ProjectId, position);
+            mModle.getImage(ht_ProjectId, position,activity);
         }
     }
 
@@ -91,9 +93,9 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
     }
 
     @Override
-    public void getAnswer(String ht_ProjectId,int position) {
+    public void getAnswer(String ht_ProjectId,int position,Activity activity) {
         if (mModle != null) {
-            mModle.getAnswer(ht_ProjectId,position);
+            mModle.getAnswer(ht_ProjectId,position,activity);
         }
     }
 
@@ -150,6 +152,27 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
     public void SaveImagesFailure() {
         if (getView() != null) {
             getView().SaveImagesFailure();
+        }
+    }
+
+    @Override
+    public void getAudio(String ht_ProjectId, int position,Activity activity) {
+        if (mModle != null) {
+            mModle.getAudio(ht_ProjectId,position,activity);
+        }
+    }
+
+    @Override
+    public void getAudioSuccess(List<String> audioList) {
+        if (getView() != null) {
+            getView().getAudioSuccess(audioList);
+        }
+    }
+
+    @Override
+    public void getAudioFailure(String failure) {
+        if (getView() != null) {
+            getView().getAudioFailure(failure);
         }
     }
 }

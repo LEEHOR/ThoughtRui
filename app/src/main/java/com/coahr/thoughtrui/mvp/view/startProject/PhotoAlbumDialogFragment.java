@@ -144,7 +144,6 @@ public class PhotoAlbumDialogFragment extends AppCompatDialogFragment {
             }
         }
 
-
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
             if (size > cacheCount) {

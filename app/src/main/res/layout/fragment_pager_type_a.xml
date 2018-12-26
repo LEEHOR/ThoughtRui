@@ -19,7 +19,7 @@
             android:paddingTop="@dimen/dp_5"
             android:paddingBottom="@dimen/dp_5"
             android:orientation="vertical">
-
+            <!--题目-->
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -108,7 +108,143 @@
                  android:layout_height="wrap_content" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
+            <!--照片-->
+            <android.support.v7.widget.CardView
+                app:cardCornerRadius="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <RelativeLayout
+                        android:padding="@dimen/edge_margin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentLeft="true"
+                            android:src="@mipmap/project_imgs"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp" />
+                        <TextView
+                            android:id="@+id/take_photo"
+                            android:layout_centerVertical="true"
+                            android:textSize="@dimen/dp_14"
+                            android:textColor="@color/material_blue_500"
+                            android:layout_alignParentRight="true"
+                            android:text="点击拍照"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </RelativeLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/material_grey_200" />
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/project_imageRecycler"
+                        android:padding="@dimen/dp_10"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false">
+                    </android.support.v7.widget.RecyclerView>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+            <!--录音-->
+            <android.support.v7.widget.CardView
+                app:cardCornerRadius="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <RelativeLayout
+                        android:padding="@dimen/edge_margin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentLeft="true"
+                            android:src="@mipmap/project_audios"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp" />
+                        <TextView
+                            android:id="@+id/take_audio"
+                            android:layout_centerVertical="true"
+                            android:textSize="@dimen/dp_14"
+                            android:textColor="@color/material_blue_500"
+                            android:layout_alignParentRight="true"
+                            android:text="点击录音"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </RelativeLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/material_grey_200" />
+                    <RelativeLayout
+                        android:padding="@dimen/edge_margin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/audio_images"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/audio"
+                            android:layout_width="@dimen/dp_20"
+                            android:layout_height="@dimen/dp_20" />
+                        <TextView
+                            android:id="@+id/audio_name_text"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@+id/audio_images"
+                            android:textSize="@dimen/dp_14"
+                            android:textColor="@color/black"
+                            android:text="录音文件名:"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                        <TextView
+                            android:id="@+id/audio_name"
+                            android:layout_centerVertical="true"
+                            android:gravity="center_vertical"
+                            android:layout_toRightOf="@+id/audio_name_text"
+                            android:layout_toLeftOf="@+id/iv_play_audio"
+                            android:layout_margin="@dimen/dp_10"
+                            android:textSize="@dimen/dp_14"
+                            android:lines="1"
+                            android:ellipsize="end"
+                            android:text="saasas"
+                            android:textColor="@color/black"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                        <TextView
+                            android:layout_centerVertical="true"
+                            android:id="@+id/tv_delete_audio"
+                            android:textSize="@dimen/dp_14"
+                            android:gravity="center_vertical"
+                            android:textColor="@color/material_grey_650"
+                            android:layout_alignParentRight="true"
+                            android:text="删除"
+                            android:visibility="invisible"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                        <ImageView
+                            android:id="@+id/iv_play_audio"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@+id/tv_delete_audio"
+                            android:layout_marginRight="@dimen/dp_10"
+                            android:src="@mipmap/play_start"
+                            android:scaleType="fitCenter"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp" />
+                    </RelativeLayout>
+                </LinearLayout>
 
+            </android.support.v7.widget.CardView>
+
+            <!--问题说明-->
             <android.support.v7.widget.CardView
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
@@ -143,48 +279,7 @@
                         android:textSize="@dimen/dp_14" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
-           <android.support.v7.widget.CardView
-               app:cardCornerRadius="@dimen/dp_5"
-               android:layout_marginTop="@dimen/dp_10"
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content">
-               <LinearLayout
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:orientation="vertical">
-            <RelativeLayout
-                android:padding="@dimen/edge_margin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <ImageView
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentLeft="true"
-                    android:src="@mipmap/images"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp" />
-                <TextView
-                    android:id="@+id/take_photo"
-                    android:layout_centerVertical="true"
-                    android:textSize="@dimen/dp_14"
-                    android:textColor="@color/material_blue_500"
-                    android:layout_alignParentRight="true"
-                    android:text="点击拍照"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </RelativeLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/material_grey_200" />
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/project_imageRecycler"
-                    android:padding="@dimen/dp_10"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false">
-                </android.support.v7.widget.RecyclerView>
-               </LinearLayout>
-           </android.support.v7.widget.CardView>
+
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

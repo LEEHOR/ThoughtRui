@@ -62,7 +62,6 @@ public abstract class BaseActivity<P extends BaseContract.Presenter> extends Sup
         unbinder = ButterKnife.bind(this);
         Connector.getDatabase();
         ActivityManager.getInstance().addActivity(this);
-        getLocationPermission();
         initView();
         initData();
     }
@@ -84,30 +83,5 @@ public abstract class BaseActivity<P extends BaseContract.Presenter> extends Sup
             getPresenter().detachView();
         }
     }
-    /**
-     * 动态获取定位
-     */
-    private void getLocationPermission() {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            RequestPermissionUtils.requestPermission(BaseActivity.this, new OnRequestPermissionListener() {
-                @Override
-                public void PermissionSuccess(List<String> permissions) {
-
-                }
-
-                @Override
-                public void PermissionFail(List<String> permissions) {
-                    Toast.makeText(BaseActivity.this, "获取权限失败", Toast.LENGTH_LONG).show();
-                }
-
-                @Override
-                public void PermissionHave() {
-                }
-            }, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_WIFI_STATE
-                    ,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE);
-
-        } else {
-        }
-    }
 }

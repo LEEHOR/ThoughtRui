@@ -19,6 +19,8 @@ public class Constants {
     public static String sessionId;
     //ht_projectId
     public static String ht_ProjectId;  //服务器端项目id
+    //name_project
+    public static String name_Project;  //项目名
     //user_id;
     public static String user_id;
     //DbProjectId 数据库中的id

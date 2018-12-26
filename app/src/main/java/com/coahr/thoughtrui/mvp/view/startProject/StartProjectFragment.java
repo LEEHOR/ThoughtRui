@@ -185,7 +185,7 @@ public class StartProjectFragment extends BaseFragment<StartProjectFragmentC.Pre
     @Override
     public void getOfflineSuccess(int size,String dbProjectId,String ht_ProjectId) {
         this.subject_size = size;
-        startProjectAdapter = new StartProjectAdapter(getChildFragmentManager(),size,dbProjectId,ht_ProjectId);
+        startProjectAdapter = new StartProjectAdapter(getChildFragmentManager(),size,dbProjectId,ht_ProjectId,Constants.name_Project);
         project_viewPage.setAdapter(startProjectAdapter);
         project_viewPage.setCurrentItem(0);
     }

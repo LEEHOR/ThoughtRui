@@ -1,5 +1,7 @@
 package com.coahr.thoughtrui.mvp.constract;
 
+import android.app.Activity;
+
 import com.coahr.thoughtrui.DBbean.AnswersDB;
 import com.coahr.thoughtrui.DBbean.ImagesDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
@@ -43,17 +45,21 @@ public interface PagerFragment_aC {
 
         void SaveImagesFailure();
 
+        void getAudioSuccess(List<String> audioList);
+
+        void getAudioFailure(String failure);
+
     }
 
      interface Presenter extends BaseContract.Presenter {
 
-        void getSubject(String DbProjectId,String ht_ProjectId,int position);
+        void getSubject(String DbProjectId,String ht_ProjectId,int position, Activity activity);
 
         void getSubjectSuccess(SubjectsDB subjectsDB);
 
         void getSubjectFailure(String failure);
 
-        void getImage(String ht_ProjectId,int position);
+        void getImage(String ht_ProjectId,int position, Activity activity);
 
         void getImageSuccess(List<String> imagePathList);
 
@@ -65,14 +71,11 @@ public interface PagerFragment_aC {
 
         void DeleteImageFailure(String Massage);
 
-
-        void getAnswer(String ht_ProjectId,int position);
+         void getAnswer(String ht_ProjectId,int position, Activity activity);
 
          void getAnswerSuccess(String Massage);
 
         void getAnswerFailure();
-
-
 
          void saveAnswers(String answers, String remark,String ht_ProjectId,int position);
 
@@ -86,22 +89,30 @@ public interface PagerFragment_aC {
 
          void SaveImagesFailure();
 
+         void getAudio(String ht_ProjectId, int position, Activity activity);
+
+         void getAudioSuccess(List<String> audioList);
+
+         void getAudioFailure(String failure);
+
     }
 
      interface Model extends BaseContract.Model {
 
 
-         void getSubject(String DbProjectId,String ht_ProjectId,int position);
+         void getSubject(String DbProjectId,String ht_ProjectId,int position,Activity activity);
 
-        void getImage(String ht_ProjectId,int position);
+        void getImage(String ht_ProjectId,int position, Activity activity);
 
-        void getAnswer(String ht_ProjectId,int position);
+        void getAnswer(String ht_ProjectId,int position, Activity activity);
 
          void DeleteImage(String deleteImagePath);
 
          void saveAnswers(String answers, String remark,String ht_ProjectId,int position);
 
          void SaveImages(List<MediaBean> mediaBeanList,String ht_ProjectId,int position);
+
+         void getAudio(String ht_ProjectId, int position, Activity activity);
 
     }
 }

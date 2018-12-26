@@ -231,7 +231,7 @@ public class FileIOUtils {
 
 
     /**
-     * 读取文件夹文件
+     * 读取文件夹文件（图片）
      *
      * @param strPath
      * @return
@@ -246,6 +246,7 @@ public class FileIOUtils {
         if (allFiles == null) {
             return null;
         }
+
         for (int k = 0; k < allFiles.length; k++) {
             final File fi = allFiles[k];
             if (fi.isFile()) {
@@ -264,5 +265,37 @@ public class FileIOUtils {
         }
         return list;
     }
-
+    /**
+     * 读取文件夹文件（录音）
+     *
+     * @param strPath
+     * @return
+     */
+    public static List<String> getAudios(final String strPath) {
+        List<String> list = new ArrayList<String>();
+        File file = new File(strPath);
+        if (!file.exists()) {
+            return null;
+        }
+        File[] allFiles = file.listFiles();
+        if (allFiles == null) {
+            return null;
+        }
+        for (int k = 0; k < allFiles.length; k++) {
+            final File fi = allFiles[k];
+            if (fi.isFile()) {
+                int idx = fi.getPath().lastIndexOf(".");
+                if (idx <= 0) {
+                    continue;
+                }
+                String suffix = fi.getPath().substring(idx);
+                if (suffix.toLowerCase().equals(".amr") ||
+                        suffix.toLowerCase().equals(".mp3") ||
+                        suffix.toLowerCase().equals(".wav")) {
+                    list.add(fi.getPath());
+                }
+            }
+        }
+        return list;
+    }
 }

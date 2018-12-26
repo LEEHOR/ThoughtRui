@@ -1,11 +1,16 @@
 package com.coahr.thoughtrui.mvp.model;
 
+import android.app.Activity;
+import android.content.Context;
+import android.provider.SyncStateContract;
+
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.Utils.FileIoUtils.SaveOrGetAnswers;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.StoreSpaceUtils;
 import com.coahr.thoughtrui.commom.Constants;
+import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.PagerFragment_aC;
 import com.socks.library.KLog;
@@ -15,6 +20,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
+import io.reactivex.internal.operators.observable.ObservableScalarXMap;
 
 /**
  * Created by Leehor
@@ -29,15 +35,16 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
     private SubjectsDB subjectsDB;
     private int subjectsDBId;
     @Override
-    public void getSubject(final String DbProjectId, final String ht_ProjectId, final int position) {
+    public void getSubject(final String DbProjectId, final String ht_ProjectId, final int position, Activity activity) {
         KLog.d("刷新",DbProjectId,ht_ProjectId,position);
         List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectByTogether_Where(SubjectsDB.class, "projectsdb_id=?", DbProjectId);
         if (subjectsDBS != null && subjectsDBS.size() > 0) {
             subjectsDB = (SubjectsDB) subjectsDBS.get(position);
             subjectsDBId = subjectsDB.getId();
             KLog.d("题目Id", subjectsDBId);
-            getImage(ht_ProjectId, (position + 1));
-            getAnswer(ht_ProjectId,(position + 1));
+            getImage(ht_ProjectId, (position + 1),activity);
+            getAnswer(ht_ProjectId,(position + 1),activity);
+            getAudio(ht_ProjectId,(position+1),activity);
             getPresenter().getSubjectSuccess(subjectsDB);
 
         } else {
@@ -49,28 +56,41 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
     }
 
     @Override
-    public void getImage(String ht_ProjectId,int position) {
+    public void getImage(final String ht_ProjectId, final int position, Activity activity) {
         //获取当前题目下的图片
-        List<String> picturesList = FileIOUtils.getPictures(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + position);
-        if (picturesList != null) {
-            getPresenter().getImageSuccess(picturesList);
-        } else {
-            getPresenter().getImageFailure();
-        }
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                List<String> picturesList = FileIOUtils.getPictures(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + position);
+                if (picturesList != null) {
+                    getPresenter().getImageSuccess(picturesList);
+                } else {
+                    getPresenter().getImageFailure();
+                }
+            }
+        });
+
     }
 
     @Override
-    public void getAnswer(String ht_ProjectId,int position) {
-        String s = SaveOrGetAnswers.readFromFile(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + position + "/");
-        if (s != null) {
-            getPresenter().getAnswerSuccess(s);
-        } else {
-            getPresenter().getAnswerFailure();
-        }
+    public void getAnswer(final String ht_ProjectId, final int position, Activity activity) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                String s = SaveOrGetAnswers.readFromFile(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + position + "/");
+                if (s != null) {
+                    getPresenter().getAnswerSuccess(s);
+                } else {
+                    getPresenter().getAnswerFailure();
+                }
+            }
+        });
+
     }
 
     @Override
     public void DeleteImage(String deleteImagePath) {
+
         boolean b = FileIOUtils.deleteFilePic(deleteImagePath);
         if (b) {
             getPresenter().DeleteImageSuccess("删除图片成功");
@@ -102,5 +122,21 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
         }).start();
 
 
+    }
+
+    @Override
+    public void getAudio(final String ht_ProjectId, final int position, Activity activity) {
+        //获取当前题目下的图片
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                List<String> audiosList = FileIOUtils.getAudios(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + position);
+                if (audiosList != null) {
+                    getPresenter().getAudioSuccess(audiosList);
+                } else {
+                    getPresenter().getAudioFailure("没有录音");
+                }
+            }
+        });
     }
 }

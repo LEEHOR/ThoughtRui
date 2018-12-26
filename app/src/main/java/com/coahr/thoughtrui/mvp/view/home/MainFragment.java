@@ -1,19 +1,25 @@
 package com.coahr.thoughtrui.mvp.view.home;
 
+import android.Manifest;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.UsersDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
+import com.coahr.thoughtrui.Utils.Permission.OnRequestPermissionListener;
+import com.coahr.thoughtrui.Utils.Permission.RequestPermissionUtils;
 import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
+import com.coahr.thoughtrui.mvp.Base.BaseActivity;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
@@ -92,9 +98,8 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
 
     @Override
     public void initData() {
-            if (sessionId !=null){
-                KLog.d("首页定位------3------3-------3------3----3---");
-                p.startLocation(1);
+        if (sessionId != null) {
+            getLocationPermission();
             }
     }
 
@@ -245,6 +250,38 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
             sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, "sessionId", null);
             p.startLocation(1);
             KLog.d("首页定位------2----2-------2---------------2");
+        }
+    }
+
+    /**
+     * 动态获取定位权限
+     */
+    private void getLocationPermission() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            RequestPermissionUtils.requestPermission(_mActivity, new OnRequestPermissionListener() {
+                        @Override
+                        public void PermissionSuccess(List<String> permissions) {
+                            KLog.d("首页定位------3------3-------3------3----3---");
+                            p.startLocation(1);
+                        }
+
+                        @Override
+                        public void PermissionFail(List<String> permissions) {
+                            Toast.makeText(_mActivity, "获取权限失败", Toast.LENGTH_LONG).show();
+                        }
+
+                        @Override
+                        public void PermissionHave() {
+                            KLog.d("首页定位------3------3-------3------3----3---");
+                            p.startLocation(1);
+                        }
+                    }, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_WIFI_STATE
+                    , Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
+
+        } else {
+            KLog.d("首页定位------3------3-------3------3----3---");
+            p.startLocation(1);
         }
     }
 }

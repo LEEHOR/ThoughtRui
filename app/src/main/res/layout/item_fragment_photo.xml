@@ -5,16 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="80dp">
     <ImageView
+        android:layout_gravity="center"
         android:id="@+id/photo_image"
         android:scaleType="fitXY"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@mipmap/last_c"/>
+        android:layout_height="match_parent" />
     <ImageView
         android:id="@+id/photo_image_de"
         android:visibility="gone"
-       android:src="@mipmap/last_c"
+        android:scaleType="fitXY"
+        android:src="@mipmap/shanchu"
         android:layout_gravity="end|top"
-        android:layout_width="15dp"
-        android:layout_height="15dp" />
+        android:layout_width="@dimen/dp_20"
+        android:layout_height="@dimen/dp_20" />
 </FrameLayout>
