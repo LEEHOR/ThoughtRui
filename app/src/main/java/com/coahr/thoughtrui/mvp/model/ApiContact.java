@@ -25,5 +25,6 @@ public class ApiContact {
     //考勤接触历史
     public static final String  AttendanceHistory="app/attendance/history.htm";
 
-
+    //考勤接触历史
+    public static final String  getSubjectList="app/question/list.htm";
 }

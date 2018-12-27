@@ -7,11 +7,11 @@ import com.coahr.thoughtrui.mvp.model.Bean.HomeDataList;
 import com.coahr.thoughtrui.mvp.model.Bean.LoginBean;
 import com.coahr.thoughtrui.mvp.model.Bean.PushAttendanceCard;
 import com.coahr.thoughtrui.mvp.model.Bean.QuestionBean;
+import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
 
 import java.util.Map;
 
 import retrofit2.Call;
-import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
@@ -90,4 +90,13 @@ public interface ApiService {
     @FormUrlEncoded
     @POST(ApiContact.AttendanceHistory)
     Call<AttendanceHistory> AttendanceHistory(@FieldMap Map<String, Object> para);
+
+    /**
+     * 考勤历史
+     * @param para
+     * @return
+     */
+    @FormUrlEncoded
+    @POST(ApiContact.getSubjectList)
+    Call<SubjectListBean> getSubjectList(@FieldMap Map<String, Object> para);
 }

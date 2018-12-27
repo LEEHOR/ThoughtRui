@@ -389,8 +389,6 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     public void getAudioFailure(String failure) {
         isHaveRecorder=false;
         tv_delete_audio.setVisibility(View.INVISIBLE);
-            ToastUtils.showLong("暂无录音");
-
     }
 
 

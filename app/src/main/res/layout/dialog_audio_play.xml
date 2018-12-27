@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+    <RelativeLayout
+        android:layout_marginBottom="@dimen/dp_20"
+        android:padding="@dimen/edge_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_alignParentTop="true"
+            android:id="@+id/line_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <SeekBar
+                android:layout_gravity="center_vertical"
+                android:id="@+id/play_seekBar"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/play_point"
+                android:layout_gravity="center_vertical"
+                android:textSize="@dimen/dp_12"
+                android:textColor="@color/material_grey_700"
+                android:text="0000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_gravity="center_vertical"
+                android:text="/"
+                android:textColor="@color/material_grey_700"
+                android:textSize="@dimen/dp_12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/play_count"
+                android:textSize="@dimen/dp_12"
+                android:text="0000"
+                android:textColor="@color/material_grey_700"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <View
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:id="@+id/center_line"
+            android:layout_below="@+id/line_top"
+            android:background="@color/material_grey_200"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+        <RelativeLayout
+            android:layout_below="@+id/center_line"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tv_audio_name"
+                android:textSize="@dimen/dp_14"
+                android:textColor="@color/black"
+                android:lines="1"
+                android:ellipsize="end"
+                android:layout_marginRight="@dimen/dp_10"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/play_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:layout_marginRight="@dimen/dp_20"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/stop_button"
+                android:id="@+id/play_button"
+                android:textSize="@dimen/dp_14"
+                android:textColor="@color/colorWhite"
+                android:src="@mipmap/play_start"
+                android:scaleType="fitXY"
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="@dimen/dp_40" />
+            <ImageView
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:id="@+id/stop_button"
+                android:textSize="@dimen/dp_14"
+                android:textColor="@color/colorWhite"
+                android:src="@mipmap/play_stop"
+                android:scaleType="fitXY"
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="@dimen/dp_40" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

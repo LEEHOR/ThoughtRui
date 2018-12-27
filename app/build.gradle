@@ -41,10 +41,12 @@ android {
 
     allprojects {
         repositories {
+            google()
             maven { url "https://jitpack.io" }
         }
     }
     repositories {
+        google()
         maven {
             url "http://maven.aliyun.com/nexus/content/repositories/releases"
         }
