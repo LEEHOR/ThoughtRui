@@ -1,6 +1,6 @@
 package com.coahr.thoughtrui.mvp.view.startProject.adapter;
 
-import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectParentListAdapterBean;
+import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
 
 /**
  * Created by Leehor
@@ -13,13 +13,13 @@ public interface ExpandListClickListener {
      *
      * @param entity
      */
-    void onExpandChildren(SubjectParentListAdapterBean entity);
+    void onExpandChildren(SubjectListBean.DataBean.QuestionListBean entity);
 
     /**
      * 隐藏子Item
      *
      * @param entity
      */
-    void onHideChildren(SubjectParentListAdapterBean entity);
+    void onHideChildren(SubjectListBean.DataBean.QuestionListBean entity);
 
 }

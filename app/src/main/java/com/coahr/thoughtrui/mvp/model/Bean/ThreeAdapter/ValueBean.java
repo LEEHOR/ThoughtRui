@@ -44,4 +44,5 @@ public class ValueBean {
     public void setValueList(List<ValueBean> valueList) {
         this.valueList = valueList;
     }
+
 }

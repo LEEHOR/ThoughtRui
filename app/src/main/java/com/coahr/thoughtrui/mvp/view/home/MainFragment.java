@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
@@ -58,6 +60,8 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
     TabLayout home_tab;
     @BindView(R.id.viewpage)
     ViewPager viewPager;
+    @BindView(R.id.tv_search)
+    TextView tv_search;
 
     private int totalSize; //项目总个数
 
@@ -89,6 +93,14 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
 
     @Override
     public void initView() {
+        tv_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(_mActivity,ConstantsActivity.class);
+                intent.putExtra("to",Constants.fragment_topics);
+                startActivity(intent);
+            }
+        });
         sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, "sessionId", null);
         pageAdapter = new MainFragmentViewPageAdapter(getFragmentManager());
         viewPager.setAdapter(pageAdapter);

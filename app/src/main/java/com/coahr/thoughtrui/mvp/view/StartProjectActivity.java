@@ -31,6 +31,7 @@ import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_recorderType;
 import com.coahr.thoughtrui.mvp.model.Bean.QuestionBean;
 import com.coahr.thoughtrui.mvp.model.Bean.isCompleteBean;
 import com.coahr.thoughtrui.mvp.presenter.StartProjectActivity_P;
+import com.coahr.thoughtrui.mvp.view.startProject.Fragment_Topics;
 import com.coahr.thoughtrui.mvp.view.startProject.PagerController;
 import com.coahr.thoughtrui.mvp.view.startProject.StartProjectFragment;
 import com.coahr.thoughtrui.mvp.view.startProject.adapter.AudioListenerComplete;
@@ -126,6 +127,14 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                 p_mytitle.getPaddingRight(), p_mytitle.getPaddingBottom());
         p_mytitle.getRightText().setVisibility(View.VISIBLE);
         p_mytitle.getRightText().setText("题目列表");
+        p_mytitle.getRightText().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(StartProjectActivity.this,ConstantsActivity.class);
+                intent.putExtra("to",Constants.fragment_topics);
+                startActivity(intent);
+            }
+        });
         p_mytitle.getLeftIcon().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

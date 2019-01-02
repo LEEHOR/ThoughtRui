@@ -1,18 +1,31 @@
 package com.coahr.thoughtrui.mvp.view.startProject;
 
+import android.view.View;
+import android.widget.ListView;
+
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.FragmentTopicsC;
-import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectChildListAdapterBean;
+import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.QuestionList;
 import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
-import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectParentListAdapterBean;
 import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.ValueBean;
 import com.coahr.thoughtrui.mvp.presenter.FragmentTopicsP;
+import com.coahr.thoughtrui.mvp.view.SubjectList.NodeTreeAdapter;
+import com.coahr.thoughtrui.mvp.view.SubjectList.ThressTest;
+import com.coahr.thoughtrui.mvp.view.SubjectList.node.Node;
+import com.coahr.thoughtrui.mvp.view.SubjectList.node.NodeHelper;
+import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
+import com.socks.library.KLog;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
+
+import butterknife.BindView;
 
 /**
  * Created by Leehor
@@ -22,7 +35,24 @@ import javax.inject.Inject;
 public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> implements FragmentTopicsC.View {
     @Inject
     FragmentTopicsP p;
-    private List<SubjectParentListAdapterBean> parentListAdapterBeanList ;
+    @BindView(R.id.subject_tittle)
+    MyTittleBar subject_tittle;
+    @BindView(R.id.id_tree)
+    ListView treeList;
+    private NodeTreeAdapter mAdapter;
+    private LinkedList<Node> mLinkedList = new LinkedList<>();
+    private List<Node> nodeList;
+    // @BindView(R.id.subject_recycler)
+    // RecyclerView subject_recycler;
+    //   private LinearLayoutManager linearLayoutManager;
+    //  private List<SubjectListBean.DataBean.QuestionListBean> questionListBeanList=new ArrayList<>();
+    //  private ThreeItemAdapter adapter;
+
+    public static Fragment_Topics newInstance() {
+        Fragment_Topics fragmentTopics = new Fragment_Topics();
+        return fragmentTopics;
+    }
+
     @Override
     public FragmentTopicsC.Presenter getPresenter() {
         return p;
@@ -35,87 +65,104 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
 
     @Override
     public void initView() {
+        nodeList = new ArrayList<>();
+        subject_tittle.getTvTittle().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                _mActivity.onBackPressed();
+            }
+        });
+        //   linearLayoutManager = new LinearLayoutManager(BaseApplication.mContext);
+        //  subject_recycler.setLayoutManager(linearLayoutManager);
+        mAdapter = new NodeTreeAdapter(_mActivity, treeList, mLinkedList);
+        treeList.setAdapter(mAdapter);
 
     }
 
     @Override
     public void initData() {
-        parentListAdapterBeanList=new ArrayList<>();
+        getHttp();
     }
 
     @Override
     public void getSubjectListSuccess(SubjectListBean subjectListBean) {
-        SubjectListBean.DataBean data = subjectListBean.getData();
-        if (data != null) {
-            List<SubjectListBean.DataBean.QuestionListBean> questionList = data.getQuestionList();
-            if (questionList != null && questionList.size()>0) {
-                parentListAdapterBeanList.clear();
-                for (int i = 0; i <questionList.size() ; i++) {  //父级
-                    SubjectParentListAdapterBean parentListAdapterBean=new SubjectParentListAdapterBean();
-                    parentListAdapterBean.setExpand(false);
-                    parentListAdapterBean.setId(questionList.get(i).getId());
-                    parentListAdapterBean.setName(questionList.get(i).getName());
-                    parentListAdapterBean.setType(0);
+        if (subjectListBean != null) {
+            SubjectListBean.DataBean data = subjectListBean.getData();
+            List<SubjectListBean.DataBean.QuestionListBean> questionLists = data.getQuestionList();
+            if (questionLists != null && questionLists.size() > 0) {
+                nodeList.clear();
+                for (int i = 0; i < questionLists.size(); i++) {
+                    SubjectListBean.DataBean.QuestionListBean questionListBean = questionLists.get(i);
+                    //根节点
+                    ThressTest root = new ThressTest(questionListBean.getId(),"", questionListBean.getName());
+                    nodeList.add(root);
+                    //子节点1
+                    if (questionListBean.getQuesList() != null && questionListBean.getQuesList().size() > 0) {
+                        for (int j = 0; j < questionListBean.getQuesList().size(); j++) {
+                            Object o = questionListBean.getQuesList().get(j);
+                           /* ThressTest rootChild_1 = new ThressTest(o.getId(), questionListBean.getId(), quesListRoot.getTitle());
+                            nodeList.add(rootChild_1);*/
+                        }
+                    } else { //子节点2
+                        if (questionListBean.getValue()!= null && questionListBean.getValue().size() > 0) {
+                            for (int j = 0; j < questionListBean.getValue().size(); j++) {
+                                SubjectListBean.DataBean.QuestionListBean.ValueBeanX valueBeanRoot = questionListBean.getValue().get(j);
+                                ThressTest rootChild_2 = new ThressTest(valueBeanRoot.getId(), questionListBean.getId(), valueBeanRoot.getName());
+                                nodeList.add(rootChild_2);
+                                //孙子节点1
+                                if (valueBeanRoot.getQuesList() != null && valueBeanRoot.getQuesList().size() > 0) {
+                                    for (int k = 0; k < valueBeanRoot.getQuesList().size(); k++) {
+                                        Object o = valueBeanRoot.getQuesList().get(k);
+                                      //  KLog.d("孙子节点1",quesListChild.getTitle());
+                                      //  ThressTest root_grand_1 = new ThressTest(quesListChild.getId(), valueBeanRoot.getId(), quesListChild.getTitle());
+                                      //  nodeList.add(root_grand_1);
+                                    }
+                                } else {
+                                    //孙子节点2
+                                    if (valueBeanRoot.getValue() != null && valueBeanRoot.getValue().size() > 0) {
+                                        for (int k = 0; k < valueBeanRoot.getValue().size(); k++) {
+                                            SubjectListBean.DataBean.QuestionListBean.ValueBeanX.ValueBean valueBean = valueBeanRoot.getValue().get(k);
+                                            ThressTest root_grand_2 = new ThressTest(valueBean.getId(), valueBeanRoot.getId(), valueBean.getName());
+                                            nodeList.add(root_grand_2);
+                                            //重孙节点 great-grandson
+                                            if (valueBean.getQuesList() != null && valueBean.getQuesList().size() > 0) {
+                                                for (int l = 0; l < valueBean.getQuesList().size(); l++) {
+                                                    SubjectListBean.DataBean.QuestionListBean.ValueBeanX.ValueBean.QuesListBean quesListBean = valueBean.getQuesList().get(l);
+                                                    ThressTest great_grandson = new ThressTest(quesListBean.getId(), valueBean.getId(), quesListBean.getTitle());
+                                                    nodeList.add(great_grandson);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
 
-                    if (questionList.get(i).getQuesList() !=null && questionList.get(i).getQuesList().size()>0){
-                        parentListAdapterBean.setQuestList(questionList.get(i).getQuesList());
+                            }
+                        }
                     }
 
-                    if (questionList.get(i).getValue()!=null  && questionList.get(i).getValue().size()>0) {//获取子级
-
-                        parentListAdapterBean.setValue(questionList.get(i).getValue());  //加入父级
-                                List<SubjectChildListAdapterBean> childListAdapterBeans =new ArrayList<>();
-                                childListAdapterBeans.clear();
-                                for (int j = 0; j < questionList.get(i).getValue().size(); j++) {  //获取子级
-                                    ValueBean valueBean = questionList.get(i).getValue().get(j);
-                                    SubjectChildListAdapterBean childListAdapterBean = new SubjectChildListAdapterBean();
-                                    childListAdapterBean.setExpand(false);
-                                    childListAdapterBean.setId(valueBean.getId());
-                                    childListAdapterBean.setName(valueBean.getName());
-                                    childListAdapterBean.setType(1);
-                                    if (valueBean.getQuesList() != null && valueBean.getQuesList().size() > 0) {
-                                        childListAdapterBean.setQuestList(valueBean.getQuesList());
-                                    }
-
-                                    if (valueBean.getValueList() != null && valueBean.getValueList().size() > 0) {
-
-                                        childListAdapterBean.setValueBeanList(valueBean.getValueList());   //加入子级
-                                        List<SubjectChildListAdapterBean> childListAdapterBeans1 =new ArrayList<>();
-                                        childListAdapterBeans1.clear();
-                                        for (int k = 0; k < valueBean.getValueList().size(); k++) {
-                                            ValueBean valueBean1 = valueBean.getValueList().get(k); //获取孙子级
-                                            SubjectChildListAdapterBean childListAdapterBean1 = new SubjectChildListAdapterBean();
-                                            childListAdapterBean1.setExpand(false);
-                                            childListAdapterBean1.setType(1);
-                                            childListAdapterBean1.setId(valueBean1.getId());
-                                            childListAdapterBean1.setName(valueBean1.getName());
-                                            if (valueBean1.getQuesList() != null && valueBean1.getQuesList().size() > 0) {
-                                                childListAdapterBean1.setQuestList(valueBean1.getQuesList());
-                                            }
-                                            if (valueBean1.getValueList() != null && valueBean1.getValueList().size() > 0) {
-                                                    childListAdapterBean1.setValueBeanList(valueBean1.getValueList());
-                                            }
-                                            childListAdapterBeans1.add(childListAdapterBean1);
-
-                                        }
-                                        childListAdapterBean.setSubjectChildListAdapterBean(childListAdapterBeans1);  //孙子级和子级相连
-                                    }
-                                    childListAdapterBeans.add(childListAdapterBean);
-
-                                }
-                                    parentListAdapterBean.setSubjectChildListAdapterBean(childListAdapterBeans); //子父级相连
-                            }
-
-                    parentListAdapterBeanList.add(parentListAdapterBean);
                 }
+
             }
         }
 
+        setAdapter(nodeList);
 
     }
 
+    private void setAdapter(List<Node> nodes) {
+        // adapter = new ThreeItemAdapter(_mActivity,questionListBeanList);
+        // subject_recycler.setAdapter(adapter);
+        mLinkedList.addAll(NodeHelper.sortNodes(nodes));
+        mAdapter.notifyDataSetChanged();
+    }
     @Override
     public void getSubjectListFailure(String failure) {
 
+    }
+
+    private void getHttp() {
+        Map map = new HashMap();
+        map.put("projectId", "e274a447c8e44f4396c031d4e933606e");
+        p.getSubjectList(map);
     }
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -65,7 +66,8 @@ public class   ProjectDetailFragment extends BaseFragment implements View.OnClic
     public void Event(Event_ProjectDetail messageEvent) {
         if (messageEvent != null) {
             Constants.ht_ProjectId=messageEvent.getP_Id();
-          if (messageEvent.isOffline()){  //离线
+            KLog.d("项目idht",Constants.ht_ProjectId);
+            if (messageEvent.isOffline()){  //离线
               Constants.DbProjectId=String.valueOf(messageEvent.getDb_Id());
               Constants.name_Project=messageEvent.getPname();
               KLog.d("1项目id",Constants.DbProjectId);

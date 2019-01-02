@@ -304,6 +304,14 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
     }
 
     @Override
+    public void showError(@Nullable Throwable e) {
+        super.showError(e);
+        ToastUtils.showLong(e.toString());
+        isLoad = false;
+        myTab_swipe.setRefreshing(false);
+    }
+
+    @Override
     public void getHomeMoreSuccess(HomeDataList homeDataList) {
 
     }

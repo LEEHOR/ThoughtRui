@@ -22,7 +22,8 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders = [qqappid: "1232323"]
+        testInstrumentationRunner "android.support.ThressTest.runner.AndroidJUnitRunner"
        // ndk { abiFilters "armeabi", "arm64-v8a", "x86", "x86_64", "armeabi-v7a" }
     }
     
@@ -72,8 +73,8 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation 'com.android.support.ThressTest:runner:1.0.2'
+    androidTestImplementation 'com.android.support.ThressTest.espresso:espresso-core:3.0.2'
     //dagger2 依赖注入控制反转
     implementation 'com.google.dagger:dagger:2.16'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.16'
@@ -114,7 +115,10 @@ dependencies {
     //动态申请权限
     implementation 'com.yanzhenjie:permission:2.0.0-rc12'
     //阿里云热更新
-    implementation 'com.aliyun.ams:alicloud-android-hotfix:3.2.6'
+    implementation ('com.aliyun.ams:alicloud-android-hotfix:3.2.6') {
+        exclude(module: 'alicloud-android-utdid')
+        exclude(module: 'alicloud-android-utils')
+    }
     //网络日志
     implementation 'com.squareup.okhttp3:logging-interceptor:3.5.0'
     //litepal数据库
@@ -125,4 +129,23 @@ dependencies {
     implementation 'cn.finalteam.rxgalleryfinal:library:1.1.3'
     implementation files('libs/BaiduLBS_Android.jar')
     implementation project(':cuterecorder')
+
+    //友盟=========================推送====================================
+
+    //PushSDK必须依赖基础组件库，所以需要加入对应依赖
+    //友盟统计
+    implementation  'com.umeng.sdk:common:1.5.1'
+    implementation 'com.umeng.sdk:analytics:7.5.0'
+    //PushSDK必须依赖utdid库，所以需要加入对应依赖(alipay-sdk中包含alicloud-android-utdid避免重复)
+    implementation  'com.umeng.umsdk:utdid:1.1.5.3'
+    //PushSDK (阿里热更新包含了避免重复)
+    implementation 'com.umeng.sdk:push:4.0.0'
+    //最新版com.umeng.sdk:common和分享share-core不兼容导致报错故使用旧版本
+    implementation 'com.umeng.sdk:share-core:6.9.1'
+    implementation 'com.umeng.sdk:share-qq:6.9.1.1'
+    implementation ('com.umeng.sdk:share-wechat:6.9.1'){
+        exclude group: 'com.tencent.mm.opensdk', module: 'wechat-sdk-android-without-mta'
+    }
+    //分享面板
+    implementation 'com.umeng.sdk:shareboard-widget:6.9.1'
 }

@@ -36,4 +36,6 @@
 
     <!--访问-->
     <string name="remark">点击编辑</string>
+    <string name="Notification_name">通知</string>
+    <string name="Notification_description">消息推送</string>
 </resources>

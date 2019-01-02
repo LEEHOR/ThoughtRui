@@ -9,6 +9,7 @@ import com.coahr.thoughtrui.Utils.StoreSpaceUtils;
  * 基础配置
  */
 public class Constants {
+    public static String  devicestoken="";
     //是否需要自杀进程以便打补丁
     public static boolean isKill=true;
     //Latitude
@@ -86,14 +87,21 @@ public class Constants {
 
     public static  final int startProjectFragment=5;
 
+    public static final  int fragment_topics=6; //题目列表
+
 
 
 
     /**
      * PreferenceUtils键
      */
-    //sessionId_key
-    public static  String sessionId_key;
+    public static  String sessionId_key="sessionId";
     //user_key
-    public static  String user_key;
+    public static  String user_key="user";
+    //token_key
+    public static  String token_key="token";
+    //uid
+    public static  String uid_key="uid";
+    //devicestoken
+    public static  String devicestoken_key="devicestoken";
 }

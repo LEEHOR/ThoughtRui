@@ -9,6 +9,7 @@ import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseSupportActivity;
 import com.coahr.thoughtrui.mvp.view.home.ProjectDetailFragment;
 import com.coahr.thoughtrui.mvp.view.mydata.LoginFragment;
+import com.coahr.thoughtrui.mvp.view.startProject.Fragment_Topics;
 import com.coahr.thoughtrui.mvp.view.startProject.StartProjectFragment;
 
 import org.greenrobot.eventbus.EventBus;
@@ -39,6 +40,9 @@ public class ConstantsActivity extends BaseSupportActivity {
 //            case Constants.startProjectFragment: //开始访问页
 //                loadRootFragment(R.id.Constants_Fragment, StartProjectFragment.newInstance());
 //                break;
+            case Constants.fragment_topics:
+                loadRootFragment(R.id.Constants_Fragment,Fragment_Topics.newInstance());
+                break;
         }
     }
 
