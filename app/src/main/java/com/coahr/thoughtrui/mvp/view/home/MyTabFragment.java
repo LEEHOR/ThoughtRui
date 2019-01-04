@@ -126,16 +126,16 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
         myTab_swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
-                if (isNetworkAvailable()) {
-                    if (isLoad) {
-                        getDate();
-                    } else {
-                        p.startLocation(3);
+                if (!isLoad) {
+                    if (isNetworkAvailable()) {
+                        isLoad=true;
+                            getDate();
+                    }  else {
+                        isLoad=true;
+                            p.getTypeDate(type);
                     }
-                } else {  //离线数据查询本地
-
-                    p.getTypeDate(type);
+                } else {
+                    myTab_swipe.setRefreshing(false);
                 }
 
             }
@@ -328,9 +328,11 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
      */
     @Override
     public void getTypeDateSuccess(List<ProjectsDB> projectsDB) {
+
         myTabFOffLineAdapter.setType(type);
         myTabFOffLineAdapter.setHomeDataList(projectsDB, BaseApplication.mContext);
         change_offline();
+        isLoad=false;
         myTab_swipe.setRefreshing(false);
     }
 
@@ -339,6 +341,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
         if (fail == 0) {
             ToastUtils.showLong( "没有更多本地数据");
         }
+        isLoad=false;
         myTab_swipe.setRefreshing(false);
     }
 
@@ -346,6 +349,11 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_start_time:
+                if (isNetworkAvailable()) {
+
+                } else {
+                    
+                }
                 setChecked(R.id.rl_start_time);
                 break;
             case R.id.rl_end_time:

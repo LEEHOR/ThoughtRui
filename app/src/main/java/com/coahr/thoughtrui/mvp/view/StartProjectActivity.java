@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.print.PrinterId;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -24,21 +23,16 @@ import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseActivity;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
-import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
-import com.coahr.thoughtrui.mvp.Base.BaseSupportActivity;
 import com.coahr.thoughtrui.mvp.constract.StartProjectActivity_C;
 import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_recorderType;
 import com.coahr.thoughtrui.mvp.model.Bean.QuestionBean;
 import com.coahr.thoughtrui.mvp.model.Bean.isCompleteBean;
 import com.coahr.thoughtrui.mvp.presenter.StartProjectActivity_P;
-import com.coahr.thoughtrui.mvp.view.startProject.Fragment_Topics;
 import com.coahr.thoughtrui.mvp.view.startProject.PagerController;
-import com.coahr.thoughtrui.mvp.view.startProject.StartProjectFragment;
 import com.coahr.thoughtrui.mvp.view.startProject.adapter.AudioListenerComplete;
 import com.coahr.thoughtrui.mvp.view.startProject.adapter.StartProjectAdapter;
 import com.coahr.thoughtrui.widgets.CustomScrollViewPager;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
-import com.example.hd.cuterecorder.AudioManger;
 import com.example.hd.cuterecorder.CuteRecorder;
 import com.socks.library.KLog;
 
@@ -46,7 +40,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -192,7 +185,6 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                     subjectsDB.setOptions(questionList.get(i).getOptions());
                     subjectsDB.setDescription(questionList.get(i).getDescription());
                     subjectsDB.setPhotoStatus(questionList.get(i).getPhotoStatus());
-                    subjectsDB.setRecordStatus(questionList.get(i).getRecordStatus());
                     subjectsDB.setDescribeStatus(questionList.get(i).getDescribeStatus());
                     subjectsDB.setCensor(questionList.get(i).getCensor());
                     subjectsDB.setIsComplete(0);
@@ -238,9 +230,9 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     }
 
     @Override
-    public void getOfflineSuccess(int size, String dbProjectId, String ht_projectId) {
+    public void getOfflineSuccess(int size, String dbProjectId, String ht_projectId,List<String> ht_list) {
         this.subject_size = size;
-        startProjectAdapter = new StartProjectAdapter(getSupportFragmentManager(),size,dbProjectId,ht_projectId,Constants.name_Project);
+        startProjectAdapter = new StartProjectAdapter(getSupportFragmentManager(),size,dbProjectId,ht_projectId,Constants.name_Project,ht_list);
         project_viewPage.setAdapter(startProjectAdapter);
         project_viewPage.setCurrentItem(0);
     }

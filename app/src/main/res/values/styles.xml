@@ -43,7 +43,7 @@
     <style name="Searchbar_hint_left">
         <item name="android:background">@drawable/bg_searchbar</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">25dp</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:drawableStart">@mipmap/search</item>
         <item name="android:drawablePadding">5dp</item>
         <item name="android:gravity">center_vertical</item>
@@ -52,7 +52,7 @@
         <item name="android:layout_marginLeft">@dimen/edge_margin</item>
         <item name="android:layout_marginRight">@dimen/edge_margin</item>
         <item name="android:singleLine">true</item>
-        <item name="android:textColorHint">#666</item>
+        <item name="android:textColorHint">#fff</item>
         <item name="android:textSize">12dp</item>
         <item name="android:hint">搜索</item>
     </style>

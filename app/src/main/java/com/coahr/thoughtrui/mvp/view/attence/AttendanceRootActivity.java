@@ -31,22 +31,9 @@ import me.yokeyword.fragmentation.SupportFragment;
  * on 11:05
  */
 public class AttendanceRootActivity extends BaseSupportActivity {
-    @BindView(R.id.top_line)
-    LinearLayout top_line;
     @BindView(R.id.myTitle)
     MyTittleBar myTitle;
-    @BindView(R.id.project_name)
-    TextView project_name;
-    @BindView(R.id.tv_start_time)
-    TextView tv_start_time;
-    @BindView(R.id.tv_end_time)
-    TextView tv_end_time;
-    @BindView(R.id.project_code)
-    TextView project_code;
-    @BindView(R.id.project_company_name)
-    TextView project_company_name;
-    @BindView(R.id.project_company_address)
-    TextView project_company_address;
+
     @BindView(R.id.left_lin)
     LinearLayout left_lin;
     @BindView(R.id.right_lin)
@@ -65,10 +52,9 @@ public class AttendanceRootActivity extends BaseSupportActivity {
 
     private SupportFragment[] mFragments = new SupportFragment[2];
 
-    /**
+   /* *//**
      * 获取数据
-     * @param messageEvent
-     */
+     *//*
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void Event(Event_Attend messageEvent) {
         project_name.setText(messageEvent.getProject_name());
@@ -76,7 +62,7 @@ public class AttendanceRootActivity extends BaseSupportActivity {
         project_company_address.setText(messageEvent.getProject_companyAddress());
         project_code.setText(messageEvent.getProject_code());
         tv_start_time.setText(TimeUtils.getStringDate_start(messageEvent.getStart_time())+"～"+TimeUtils.getStringDate_end(messageEvent.getEnd_time()));
-    }
+    }*/
     @Override
     public int binLayout() {
         return R.layout.activity_attendanceroot;
@@ -92,13 +78,13 @@ public class AttendanceRootActivity extends BaseSupportActivity {
             mFragments[1] = AttendanceFragment_h.newInstance();
         }
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
+      //  EventBus.getDefault().register(this);
 
     }
 
     @Override
     public void initView() {
-        top_line.setPadding(top_line.getPaddingLeft(), ScreenUtils.getStatusBarHeight(BaseApplication.mContext), top_line.getPaddingRight(), top_line.getPaddingBottom());
+        myTitle.setPadding(myTitle.getPaddingLeft(), ScreenUtils.getStatusBarHeight(BaseApplication.mContext), myTitle.getPaddingRight(), myTitle.getPaddingBottom());
 
         left_lin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,9 +129,9 @@ public class AttendanceRootActivity extends BaseSupportActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(EventBus.getDefault().isRegistered(this)) {
+      /*  if(EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
-        }
+        }*/
     }
 
 }

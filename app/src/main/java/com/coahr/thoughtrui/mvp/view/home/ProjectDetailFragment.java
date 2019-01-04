@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -39,11 +40,11 @@ import butterknife.BindView;
  */
 public class   ProjectDetailFragment extends BaseFragment implements View.OnClickListener {
     @BindView(R.id.kaoqing)
-    ImageView kaoqing;
+    RelativeLayout kaoqing;
     @BindView(R.id.fangwen)
-    ImageView fangwen;
+    RelativeLayout fangwen;
     @BindView(R.id.attachment)
-    ImageView attachment;
+    RelativeLayout attachment;
     @BindView(R.id.naviBar)
     MyTittleBar naviBar;
 

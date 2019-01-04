@@ -9,7 +9,7 @@ import com.coahr.thoughtrui.mvp.view.home.MainFragment;
 import com.coahr.thoughtrui.mvp.view.home.MyTabFragment;
 import com.coahr.thoughtrui.mvp.view.home.ProjectDetailFragment;
 import com.coahr.thoughtrui.mvp.view.mydata.LoginFragment;
-import com.coahr.thoughtrui.mvp.view.startProject.Fragment_Topics;
+import com.coahr.thoughtrui.mvp.view.SubjectList.Fragment_Topics;
 import com.coahr.thoughtrui.mvp.view.startProject.PagerFragment_a;
 import com.coahr.thoughtrui.mvp.view.startProject.StartProjectFragment;
 import com.coahr.thoughtrui.mvp.view.upload.UploadFragment;
@@ -27,7 +27,7 @@ import dagger.android.ContributesAndroidInjector;
         BaseFragmentComponents.class
 })
 public abstract class AllFragmentModule {
-    @ContributesAndroidInjector(modules = MyTabFragmentModule.class)
+    @ContributesAndroidInjector()
     abstract MyTabFragment contributeMyFirstFragmentInjector();
 
     @ContributesAndroidInjector(modules = UploadFragmentModule.class)
@@ -36,25 +36,25 @@ public abstract class AllFragmentModule {
     @ContributesAndroidInjector(modules = MyMainFragmentModule.class)
     abstract MainFragment MainFragmentInjector();
 
-    @ContributesAndroidInjector(modules = LoginFragmentModule.class)
+    @ContributesAndroidInjector()
     abstract LoginFragment LoginFragmentInjector();
 
     @ContributesAndroidInjector()
     abstract ProjectDetailFragment ProjectDetailFragmentInjector();
 
-    @ContributesAndroidInjector(modules = AttendanceFragment_kModule.class)
+    @ContributesAndroidInjector()
     abstract AttendanceFragment_k AttachFragment_kFragmentInjector();
 
-    @ContributesAndroidInjector(modules = AttendanceFragment_hModule.class)
+    @ContributesAndroidInjector()
     abstract AttendanceFragment_h AttachFragment_hFragmentInjector();
 
-    @ContributesAndroidInjector(modules = StartProjectFragmentModule.class)
+    @ContributesAndroidInjector()
     abstract StartProjectFragment StartProjectFragmentFragmentInjector();
 
-    @ContributesAndroidInjector(modules = PagerStartProjectFragmentModule.class)
+    @ContributesAndroidInjector()
     abstract PagerFragment_a PagerFragment_aFragmentInjector();
 
-    @ContributesAndroidInjector(modules = DialogFragmentAudioPaly_Module.class)
+    @ContributesAndroidInjector()
     abstract DialogFragmentAudioPlay DialogFragmentAudioPlayInjector();
 
     @ContributesAndroidInjector()

@@ -84,7 +84,6 @@ public class QuestionBean {
             private String quota2;
             private String quota3;
 
-            private Integer recordStatus;
             private String title;
             private Integer type;
 
@@ -152,13 +151,6 @@ public class QuestionBean {
                 this.photoStatus = photoStatus;
             }
 
-            public Integer getRecordStatus() {
-                return recordStatus;
-            }
-
-            public void setRecordStatus(Integer recordStatus) {
-                this.recordStatus = recordStatus;
-            }
 
             public String getTitle() {
                 return title;

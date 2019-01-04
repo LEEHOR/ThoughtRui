@@ -1,17 +1,13 @@
 package com.coahr.thoughtrui.mvp.view.SubjectList;
 
-import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.QuestionList;
-import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.ValueBean;
-import com.coahr.thoughtrui.mvp.view.SubjectList.node.Node;
-
-import java.util.List;
+import com.coahr.thoughtrui.mvp.view.SubjectList.node.BaseNode;
 
 /**
  * Created by Leehor
  * on 2019/1/2
  * on 16:06
  */
-public class ThressTest extends Node<String> {
+public class ThreeNode extends BaseNode<String> {
 
 
     /**
@@ -39,7 +35,7 @@ public class ThressTest extends Node<String> {
     }
 
     @Override
-    public boolean parent(Node dest) {
+    public boolean parent(BaseNode dest) {
         if (id.equals(dest.get_parentId())){
             return true;
         }
@@ -47,7 +43,7 @@ public class ThressTest extends Node<String> {
     }
 
     @Override
-    public boolean child(Node dest) {
+    public boolean child(BaseNode dest) {
         if (parentId.equals(String.valueOf(dest.get_id()))){
             return true;
         };
@@ -81,10 +77,10 @@ public class ThressTest extends Node<String> {
     }
 
 
-    public ThressTest() {
+    public ThreeNode() {
     }
 
-    public ThressTest(String id, String parentId, String name) {
+    public ThreeNode(String id, String parentId, String name) {
         this.id = id;
         this.parentId = parentId;
         this.name = name;

@@ -30,7 +30,7 @@
     <string name="attendance_Time">打卡时间:</string>
     <string name="attendance_start">开始打卡</string>
     <string name="attendance_end">结束打卡</string>
-    <string name="relocation">重新定位</string>
+    <string name="relocation">去重新定位</string>
     <string name="attendance_start_time">开始时间</string>
     <string name="attendance_end_time">结束时间</string>
 

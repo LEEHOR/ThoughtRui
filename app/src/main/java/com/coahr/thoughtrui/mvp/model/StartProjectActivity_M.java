@@ -6,6 +6,7 @@ import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.StartProjectActivity_C;
 import com.coahr.thoughtrui.mvp.model.Bean.QuestionBean;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -41,8 +42,14 @@ public class StartProjectActivity_M extends BaseModel<StartProjectActivity_C.Pre
     @Override
     public void getOfflineDate(String dbProjectId,String ht_projectId) {
         List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectByTogether_Where(SubjectsDB.class, "projectsdb_id=?", dbProjectId);
-        if (subjectsDBS !=null){
-           getPresenter().getOfflineSuccess(subjectsDBS.size(), dbProjectId,ht_projectId);
+        List<String> ht_list=new ArrayList<>();
+        if (subjectsDBS !=null && subjectsDBS.size()>0){
+            ht_list.clear();
+            for (int i = 0; i <subjectsDBS.size() ; i++) {
+                String ht_id = subjectsDBS.get(i).getHt_id();
+                ht_list.add(ht_id);
+            }
+           getPresenter().getOfflineSuccess(subjectsDBS.size(), dbProjectId,ht_projectId,ht_list);
         } else {
             getPresenter().getOfflineFailure(0);
         }

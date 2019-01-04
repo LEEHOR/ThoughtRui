@@ -11,7 +11,7 @@
         android:orientation="horizontal">
         <TextView
             android:textSize="@dimen/dp_14"
-            android:textColor="@color/material_grey_550"
+            android:textColor="@color/material_grey_900"
             android:text="@string/attendance_Time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -28,17 +28,26 @@
             android:layout_width="35dp"
             android:layout_height="20dp"
             android:src="@mipmap/kaoqinz"/>
+        <TextView
+            android:textSize="@dimen/dp_14"
+            android:textColor="#2D7DFF"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:drawableLeft="@mipmap/bianji"
+            android:drawablePadding="@dimen/dp_5"
+            android:text="添加备注"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
     <LinearLayout
         android:padding="@dimen/dp_5"
-        android:layout_marginTop="@dimen/dp_5"
+        android:layout_marginTop="@dimen/dp_10"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <ImageView
             android:layout_width="15dp"
             android:layout_height="15dp"
-            android:src="@mipmap/home_site"/>
+            android:src="@mipmap/daka"/>
         <TextView
             android:layout_marginLeft="@dimen/dp_10"
             android:id="@+id/tv_attendance_address_e"
@@ -46,6 +55,21 @@
             android:textSize="@dimen/dp_14"
             android:lines="1"
             android:ellipsize="end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="@dimen/dp_5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tv_update_daka"
+            android:drawableRight="@mipmap/updata_daka"
+            android:drawablePadding="@dimen/dp_5"
+            android:textSize="@dimen/dp_14"
+            android:textColor="#113D83"
+            android:text="更新打卡"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>

@@ -1,4 +1,4 @@
-package com.coahr.thoughtrui.mvp.view.SubjectList;
+package com.coahr.thoughtrui.mvp.view.SubjectList.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 
 import com.coahr.thoughtrui.R;
-import com.coahr.thoughtrui.mvp.view.SubjectList.node.Node;
+import com.coahr.thoughtrui.mvp.view.SubjectList.node.BaseNode;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -30,15 +30,15 @@ public class NodeTreeAdapter extends BaseAdapter {
     // ，后面大家会发现因为这个list会随着用户展开、收缩某一项而频繁的进行增加、删除元素操作，
     // 因为ArrayList是数组实现的，频繁的增删性能低下，而LinkedList是链表实现的，对于频繁的增删
     //操作性能要比ArrayList好。
-    private LinkedList<Node> nodeLinkedList;
+    private LinkedList<BaseNode> baseNodeLinkedList;
     private LayoutInflater inflater;
     private int retract;//缩进值
     private Context context;
 
-    public NodeTreeAdapter(Context context, ListView listView, LinkedList<Node> linkedList){
+    public NodeTreeAdapter(Context context, ListView listView, LinkedList<BaseNode> linkedList){
         inflater = LayoutInflater.from(context);
         this.context = context;
-        nodeLinkedList = linkedList;
+        baseNodeLinkedList = linkedList;
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -54,24 +54,24 @@ public class NodeTreeAdapter extends BaseAdapter {
      * @param position
      */
     private void expandOrCollapse(int position){
-        Node node = nodeLinkedList.get(position);
-        if (node != null && !node.isLeaf()){
-            boolean old = node.isExpand();
+        BaseNode baseNode = baseNodeLinkedList.get(position);
+        if (baseNode != null && !baseNode.isLeaf()){
+            boolean old = baseNode.isExpand();
             if (old){
-                List<Node> nodeList = node.get_childrenList();
-                int size = nodeList.size();
-                Node tmp = null;
+                List<BaseNode> baseNodeList = baseNode.get_childrenList();
+                int size = baseNodeList.size();
+                BaseNode tmp = null;
                 for (int i = 0;i < size;i++){
-                    tmp = nodeList.get(i);
+                    tmp = baseNodeList.get(i);
                     if (tmp.isExpand()){
                         collapse(tmp,position+1);
                     }
-                    nodeLinkedList.remove(position+1);
+                    baseNodeLinkedList.remove(position+1);
                 }
             }else{
-                nodeLinkedList.addAll(position + 1, node.get_childrenList());
+                baseNodeLinkedList.addAll(position + 1, baseNode.get_childrenList());
             }
-            node.setIsExpand(!old);
+            baseNode.setIsExpand(!old);
             notifyDataSetChanged();
         }
     }
@@ -84,28 +84,28 @@ public class NodeTreeAdapter extends BaseAdapter {
      * 所以这种只改变局部数据的方式性能大大提高。
      * @param position
      */
-    private void collapse(Node node,int position){
-        node.setIsExpand(false);
-        List<Node> nodes = node.get_childrenList();
-        int size = nodes.size();
-        Node tmp = null;
+    private void collapse(BaseNode baseNode, int position){
+        baseNode.setIsExpand(false);
+        List<BaseNode> baseNodes = baseNode.get_childrenList();
+        int size = baseNodes.size();
+        BaseNode tmp = null;
         for (int i = 0;i < size;i++){
-            tmp = nodes.get(i);
+            tmp = baseNodes.get(i);
             if (tmp.isExpand()){
                 collapse(tmp,position+1);
             }
-            nodeLinkedList.remove(position+1);
+            baseNodeLinkedList.remove(position+1);
         }
     }
 
     @Override
     public int getCount() {
-        return nodeLinkedList.size();
+        return baseNodeLinkedList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return nodeLinkedList.get(position);
+        return baseNodeLinkedList.get(position);
     }
 
     @Override
@@ -126,26 +126,26 @@ public class NodeTreeAdapter extends BaseAdapter {
         }else{
             holder = (ViewHolder)convertView.getTag();
         }
-        final Node node = nodeLinkedList.get(position);
-        holder.label.setText(node.get_label());
-        if(node.get_icon() == -1){
+        final BaseNode baseNode = baseNodeLinkedList.get(position);
+        holder.label.setText(baseNode.get_label());
+        if(baseNode.get_icon() == -1){
             holder.imageView.setVisibility(View.INVISIBLE);
             holder.confirm.setVisibility(View.VISIBLE);
         }else{
             holder.imageView.setVisibility(View.VISIBLE);
 
             holder.confirm.setVisibility(View.INVISIBLE);
-            holder.imageView.setImageResource(node.get_icon());
+            holder.imageView.setImageResource(baseNode.get_icon());
         }
         holder.confirm.setTag(position);
         holder.confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(context,"选中:"+v.getTag()+"/"+node.get_id(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(context,"选中:"+v.getTag()+"/"+ baseNode.get_id(),Toast.LENGTH_SHORT).show();
             }
         });
-        convertView.setPadding(node.get_level()*retract,5,5,5);
+        convertView.setPadding(baseNode.get_level()*retract,5,5,5);
         return convertView;
     }
 

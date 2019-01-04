@@ -5,6 +5,8 @@ import com.coahr.thoughtrui.mvp.constract.StartProjectActivity_C;
 import com.coahr.thoughtrui.mvp.model.Bean.QuestionBean;
 import com.coahr.thoughtrui.mvp.model.StartProjectActivity_M;
 import com.coahr.thoughtrui.mvp.view.StartProjectActivity;
+
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -49,9 +51,9 @@ public class StartProjectActivity_P extends BasePresenter<StartProjectActivity_C
     }
 
     @Override
-    public void getOfflineSuccess(int size,String dbProjectId,String ht_projectId) {
+    public void getOfflineSuccess(int size, String dbProjectId, String ht_projectId, List<String> ht_list) {
         if (getView() != null) {
-            getView().getOfflineSuccess(size, dbProjectId,ht_projectId);
+            getView().getOfflineSuccess(size, dbProjectId,ht_projectId,ht_list);
         }
     }
 

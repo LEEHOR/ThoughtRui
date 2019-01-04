@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,8 +61,8 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
     TabLayout home_tab;
     @BindView(R.id.viewpage)
     ViewPager viewPager;
-    @BindView(R.id.tv_search)
-    TextView tv_search;
+    @BindView(R.id.ed_search)
+    EditText tv_search;
 
     private int totalSize; //项目总个数
 
@@ -96,8 +97,8 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
         tv_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(_mActivity,ConstantsActivity.class);
-                intent.putExtra("to",Constants.fragment_topics);
+                Intent intent = new Intent(_mActivity, ConstantsActivity.class);
+                intent.putExtra("to", Constants.fragment_topics);
                 startActivity(intent);
             }
         });
@@ -105,49 +106,49 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
         pageAdapter = new MainFragmentViewPageAdapter(getFragmentManager());
         viewPager.setAdapter(pageAdapter);
         home_tab.setupWithViewPager(viewPager);
-        viewPager.setCurrentItem(0);
+
     }
 
     @Override
     public void initData() {
         if (sessionId != null) {
             getLocationPermission();
-            }
+        }
     }
 
     @Override
     public void onLocationSuccess(BDLocation location) {
-        KLog.d("首页定位------4------4-------4------4----4---"+"type");
+        KLog.d("首页定位------4------4-------4------4----4---" + "type");
 
-            KLog.d("定位成功fragment", location.getAddrStr());
-            Constants.Latitude = location.getLatitude();
-            Constants.Longitude = location.getLongitude();
-            Map<String, Object> map = new HashMap<>();
-            map.put("latitude", Constants.Latitude);
-            map.put("longitude", Constants.Longitude);
-            map.put("sessionId", Constants.sessionId);
-            KLog.d("首页定位------5------5-------5------5----5---"+"type");
-            p.getHomeData(map);
+        KLog.d("定位成功fragment", location.getAddrStr());
+        Constants.Latitude = location.getLatitude();
+        Constants.Longitude = location.getLongitude();
+        Map<String, Object> map = new HashMap<>();
+        map.put("latitude", Constants.Latitude);
+        map.put("longitude", Constants.Longitude);
+        map.put("sessionId", Constants.sessionId);
+        KLog.d("首页定位------5------5-------5------5----5---" + "type");
+        p.getHomeData(map);
 
     }
 
     @Override
     public void onLocationFailure(int failure) {
 
-            if (Constants.location_counts <= 3) {
-                Constants.location_counts++;
-                p.startLocation(1);
-            }
+        if (Constants.location_counts <= 3) {
+            Constants.location_counts++;
+            p.startLocation(1);
+        }
 
     }
 
     @Override
     public void getHomeDataSuccess(HomeDataList homeDataList) {
         List<HomeDataList.DataBean.AllListBean> allList = homeDataList.getData().getAllList();
-        if (allList != null && allList.size()>0) {
-            totalSize=allList.size();
-            for (int i = 0; i <allList.size() ; i++) {
-                 SaveProject(allList.get(i).getId(),allList.get(i));
+        if (allList != null && allList.size() > 0) {
+            totalSize = allList.size();
+            for (int i = 0; i < allList.size(); i++) {
+                SaveProject(allList.get(i).getId(), allList.get(i));
             }
         }
 
@@ -160,7 +161,7 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
         map.put("latitude", Constants.Latitude);
         map.put("longitude", Constants.Longitude);
         map.put("sessionId", sessionId);
-       // p.getHomeData(map);
+        // p.getHomeData(map);
     }
 
     @Override
@@ -201,7 +202,7 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
             ProjectDBList.get(0).setGrade(listBean.getGrade());
             ProjectDBList.get(0).setModifyTime(listBean.getModifyTime());
             ProjectDBList.get(0).setNotice(listBean.getNotice());
-            if (usersDBS !=null && usersDBS.size()>0){
+            if (usersDBS != null && usersDBS.size() > 0) {
                 ProjectDBList.get(0).setUser(usersDBS.get(0));
             }
             int update = ProjectDBList.get(0).update(ProjectDBList.get(0).getId());
@@ -210,7 +211,7 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
             }
         } else {
             ProjectsDB projectsDB = new ProjectsDB();
-            KLog.d("缓存",listBean.getId());
+            KLog.d("缓存", listBean.getId());
             projectsDB.setPid(listBean.getId());
             projectsDB.setRecord(listBean.getRecord()); //录音方式
             projectsDB.setInspect(listBean.getInspect()); //检验方式
@@ -231,7 +232,7 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
             projectsDB.setEndTime(listBean.getEndTime());
             projectsDB.setIsComplete(0);
             projectsDB.setStage("1");
-            if (usersDBS !=null && usersDBS.size()>0){
+            if (usersDBS != null && usersDBS.size() > 0) {
                 projectsDB.setUser(usersDBS.get(0));
             }
             boolean save = projectsDB.save();
@@ -239,32 +240,35 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
                 saveSize++;
             }
         }
-      if (totalSize==(updateSize+saveSize)){
-            KLog.d("缓存",(updateSize+saveSize));
-          ToastUtils.showLong("项目数据缓存完成");
-      }
+        if (totalSize == (updateSize + saveSize)) {
+            KLog.d("缓存", (updateSize + saveSize));
+            ToastUtils.showLong("项目数据缓存完成");
+            setPager();
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(EventBus.getDefault().isRegistered(this)) {
+        if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
     }
+
     /**
      * 获取登陆状态
+     *
      * @param messageEvent
      */
-    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void Event(Event_Main messageEvent) {
-        if (messageEvent.getIsLoad()==1 && messageEvent.getPage()==0){
+        if (messageEvent.getIsLoad() == 1 && messageEvent.getPage() == 0) {
             sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, "sessionId", null);
-            p.startLocation(1);
+           // p.startLocation(1);
+            getLocationPermission();
             KLog.d("首页定位------2----2-------2---------------2");
         }
     }
-
     /**
      * 动态获取定位权限
      */
@@ -295,5 +299,9 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
             KLog.d("首页定位------3------3-------3------3----3---");
             p.startLocation(1);
         }
+    }
+
+    private void setPager(){
+        viewPager.setCurrentItem(0);
     }
 }

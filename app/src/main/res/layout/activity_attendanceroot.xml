@@ -1,165 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <LinearLayout
-        android:id="@+id/top_line"
-        android:layout_alignParentTop="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar
-            android:id="@+id/myTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:tittle="考勤"/>
-    </LinearLayout>
-
-
-    <RelativeLayout
-        android:id="@+id/center_top"
-        android:layout_below="@+id/top_line"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/edge_margin">
-
-        <TextView
-            android:id="@+id/project_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:ellipsize="end"
-            android:lines="1"
-            android:textColor="@color/material_grey_850"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:id="@+id/li_project_time"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/project_name"
-            android:layout_marginTop="@dimen/dp_10"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/text1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/access_cycle"
-                android:textColor="@color/material_grey_650"
-                android:textSize="@dimen/dp_14" />
-
-            <TextView
-                android:id="@+id/tv_start_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:textColor="@color/material_grey_650"
-                android:textSize="@dimen/dp_14" />
-
-            <TextView
-                android:id="@+id/tv_end_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:textColor="@color/material_grey_650"
-                android:textSize="@dimen/dp_14" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/li_project_code"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/li_project_time"
-            android:layout_marginTop="@dimen/dp_10"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/dealer_code"
-                android:textColor="@color/material_grey_650"
-                android:textSize="@dimen/dp_14" />
-
-            <TextView
-                android:id="@+id/project_code"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/material_grey_650"
-                android:textSize="@dimen/dp_14" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/li_company_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/li_project_code"
-            android:layout_marginTop="@dimen/dp_10"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:src="@mipmap/home_company" />
-
-            <TextView
-                android:id="@+id/project_company_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_10"
-                android:ellipsize="end"
-                android:lines="1"
-                android:textColor="@color/material_grey_550"
-                android:textSize="@dimen/dp_12" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/li_company_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/li_company_name"
-            android:layout_marginTop="@dimen/dp_10"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:src="@mipmap/home_site" />
-
-            <TextView
-                android:id="@+id/project_company_address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_10"
-                android:ellipsize="end"
-                android:lines="1"
-                android:textColor="@color/material_grey_550"
-                android:textSize="@dimen/dp_12" />
-        </LinearLayout>
-    </RelativeLayout>
-
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/center_scroll"
-        android:layout_below="@+id/center_top"
-        android:layout_marginBottom="50dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+     <com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar
+         android:id="@+id/myTitle"
+         app:tittle="考勤"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content">
+     </com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar>
         <FrameLayout
             android:id="@+id/attachment_root"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
+            android:layout_height="0dp"
+            android:layout_weight="1">
         </FrameLayout>
-    </android.support.v4.widget.NestedScrollView>
     <LinearLayout
+        android:id="@+id/line_bottom"
         android:background="@color/colorPrimary"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
@@ -179,8 +38,8 @@
                 android:id="@+id/iv_select_k"
                 android:layout_width="@dimen/dp_20"
                 android:layout_height="@dimen/dp_20"
-                app:select_src="@mipmap/attendance_c"
-                android:src="@mipmap/attendance" />
+                app:select_src="@mipmap/checking_in"
+                android:src="@mipmap/daka" />
             <com.coahr.thoughtrui.widgets.SelectTextView
                 android:id="@+id/tv_select_k"
                 android:layout_marginTop="2dp"
@@ -222,4 +81,4 @@
                 android:textSize="@dimen/dp_12" />
         </LinearLayout>
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

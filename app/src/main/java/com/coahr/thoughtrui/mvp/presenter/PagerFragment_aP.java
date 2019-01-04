@@ -30,9 +30,9 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
 
 
     @Override
-    public void getSubject(String DbProjectId, String ht_ProjectId, int position, Activity activity) {
+    public void getSubject(String DbProjectId, String ht_ProjectId, Activity activity,int number,String ht_id) {
         if (mModle != null) {
-            mModle.getSubject(DbProjectId,ht_ProjectId,position,activity);
+            mModle.getSubject(DbProjectId,ht_ProjectId,activity,number,ht_id);
         }
     }
 
@@ -51,9 +51,9 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
     }
 
     @Override
-    public void getImage(String ht_ProjectId,int position, Activity activity) {
+    public void getImage(String ht_ProjectId,Activity activity,int number,String ht_id) {
         if (mModle != null) {
-            mModle.getImage(ht_ProjectId, position,activity);
+            mModle.getImage(ht_ProjectId,activity, number, ht_id);
         }
     }
 
@@ -93,9 +93,9 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
     }
 
     @Override
-    public void getAnswer(String ht_ProjectId,int position,Activity activity) {
+    public void getAnswer(String ht_ProjectId,Activity activity,int number,String ht_id) {
         if (mModle != null) {
-            mModle.getAnswer(ht_ProjectId,position,activity);
+            mModle.getAnswer(ht_ProjectId,activity,number,ht_id);
         }
     }
 
@@ -114,9 +114,9 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
     }
 
     @Override
-    public void saveAnswers(String answers,String remark,String ht_ProjectId,int position) {
+    public void saveAnswers(String answers,String remark,String ht_ProjectId,int number,String ht_id) {
         if (mModle != null) {
-            mModle.saveAnswers(answers,remark,ht_ProjectId,position);
+            mModle.saveAnswers(answers,remark,ht_ProjectId,number,ht_id);
         }
     }
 
@@ -135,9 +135,9 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
     }
 
     @Override
-    public void SaveImages(List<MediaBean> mediaBeanList,String ht_ProjectId,int position) {
+    public void SaveImages(List<MediaBean> mediaBeanList,String ht_ProjectId,int number,String ht_id) {
         if (mModle != null) {
-            mModle.SaveImages(mediaBeanList,ht_ProjectId,position);
+            mModle.SaveImages(mediaBeanList,ht_ProjectId,number,ht_id);
         }
     }
 
@@ -156,9 +156,9 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
     }
 
     @Override
-    public void getAudio(String ht_ProjectId, int position,Activity activity) {
+    public void getAudio(String ht_ProjectId,Activity activity,int number,String ht_id) {
         if (mModle != null) {
-            mModle.getAudio(ht_ProjectId,position,activity);
+            mModle.getAudio(ht_ProjectId,activity,number,ht_id);
         }
     }
 

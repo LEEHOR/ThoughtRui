@@ -16,6 +16,7 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseActivity;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.constract.MainActivityC;
+import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_LoginSuccess;
 import com.coahr.thoughtrui.mvp.model.Bean.Event_Main;
 import com.coahr.thoughtrui.mvp.presenter.MainActivityP;
 import com.coahr.thoughtrui.mvp.view.home.MainFragment;
@@ -24,6 +25,8 @@ import com.coahr.thoughtrui.widgets.MyBottomNavigation.MyBottomNavigation;
 import com.socks.library.KLog;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import javax.inject.Inject;
 
@@ -60,6 +63,15 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
             mFragments[1] = UploadFragment.newInstance();
         }
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 
     @Override
@@ -85,8 +97,8 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     @Override
     public void initData() {
         loadMultipleRootFragment(R.id.Root_Fragment, 0, mFragments);
-
-        if (sessionId != null) {
+        showFragment(0);
+     /*   if (sessionId != null) {
             showFragment(0);
         } else {
             Intent intent = new Intent(MainActivity.this, ConstantsActivity.class);
@@ -94,7 +106,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
             intent.putExtra("to", Constants.loginFragmentCode);
             page = 0;
             startActivityForResult(intent, 100);
-        }
+        }*/
     }
 
     private void showFragment(int position) {
@@ -103,9 +115,9 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
             Intent intent = new Intent(MainActivity.this, ConstantsActivity.class);
             intent.putExtra("from", Constants.MainActivityCode);
             intent.putExtra("to", Constants.loginFragmentCode);
-            startActivityForResult(intent, 100);
+            intent.putExtra("type",1);
+            startActivity(intent);
         } else {
-
             showHideFragment(mFragments[position], mFragments[bottomNavigationPreposition]);
         }
         myBottomNavigation.beanSelect(position);
@@ -130,13 +142,18 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == 100 && requestCode == 100) {
-            sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, "sessionId", null);
-            showFragment(0);
-            // p.startLocation();
-            EventBus.getDefault().postSticky(new Event_Main(1, "登陆成功",page));
+
         }
     }
-
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void Event(EvenBus_LoginSuccess loginSuccess) {
+     if (loginSuccess.getLoginType()==100){
+         sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, "sessionId", null);
+         showFragment(0);
+         // p.startLocation();
+         EventBus.getDefault().postSticky(new Event_Main(1, "登陆成功",page));
+     }
+    }
     @Override
     public void onBackPressedSupport() {
         if ((System.currentTimeMillis() - exitTime) > INTERVAL_TIME) {

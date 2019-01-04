@@ -17,6 +17,7 @@ public class Attendance {
     private DataBean data;
     private String msg;
     private int result;
+    private int type;
 
     public DataBean getData() {
         return data;
@@ -42,6 +43,14 @@ public class Attendance {
         this.result = result;
     }
 
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
     public static class DataBean {
         /**
          * Cname : 自由班次
@@ -61,6 +70,7 @@ public class Attendance {
          * notice :
          * projectId : c89c42ec8cef4f7794c6fc6920e4365d
          * startTime : 1529032353245
+         * type: 1上班卡/2下班卡
          */
 
         private String Cname;
@@ -216,6 +226,7 @@ public class Attendance {
         public void setStartTime(long startTime) {
             this.startTime = startTime;
         }
+
 
         public static class AttendanceBean {
             /**

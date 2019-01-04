@@ -130,7 +130,6 @@ public class StartProjectFragment extends BaseFragment<StartProjectFragmentC.Pre
                     subjectsDB.setOptions(questionList.get(i).getOptions());
                     subjectsDB.setDescription(questionList.get(i).getDescription());
                     subjectsDB.setPhotoStatus(questionList.get(i).getPhotoStatus());
-                    subjectsDB.setRecordStatus(questionList.get(i).getRecordStatus());
                     subjectsDB.setDescribeStatus(questionList.get(i).getDescribeStatus());
                     subjectsDB.setCensor(questionList.get(i).getCensor());
                     subjectsDB.setIsComplete(0);
@@ -185,7 +184,7 @@ public class StartProjectFragment extends BaseFragment<StartProjectFragmentC.Pre
     @Override
     public void getOfflineSuccess(int size,String dbProjectId,String ht_ProjectId) {
         this.subject_size = size;
-        startProjectAdapter = new StartProjectAdapter(getChildFragmentManager(),size,dbProjectId,ht_ProjectId,Constants.name_Project);
+        startProjectAdapter = new StartProjectAdapter(getChildFragmentManager(),size,dbProjectId,ht_ProjectId,Constants.name_Project,null);
         project_viewPage.setAdapter(startProjectAdapter);
         project_viewPage.setCurrentItem(0);
     }

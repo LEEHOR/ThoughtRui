@@ -24,11 +24,9 @@ public class HttpUtils {
 
     public static void getAddress(String lat, String lot ,HttpUtilListener listener) {
 
-        HttpUrl httpUrl = HttpUrl.parse("http://api.map.baidu.com/geocoder/v2/" +
-                "?ak=zRN4LdcsWnyGqEcZdeUC5NdrfWRGIe4f" +
-                "&location=" + lat + lot + "" +
-                "&output=json&pois=1" +
-                "&mcode=90:37:69:C2:14:27:E2:88:4C:C7:0D:AA:9A:CF:39:35:EE:78:BD:86;com.coahr.thoughtrui")
+        HttpUrl httpUrl = HttpUrl.parse("http://api.map.baidu.com/geocoder/v2/?ak=zRN4LdcsWnyGqEcZdeUC5NdrfWRGIe4f&location="
+                 +lat+","+ lot +
+                "&output=json&pois=1&mcode=90:37:69:C2:14:27:E2:88:4C:C7:0D:AA:9A:CF:39:35:EE:78:BD:86;com.coahr.thoughtrui")
                 .newBuilder()
                 .build();
 
@@ -42,7 +40,7 @@ public class HttpUtils {
             if (response.isSuccessful()) {
                 String string = execute.body().string();
                 if (listener != null) {
-                    listener.getAddressSuccess(string);
+                    listener.getAddressSuccess(execute);
                 }
             } else {
                 if (listener != null) {

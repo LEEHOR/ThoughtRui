@@ -15,11 +15,13 @@ import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.LoginFragmentC;
+import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_LoginSuccess;
 import com.coahr.thoughtrui.mvp.model.Bean.LoginBean;
 import com.coahr.thoughtrui.mvp.presenter.LoginFragmentP;
 import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
 import com.socks.library.KLog;
 
+import org.greenrobot.eventbus.EventBus;
 import org.litepal.crud.callback.SaveCallback;
 
 import java.util.HashMap;
@@ -44,20 +46,20 @@ public class LoginFragment extends BaseFragment<LoginFragmentC.Presenter> implem
     EditText user_password;
     @BindView(R.id.loginBtn)
     Button loginBtn;
-    private int to; //从哪个页面来
-
+    private int from; //从哪个页面来
+    private int type; //类型
     /**
      *
-     * @param to
+     * @param type
      *
      * @param from
      *      来的页面
      * @return
      */
-    public static LoginFragment newInstance(int to,int from) {
+    public static LoginFragment newInstance(int type,int from) {
         LoginFragment loginFragment = new LoginFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt("to", to);
+        bundle.putInt("type", type);
         bundle.putInt("from",from);
         loginFragment.setArguments(bundle);
         return loginFragment;
@@ -78,14 +80,21 @@ public class LoginFragment extends BaseFragment<LoginFragmentC.Presenter> implem
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (TextUtils.isEmpty(user_account.getText()) || user_account.getText().toString().length()<4 ){
+                    ToastUtils.showLong("请输入4位及以上字符的账户");
+                    return;
+                }
+                if (TextUtils.isEmpty(user_password.getText()) || user_password.getText().toString().length()<4){
+                    ToastUtils.showLong("请输入4位及以上字符的密码");
+                    return;
+                }
                 Map<String, Object> map = new HashMap<>();
                 map.put("username", user_account.getText().toString());
                 map.put("password",user_password.getText().toString());
-
                 p.Login(map);
             }
         });
-        user_account.addTextChangedListener(new TextWatcher() {
+   /*     user_account.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -107,9 +116,9 @@ public class LoginFragment extends BaseFragment<LoginFragmentC.Presenter> implem
                     ToastUtils.showLong("请输入正确的账户");
                 }
             }
-        });
+        });*/
 
-        user_password.addTextChangedListener(new TextWatcher() {
+    /*    user_password.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -131,13 +140,14 @@ public class LoginFragment extends BaseFragment<LoginFragmentC.Presenter> implem
                     ToastUtils.showLong("请输入正确的密码");
                 }
             }
-        });
+        });*/
     }
 
     @Override
     public void initData() {
         if (getArguments() != null) {
-            to = getArguments().getInt("to");
+            type = getArguments().getInt("type");
+             from= getArguments().getInt("from");
         }
     }
 
@@ -153,8 +163,8 @@ public class LoginFragment extends BaseFragment<LoginFragmentC.Presenter> implem
                 KLog.d("保存成功",loginBean.getData().getSessionId());
                 Constants.sessionId=loginBean.getData().getSessionId();
                 PreferenceUtils.setPrefString(_mActivity,"sessionId",loginBean.getData().getSessionId());
-                if (to == 1){
-                    ((ConstantsActivity)_mActivity).onLoginSuccessResult(100);
+                if (from == Constants.MainActivityCode){
+                    EventBus.getDefault().postSticky(new EvenBus_LoginSuccess(100));
                 }
                 _mActivity.onBackPressed();
             }
@@ -170,7 +180,7 @@ public class LoginFragment extends BaseFragment<LoginFragmentC.Presenter> implem
 
     @Override
     public boolean onBackPressedSupport() {
-        if (to == 1){
+        if (type == Constants.MainActivityCode){
             return true;
         } else {
             return super.onBackPressedSupport();

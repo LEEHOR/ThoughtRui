@@ -1,20 +1,17 @@
 package com.coahr.thoughtrui.mvp.view;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseSupportActivity;
+import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_LoginSuccess;
 import com.coahr.thoughtrui.mvp.view.home.ProjectDetailFragment;
 import com.coahr.thoughtrui.mvp.view.mydata.LoginFragment;
-import com.coahr.thoughtrui.mvp.view.startProject.Fragment_Topics;
-import com.coahr.thoughtrui.mvp.view.startProject.StartProjectFragment;
+import com.coahr.thoughtrui.mvp.view.SubjectList.Fragment_Topics;
 
 import org.greenrobot.eventbus.EventBus;
-
-import me.yokeyword.fragmentation.SupportActivity;
 
 /**
  * Created by Leehor

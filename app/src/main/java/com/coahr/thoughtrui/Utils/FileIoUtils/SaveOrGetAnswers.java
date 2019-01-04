@@ -108,7 +108,7 @@ public class SaveOrGetAnswers {
         }
 
         try {
-            fis = new FileInputStream(FilePath + "/AnswerAndRemark.txt");
+            fis = new FileInputStream(FilePath + "AnswerAndRemark.txt");
             reader = new BufferedReader(new InputStreamReader(fis));
             String row;
             while ((row = reader.readLine()) != null) {

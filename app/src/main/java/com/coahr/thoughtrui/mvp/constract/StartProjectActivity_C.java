@@ -3,6 +3,7 @@ package com.coahr.thoughtrui.mvp.constract;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.model.Bean.QuestionBean;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,7 +19,7 @@ public interface StartProjectActivity_C {
 
         void getMainDataFailure(String failure);
 
-        void getOfflineSuccess(int size, String dbProjectId, String ht_projectId);
+        void getOfflineSuccess(int size, String dbProjectId, String ht_projectId,List<String> ht_id);
 
         void getOfflineFailure(int failure);
 
@@ -35,7 +36,7 @@ public interface StartProjectActivity_C {
 
         void getOfflineDate(String dbProjectId, String ht_projectId);
 
-        void getOfflineSuccess(int size, String dbProjectId, String ht_projectId);
+        void getOfflineSuccess(int size, String dbProjectId, String ht_projectId,List<String> ht_id);
 
         void getOfflineFailure(int failure);
 

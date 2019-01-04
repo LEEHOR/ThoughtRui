@@ -19,7 +19,7 @@ public class ApiContact {
     //考勤备注
     public static final String remark="app/attendance/remark.htm";
     //题目信息接口
-    public static final String getSubjects="app/question/question/dList.htm";
+    public static final String getSubjects="app/question/dList.htm";
     //考勤打卡
     public static final String getPushAttendance="app/attendance/signIn.htm";
     //考勤接触历史

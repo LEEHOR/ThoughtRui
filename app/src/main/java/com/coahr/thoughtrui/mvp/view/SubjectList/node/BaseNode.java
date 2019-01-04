@@ -13,19 +13,19 @@ import java.util.List;
  * 即这里可以传入Integer或者String，具体什么类型由子类指定
 ，因为这两种类型比较是否相等的方式不同：一个是用 “==”，一个是用  equals() 函数）
  */
-public abstract class Node<T> {
+public abstract class BaseNode<T> {
 
     private int _level = -1;//当前节点的层级，初始值-1 后面会讲到
-    private List<Node> _childrenList = new ArrayList<>();//所有的孩子节点
-    private Node _parent;//父亲节点
+    private List<BaseNode> _childrenList = new ArrayList<>();//所有的孩子节点
+    private BaseNode _parent;//父亲节点
     private int _icon;//图标资源ID
     private boolean isExpand = false;//当前状态是否展开
 
     public abstract T get_id();//得到当前节点ID
     public abstract T get_parentId();//得到当前节点的父ID
     public abstract String get_label();//要显示的内容
-    public abstract boolean parent(Node dest);//判断当前节点是否是dest的父亲节点
-    public abstract boolean child(Node dest);//判断当前节点是否是dest的孩子节点
+    public abstract boolean parent(BaseNode dest);//判断当前节点是否是dest的父亲节点
+    public abstract boolean child(BaseNode dest);//判断当前节点是否是dest的孩子节点
 
 
     public int get_level() {
@@ -44,19 +44,19 @@ public abstract class Node<T> {
         this._level = _level;
     }
 
-    public List<Node> get_childrenList() {
+    public List<BaseNode> get_childrenList() {
         return _childrenList;
     }
 
-    public void set_childrenList(List<Node> _childrenList) {
+    public void set_childrenList(List<BaseNode> _childrenList) {
         this._childrenList = _childrenList;
     }
 
-    public Node get_parent() {
+    public BaseNode get_parent() {
         return _parent;
     }
 
-    public void set_parent(Node _parent) {
+    public void set_parent(BaseNode _parent) {
         this._parent = _parent;
     }
 

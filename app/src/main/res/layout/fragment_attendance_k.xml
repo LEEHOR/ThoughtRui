@@ -19,6 +19,7 @@
             android:textSize="@dimen/dp_14" />
 
         <TextView
+            android:text="dsdsdds"
             android:id="@+id/tv_start_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -124,12 +125,14 @@
                   android:layout_height="wrap_content" />
           </RelativeLayout>
       </FrameLayout>
+
     <LinearLayout
-        android:gravity="center_horizontal"
+        android:gravity="center_vertical|center_horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
         <TextView
+            android:text="dsdsdsdsds"
             android:gravity="center"
             android:id="@+id/location_message"
             android:textSize="@dimen/dp_12"
@@ -138,7 +141,6 @@
             android:layout_height="wrap_content" />
         <TextView
             android:gravity="center"
-            android:layout_marginTop="@dimen/dp_5"
             android:textSize="@dimen/dp_12"
             android:textColor="@color/material_blue_550"
             android:id="@+id/relocation"

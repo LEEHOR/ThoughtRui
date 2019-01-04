@@ -79,20 +79,20 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
 
     @Override
     public void initData() {
-        getData();
+        getHistory(Constants.ht_ProjectId);
     }
 
     @Override
     public void getMainDataSuccess(Attendance attendance) {
-        //把数据发送到AttendRootFragment用于显示
+     /*   //把数据发送到AttendRootFragment用于显示
         EventBus.getDefault().postSticky(new Event_Attend(attendance.getData().getPname()
                 ,attendance.getData().getStartTime()
                 ,attendance.getData().getEndTime()
                 ,attendance.getData().getCname()
                 ,attendance.getData().getCode()
                 ,attendance.getData().getAreaAddress()));
-        projectId = attendance.getData().getProjectId();
-        getHistory(projectId);
+        projectId = attendance.getData().getProjectId();*/
+       // getHistory(projectId);
     }
 
     @Override
@@ -118,9 +118,9 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
         Map<String, Object> map = new HashMap<>();
         map.put("projectId", Constants.ht_ProjectId);
         map.put("sessionId",Constants.sessionId);
-        p.getMainData(map);
+       // p.getMainData(map);
     }
-
+        //打卡历史
     private void getHistory(String projectId){
         Map<String, Object> map = new HashMap<>();
         map.put("projectId", projectId);

@@ -25,6 +25,7 @@ import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.DensityUtils;
 import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.Utils.FileIoUtils.SaveOrGetAnswers;
+import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.Permission.OnRequestPermissionListener;
 import com.coahr.thoughtrui.Utils.Permission.RequestPermissionUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
@@ -99,9 +100,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     LinearLayout left_lin;    //上翻页
     @BindView(R.id.right_lin)
     LinearLayout right_lin;  //下翻页
-    private  int position=0;
     private String dbProjectId;
-
     private int imageSize=0; //图片个数
     private PagerFragmentPhotoAdapter adapter;
     private GridLayoutManager photoManager;
@@ -119,7 +118,10 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     private boolean isRecorder; //录音状态
     private boolean isHaveRecorder; //是否有录音
     private String recorderPath; //录音地址
-    public static PagerFragment_a newInstance(int position, String DbProjectId, String ht_ProjectId, int countSize,String name_project) {
+    private String ht_id;
+    private int number;
+
+    public static PagerFragment_a newInstance(int position, String DbProjectId, String ht_ProjectId, int countSize,String name_project,String ht_id) {
         PagerFragment_a pagerFragment_a=new PagerFragment_a();
         Bundle bundle=new Bundle();
         bundle.putInt("position",position);
@@ -127,6 +129,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         bundle.putString("ht_ProjectId", ht_ProjectId);
         bundle.putInt("countSize",countSize);
         bundle.putString("name_project",name_project);
+        bundle.putString("ht_id",ht_id);
         pagerFragment_a.setArguments(bundle);
         return pagerFragment_a;
     }
@@ -143,11 +146,15 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
     @Override
     public void initView() {
-        position = getArguments().getInt("position");
         dbProjectId = getArguments().getString("DbProjectId");
         ht_projectId = getArguments().getString("ht_ProjectId");
         countSize = getArguments().getInt("countSize");
         name_project = getArguments().getString("name_project");
+        ht_id = getArguments().getString("ht_id");
+        List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectBy_Where(SubjectsDB.class, new String[]{"number"}, "ht_id=?", ht_id);
+        if (subjectsDBS != null && subjectsDBS.size()>0) {
+            number = subjectsDBS.get(0).getNumber();
+        }
         take_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -161,7 +168,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 if (take_photo.getText().equals("取消删除")) {
                     isDelete = false;
                     take_photo.setText("点击拍照");
-                    p.getSubject(dbProjectId, ht_projectId, position,_mActivity);
+                    p.getSubject(dbProjectId, ht_projectId,_mActivity,number,ht_id);
                 }
 
             }
@@ -172,7 +179,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 if (input != null && !input.equals("")) {
                     KLog.d("输入", input);
                     user_remark.setText(input);
-                    p.saveAnswers(answers, input, ht_projectId, position + 1);
+                    p.saveAnswers(answers, input, ht_projectId,number,ht_id);
                     dialogFragment.dismiss();
                 }
             }
@@ -225,8 +232,8 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
         }
 
-        KLog.d("参数", position, dbProjectId, ht_projectId);
-        p.getSubject(dbProjectId, ht_projectId, position,_mActivity);
+        KLog.d("参数", number, dbProjectId, ht_projectId);
+        p.getSubject(dbProjectId, ht_projectId,_mActivity,number,ht_id);
         radio_group.setOnCheckedChangeListener(new RadioGroupListener());
         adapter.setListener(new PagerAdapterListener());
         left_lin.setOnClickListener(this);
@@ -345,7 +352,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     public void DeleteImageSuccess(String Massage) {
         ToastUtils.showLong(Massage);
        // p.getSubject(dbProjectId, ht_projectId, position);
-        p.getImage(ht_projectId,position+1,_mActivity);
+        p.getImage(ht_projectId,_mActivity,number,ht_id);
     }
 
     @Override
@@ -410,7 +417,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                   List<MediaBean> mediaBeanList = imageMultipleResultEvent.getResult();
                   if (mediaBeanList != null && mediaBeanList.size() > 0) {
                       KLog.d(mediaBeanList.get(0).getOriginalPath());
-                      p.SaveImages(mediaBeanList,ht_projectId,(position+1));
+                      p.SaveImages(mediaBeanList,ht_projectId,number,ht_id);
                   }
               }
 
@@ -427,19 +434,19 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.left_lin:
-                KLog.d("position",position);
-                if (position > 0) {
+                KLog.d("position",number);
+                if (number > 0) {
                     if (isComplete()) {
-                        EventBus.getDefault().post(new isCompleteBean(true,position,1));
+                        EventBus.getDefault().post(new isCompleteBean(true,number,1));
                     } else {
                         ToastUtils.showLong("当前题目未完成");
                     }
                 }
                 break;
             case R.id.right_lin:
-                if (position < countSize) {
+                if (number < countSize) {
                     if (isComplete()) {
-                        EventBus.getDefault().post(new isCompleteBean(true,position,2));
+                        EventBus.getDefault().post(new isCompleteBean(true,number,2));
                     } else {
                         ToastUtils.showLong("当前题目未完成");
                     }
@@ -456,7 +463,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     public void AudioSuccess(String audioPath) {
         KLog.d("录音回调",audioPath);
         isRecorder=false;
-        p.getAudio(ht_projectId,(position+1),_mActivity);
+        p.getAudio(ht_projectId,_mActivity,number,ht_id);
     }
 
     /**
@@ -525,7 +532,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 answers = "否";
             }
             KLog.d("选择", answers);
-            p.saveAnswers(answers, remark, ht_projectId, position + 1);
+            p.saveAnswers(answers, remark, ht_projectId, number,ht_id);
         }
     }
 
@@ -567,7 +574,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             RequestPermissionUtils.requestPermission(_mActivity, new OnRequestPermissionListener() {
                         @Override
                         public void PermissionSuccess(List<String> permissions) {
-                            EventBus.getDefault().postSticky(new EvenBus_recorderType(1,String.valueOf(position+1),Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + (position+1) ,Constants.SAVE_DIR_VOICE_TEM));
+                            EventBus.getDefault().postSticky(new EvenBus_recorderType(1,String.valueOf(number),Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number+"_"+ht_id ,Constants.SAVE_DIR_VOICE_TEM));
                         }
 
                         @Override
@@ -577,14 +584,14 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
                         @Override
                         public void PermissionHave() {
-                            EventBus.getDefault().postSticky(new EvenBus_recorderType(1,String.valueOf(position+1),Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + (position+1) ,Constants.SAVE_DIR_VOICE_TEM));
+                            EventBus.getDefault().postSticky(new EvenBus_recorderType(1,String.valueOf(number),Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/"+ number+"_"+ht_id ,Constants.SAVE_DIR_VOICE_TEM));
                         }
                     }, Manifest.permission.RECORD_AUDIO
                      , Manifest.permission.WRITE_EXTERNAL_STORAGE
                      , Manifest.permission.READ_EXTERNAL_STORAGE);
 
         } else {
-            EventBus.getDefault().postSticky(new EvenBus_recorderType(1,String.valueOf(position+1),Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + (position+1) ,Constants.SAVE_DIR_VOICE_TEM));
+            EventBus.getDefault().postSticky(new EvenBus_recorderType(1,String.valueOf(number),Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number+"_"+ht_id ,Constants.SAVE_DIR_VOICE_TEM));
         }
     }
 }
