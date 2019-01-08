@@ -1,8 +1,6 @@
 package com.coahr.thoughtrui.dagger.modules;
 
 import com.coahr.thoughtrui.dagger.components.BaseFragmentComponents;
-import com.coahr.thoughtrui.dagger.modules.attendance.AttendanceFragment_hModule;
-import com.coahr.thoughtrui.dagger.modules.attendance.AttendanceFragment_kModule;
 import com.coahr.thoughtrui.mvp.view.attence.AttendanceFragment_h;
 import com.coahr.thoughtrui.mvp.view.attence.AttendanceFragment_k;
 import com.coahr.thoughtrui.mvp.view.home.MainFragment;
@@ -10,8 +8,11 @@ import com.coahr.thoughtrui.mvp.view.home.MyTabFragment;
 import com.coahr.thoughtrui.mvp.view.home.ProjectDetailFragment;
 import com.coahr.thoughtrui.mvp.view.mydata.LoginFragment;
 import com.coahr.thoughtrui.mvp.view.SubjectList.Fragment_Topics;
+import com.coahr.thoughtrui.mvp.view.reviewed.ReviewInfoList;
+import com.coahr.thoughtrui.mvp.view.reviewed.ReviewPager;
+import com.coahr.thoughtrui.mvp.view.reviewed.ReviewStartProject;
+import com.coahr.thoughtrui.mvp.view.reviewed.ReviewedFragment;
 import com.coahr.thoughtrui.mvp.view.startProject.PagerFragment_a;
-import com.coahr.thoughtrui.mvp.view.startProject.StartProjectFragment;
 import com.coahr.thoughtrui.mvp.view.upload.UploadFragment;
 import com.coahr.thoughtrui.widgets.AltDialog.DialogFragmentAudioPlay;
 
@@ -49,9 +50,6 @@ public abstract class AllFragmentModule {
     abstract AttendanceFragment_h AttachFragment_hFragmentInjector();
 
     @ContributesAndroidInjector()
-    abstract StartProjectFragment StartProjectFragmentFragmentInjector();
-
-    @ContributesAndroidInjector()
     abstract PagerFragment_a PagerFragment_aFragmentInjector();
 
     @ContributesAndroidInjector()
@@ -59,4 +57,16 @@ public abstract class AllFragmentModule {
 
     @ContributesAndroidInjector()
     abstract Fragment_Topics Fragment_TopicsInjector();
+
+    @ContributesAndroidInjector(modules = ReviewFragment_Module.class)
+    abstract ReviewedFragment ReviewFragmentInjector();
+
+    @ContributesAndroidInjector()
+    abstract ReviewPager ReviewPagerInjector();
+
+    @ContributesAndroidInjector()
+    abstract ReviewInfoList ReviewInfoListInjector();
+
+    @ContributesAndroidInjector()
+    abstract ReviewStartProject  ReviewStartProjectInjector();
 }

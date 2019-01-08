@@ -10,12 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar>
-    <include
-        android:id="@+id/recorder_model"
-        android:layout_margin="@dimen/dp_5"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        layout="@layout/layout_audio_recorder"/>
     <com.coahr.thoughtrui.widgets.CustomScrollViewPager
         android:id="@+id/project_viewPage"
         android:layout_width="match_parent"

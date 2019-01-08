@@ -2,6 +2,7 @@ package com.coahr.thoughtrui.mvp.view.attence.adapter;
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -18,6 +19,7 @@ import com.socks.library.KLog;
  * Created by Leehor
  * on 2018/12/24
  * on 16:30
+ * 已弃用
  */
 public class AttendanceHistoryAdapter extends BaseQuickAdapter<AttendanceHistory.DataBean.AttendanceListBean, BaseViewHolder> {
     public AttendanceHistoryAdapter() {
@@ -37,10 +39,13 @@ public class AttendanceHistoryAdapter extends BaseQuickAdapter<AttendanceHistory
         TextView attendance_time_e = include_end.findViewById(R.id.attendance_time_e);
         ImageView iv_attendance_tag_end = include_end.findViewById(R.id.iv_attendance_tag_end);
          TextView tv_attendance_address_e = include_end.findViewById(R.id.tv_attendance_address_e);
+        LinearLayout viewById = include_end.findViewById(R.id.line_update);
+        viewById.setVisibility(View.GONE);
+        include_end.findViewById(R.id.tv_bzhu).setVisibility(View.GONE);
         helper.setText(R.id.tv_date, TimeUtils.getStringDate_start(Long.parseLong(item.getDateTime())));
         helper.setText(R.id.tv_progress, item.getProgress());
         if (item.getInTime() != 0) {
-            attendance_time_k.setText(TimeUtils.getStingYMDHM(item.getInTime()));
+            attendance_time_k.setText(TimeUtils.getStingHM(item.getInTime()));
             if (item.getStartTimeStatus() == 1 && item.getStartLocationStatus() == 1) {
                 iv_attendance_tag_start.setImageResource(R.mipmap.kaoqinz);
             } else {
@@ -75,7 +80,7 @@ public class AttendanceHistoryAdapter extends BaseQuickAdapter<AttendanceHistory
         }
 
         if (item.getOutTime() != 0) {
-            attendance_time_e.setText(TimeUtils.getStingYMDHM(item.getOutTime()));
+            attendance_time_e.setText(TimeUtils.getStingHM(item.getOutTime()));
             if (item.getEndTimeStatus() == 1 && item.getEndLocationStatus() == 1) {
                 iv_attendance_tag_end.setImageResource(R.mipmap.kaoqinz);
             } else {
@@ -106,6 +111,7 @@ public class AttendanceHistoryAdapter extends BaseQuickAdapter<AttendanceHistory
                     }
                 }
             }).start();*/
+
         } else {
             iv_attendance_tag_end.setImageResource(R.mipmap.kaoqinq);
         }

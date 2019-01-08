@@ -20,6 +20,7 @@ import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_LoginSuccess;
 import com.coahr.thoughtrui.mvp.model.Bean.Event_Main;
 import com.coahr.thoughtrui.mvp.presenter.MainActivityP;
 import com.coahr.thoughtrui.mvp.view.home.MainFragment;
+import com.coahr.thoughtrui.mvp.view.reviewed.ReviewedFragment;
 import com.coahr.thoughtrui.mvp.view.upload.UploadFragment;
 import com.coahr.thoughtrui.widgets.MyBottomNavigation.MyBottomNavigation;
 import com.socks.library.KLog;
@@ -41,7 +42,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     MyBottomNavigation myBottomNavigation;
     //正在展示的fragment的position
     private int bottomNavigationPreposition = 0;
-    private SupportFragment[] mFragments = new SupportFragment[2];
+    private SupportFragment[] mFragments = new SupportFragment[3];
     private long exitTime = 0;
     private static final long INTERVAL_TIME = 2000;
     private String sessionId;
@@ -58,9 +59,11 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
         if (savedInstanceState != null) {
             mFragments[0] = findFragment(MainFragment.class);
             mFragments[1] = findFragment(UploadFragment.class);
+            mFragments[2]=findFragment(ReviewedFragment.class);
         } else {
             mFragments[0] = MainFragment.newInstance();
             mFragments[1] = UploadFragment.newInstance();
+            mFragments[2] = ReviewedFragment.newInstance();
         }
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
@@ -85,7 +88,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
         myBottomNavigation.setOnTabPositionListener(new MyBottomNavigation.OnTabPositionListener() {
             @Override
             public void onPositionTab(int position) {
-                if (position <= 1) {
+                if (position <= 2) {
                     showFragment(position);
                 }
             }

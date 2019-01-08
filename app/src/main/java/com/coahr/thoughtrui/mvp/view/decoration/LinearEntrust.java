@@ -21,7 +21,7 @@ public class LinearEntrust extends SpacesItemDecorationEntrust {
     @Override
     public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
         LinearLayoutManager layoutManager = (LinearLayoutManager) parent.getLayoutManager();
-        //没有子view或者没有没有颜色直接return
+        //没有子view或者没有颜色直接return
         if (mDivider == null || layoutManager.getChildCount() == 0) {
             return;
         }

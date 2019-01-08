@@ -29,6 +29,7 @@
             android:layout_height="20dp"
             android:src="@mipmap/kaoqinz"/>
         <TextView
+            android:id="@+id/tv_bzhu"
             android:textSize="@dimen/dp_14"
             android:textColor="#2D7DFF"
             android:layout_marginLeft="@dimen/dp_10"
@@ -59,6 +60,7 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/line_update"
         android:layout_marginTop="@dimen/dp_5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

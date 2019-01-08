@@ -129,7 +129,8 @@ dependencies {
     implementation 'cn.finalteam.rxgalleryfinal:library:1.1.3'
     implementation files('libs/BaiduLBS_Android.jar')
     implementation project(':cuterecorder')
-
+    //日期选择器
+    implementation 'com.jzxiang.pickerview:TimePickerDialog:1.0.1'
     //友盟=========================推送====================================
 
     //PushSDK必须依赖基础组件库，所以需要加入对应依赖

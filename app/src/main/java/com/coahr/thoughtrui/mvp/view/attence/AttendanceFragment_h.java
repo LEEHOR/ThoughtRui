@@ -3,6 +3,10 @@ package com.coahr.thoughtrui.mvp.view.attence;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.util.TouchEventUtil;
 import com.coahr.thoughtrui.R;
@@ -21,10 +25,15 @@ import com.coahr.thoughtrui.mvp.model.Bean.Event_Attend;
 import com.coahr.thoughtrui.mvp.presenter.AttendanceFP_h;
 import com.coahr.thoughtrui.mvp.view.attence.adapter.AttendanceHistoryAdapter;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
+import com.jzxiang.pickerview.TimePickerDialog;
+import com.jzxiang.pickerview.data.Type;
+import com.jzxiang.pickerview.listener.OnDateSetListener;
 import com.socks.library.KLog;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,17 +46,33 @@ import butterknife.BindView;
  * on 2018/11/15
  * on 13:22
  */
-public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Presenter> implements AttendanceFC_h.View {
+public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Presenter> implements AttendanceFC_h.View, OnDateSetListener {
     @Inject
     AttendanceFP_h p;
-    @BindView(R.id.history_recyclerView)
-    RecyclerView history_recyclerView;
-    private AttendanceHistoryAdapter attendanceHistoryAdapter;
-    private LinearLayoutManager linearLayoutManager;
+    @BindView(R.id.start_part)
+    View include_start;
+    @BindView(R.id.end_part)
+    View include_end;
+    @BindView(R.id.tv_progress)
+    TextView tv_progress;
+    @BindView(R.id.tv_select_time)
+    TextView tv_select_time;
+    @BindView(R.id.iv_select_time)
+    ImageView iv_select_time;
     private String projectId;
 
+    private TextView attendance_time_k;
+    private ImageView iv_attendance_tag_start;
+    private TextView tv_attendance_address_k;
+
+    private TextView attendance_time_e;
+    private ImageView iv_attendance_tag_end;
+    private TextView tv_attendance_address_e;
+    private TimePickerDialog datePickerDialog;
+    //
+
     public static AttendanceFragment_h newInstance() {
-        AttendanceFragment_h attendanceFragment_h =new AttendanceFragment_h();
+        AttendanceFragment_h attendanceFragment_h = new AttendanceFragment_h();
         return attendanceFragment_h;
     }
 
@@ -64,17 +89,26 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
 
     @Override
     public void initView() {
-        attendanceHistoryAdapter = new AttendanceHistoryAdapter();
-        linearLayoutManager = new LinearLayoutManager(BaseApplication.mContext);
-        history_recyclerView.setLayoutManager(linearLayoutManager);
-        history_recyclerView.setAdapter(attendanceHistoryAdapter);
-        history_recyclerView.addItemDecoration(new SpacesItemDecoration(0,DensityUtils.dp2px(BaseApplication.mContext,5)),getResources().getColor(R.color.material_grey_400));
+        initTimePickerDialog();
+        //开始
+        attendance_time_k = include_start.findViewById(R.id.attendance_time_k);
+        iv_attendance_tag_start = include_start.findViewById(R.id.iv_attendance_tag_start);
+        tv_attendance_address_k = include_start.findViewById(R.id.tv_attendance_address_k);
+        //结束
+        attendance_time_e = include_end.findViewById(R.id.attendance_time_e);
+        iv_attendance_tag_end = include_end.findViewById(R.id.iv_attendance_tag_end);
+        tv_attendance_address_e = include_end.findViewById(R.id.tv_attendance_address_e);
 
-        for (int i = 0; i < history_recyclerView.getItemDecorationCount(); i++) {
-            if (i!=0){
-                history_recyclerView.removeItemDecorationAt(i);
+        //把备注和更新打卡隐藏
+        LinearLayout viewById = include_end.findViewById(R.id.line_update);
+        viewById.setVisibility(View.GONE);
+        include_end.findViewById(R.id.tv_bzhu).setVisibility(View.GONE);
+        iv_select_time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                datePickerDialog.show(getFragmentManager(), "datePickerDialog");
             }
-        }
+        });
     }
 
     @Override
@@ -84,15 +118,7 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
 
     @Override
     public void getMainDataSuccess(Attendance attendance) {
-     /*   //把数据发送到AttendRootFragment用于显示
-        EventBus.getDefault().postSticky(new Event_Attend(attendance.getData().getPname()
-                ,attendance.getData().getStartTime()
-                ,attendance.getData().getEndTime()
-                ,attendance.getData().getCname()
-                ,attendance.getData().getCode()
-                ,attendance.getData().getAreaAddress()));
-        projectId = attendance.getData().getProjectId();*/
-       // getHistory(projectId);
+
     }
 
     @Override
@@ -102,10 +128,9 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
 
     @Override
     public void getAttendanceHistorySuccess(AttendanceHistory history) {
-        KLog.d("开始了1");
 
 
-        attendanceHistoryAdapter.setNewData(history.getData().getAttendanceList());
+
     }
 
     @Override
@@ -114,17 +139,50 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
     }
 
     //网络请求
-    private void getData(){
+    private void getData() {
         Map<String, Object> map = new HashMap<>();
         map.put("projectId", Constants.ht_ProjectId);
-        map.put("sessionId",Constants.sessionId);
-       // p.getMainData(map);
+        map.put("sessionId", Constants.sessionId);
+        // p.getMainData(map);
     }
-        //打卡历史
-    private void getHistory(String projectId){
+
+    //打卡历史
+    private void getHistory(String projectId) {
         Map<String, Object> map = new HashMap<>();
         map.put("projectId", projectId);
-        map.put("sessionId",Constants.sessionId);
+        map.put("sessionId", Constants.sessionId);
         p.getAttendanceHistory(map);
+    }
+
+    private void initTimePickerDialog() {
+        KLog.e(TAG, "---initTimePickerDialog---pre---");
+        long tenYears = 10L * 365 * 1000 * 60 * 60 * 24L;
+        long fourHour = 60 * 60 * 4L * 1000;
+        datePickerDialog = new TimePickerDialog.Builder()
+                .setCallBack(this)
+                .setCancelStringId("取消")
+                .setSureStringId("确定")
+                .setTitleStringId("预约日期")
+                .setYearText("年")
+                .setMonthText("月")
+                .setDayText("日")
+                .setHourText("时")
+                .setMinuteText("分")
+                .setCyclic(false)
+                .setMinMillseconds(System.currentTimeMillis() - tenYears)
+                .setMaxMillseconds(System.currentTimeMillis() + tenYears)
+                .setCurrentMillseconds(System.currentTimeMillis())
+                .setThemeColor(getResources().getColor(R.color.material_blue_600))
+                .setType(Type.ALL)
+                .setWheelItemTextNormalColor(getResources().getColor(R.color.timetimepicker_default_text_color))
+                .setWheelItemTextSelectorColor(getResources().getColor(R.color.black))
+                .setWheelItemTextSize(12)
+                .build();
+
+    }
+
+    @Override
+    public void onDateSet(TimePickerDialog timePickerView, long millseconds) {
+
     }
 }

@@ -26,4 +26,9 @@ public class ApiContact {
     public static final String  AttendanceHistory="app/attendance/history.htm";
     //题目列表
     public static final String  getSubjectList="app/question/list.htm";
+    //审核列表和搜索
+    public static final String  getCensorList="app/censor/list.htm";
+    //审核详情列表
+    public static final String getCensorInfoList="app/censor/infor.htm";
+
 }

@@ -1,11 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-            <android.support.v7.widget.RecyclerView
-                android:background="@color/material_grey_50"
-                android:id="@+id/history_recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-            </android.support.v7.widget.RecyclerView>
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:padding="@dimen/edge_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/te_1"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:textSize="@dimen/dp_14"
+            android:textColor="#2D7DFF"
+            android:text="访问进度:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tv_progress"
+            android:layout_toRightOf="@+id/te_1"
+            android:layout_marginLeft="@dimen/dp_5"
+            android:textSize="@dimen/dp_14"
+            android:textColor="#2D7DFF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_toLeftOf="@+id/iv_select_time"
+            android:id="@+id/tv_select_time"
+            android:layout_centerVertical="true"
+            android:textColor="#999999"
+            android:textSize="@dimen/dp_14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:layout_marginLeft="@dimen/dp_5"
+            android:id="@+id/iv_select_time"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/down"
+            android:layout_width="@dimen/dp_12"
+            android:layout_height="@dimen/dp_12" />
+    </RelativeLayout>
+   <RelativeLayout
+       android:padding="@dimen/edge_margin"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+       <RelativeLayout
+           android:padding="@dimen/dp_5"
+           android:id="@+id/re_left"
+           android:layout_alignParentLeft="true"
+           android:layout_alignTop="@+id/re_right"
+           android:layout_alignBottom="@+id/re_right"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content">
+           <ImageView
+               android:id="@+id/iv_top"
+               android:layout_alignParentTop="true"
+               android:layout_centerHorizontal="true"
+               android:background="@drawable/bg_blue_circle"
+               android:scaleType="fitXY"
+               android:layout_width="@dimen/dp_10"
+               android:layout_height="@dimen/dp_10" />
+           <View
+               android:id="@+id/center_line"
+               android:layout_below="@+id/iv_top"
+               android:layout_above="@+id/iv_bottom"
+               android:layout_centerHorizontal="true"
+               android:background="#999999"
+               android:layout_width="1dp"
+               android:layout_height="wrap_content"/>
+           <ImageView
+               android:layout_alignParentBottom="true"
+               android:id="@+id/iv_bottom"
+               android:layout_centerHorizontal="true"
+               android:background="@drawable/bg_gray_circle"
+               android:scaleType="fitXY"
+               android:layout_width="@dimen/dp_10"
+               android:layout_height="@dimen/dp_10" />
+       </RelativeLayout>
+       <RelativeLayout
+
+           android:layout_toRightOf="@+id/re_left"
+           android:id="@+id/re_right"
+           android:layout_alignParentRight="true"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content">
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="vertical">
+               <RelativeLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+                   <TextView
+                       android:layout_centerVertical="true"
+                       android:layout_alignParentLeft="true"
+                       android:id="@+id/text1"
+                       android:textColor="#999999"
+                       android:textSize="@dimen/dp_14"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:text="进店时间/"/>
+                   <TextView
+                       android:id="@+id/tv_date"
+                       android:text="dsdsdsdsd"
+                       android:layout_centerVertical="true"
+                       android:layout_toRightOf="@+id/text1"
+                       android:textColor="#999999"
+                       android:textSize="@dimen/dp_14"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content" />
+       </RelativeLayout>
+
+
+               <include
+                   android:id="@+id/start_part"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   layout="@layout/layout_attendance_starttime"/>
+
+               <include
+                   android:id="@+id/end_part"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   layout="@layout/layout_attendance_endtime"/>
+
+           </LinearLayout>
+       </RelativeLayout>
+        <TextView
+            android:hint="备注："
+            android:background="#FAFAFA"
+            android:textColor="#999999"
+            android:gravity="top"
+            android:lines="5"
+            android:textSize="@dimen/dp_12"
+            android:padding="@dimen/dp_5"
+            android:layout_marginTop="@dimen/dp_5"
+           android:layout_toRightOf="@+id/re_left"
+            android:layout_below="@+id/re_left"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+   </RelativeLayout>
 </LinearLayout>

@@ -60,4 +60,13 @@ public class TimeUtils {
         //将时间赋值给控件
         textView.setText(str);
     }
+
+    public static String getStingHM(long date){
+        String startTime;
+        Date d = new Date(date);
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        startTime = sdf.format(d);
+        return startTime;
+
+    }
 }

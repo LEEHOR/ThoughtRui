@@ -357,7 +357,7 @@ public class CuteRecorder implements AudioManger.AudioStateListener {
                     }
                     File file = new File(unitedFilePath, audioName);
                     if (!file.exists()){
-                        file.mkdir();
+                        file.createNewFile();
                     }
                     FileOutputStream fos = new FileOutputStream(unitedFile);
                     RandomAccessFile ra = null;

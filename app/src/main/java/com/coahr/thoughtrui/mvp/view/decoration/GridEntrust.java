@@ -29,7 +29,7 @@ public class GridEntrust extends SpacesItemDecorationEntrust {
         int left, right, top, bottom;
         final int childCount = parent.getChildCount();
         if (layoutManager.getOrientation() == GridLayoutManager.VERTICAL) {
-            for (int i = 0; i < childCount; i++) {
+            for (int i = 0; i <= childCount-1; i++) {
                 final View child = parent.getChildAt(i);
                 //将带有颜色的分割线处于中间位置
                 final float centerLeft = ((float) (layoutManager.getLeftDecorationWidth(child) + layoutManager.getRightDecorationWidth(child))
@@ -68,7 +68,7 @@ public class GridEntrust extends SpacesItemDecorationEntrust {
                 }
             }
         } else {
-            for (int i = 0; i < childCount; i++) {
+            for (int i = 0; i <= childCount-1; i++) {
                 final View child = parent.getChildAt(i);
                 //将带有颜色的分割线处于中间位置
                 final float centerLeft = (layoutManager.getRightDecorationWidth(child) + 1 - leftRight) / 2;

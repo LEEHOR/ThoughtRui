@@ -2,7 +2,7 @@
 <resources>
     <!--与手机边缘距离-->
     <dimen name="edge_margin">12.5dp</dimen>
-
+    <dimen name="dp_1">1dp</dimen>
     <dimen name="dp_5">5dp</dimen>
     <dimen name="dp_8">8dp</dimen>
     <dimen name="dp_10">10dp</dimen>

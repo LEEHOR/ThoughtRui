@@ -3,6 +3,8 @@ package com.coahr.thoughtrui.mvp.model;
 import com.coahr.thoughtrui.mvp.model.Bean.AttendRemark;
 import com.coahr.thoughtrui.mvp.model.Bean.Attendance;
 import com.coahr.thoughtrui.mvp.model.Bean.AttendanceHistory;
+import com.coahr.thoughtrui.mvp.model.Bean.CensorBean;
+import com.coahr.thoughtrui.mvp.model.Bean.CensorInfoList;
 import com.coahr.thoughtrui.mvp.model.Bean.HomeDataList;
 import com.coahr.thoughtrui.mvp.model.Bean.LoginBean;
 import com.coahr.thoughtrui.mvp.model.Bean.PushAttendanceCard;
@@ -99,4 +101,22 @@ public interface ApiService {
     @FormUrlEncoded
     @POST(ApiContact.getSubjectList)
     Call<SubjectListBean> getSubjectList(@FieldMap Map<String, Object> para);
+
+    /**
+     * 获取审核列表或搜索
+     * @param para
+     * @return
+     */
+    @FormUrlEncoded
+    @POST(ApiContact.getCensorList)
+    Call<CensorBean> getCensorList(@FieldMap Map<String,Object> para);
+
+    /**
+     * 获取审核详情列表
+     * @param para
+     * @return
+     */
+    @FormUrlEncoded
+    @POST(ApiContact.getCensorInfoList)
+    Call<CensorInfoList> getCensorInfoList(@FieldMap Map<String,Object> para);
 }

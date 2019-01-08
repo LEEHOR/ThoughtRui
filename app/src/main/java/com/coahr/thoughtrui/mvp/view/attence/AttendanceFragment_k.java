@@ -484,7 +484,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                         //早班打卡时间状态
                         startTimeStatus = k_bean.getStartTimeStatus();
                         //早班打卡时间
-                        String stringDate_start = TimeUtils.getStingYMDHM(k_bean.getInTime());
+                        String stringDate_start = TimeUtils.getStingHM(k_bean.getInTime());
                         start_time_d.setText(stringDate_start);
                         //图标
                         if (startLocationStatus == 1 && startTimeStatus == 1) {  //在范围内
@@ -537,7 +537,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                 //早班打卡时间状态
                 startTimeStatus = k_bean.getStartTimeStatus();
                 //早班打卡时间
-                String stringDate_start = TimeUtils.getStingYMDHM(k_bean.getInTime());
+                String stringDate_start = TimeUtils.getStingHM(k_bean.getInTime());
                 start_time_d.setText(stringDate_start);
                 //早班打卡位置
 
@@ -568,7 +568,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                 //晚班卡打卡信息隐藏
                 include_end.setVisibility(View.VISIBLE);
                 //晚班打卡时间
-                String stringDate_start = TimeUtils.getStingYMDHM(k_bean.getOutTime());
+                String stringDate_start = TimeUtils.getStingHM(k_bean.getOutTime());
                 end_tv_time_d.setText(stringDate_start);
                 //晚班打卡位置状态
                 endLocationStatus = k_bean.getEndLocationStatus();
@@ -626,10 +626,11 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         continueStla = location.getLatitude();
         continueStlo = location.getLongitude();
         //当前定位位置
-        Location_now = location.getAddress() + location.getStreet();
+        Location_now = location.getAddress().street;
+        KLog.d("当前定位",location.getAddress().street);
         //把定位信息赋值
-        location_address_in.setText(location.getAddress() + location.getStreet());
-        location_address_out.setText(location.getAddress() + location.getStreet());
+        location_address_in.setText(Location_now);
+        location_address_out.setText(Location_now);
 
         mHandler.sendEmptyMessage(LOCATIONMESSAGE);
     }
