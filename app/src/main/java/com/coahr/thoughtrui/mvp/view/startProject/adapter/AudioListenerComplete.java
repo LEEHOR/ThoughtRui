@@ -6,5 +6,16 @@ package com.coahr.thoughtrui.mvp.view.startProject.adapter;
  * on 15:56
  */
 public interface AudioListenerComplete {
-    void AudioSuccess(String audioPath);
+
+    void isStart();
+
+    void isRecorderTime(int time);
+
+    void isComplete(int seconds, String filePath);
+
+    void isShort();
+
+    void isPause();
+
+    void isResume();
 }

@@ -93,7 +93,7 @@
         <service android:name=".mvp.view.UMPush.UmengNotificationService" />
 
         <receiver android:name=".mvp.view.UMPush.NotificationBroadcast" />
-
+        <service android:name=".mvp.view.recorder.RecorderService"/>
     </application>
 
 </manifest>

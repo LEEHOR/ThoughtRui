@@ -27,8 +27,6 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
         super(mview, mModel);
     }
 
-
-
     @Override
     public void getSubject(String DbProjectId, String ht_ProjectId, Activity activity,int number,String ht_id) {
         if (mModle != null) {

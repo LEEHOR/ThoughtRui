@@ -5,10 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaRecorder;
+import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
-import android.print.PrinterId;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -28,20 +28,20 @@ import java.util.List;
  * 创建日期：2019/1/8
  * 描述：录音服务
  */
-public class recorderService extends Service {
+public class RecorderService extends Service {
     private String mFileName = null;
     private String mFilePath = null;
     private String temName;
-    private Handler mHandle;
+    private static Handler mHandle;
     private String outPath;  //输出录音路径
     private String outName;  //录音文件名
     //默认录音最大最小时长
-    private int MAX_TIME = 60 * 1000 * 5;
-    private int MIN_TIME = 3 * 1000;
+    private int MAX_TIME = 60 * 5;
+    private int MIN_TIME = 3 ;
     private List<String> audioList = new ArrayList<>();
     private int time;
-    private AudioRecordListener recordListener;
-    private MediaRecorder mRecorder = null;
+    private  AudioRecordListener audioRecordListener;
+    private static MediaRecorder mRecorder = null;
     private recorderStatus status;  //录音状态
     private boolean isPrepare;
 
@@ -53,22 +53,82 @@ public class recorderService extends Service {
     private TelephonyManager tm;
     // 监听器对象
     private AudioManager ams = null;//音频管理器
+    private RecorderBinder mBinder = new RecorderBinder();
+
+    public RecorderService() {
+    }
+
+    public class RecorderBinder extends Binder{
+        /**
+         * 初始化
+         */
+            public void init(){
+                getInstance();
+            }
+
+        /**
+         * 配置录音参数
+         */
+        public void configureMediaRecorder(){
+                prepareRecording();
+            }
+
+        /**
+         * 配置路径和名字
+         * @param outPath
+         * @param outName
+         */
+        public void PrepareMediaRecorder(String outPath, String outName){
+            prepare(outPath,outName);
+        }
+
+        /**
+         * 开始录音
+         */
+        public  void  Start(){
+            startRecorder();
+        }
+
+        /**
+         * 停止录音
+         */
+        public void Stop(){
+            stopRecorder();
+        }
+
+        /**
+         * 暂停
+         */
+        public void Pause(){
+            pauseRecorder();
+        }
+
+        /**
+         * 继续
+         */
+        public void Resume() {
+            resumeRecorder();
+        }
+        public RecorderService getMyService(){
+            return RecorderService.this;
+        }
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return mBinder;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        return super.onStartCommand(intent,flags,startId);
+    }
+
+    public static void getInstance(){
         if (mHandle == null) {
             mHandle = new Handler();
         }
-        audioList.clear();
-        prepareRecording();
-        return START_STICKY;
     }
-
     /**
      * 服务创建的时候调用的方法
      */
@@ -91,18 +151,19 @@ public class recorderService extends Service {
     }
 
     /**
-     * 准备录音
+     * 配置录音参数
      */
     public void prepareRecording() {
         if (mRecorder == null) {
             mRecorder = new MediaRecorder();
+            mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+            mRecorder.setAudioChannels(1);
+            mRecorder.setAudioSamplingRate(44100);
+            mRecorder.setAudioEncodingBitRate(192000);
         }
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        mRecorder.setAudioChannels(1);
-        mRecorder.setAudioSamplingRate(44100);
-        mRecorder.setAudioEncodingBitRate(192000);
+
     }
 
     /**
@@ -111,11 +172,16 @@ public class recorderService extends Service {
     public void prepare(String outPath, String outName) {
         this.outPath = outPath;
         this.outName = outName;
+        if (isPrepare){
+            return;
+        }
         if (mRecorder != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                mRecorder.setOutputFile(setRecorderOutPath_max(outPath, outName));
+                String s = setRecorderOutPath_max(outPath, outName);
+                mRecorder.setOutputFile(s);
             } else {
-                mRecorder.setOutputFile(setRecorderOutPath_min(outPath));
+                String s = setRecorderOutPath_min(outPath);
+                mRecorder.setOutputFile(s);
             }
             try {
                 mRecorder.prepare();
@@ -126,25 +192,25 @@ public class recorderService extends Service {
         }
     }
 
-
     /**
      * 开始录制
      */
     public void startRecorder() {
+        audioList.clear();
         if (mRecorder != null && status != recorderStatus.Start && isPrepare && !Call) {
             mRecorder.start();
             status = recorderStatus.Start;
             mHandle.post(runnable);
-            if (recordListener != null) {
-                recordListener.StartRecorder();
+            if (audioRecordListener != null) {
+                audioRecordListener.StartRecorder();
             }
         }
     }
 
     public void stopRecorder() {
         if (time <= MIN_TIME) {
-            if (recordListener != null) {
-                recordListener.tooShort();
+            if (audioRecordListener != null) {
+                audioRecordListener.tooShort();
             }
         } else {
             if (mRecorder != null && status != recorderStatus.Stop) {
@@ -155,11 +221,11 @@ public class recorderService extends Service {
                 time = 0;
                 //判断版本
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    if (recordListener != null) {
-                        recordListener.finish(time, mFilePath);
+                    if (audioRecordListener != null) {
+                        audioRecordListener.finish(time, mFilePath);
                     }
                 } else {
-                    //判断数组书否大于1，大于1就和并
+                    //判断数组否大于1，大于1就合并
                     audioList.add(mFilePath);
                     if (audioList.size() > 1) {
                         new Thread(new Runnable() {
@@ -170,8 +236,8 @@ public class recorderService extends Service {
                                     public void mergeSuccess(String outPath) {
                                         //删除文件
                                         deleteAudio();
-                                        if (recordListener != null) {
-                                            recordListener.finish(time, outPath);
+                                        if (audioRecordListener != null) {
+                                            audioRecordListener.finish(time, outPath);
                                         }
                                     }
 
@@ -201,8 +267,8 @@ public class recorderService extends Service {
                 mRecorder.pause();
                 status = recorderStatus.Pause;
                 mHandle.removeCallbacks(runnable);
-                if (recordListener != null) {
-                    recordListener.hasPause();
+                if (audioRecordListener != null) {
+                    audioRecordListener.hasPause();
                 }
             } else {
                 //先停止并保存
@@ -221,8 +287,8 @@ public class recorderService extends Service {
                                     audioList.add(outPath);
                                     status = recorderStatus.Pause;
                                     mHandle.removeCallbacks(runnable);
-                                    if (recordListener != null) {
-                                        recordListener.hasPause();
+                                    if (audioRecordListener != null) {
+                                        audioRecordListener.hasPause();
                                     }
                                 }
 
@@ -247,8 +313,8 @@ public class recorderService extends Service {
                 mRecorder.start();
                 status = recorderStatus.Resume;
                 mHandle.post(runnable);
-                if (recordListener != null) {
-                    recordListener.hasResume();
+                if (audioRecordListener != null) {
+                    audioRecordListener.hasResume();
                 }
             }
         } else {
@@ -258,8 +324,8 @@ public class recorderService extends Service {
                 mRecorder.start();
                 status = recorderStatus.Resume;
                 mHandle.post(runnable);
-                if (recordListener != null) {
-                    recordListener.hasResume();
+                if (audioRecordListener != null) {
+                    audioRecordListener.hasResume();
                 }
             }
         }
@@ -283,21 +349,6 @@ public class recorderService extends Service {
         this.MIN_TIME = minTime;
     }
 
-    public interface AudioRecordListener {
-        //has record
-        void StartRecorder();
-
-        void RecorderTime(int time);
-
-        void finish(int seconds, String filePath);
-
-        void tooShort();
-
-        void hasPause();
-
-        void hasResume();
-    }
-
     /**
      * 释放录音
      */
@@ -318,7 +369,9 @@ public class recorderService extends Service {
             if (status == recorderStatus.Start  || status == recorderStatus.Resume) {
                 if (time<=MAX_TIME){
                     time++;
-                    recordListener.RecorderTime(time);
+                    if (audioRecordListener != null) {
+                        audioRecordListener.RecorderTime(time);
+                    }
                     mHandle.postDelayed(this, 1000);
                 } else {
                     stopRecorder();
@@ -440,11 +493,21 @@ public class recorderService extends Service {
      */
     @Override
     public void onDestroy() {
-        super.onDestroy();
             tm.listen(listener, PhoneStateListener.LISTEN_NONE);
             listener = null;
             ams.abandonAudioFocus(mAudioFocusListener);
+        if (mHandle != null) {
             mHandle.removeCallbacks(runnable);
+        }
             release();
+        super.onDestroy();
+    }
+
+    public  void setRecordListener(AudioRecordListener recordListener) {
+        this.audioRecordListener = recordListener;
+    }
+
+    public AudioRecordListener getRecordListener() {
+        return audioRecordListener;
     }
 }

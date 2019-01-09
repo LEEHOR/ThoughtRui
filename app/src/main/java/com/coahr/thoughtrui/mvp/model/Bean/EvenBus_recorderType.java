@@ -13,21 +13,18 @@ public class EvenBus_recorderType {
      *
      * audioSavePath 录音保存文件夹
      *
-     * audioTemSavePath 录音保存临时文件夹
      */
     private int type;
     private String recorderName;
     private String audioSavePath;
-    private String audioTemSavePath;
-
     public EvenBus_recorderType() {
     }
 
-    public EvenBus_recorderType(int type, String recorderName, String audioSavePath, String audioTemSavePath) {
+    public EvenBus_recorderType(int type, String recorderName, String audioSavePath) {
         this.type = type;
         this.recorderName = recorderName;
         this.audioSavePath = audioSavePath;
-        this.audioTemSavePath = audioTemSavePath;
+
     }
 
     public int getType() {
@@ -54,11 +51,4 @@ public class EvenBus_recorderType {
         this.audioSavePath = audioSavePath;
     }
 
-    public String getAudioTemSavePath() {
-        return audioTemSavePath;
-    }
-
-    public void setAudioTemSavePath(String audioTemSavePath) {
-        this.audioTemSavePath = audioTemSavePath;
-    }
 }

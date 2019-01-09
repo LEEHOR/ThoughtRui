@@ -2,8 +2,11 @@ package com.coahr.thoughtrui.mvp.view.startProject;
 
 import android.Manifest;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
@@ -92,12 +95,12 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     TextView tv_recorderBtn;  // 录音文字图片
     @BindView(R.id.Fr_takeRecorder)
     FrameLayout Fr_takeRecorder;  //录音总按钮
-    @BindView(R.id.ed_bianji)
-    EditText ed_bianji;    //编辑
+    @BindView(R.id.tv_bianji)
+    TextView tv_bianji;    //编辑
     @BindView(R.id.tv_Unfold)
     TextView tv_Unfold; //图片展开收起
     @BindView(R.id.img_recycler)
-    RecyclerView img_recycler;  //图片展示
+    RecyclerView img_recycler;  //图片列表
     @BindView(R.id.re_bottom_le)
     RelativeLayout re_bottom_le; //上一页
     @BindView(R.id.re_bottom_ri)
@@ -128,8 +131,39 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     private boolean isAnswer;
     //是否有录音
     private boolean isHaveRecorder;
+    //是否有图片
+    private boolean isPhotos;
     private String audioPath;
     private PhotoAlbumDialogFragment photoAlbumDialogFragment;
+    //评论输入窗口
+    EvaluateInputDialogFragment dialogFragment = EvaluateInputDialogFragment.newInstance();
+    //是否获取录音权限
+    private boolean isHavePermission;
+    //录音播放按钮Ui
+    private Drawable imgs[]={BaseApplication.mContext.getResources().getDrawable(R.mipmap.ico_recorder,null)
+            ,BaseApplication.mContext.getResources().getDrawable(R.mipmap.recordering,null)
+            ,BaseApplication.mContext.getResources().getDrawable(R.mipmap.recorder_play_w,null)};
+    //主线程更新Ui
+    private static final int RecorderType_1=1; //开始录音
+    private static final int RecorderType_2=2; //正在录音
+    private static final int RecorderType_4=4; //播放录音
+    Handler mHandler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case RecorderType_1:
+                    updateUi(1);
+                    break;
+                case RecorderType_2:
+                    updateUi(2);
+                    break;
+                    case RecorderType_4:
+                        updateUi(4);
+                    break;
+            }
+        }
+    };
     public static PagerFragment_a newInstance(int position, String DbProjectId, String ht_ProjectId, int countSize, String name_project, String ht_id) {
         PagerFragment_a pagerFragment_a = new PagerFragment_a();
         Bundle bundle = new Bundle();
@@ -176,6 +210,50 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         gridLayoutManager = new GridLayoutManager(BaseApplication.mContext, 5);
         img_recycler.setLayoutManager(gridLayoutManager);
         img_recycler.setAdapter(adapter);
+        tv_Unfold.setOnClickListener(this);
+        re_bottom_le.setOnClickListener(this);
+        re_bottom_ri.setOnClickListener(this);
+        Fr_takePhoto.setOnClickListener(this);
+        tv_bianji.setOnClickListener(this);
+        //录音控制
+        Fr_takeRecorder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getAudioPermission()) { //有权限
+                    if (isHaveRecorder) {  //有无录音
+
+                    } else {
+                        if (Fr_takeRecorder.getTag() == null || Fr_takeRecorder.getTag().toString().equals("1")) { //开始录音
+                           // StartProjectActivity.startRecorder( Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id,String.valueOf(number));
+                            EventBus.getDefault().postSticky(new EvenBus_recorderType(1, String.valueOf(number), Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id));
+                        } else if (Fr_takeRecorder.getTag().toString().equals("2")) { //暂停录音
+                            EventBus.getDefault().postSticky(new EvenBus_recorderType(2, String.valueOf(number), Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id));
+                        } else if (Fr_takeRecorder.getTag().toString().equals("3")) { //继续录音
+                            EventBus.getDefault().postSticky(new EvenBus_recorderType(3, String.valueOf(number), Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id));
+                        } else if (Fr_takeRecorder.getTag().toString().equals("4")) {  //停止录音
+                           // StartProjectActivity.stopRecorder();
+                            EventBus.getDefault().postSticky(new EvenBus_recorderType(4, String.valueOf(number), Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id));
+                        } else {
+
+                        }
+                    }
+                } else {  //无权限
+                    ToastUtils.showLong("请授予录音权限");
+                }
+            }
+        });
+        //输入备注
+        dialogFragment.setOnInputCallback(new EvaluateInputDialogFragment.InputCallback() {
+            @Override
+            public void onInputSend(String input, AppCompatDialogFragment dialog) {
+                if (input != null && !input.equals("")) {
+                    KLog.d("输入", input);
+                    tv_bianji.setText(input);
+                    p.saveAnswers(answers, input, ht_projectId, number, ht_id);
+                    dialogFragment.dismiss();
+                }
+            }
+        });
     }
 
     @Override
@@ -185,26 +263,79 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         rg_gr.setOnCheckedChangeListener(new RadioGroupListener());
         //图片监听
         adapter.setListener(new PagerAdapterListener());
+        StartProjectActivity.setAudioListenerComplete(new AudioListenerComplete() {
+            @Override
+            public void isStart() {
+                KLog.d("录音2",1);
+                Fr_takeRecorder.setTag(4);
+                 //   updateUi(2); //正在录音
+                mHandler.sendEmptyMessage(RecorderType_2);
+            }
+
+            @Override
+            public void isRecorderTime(int time) {
+                KLog.d("录音2",time);
+            }
+
+            @Override
+            public void isComplete(int seconds, String filePath) {
+                Fr_takeRecorder.setTag(1);
+                p.getAudio(ht_projectId,_mActivity,number,ht_id);
+                KLog.d("录音2",filePath);
+            }
+
+            @Override
+            public void isShort() {
+                KLog.d("录音2",4);
+            }
+
+            @Override
+            public void isPause() {
+                Fr_takeRecorder.setTag(3);
+                KLog.d("录音2",5);
+            }
+
+            @Override
+            public void isResume() {
+                Fr_takeRecorder.setTag(4);
+                KLog.d("录音2",6);
+            }
+        });
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             //上一题
             case R.id.re_bottom_le:
-
+                if (number > 0) {
+                    if (isComplete()) {
+                        EventBus.getDefault().post(new isCompleteBean(true, number, 1));
+                    } else {
+                        ToastUtils.showLong("当前题目未完成");
+                    }
+                }
                 break;
-                //下一题
+            //下一题
             case R.id.re_bottom_ri:
-
+                if (number < countSize) {
+                    if (isComplete()) {
+                        EventBus.getDefault().post(new isCompleteBean(true, number, 2));
+                    } else {
+                        ToastUtils.showLong("当前题目未完成");
+                    }
+                }
                 break;
-                //拍照
+            //拍照
             case R.id.Fr_takePhoto:
                 if (imageSize < 10) {
                     openMulti((10 - imageSize));
                 } else {
                     ToastUtils.showLong("图片数量已经足够");
                 }
+                break;
+            case R.id.tv_bianji:
+                dialogFragment.show(_mActivity.getSupportFragmentManager(), TAG);
                 break;
 
         }
@@ -254,6 +385,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     public void getImageSuccess(List<String> imagePathList) {
         imageSize = imagePathList.size();
         if (imagePathList.size() > 0) {
+            isPhotos = true;
             if (isDeletePic) {
                 adapter.setIsDel(true);
                 adapter.setNewData(imagePathList);
@@ -263,6 +395,11 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 adapter.setNewData(imagePathList);
                 adapter.setImageList(imagePathList);
             }
+        } else {
+            isDeletePic = false;
+            adapter.setIsDel(false);
+            adapter.setNewData(imagePathList);
+            adapter.setImageList(imagePathList);
         }
     }
 
@@ -270,6 +407,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     public void getImageFailure() {
         ToastUtils.showLong("获取图片失败");
         isDeletePic = false;
+        isPhotos = false;
     }
 
     @Override
@@ -298,7 +436,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                         String string1 = SaveOrGetAnswers.getString(s1, ":");
                         if (string1 != null && !string1.equals("") && !string1.equals("null")) {
                             remark = string1;
-                            ed_bianji.setText(string1);
+                            tv_bianji.setText(string1);
                         }
                     }
                 }
@@ -314,7 +452,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     @Override
     public void DeleteImageSuccess(String Massage) {
         ToastUtils.showLong(Massage);
-        p.getImage(ht_projectId,_mActivity,number,ht_id);
+        p.getImage(ht_projectId, _mActivity, number, ht_id);
     }
 
     @Override
@@ -344,18 +482,21 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
     @Override
     public void getAudioSuccess(List<String> audioList) {
-        if (audioList != null && audioList.size()>0) {
-            isHaveRecorder=true;
+        if (audioList != null && audioList.size() > 0) {
+            isHaveRecorder = true;
             audioPath = audioList.get(0);
-            String audioName = FileIOUtils.getE(audioPath, "/");
-
+            //String audioName = FileIOUtils.getE(audioPath, "/");
+           // updateUi(4); //播放录音
+            mHandler.sendEmptyMessage(RecorderType_4);
         }
     }
 
     @Override
     public void getAudioFailure(String failure) {
-        isHaveRecorder=false;
+        isHaveRecorder = false;
         ToastUtils.showLong(failure);
+       // updateUi(1); //开始录音
+        mHandler.sendEmptyMessage(RecorderType_1);
     }
 
 
@@ -369,7 +510,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     /**
      * 拍照
      */
-    private void openMulti(int count){
+    private void openMulti(int count) {
         setPath();
         RxGalleryFinal rxGalleryFinal = RxGalleryFinal
                 .with(_mActivity)
@@ -383,7 +524,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                         List<MediaBean> mediaBeanList = imageMultipleResultEvent.getResult();
                         if (mediaBeanList != null && mediaBeanList.size() > 0) {
                             KLog.d(mediaBeanList.get(0).getOriginalPath());
-                            p.SaveImages(mediaBeanList,ht_projectId,number,ht_id);
+                            p.SaveImages(mediaBeanList, ht_projectId, number, ht_id);
                         }
                     }
 
@@ -407,36 +548,41 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     /**
      * 动态获取录音权限
      */
-    private void getAudioPermission() {
-
+    private boolean getAudioPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             RequestPermissionUtils.requestPermission(_mActivity, new OnRequestPermissionListener() {
                         @Override
                         public void PermissionSuccess(List<String> permissions) {
-                            EventBus.getDefault().postSticky(new EvenBus_recorderType(1,String.valueOf(number),Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number+"_"+ht_id ,Constants.SAVE_DIR_VOICE_TEM));
+                            isHavePermission=true;
+                           // EventBus.getDefault().postSticky(new EvenBus_recorderType(1, String.valueOf(number), Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id));
                         }
 
                         @Override
                         public void PermissionFail(List<String> permissions) {
+                            isHavePermission=false;
                             Toast.makeText(_mActivity, "获取权限失败", Toast.LENGTH_LONG).show();
                         }
 
                         @Override
                         public void PermissionHave() {
-                            EventBus.getDefault().postSticky(new EvenBus_recorderType(1,String.valueOf(number),Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/"+ number+"_"+ht_id ,Constants.SAVE_DIR_VOICE_TEM));
+                            isHavePermission=true;
+                            //EventBus.getDefault().postSticky(new EvenBus_recorderType(1, String.valueOf(number), Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id));
                         }
                     }, Manifest.permission.RECORD_AUDIO
                     , Manifest.permission.WRITE_EXTERNAL_STORAGE
                     , Manifest.permission.READ_EXTERNAL_STORAGE);
 
         } else {
-            EventBus.getDefault().postSticky(new EvenBus_recorderType(1,String.valueOf(number),Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number+"_"+ht_id ,Constants.SAVE_DIR_VOICE_TEM));
+            isHavePermission=true;
+           // EventBus.getDefault().postSticky(new EvenBus_recorderType(1, String.valueOf(number), Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id));
         }
+        return isHavePermission;
     }
+
     /**
      * 图片监听
      */
-    class PagerAdapterListener implements PagerFragmentPhotoListener{
+    class PagerAdapterListener implements PagerFragmentPhotoListener {
 
         @Override
         public void onClick(List<String> imageList, int position) {
@@ -462,7 +608,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         }
     }
 
-    class RadioGroupListener implements RadioGroup.OnCheckedChangeListener{
+    class RadioGroupListener implements RadioGroup.OnCheckedChangeListener {
 
         @Override
         public void onCheckedChanged(RadioGroup radioGroup, int i) {
@@ -478,7 +624,38 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 answers = "否";
             }
             KLog.d("选择", answers);
-            p.saveAnswers(answers, remark, ht_projectId, number,ht_id);
+            p.saveAnswers(answers, remark, ht_projectId, number, ht_id);
         }
+    }
+
+    /**
+     * 判断是否完成
+     *
+     * @return
+     */
+    private boolean isComplete() {
+        if (isPhotos && isAnswer) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * UI更新
+     * @param type
+     */
+    private void updateUi( int type){
+                if (type==1){
+                    tv_recorderBtn.setText("开始录音");
+                    tv_recorderBtn.setCompoundDrawables(imgs[0],null,null,null);
+                }
+                if (type==2){
+                    tv_recorderBtn.setText("正在录音");
+                    tv_recorderBtn.setCompoundDrawables(imgs[1],null,null,null);
+                }
+                if (type==4){
+                    tv_recorderBtn.setText("播放录音");
+                    tv_recorderBtn.setCompoundDrawables(imgs[2],null,null,null);
+                }
     }
 }

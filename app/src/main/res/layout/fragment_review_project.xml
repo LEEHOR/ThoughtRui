@@ -46,14 +46,19 @@
                 android:orientation="vertical">
                 <RadioButton
                     android:id="@+id/rb_yes"
-                    android:button="@drawable/radio_button"
+                    android:button="@null"
+                    android:drawableLeft="@drawable/radio_button"
+                    android:drawablePadding="@dimen/dp_10"
+                    android:buttonTintMode="src_in"
                     android:text="是"
                     android:padding="@dimen/dp_10"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
                 <RadioButton
                     android:id="@+id/rb_no"
-                    android:button="@drawable/radio_button"
+                    android:button="@null"
+                    android:drawableLeft="@drawable/radio_button"
+                    android:drawablePadding="@dimen/dp_10"
                     android:text="否"
                     android:padding="@dimen/dp_10"
                     android:layout_width="match_parent"
@@ -90,7 +95,7 @@
             android:layout_height="wrap_content">
             <RelativeLayout
                 android:id="@+id/re_top_1"
-              android:padding="@dimen/dp_10"
+                android:padding="@dimen/dp_10"
                 android:layout_alignParentTop="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -116,7 +121,7 @@
                 android:layout_height="@dimen/dp_1"
                 android:background="@color/material_grey_200"/>
             <RelativeLayout
-                android:layout_marginTop="@dimen/dp_20"
+                android:layout_marginTop="@dimen/dp_10"
                 android:padding="@dimen/dp_10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -221,8 +226,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_1"
                     android:background="@color/material_grey_200"/>
-                <EditText
-                    android:id="@+id/ed_bianji"
+                <TextView
+                    android:id="@+id/tv_bianji"
                     android:hint="点击编辑"
                     android:layout_marginTop="@dimen/dp_5"
                     android:padding="@dimen/dp_5"
@@ -231,7 +236,7 @@
                     android:textColor="@color/black"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/normal_edittext_style"/>
+                    />
             </LinearLayout>
     </android.support.v7.widget.CardView>
 
