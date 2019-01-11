@@ -20,6 +20,7 @@ import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_LoginSuccess;
 import com.coahr.thoughtrui.mvp.model.Bean.Event_Main;
 import com.coahr.thoughtrui.mvp.presenter.MainActivityP;
 import com.coahr.thoughtrui.mvp.view.home.MainFragment;
+import com.coahr.thoughtrui.mvp.view.mydata.MyFragment;
 import com.coahr.thoughtrui.mvp.view.reviewed.ReviewedFragment;
 import com.coahr.thoughtrui.mvp.view.upload.UploadFragment;
 import com.coahr.thoughtrui.widgets.MyBottomNavigation.MyBottomNavigation;
@@ -42,7 +43,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     MyBottomNavigation myBottomNavigation;
     //正在展示的fragment的position
     private int bottomNavigationPreposition = 0;
-    private SupportFragment[] mFragments = new SupportFragment[3];
+    private SupportFragment[] mFragments = new SupportFragment[4];
     private long exitTime = 0;
     private static final long INTERVAL_TIME = 2000;
     private String sessionId;
@@ -59,11 +60,13 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
         if (savedInstanceState != null) {
             mFragments[0] = findFragment(MainFragment.class);
             mFragments[1] = findFragment(UploadFragment.class);
-            mFragments[2]=findFragment(ReviewedFragment.class);
+            mFragments[2] = findFragment(ReviewedFragment.class);
+            mFragments[3] = findFragment(MyFragment.class);
         } else {
             mFragments[0] = MainFragment.newInstance();
             mFragments[1] = UploadFragment.newInstance();
             mFragments[2] = ReviewedFragment.newInstance();
+            mFragments[3] = MyFragment.newInstance();
         }
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
@@ -88,9 +91,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
         myBottomNavigation.setOnTabPositionListener(new MyBottomNavigation.OnTabPositionListener() {
             @Override
             public void onPositionTab(int position) {
-                if (position <= 2) {
-                    showFragment(position);
-                }
+                showFragment(position);
             }
         });
 
@@ -101,15 +102,15 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     public void initData() {
         loadMultipleRootFragment(R.id.Root_Fragment, 0, mFragments);
         showFragment(0);
-     /*   if (sessionId != null) {
-            showFragment(0);
-        } else {
-            Intent intent = new Intent(MainActivity.this, ConstantsActivity.class);
-            intent.putExtra("from", Constants.MainActivityCode);
-            intent.putExtra("to", Constants.loginFragmentCode);
-            page = 0;
-            startActivityForResult(intent, 100);
-        }*/
+//        if (sessionId != null) {
+//            showFragment(0);
+//        } else {
+//            Intent intent = new Intent(MainActivity.this, ConstantsActivity.class);
+//            intent.putExtra("from", Constants.MainActivityCode);
+//            intent.putExtra("to", Constants.loginFragmentCode);
+//            page = 0;
+//            startActivityForResult(intent, 100);
+//        }
     }
 
     private void showFragment(int position) {
@@ -118,7 +119,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
             Intent intent = new Intent(MainActivity.this, ConstantsActivity.class);
             intent.putExtra("from", Constants.MainActivityCode);
             intent.putExtra("to", Constants.loginFragmentCode);
-            intent.putExtra("type",1);
+            intent.putExtra("type", 1);
             startActivity(intent);
         } else {
             showHideFragment(mFragments[position], mFragments[bottomNavigationPreposition]);
@@ -148,15 +149,17 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
 
         }
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void Event(EvenBus_LoginSuccess loginSuccess) {
-     if (loginSuccess.getLoginType()==100){
-         sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, "sessionId", null);
-         showFragment(0);
-         // p.startLocation();
-         EventBus.getDefault().postSticky(new Event_Main(1, "登陆成功",page));
-     }
+        if (loginSuccess.getLoginType() == 100) {
+            sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, "sessionId", null);
+            showFragment(0);
+            // p.startLocation();
+            EventBus.getDefault().postSticky(new Event_Main(1, "登陆成功", page));
+        }
     }
+
     @Override
     public void onBackPressedSupport() {
         if ((System.currentTimeMillis() - exitTime) > INTERVAL_TIME) {

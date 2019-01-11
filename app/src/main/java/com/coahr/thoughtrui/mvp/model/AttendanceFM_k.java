@@ -32,13 +32,6 @@ public class AttendanceFM_k extends BaseModel<AttendanceFC_k.Presenter> implemen
   private BaiduLocationHelper.OnLocationCallBack onLocationCallBack = new BaiduLocationHelper.OnLocationCallBack() {
     @Override
     public void onLocationSuccess(BDLocation location) {
-      if (LocationType == type) {
-        if (getPresenter() != null) {
-          getPresenter().LocationSuccess(location);
-          baiduLocationHelper.stopLocation();
-        }
-        type = 0;
-      }
       //连续定位成功
       if (continuously == type){
         if (getPresenter() != null) {
@@ -50,12 +43,6 @@ public class AttendanceFM_k extends BaseModel<AttendanceFC_k.Presenter> implemen
 
     @Override
     public void onLocationFailure(int locType) {
-      if (LocationType == type) {
-        if (getPresenter() != null) {
-          getPresenter().LocationFailure(locType);
-        }
-        type=0;
-      }
       //连续定位失败
       if (continuously == type){
         if (getPresenter() != null) {

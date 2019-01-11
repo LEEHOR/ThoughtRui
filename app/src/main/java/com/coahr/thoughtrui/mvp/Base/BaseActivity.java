@@ -84,4 +84,8 @@ public abstract class BaseActivity<P extends BaseContract.Presenter> extends Sup
         }
     }
 
+    public void hsaLogin(){
+
+    }
+
 }

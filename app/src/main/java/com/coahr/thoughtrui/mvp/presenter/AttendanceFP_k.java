@@ -33,19 +33,6 @@ public class AttendanceFP_k extends BasePresenter<AttendanceFC_k.View,Attendance
         }
     }
 
-    @Override
-    public void LocationSuccess(BDLocation location) {
-        if (getView() != null) {
-            getView().LocationSuccess(location);
-        }
-    }
-
-    @Override
-    public void LocationFailure(int failure) {
-        if (getView() != null) {
-            getView().LocationFailure(failure);
-        }
-    }
 
     @Override
     public void getMainData(Map<String,Object> map) {

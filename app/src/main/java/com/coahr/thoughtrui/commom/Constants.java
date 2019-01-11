@@ -26,6 +26,8 @@ public class Constants {
     public static String user_id;
     //DbProjectId 数据库中的id
     public static String DbProjectId;
+    //当前用户名
+    public static String user_name;
 
     //网络访问超时时间
     public static int timeout=15;
@@ -88,6 +90,10 @@ public class Constants {
     public static  final int startProjectFragment=5;
 
     public static final  int fragment_topics=6; //题目列表
+
+    public static final int fragment_myFragment=7; //我的页面
+
+    public static final int fragment_ChangePass=8; //修改密码
 
 
 

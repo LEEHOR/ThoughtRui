@@ -42,7 +42,6 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
             getAnswer(ht_ProjectId,activity,number,ht_id);
             getAudio(ht_ProjectId,activity,number,ht_id);
             getPresenter().getSubjectSuccess(subjectsDBS.get(0));
-
         } else {
             getPresenter().getSubjectFailure("0");
             getPresenter().getImageFailure();
@@ -54,33 +53,24 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
     @Override
     public void getImage(final String ht_ProjectId, Activity activity, final int number, final String ht_id) {
         //获取当前题目下的图片
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
                 List<String> picturesList = FileIOUtils.getPictures(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number+"_"+ht_id);
                 if (picturesList != null) {
                     getPresenter().getImageSuccess(picturesList);
                 } else {
                     getPresenter().getImageFailure();
                 }
-            }
-        });
 
     }
 
     @Override
     public void getAnswer(final String ht_ProjectId, Activity activity, final int number, final String ht_id) {
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                String s = SaveOrGetAnswers.readFromFile(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number+"_"+ht_id );
+
+                String s = SaveOrGetAnswers.readFromFile(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number+"_"+ht_id+"/" );
                 if (s != null) {
                     getPresenter().getAnswerSuccess(s);
                 } else {
                     getPresenter().getAnswerFailure();
                 }
-            }
-        });
 
     }
 
@@ -122,17 +112,13 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
 
     @Override
     public void getAudio(final String ht_ProjectId, Activity activity, final int number , final String ht_id) {
-        //获取当前题目下的图片
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+
+
                 List<String> audiosList = FileIOUtils.getAudios(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number+"_"+ht_id);
-                if (audiosList != null) {
+                if (audiosList != null && audiosList.size()>0) {
                     getPresenter().getAudioSuccess(audiosList);
                 } else {
                     getPresenter().getAudioFailure("没有录音");
                 }
-            }
-        });
     }
 }

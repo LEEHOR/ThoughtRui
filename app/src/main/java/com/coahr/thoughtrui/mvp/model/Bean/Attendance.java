@@ -17,7 +17,7 @@ public class Attendance {
     private DataBean data;
     private String msg;
     private int result;
-    private int type;
+
 
     public DataBean getData() {
         return data;
@@ -43,13 +43,6 @@ public class Attendance {
         this.result = result;
     }
 
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
 
     public static class DataBean {
         /**
@@ -90,6 +83,15 @@ public class Attendance {
         private String notice;
         private String projectId;
         private long startTime;
+        private int type;
+
+        public int getType() {
+            return type;
+        }
+
+        public void setType(int type) {
+            this.type = type;
+        }
 
         public String getCname() {
             return Cname;

@@ -304,7 +304,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                 }
             }
         });
-
+//晚班卡重新定位
         relocation_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -400,21 +400,6 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         getData();
         mHandler.post(run_time); //开启时间线程
     }
-
-    @Override
-    public void LocationSuccess(BDLocation location) {
-        Constants.Longitude = location.getLongitude();
-        Constants.Latitude = location.getLatitude();
-        KLog.d("打卡定位成功", location.getAddrStr());
-      //  getData();
-
-    }
-
-    @Override
-    public void LocationFailure(int failure) {
-
-    }
-
     @Override
     public void getMainDataSuccess(Attendance attendance) {
    /*     //把数据发送到AttendRootFragment用于显示
@@ -445,7 +430,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         //判断上下班卡 1上班卡 2下班卡
 
 
-        type = attendance.getType();
+        type = attendance.getData().getType();
         k_bean = attendance.getData().getAttendance();
         if (type == 1) { //渲染上班卡（没打卡）
             //早班打卡信息隐藏

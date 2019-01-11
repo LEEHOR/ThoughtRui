@@ -17,9 +17,6 @@ import java.util.Map;
 public interface AttendanceFC_k {
     interface View extends BaseContract.View {
 
-        void LocationSuccess(BDLocation location);
-
-        void LocationFailure(int failure);
 
         void getMainDataSuccess(Attendance attendance);
 
@@ -42,10 +39,6 @@ public interface AttendanceFC_k {
     interface Presenter extends BaseContract.Presenter {
 
         void startLocations(int type);
-
-        void LocationSuccess(BDLocation location);
-
-        void LocationFailure(int failure);
 
         void getMainData(Map<String,Object> map);
 

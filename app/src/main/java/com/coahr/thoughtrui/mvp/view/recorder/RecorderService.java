@@ -156,12 +156,16 @@ public class RecorderService extends Service {
     public void prepareRecording() {
         if (mRecorder == null) {
             mRecorder = new MediaRecorder();
-            mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+           /* mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-            mRecorder.setAudioChannels(1);
-            mRecorder.setAudioSamplingRate(44100);
-            mRecorder.setAudioEncodingBitRate(192000);
+            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);*/
+            mRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
+            mRecorder.setOutputFormat(MediaRecorder.OutputFormat.AMR_NB);
+            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+           // mRecorder.setAudioChannels(1);
+          //  mRecorder.setAudioSamplingRate(44100);
+          //  mRecorder.setAudioEncodingBitRate(192000);
+
         }
 
     }

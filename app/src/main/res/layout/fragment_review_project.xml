@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -19,7 +20,7 @@
     <android.support.v7.widget.CardView
         android:background="@color/colorWhite"
         app:cardCornerRadius="@dimen/dp_5"
-        app:contentPadding="@dimen/dp_10"
+       app:contentPadding="@dimen/dp_10"
         app:cardElevation="0dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -40,7 +41,7 @@
                 android:layout_below="@+id/project_detail_titlle"
                 android:id="@+id/rg_gr"
                 android:layout_marginTop="@dimen/dp_20"
-                android:padding="@dimen/dp_5"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -89,7 +90,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
-            android:padding="@dimen/dp_10"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -191,14 +191,13 @@
     </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.CardView
-        app:contentPadding="@dimen/dp_10"
         app:cardElevation="0dp"
+        app:contentPadding="@dimen/dp_10"
         android:background="@color/colorWhite"
         android:layout_marginTop="@dimen/dp_10"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
             <LinearLayout
-                android:padding="@dimen/dp_10"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -240,6 +239,78 @@
             </LinearLayout>
     </android.support.v7.widget.CardView>
 
+        <android.support.v7.widget.CardView
+            android:layout_marginTop="@dimen/dp_10"
+            app:contentPadding="@dimen/dp_10"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/colorWhite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+            <RelativeLayout
+                android:padding="@dimen/dp_10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/iv_recorder_img"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/recorder_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                    <TextView
+                        android:textSize="@dimen/dp_14"
+                        android:text="录音"
+                        android:layout_toRightOf="@+id/iv_recorder_img"
+                        android:layout_marginLeft="@dimen/dp_5"
+                        android:textColor="#333333"
+                        android:layout_centerVertical="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+            </RelativeLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_1"
+                    android:background="@color/material_grey_200"/>
+                <RelativeLayout
+                    android:padding="@dimen/dp_10"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/tv_recorderName_text"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/dp_14"
+                        android:text="文件名："
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/tv_recorder_name"
+                        android:layout_toRightOf="@+id/tv_recorderName_text"
+                        android:layout_marginLeft="@dimen/dp_5"
+                        android:textSize="@dimen/dp_14"
+                        android:textColor="#FD8317"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/tv_play_recorder"
+                        android:text="播放"
+                        android:layout_alignParentRight="true"
+                        android:textSize="@dimen/dp_14"
+                        android:textColor="@color/material_blue_800"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </RelativeLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
     <android.support.v7.widget.CardView
         android:layout_marginTop="@dimen/dp_10"
         app:contentPadding="@dimen/dp_10"
@@ -248,7 +319,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
-            android:padding="@dimen/dp_10"
+
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -315,11 +386,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <LinearLayout
-                    android:paddingTop="15dp"
-                    android:paddingBottom="@dimen/dp_5"
+                    android:gravity="center_vertical"
+                    android:paddingTop="@dimen/dp_10"
+                    android:paddingBottom="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <RelativeLayout
+                        android:padding="@dimen/dp_5"
                         android:layout_gravity="center"
                         android:id="@+id/re_bottom_le"
                         android:layout_width="0dp"
@@ -344,6 +417,7 @@
                     </RelativeLayout>
 
                     <RelativeLayout
+                        android:padding="@dimen/dp_5"
                         android:id="@+id/re_bottom_ri"
                         android:layout_gravity="center"
                         android:layout_width="0dp"

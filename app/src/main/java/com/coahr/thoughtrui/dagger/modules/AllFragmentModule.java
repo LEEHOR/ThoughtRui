@@ -6,11 +6,14 @@ import com.coahr.thoughtrui.mvp.view.attence.AttendanceFragment_k;
 import com.coahr.thoughtrui.mvp.view.home.MainFragment;
 import com.coahr.thoughtrui.mvp.view.home.MyTabFragment;
 import com.coahr.thoughtrui.mvp.view.home.ProjectDetailFragment;
+import com.coahr.thoughtrui.mvp.view.mydata.ChangePasswordFragment;
 import com.coahr.thoughtrui.mvp.view.mydata.LoginFragment;
 import com.coahr.thoughtrui.mvp.view.SubjectList.Fragment_Topics;
+import com.coahr.thoughtrui.mvp.view.mydata.MyFragment;
+import com.coahr.thoughtrui.mvp.view.reviewed.ReViewStart;
 import com.coahr.thoughtrui.mvp.view.reviewed.ReviewInfoList;
 import com.coahr.thoughtrui.mvp.view.reviewed.ReviewPager;
-import com.coahr.thoughtrui.mvp.view.reviewed.ReviewStartProject;
+import com.coahr.thoughtrui.mvp.view.reviewed.ReviewStartPager;
 import com.coahr.thoughtrui.mvp.view.reviewed.ReviewedFragment;
 import com.coahr.thoughtrui.mvp.view.startProject.PagerFragment_a;
 import com.coahr.thoughtrui.mvp.view.upload.UploadFragment;
@@ -36,6 +39,9 @@ public abstract class AllFragmentModule {
 
     @ContributesAndroidInjector(modules = MyMainFragmentModule.class)
     abstract MainFragment MainFragmentInjector();
+
+    @ContributesAndroidInjector(modules = MyFragment_Module.class)
+    abstract MyFragment MyFragmentInjector();
 
     @ContributesAndroidInjector()
     abstract LoginFragment LoginFragmentInjector();
@@ -68,5 +74,11 @@ public abstract class AllFragmentModule {
     abstract ReviewInfoList ReviewInfoListInjector();
 
     @ContributesAndroidInjector()
-    abstract ReviewStartProject  ReviewStartProjectInjector();
+    abstract ReviewStartPager ReviewStartProjectInjector();
+
+    @ContributesAndroidInjector()
+    abstract ReViewStart ReViewStartInjector();
+
+    @ContributesAndroidInjector()
+    abstract ChangePasswordFragment ChangePasswordFragmentInjector();
 }

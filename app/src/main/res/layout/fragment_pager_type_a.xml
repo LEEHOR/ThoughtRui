@@ -235,7 +235,7 @@
                             android:layout_centerVertical="true"
                             android:layout_toLeftOf="@+id/tv_delete_audio"
                             android:layout_marginRight="@dimen/dp_10"
-                            android:src="@mipmap/play_start"
+                            android:src="@mipmap/play_music"
                             android:scaleType="fitCenter"
                             android:layout_width="25dp"
                             android:layout_height="25dp" />

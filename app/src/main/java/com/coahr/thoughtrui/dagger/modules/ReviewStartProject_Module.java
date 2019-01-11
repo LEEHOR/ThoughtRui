@@ -1,7 +1,6 @@
 package com.coahr.thoughtrui.dagger.modules;
 
-import com.coahr.thoughtrui.mvp.view.reviewed.ReviewInfoList;
-import com.coahr.thoughtrui.mvp.view.reviewed.ReviewStartProject;
+import com.coahr.thoughtrui.mvp.view.reviewed.ReviewStartPager;
 
 import dagger.Module;
 import dagger.Provides;
@@ -16,6 +15,6 @@ import dagger.Provides;
 public class ReviewStartProject_Module {
     @Provides
     public  String provideName() {
-        return ReviewStartProject.class.getName();
+        return ReviewStartPager.class.getName();
     }
 }

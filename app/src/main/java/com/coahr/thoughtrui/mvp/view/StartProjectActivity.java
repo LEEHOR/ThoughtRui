@@ -4,7 +4,9 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -62,69 +64,6 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     private StartProjectAdapter startProjectAdapter;
     private int subject_size; //题目个数
 
-    public static AudioListenerComplete audioListenerComplete;
-    private static RecorderService.RecorderBinder recorderBinder;
-
-    private ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            if (service instanceof RecorderService.RecorderBinder) {
-                recorderBinder = (RecorderService.RecorderBinder) service;
-            }
-            recorderBinder.getMyService().setRecordListener(new AudioRecordListener() {
-                @Override
-                public void StartRecorder() {
-                    KLog.d("录音1","开始录音");
-                    if (audioListenerComplete != null) {
-                        audioListenerComplete.isStart();
-                    }
-                }
-
-                @Override
-                public void RecorderTime(int time) {
-                    if (audioListenerComplete != null) {
-                        audioListenerComplete.isRecorderTime(time);
-                    }
-                }
-
-                @Override
-                public void finish(int seconds, String filePath) {
-                    KLog.d("录音1",filePath);
-                    if (audioListenerComplete != null) {
-                        audioListenerComplete.isComplete(seconds,filePath);
-                    }
-                }
-
-                @Override
-                public void tooShort() {
-                    if (audioListenerComplete != null) {
-                        audioListenerComplete.isShort();
-                    }
-                }
-
-                @Override
-                public void hasPause() {
-                    if (audioListenerComplete != null) {
-                        audioListenerComplete.isPause();
-                    }
-                }
-
-                @Override
-                public void hasResume() {
-                    if (audioListenerComplete != null) {
-                        audioListenerComplete.isResume();
-                    }
-                }
-            });
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-        }
-    };
-    private Intent intent;
-
     @Override
     public StartProjectActivity_C.Presenter getPresenter() {
         return p;
@@ -141,36 +80,6 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         return R.layout.activity_startproject;
     }
 
-    /**
-     * 开启服务
-     */
-    private void StartService() {
-        intent = new Intent(this, RecorderService.class);
-        startService(intent);
-    }
-
-    /**
-     * 绑定录音服务
-     */
-    private void bindService() {
-       // Intent intent = new Intent(this, RecorderService.class);
-        bindService(intent, serviceConnection, BIND_AUTO_CREATE); // 绑定服务
-    }
-
-    /**
-     * 解绑服务
-     */
-    private void unBindService() {
-        unbindService(serviceConnection);
-    }
-
-    /**
-     * 停止服务
-     */
-    private void StopService() {
-       // Intent intent = new Intent(this, RecorderService.class);
-        stopService(intent);
-    }
 
     @Override
     public void initView() {
@@ -204,10 +113,6 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         } else {
             p.getOfflineDate(Constants.DbProjectId, Constants.ht_ProjectId);
         }
-        //开启录音服务
-        StartService();
-        bindService();
-
     }
 
     @Override
@@ -243,7 +148,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                     subjectsDB.setCensor(questionList.get(i).getCensor());
                     subjectsDB.setIsComplete(0);
                     subjectsDB.setDh("0");
-                    subjectsDB.setNumber(questionList.get(i).getNumber());
+                    subjectsDB.setNumber(i+1);
                     subjectsDB.setsUploadStatus(0);
                     if (questionList.get(i).getQuota1() != null) {
                         subjectsDB.setQuota1(questionList.get(i).getQuota1());
@@ -329,8 +234,6 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
-        unBindService();
-        StopService();
         super.onDestroy();
 
     }
@@ -372,58 +275,12 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         }
     }
 
-    /**
-     * 录音控制
-     *threadMode = ThreadMode.BACKGROUND
-     * @param evenBus_recorderType
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void Event_recorder(EvenBus_recorderType evenBus_recorderType) {
-        if (evenBus_recorderType != null) {
-            if (evenBus_recorderType.getType()==1){  //开始录音
-                recorderBinder.init();
-                recorderBinder.configureMediaRecorder();
-                recorderBinder.PrepareMediaRecorder(evenBus_recorderType.getAudioSavePath(),evenBus_recorderType.getRecorderName());
-                recorderBinder.Start();
-            }
-            if (evenBus_recorderType.getType()==2){
-                recorderBinder.Pause();
-            }
-            if (evenBus_recorderType.getType()==3){
-                recorderBinder.Resume();
-            }
-            if (evenBus_recorderType.getType()==4){
-                recorderBinder.Stop();
-            }
-        }
 
-    }
-
-    /**
-     * 开始录音
-     * @param path
-     * @param name
-     */
-    public static  void startRecorder(String path,String name){
-        recorderBinder.init();
-        recorderBinder.configureMediaRecorder();
-        recorderBinder.PrepareMediaRecorder(path,name);
-        recorderBinder.Start();
-    }
-    public static void stopRecorder(){
-        recorderBinder.Stop();
-    }
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
 
         }
     }
-
-
-    public static void setAudioListenerComplete(AudioListenerComplete audioListenerComplete) {
-        StartProjectActivity.audioListenerComplete = audioListenerComplete;
-    }
-
 
 }

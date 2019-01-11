@@ -104,7 +104,7 @@ public class SaveOrGetAnswers {
         StringBuilder sbd = new StringBuilder();
         File file=new File(FilePath);
         if (!file.exists()){
-            return "";
+            return null;
         }
 
         try {

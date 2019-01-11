@@ -30,5 +30,7 @@ public class ApiContact {
     public static final String  getCensorList="app/censor/list.htm";
     //审核详情列表
     public static final String getCensorInfoList="app/censor/infor.htm";
+    //修改密码
+    public static final String getChangePassWord="app/update/password.htm";
 
 }

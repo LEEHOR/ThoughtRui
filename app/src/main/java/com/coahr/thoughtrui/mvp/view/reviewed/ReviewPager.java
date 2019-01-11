@@ -36,7 +36,7 @@ import butterknife.BindView;
  * @author Leehor
  * 版本：
  * 创建日期：2019/1/7
- * 描述：
+ * 描述：已通过或未通过页面
  */
 public class ReviewPager extends BaseChildFragment<ReviewPagerFragment_C.Presenter> implements ReviewPagerFragment_C.View {
     @Inject
@@ -110,7 +110,7 @@ public class ReviewPager extends BaseChildFragment<ReviewPagerFragment_C.Present
         adapter.setOnItemClick(new pageAdapter.OnItemClick() {
             @Override
             public void OnClick(CensorBean.DataBean.ListBean bean, int position) {
-
+                    start(ReviewInfoList.newInstance(bean.getId(),Constants.sessionId,type));
             }
         });
     }

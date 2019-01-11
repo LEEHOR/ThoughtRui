@@ -162,7 +162,9 @@ public class LoginFragment extends BaseFragment<LoginFragmentC.Presenter> implem
             public void onFinish(boolean success) {
                 KLog.d("保存成功",loginBean.getData().getSessionId());
                 Constants.sessionId=loginBean.getData().getSessionId();
-                PreferenceUtils.setPrefString(_mActivity,"sessionId",loginBean.getData().getSessionId());
+                Constants.user_name=loginBean.getData().getName();
+                PreferenceUtils.setPrefString(_mActivity,Constants.sessionId_key,loginBean.getData().getSessionId());
+                PreferenceUtils.setPrefString(_mActivity,Constants.user_key,loginBean.getData().getName());
                 if (from == Constants.MainActivityCode){
                     EventBus.getDefault().postSticky(new EvenBus_LoginSuccess(100));
                 }

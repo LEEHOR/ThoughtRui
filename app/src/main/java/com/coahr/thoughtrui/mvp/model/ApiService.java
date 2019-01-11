@@ -5,6 +5,7 @@ import com.coahr.thoughtrui.mvp.model.Bean.Attendance;
 import com.coahr.thoughtrui.mvp.model.Bean.AttendanceHistory;
 import com.coahr.thoughtrui.mvp.model.Bean.CensorBean;
 import com.coahr.thoughtrui.mvp.model.Bean.CensorInfoList;
+import com.coahr.thoughtrui.mvp.model.Bean.ChangePassWord;
 import com.coahr.thoughtrui.mvp.model.Bean.HomeDataList;
 import com.coahr.thoughtrui.mvp.model.Bean.LoginBean;
 import com.coahr.thoughtrui.mvp.model.Bean.PushAttendanceCard;
@@ -119,4 +120,13 @@ public interface ApiService {
     @FormUrlEncoded
     @POST(ApiContact.getCensorInfoList)
     Call<CensorInfoList> getCensorInfoList(@FieldMap Map<String,Object> para);
+
+    /**
+     * 修改密码
+     * @param para
+     * @return
+     */
+    @FormUrlEncoded
+    @POST(ApiContact.getChangePassWord)
+    Call<ChangePassWord> getChangePassWord(@FieldMap Map<String,Object> para);
 }

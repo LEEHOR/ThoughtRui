@@ -8,6 +8,7 @@ import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseSupportActivity;
 import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_LoginSuccess;
 import com.coahr.thoughtrui.mvp.view.home.ProjectDetailFragment;
+import com.coahr.thoughtrui.mvp.view.mydata.ChangePasswordFragment;
 import com.coahr.thoughtrui.mvp.view.mydata.LoginFragment;
 import com.coahr.thoughtrui.mvp.view.SubjectList.Fragment_Topics;
 
@@ -39,6 +40,9 @@ public class ConstantsActivity extends BaseSupportActivity {
 //                break;
             case Constants.fragment_topics:
                 loadRootFragment(R.id.Constants_Fragment,Fragment_Topics.newInstance());
+                break;
+            case Constants.fragment_ChangePass:
+                loadRootFragment(R.id.Constants_Fragment,ChangePasswordFragment.newInstance());
                 break;
         }
     }
