@@ -214,29 +214,37 @@ public class ReViewStart extends BaseFragment<ReViewStart_C.Presenter> implement
 
                 } else {
                     if (type == 1) { //开始录音
-                        getAudioPermission();
+                        Fr_takeRecorder.setEnabled(false);
                         isRecorder = true;
+                        recorder.startRecording();
                         updateUi(2);
-                        type = 4;
+                        Fr_takeRecorder.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                type = 4;
+                                Fr_takeRecorder.setEnabled(true);
+                            }
+                        },1000);
                     } else if (type == 2) { //暂停录音
 
                     } else if (type == 3) { //继续录音
 
                     } else if (type == 4) {  //停止录音
+                        Fr_takeRecorder.setEnabled(false);
+                        isRecorder = false;
                         try {
                             recorder.stopRecording();
-                            isRecorder = false;
-                            type = 1;
-                            Fr_takeRecorder.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    p.getAudio(ht_projectId, _mActivity, number, ht_id);
-                                }
-                            }, 1500);
-
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                        Fr_takeRecorder.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                p.getAudio(ht_projectId, _mActivity, number, ht_id);
+                                Fr_takeRecorder.setEnabled(true);
+                                type = 1;
+                            }
+                        }, 1500);
                     } else {
 
                     }
@@ -476,22 +484,26 @@ public class ReViewStart extends BaseFragment<ReViewStart_C.Presenter> implement
         switch (v.getId()) {
             //上一题
             case R.id.re_bottom_le:
-                if (number > 0) {
+                if (number > 1) {
                     if (isComplete()) {
-                        EventBus.getDefault().post(new isCompleteBean(true, number, 1));
+                        EventBus.getDefault().post(new isCompleteBean(true, number-1, 1));
                     } else {
                         ToastUtils.showLong("当前题目未完成");
                     }
+                }else {
+                    ToastUtils.showLong("已经是第一题");
                 }
                 break;
             //下一题
             case R.id.re_bottom_ri:
                 if (number < countSize) {
                     if (isComplete()) {
-                        EventBus.getDefault().post(new isCompleteBean(true, number, 2));
+                        EventBus.getDefault().post(new isCompleteBean(true, number+1, 2));
                     } else {
                         ToastUtils.showLong("当前题目未完成");
                     }
+                }else {
+                    ToastUtils.showLong("已经是最后一题");
                 }
                 break;
             //拍照

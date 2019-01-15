@@ -172,6 +172,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     private Recorder recorder;
     private int type=1;
     private String audioName;
+    private boolean isHavePermission=false;
 
     public static PagerFragment_a newInstance(int position, String DbProjectId, String ht_ProjectId, int countSize, String name_project, String ht_id) {
         PagerFragment_a pagerFragment_a = new PagerFragment_a();
@@ -235,34 +236,47 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             @Override
             public void onClick(View v) {
                 if (isHaveRecorder) {  //有无录音
-
+                       ToastUtils.showLong("当前题目下有录音");
                 } else {
+                    if (getAudioPermission()) {
                     if (type == 1) { //开始录音
-                       getAudioPermission();
+                        Fr_takeRecorder.setEnabled(false);
                         isRecorder = true;
+                        recorder.startRecording();
                         updateUi(2);
-                        type = 4;
+                        Fr_takeRecorder.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                type = 4;
+                                Fr_takeRecorder.setEnabled(true);
+                            }
+                        },1000);
+
                     } else if (type == 2) { //暂停录音
 
                     } else if (type == 3) { //继续录音
 
                     } else if (type == 4) {  //停止录音
+                        Fr_takeRecorder.setEnabled(false);
+                        isRecorder = false;
                         try {
                             recorder.stopRecording();
-                            isRecorder = false;
-                            type = 1;
-                            Fr_takeRecorder.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    p.getAudio(ht_projectId, _mActivity, number, ht_id);
-                                }
-                            }, 1500);
-
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                        type = 1;
+
+                        Fr_takeRecorder.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                p.getAudio(ht_projectId, _mActivity, number, ht_id);
+                                Fr_takeRecorder.setEnabled(true);
+                            }
+                        }, 1500);
+
                     } else {
 
+                    }
                     }
                 }
 
@@ -296,22 +310,26 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         switch (v.getId()) {
             //上一题
             case R.id.re_bottom_le:
-                if (number > 0) {
+                if (number > 1) {
                     if (isComplete()) {
-                        EventBus.getDefault().post(new isCompleteBean(true, number, 1));
+                        EventBus.getDefault().post(new isCompleteBean(true, number-1, 1));
                     } else {
                         ToastUtils.showLong("当前题目未完成");
                     }
+                } else {
+                    ToastUtils.showLong("已经是第一题");
                 }
                 break;
             //下一题
             case R.id.re_bottom_ri:
                 if (number < countSize) {
                     if (isComplete()) {
-                        EventBus.getDefault().post(new isCompleteBean(true, number, 2));
+                        EventBus.getDefault().post(new isCompleteBean(true, number+1, 2));
                     } else {
                         ToastUtils.showLong("当前题目未完成");
                     }
+                } else {
+                    ToastUtils.showLong("已经是最后一题");
                 }
                 break;
             //拍照
@@ -556,23 +574,24 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     /**
      * 动态获取录音权限
      */
-    private void getAudioPermission() {
+    private boolean getAudioPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             RequestPermissionUtils.requestPermission(_mActivity, new OnRequestPermissionListener() {
                         @Override
                         public void PermissionSuccess(List<String> permissions) {
-                           recorder.startRecording();
+                           isHavePermission=true;
                             // EventBus.getDefault().postSticky(new EvenBus_recorderType(1, String.valueOf(number), Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id));
                         }
 
                         @Override
                         public void PermissionFail(List<String> permissions) {
                             Toast.makeText(_mActivity, "获取权限失败", Toast.LENGTH_LONG).show();
+                            isHavePermission=false;
                         }
 
                         @Override
                         public void PermissionHave() {
-                            recorder.startRecording();
+                            isHavePermission=true;
                             //EventBus.getDefault().postSticky(new EvenBus_recorderType(1, String.valueOf(number), Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id));
                         }
                     }, Manifest.permission.RECORD_AUDIO
@@ -580,9 +599,10 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                     , Manifest.permission.READ_EXTERNAL_STORAGE);
 
         } else {
-            recorder.startRecording();
+            isHavePermission=true;
             // EventBus.getDefault().postSticky(new EvenBus_recorderType(1, String.valueOf(number), Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id));
         }
+        return isHavePermission;
     }
 
     /**

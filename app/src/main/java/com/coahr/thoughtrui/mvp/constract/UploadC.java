@@ -1,8 +1,17 @@
 package com.coahr.thoughtrui.mvp.constract;
 
+import android.app.Activity;
+import android.content.Context;
+
+import com.alibaba.sdk.android.oss.ClientConfiguration;
+import com.alibaba.sdk.android.oss.OSS;
+import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
 import com.baidu.location.BDLocation;
+import com.coahr.thoughtrui.DBbean.ProjectsDB;
+import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,38 +22,71 @@ import java.util.Map;
 public interface UploadC  {
     interface View extends BaseContract.View {
 
-        void onLocationSuccess(BDLocation location);
+        void getSTSSuccess(OSSCredentialProvider ossCredentialProvider);
+        void getSTSFailure(String failure);
 
-        void onLocationFailure(int failure);
+        void  getOSSSuccess( OSS oss);
+        void  getOSSFailure(String failure);
 
-        void getHomeDataSuccess();
+        void getProjectListSuccess(List<ProjectsDB> projectsDB);
+        void  getProjectListFailure(String failure);
 
-        void getHomeDataFailure(String fail);
+        void getSubjectListSuccess(List<SubjectsDB> subjectsDBList,ProjectsDB projectsDB);
+        void getSubjectListFailure(String failure);
+
+        void getUoLoadFileListSuccess(List<String> list,ProjectsDB projectsDB, SubjectsDB  subjectsDB);
+        void getUpLoadFileListFailure(String failure);
+
+        void StartUpLoadSuccess(ProjectsDB projectsDB, SubjectsDB  subjectsDB,  List<String> list);
+        void StartUpLoadFailure(ProjectsDB projectsDB, SubjectsDB  subjectsDB);
+
+        void CallBackSuccess(ProjectsDB projectsDB,SubjectsDB subjectsDB);
+        void CallBackFailure(ProjectsDB projectsDB,SubjectsDB subjectsDB);
 
     }
 
     interface Presenter extends BaseContract.Presenter {
+        //AK鉴权
+        void getSTS(String utl);
+        void getSTSSuccess(OSSCredentialProvider ossCredentialProvider);
+        void getSTSFailure(String failure);
+        //OSS
+        void getOSS(Context context, String endpoint, OSSCredentialProvider credentialProvider, ClientConfiguration conf);
+        void  getOSSSuccess( OSS oss);
+        void  getOSSFailure(String failure);
+        //获取项目列表
+        void getProjectList(String sessionId);
+        void getProjectListSuccess(List<ProjectsDB> projectsDB);
+        void  getProjectListFailure(String failure);
 
-        void startLocation();
+        //获取题目列表
+        void getSubjectList(ProjectsDB projectsDB);
+        void getSubjectListSuccess(List<SubjectsDB> subjectsDBList,ProjectsDB projectsdb);
+        void getSubjectListFailure(String failure);
 
-        void onLocationSuccess(BDLocation location);
+        //获取上传文件列表
+        void UpLoadFileList(ProjectsDB projectsDB, SubjectsDB  subjectsDB, Activity activity);
+        void getUoLoadFileListSuccess(List<String> list,ProjectsDB projectsDB, SubjectsDB  subjectsDB);
+        void getUpLoadFileListFailure(String failure);
+        //开始上传
+        void StartUpLoad(OSS oss,List<String> list,ProjectsDB projectsDB, SubjectsDB  subjectsDB);
+        void StartUpLoadSuccess(ProjectsDB projectsDB, SubjectsDB  subjectsDB,  List<String> list);
+        void StartUpLoadFailure(ProjectsDB projectsDB, SubjectsDB  subjectsDB);
 
-        void onLocationFailure(int failure);
-
-        void getUploadData(Map map);
-
-        void getUploadDataSuccess();
-
-        void getUploadDataFailure(String fail);
-
+        //每题上传完成后的回调
+        void CallBack(Map<String,Object> map,ProjectsDB projectsDB,SubjectsDB subjectsDB);
+        void CallBackSuccess(ProjectsDB projectsDB,SubjectsDB subjectsDB);
+        void CallBackFailure(ProjectsDB projectsDB,SubjectsDB subjectsDB);
     }
 
     interface Model extends BaseContract.Model {
-
-        void startLocation();
-
-        void getHomeData(Map map);
-        ;
+        void getSTS(String utl);
+        void getOSS(Context context, String endpoint, OSSCredentialProvider credentialProvider, ClientConfiguration conf);
+        void getProjectList(String sessionId);
+        void getSubjectList(ProjectsDB projectsDB);
+        void UpLoadFileList(ProjectsDB projectsDB, SubjectsDB  subjectsDB, Activity activity);
+        void StartUpLoad(OSS oss,List<String> list,ProjectsDB projectsDB, SubjectsDB  subjectsDB);
+        void CallBack(Map<String,Object> map,ProjectsDB projectsDB,SubjectsDB subjectsDB);
 
     }
 }

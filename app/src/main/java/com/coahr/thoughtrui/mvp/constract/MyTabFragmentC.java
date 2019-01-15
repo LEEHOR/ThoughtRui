@@ -16,10 +16,10 @@ import java.util.Map;
 public interface MyTabFragmentC {
     interface View extends BaseContract.View {
 
-        void onLocationSuccess(BDLocation location);
+       /* void onLocationSuccess(BDLocation location);
 
         void onLocationFailure(int failure);
-
+*/
         void getHomeDataSuccess(HomeDataList homeDataList);
 
         void getHomeDataFailure(String fail);
@@ -35,11 +35,11 @@ public interface MyTabFragmentC {
 
     interface Presenter extends BaseContract.Presenter {
 
-        void startLocation(int type);
+      /*  void startLocation(int type);
 
         void onLocationSuccess(BDLocation location);
 
-        void onLocationFailure(int failure);
+        void onLocationFailure(int failure);*/
 
         void getHomeData(Map map);
 
@@ -63,7 +63,7 @@ public interface MyTabFragmentC {
 
     interface Model extends BaseContract.Model {
 
-        void startLocation(int type);
+       // void startLocation(int type);
 
         void getHomeData(Map map);
 

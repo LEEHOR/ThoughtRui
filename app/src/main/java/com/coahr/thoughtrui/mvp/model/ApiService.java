@@ -11,12 +11,14 @@ import com.coahr.thoughtrui.mvp.model.Bean.LoginBean;
 import com.coahr.thoughtrui.mvp.model.Bean.PushAttendanceCard;
 import com.coahr.thoughtrui.mvp.model.Bean.QuestionBean;
 import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
+import com.coahr.thoughtrui.mvp.model.Bean.UpLoadCallBack;
 
 import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
 /**
@@ -129,4 +131,12 @@ public interface ApiService {
     @FormUrlEncoded
     @POST(ApiContact.getChangePassWord)
     Call<ChangePassWord> getChangePassWord(@FieldMap Map<String,Object> para);
+
+    /**
+     * 上传回调
+     */
+    @FormUrlEncoded
+    @Headers("Content-Type: application/x-www-form-urlencoded charset=utf-8")
+    @POST(ApiContact.uploadDate)
+    Call<UpLoadCallBack>upLoadCallBack (@FieldMap Map<String,Object> para);
 }

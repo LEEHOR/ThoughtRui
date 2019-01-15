@@ -298,4 +298,27 @@ public class FileIOUtils {
         }
         return list;
     }
+
+    /**
+     * 获取文件夹下的所有文件
+     * @param path
+     * @return
+     */
+    public static List<String> getFileList(String path){
+        List<String> fileList=new ArrayList<>();
+        if (path == null) {
+            return null;
+        }
+        File file = new File(path);
+        if (!file.exists()) {
+            return null;
+        }
+        File[] files = file.listFiles();
+        for (int i = 0; i <files.length ; i++) {
+            if (files[i].exists()){
+                fileList.add(files[i].getAbsolutePath());
+            }
+        }
+        return fileList;
+    }
 }

@@ -8,6 +8,12 @@ package com.coahr.thoughtrui.mvp.model;
 public class ApiContact {
     //根路径
   //  public static String baseUrl="http://survey.three3.cn:8081/three_research/";
+    // 访问的endpoint地址
+    public static final String endpoint = "http://oss-cn-hangzhou.aliyuncs.com";
+    //STS 鉴权地址
+    public static final String STSSERVER = "http://survey.three3.cn:8081/three_research/app/answer/oss/token.htm";
+    //
+    public static final String callbackAddress = "http://192.168.191.1:8080/three_research/app/answer/oss/callback.htm";
     //测试路径
     public static String baseUrl="http://leinuo.coahr.com:8085/research/";
      //登陆接口
@@ -32,5 +38,8 @@ public class ApiContact {
     public static final String getCensorInfoList="app/censor/infor.htm";
     //修改密码
     public static final String getChangePassWord="app/update/password.htm";
+
+    //上传回调
+    public static final String uploadDate="app/answer/callback.htm";
 
 }

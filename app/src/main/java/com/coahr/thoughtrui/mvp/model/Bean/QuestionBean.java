@@ -75,7 +75,7 @@ public class QuestionBean {
 //        "type":0
             private Integer censor;
             private Integer describeStatus;
-            private String description;
+            private String describes;
             private String id;
             private int number;
             private String options;
@@ -95,12 +95,12 @@ public class QuestionBean {
                 this.describeStatus = describeStatus;
             }
 
-            public String getDescription() {
-                return description;
+            public String getDescribes() {
+                return describes;
             }
 
-            public void setDescription(String description) {
-                this.description = description;
+            public void setDescribes(String describes) {
+                this.describes = describes;
             }
 
             public String getId() {

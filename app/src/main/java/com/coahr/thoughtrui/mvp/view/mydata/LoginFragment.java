@@ -157,20 +157,15 @@ public class LoginFragment extends BaseFragment<LoginFragmentC.Presenter> implem
         UsersDB usersDB=new UsersDB();
         usersDB.setUserName(loginBean.getData().getName());
         usersDB.setSessionId(loginBean.getData().getSessionId());
-        usersDB.saveOrUpdateAsync("sessionid=?",loginBean.getData().getSessionId()).listen(new SaveCallback() {
-            @Override
-            public void onFinish(boolean success) {
-                KLog.d("保存成功",loginBean.getData().getSessionId());
-                Constants.sessionId=loginBean.getData().getSessionId();
-                Constants.user_name=loginBean.getData().getName();
-                PreferenceUtils.setPrefString(_mActivity,Constants.sessionId_key,loginBean.getData().getSessionId());
-                PreferenceUtils.setPrefString(_mActivity,Constants.user_key,loginBean.getData().getName());
-                if (from == Constants.MainActivityCode){
-                    EventBus.getDefault().postSticky(new EvenBus_LoginSuccess(100));
-                }
-                _mActivity.onBackPressed();
-            }
-        });
+        usersDB.saveOrUpdate("sessionid=?",loginBean.getData().getSessionId());
+        Constants.sessionId=loginBean.getData().getSessionId();
+        Constants.user_name=loginBean.getData().getName();
+        PreferenceUtils.setPrefString(_mActivity,Constants.sessionId_key,loginBean.getData().getSessionId());
+        PreferenceUtils.setPrefString(_mActivity,Constants.user_key,loginBean.getData().getName());
+        if (from == Constants.MainActivityCode){
+            EventBus.getDefault().postSticky(new EvenBus_LoginSuccess(100));
+        }
+        _mActivity.finish();
 
 
     }

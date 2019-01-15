@@ -23,45 +23,6 @@ public class MyMainFragmentM extends BaseModel<MyMainFragmentC.Presenter> implem
     public MyMainFragmentM() {
         super();
     }
-private int type;
-    private int locationType = 1;
-    @Inject
-    BaiduLocationHelper baiduLocationHelper;
-
-    private BaiduLocationHelper.OnLocationCallBack onLocationCallBack = new BaiduLocationHelper.OnLocationCallBack() {
-        @Override
-        public void onLocationSuccess(BDLocation location) {
-            KLog.d("首页定位---========================"+type);
-            if (locationType == type) {
-                if (getPresenter() != null) {
-                    getPresenter().onLocationSuccess(location);
-                }
-                type=0;
-                baiduLocationHelper.stopLocation();
-            }
-
-
-        }
-
-        @Override
-        public void onLocationFailure(int locType) {
-            if (locationType == type) {
-                if (getPresenter() != null) {
-                    getPresenter().onLocationFailure(locType);
-                }
-                type=0;
-            }
-
-        }
-    };
-
-    @Override
-    public void startLocation(int type) {
-        this.type=type;
-        KLog.d("首页定位--------------------------------");
-        initlocation();
-        baiduLocationHelper.startLocation();
-    }
 
     @Override
     public void getHomeData(Map map) {
@@ -85,16 +46,5 @@ private int type;
     public void getHomeMore(Map map) {
 
     }
-
-    private void initlocation() {
-        baiduLocationHelper.registerLocationCallback(onLocationCallBack);
-    }
-
-    @Override
-    public void detachPresenter() {
-        super.detachPresenter();
-        baiduLocationHelper.unRegisterLocationCallback(onLocationCallBack);
-    }
-
 
 }

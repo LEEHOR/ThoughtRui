@@ -176,7 +176,8 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
             tab_off_recyclerView.removeItemDecoration(spacesItemDecoration);
         }
         if (isNetworkAvailable()) {  //有网络
-            p.startLocation(3);
+          //  p.startLocation(3);
+            getDate();
         } else { //无网络
             p.getTypeDate(type);
         }
@@ -271,35 +272,20 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
         });
 
     }
-
-    @Override
-    public void onLocationSuccess(BDLocation location) {
-        isLoad = true;
-        myTab_swipe.setRefreshing(false);
-        Constants.Latitude = location.getLatitude();
-        Constants.Longitude = location.getLongitude();
-        getDate();
-    }
-
-    @Override
-    public void onLocationFailure(int failure) {
-        isLoad = false;
-        myTab_swipe.setRefreshing(false);
-    }
-
     @Override
     public void getHomeDataSuccess(HomeDataList homeDataList) {
-        myTab_swipe.setRefreshing(false);
         tabFAdapter.setType(type);
         tabFAdapter.setHomeDataList(homeDataList, BaseApplication.mContext);
         change_online();
-
+        isLoad = true;
+        myTab_swipe.setRefreshing(false);
     }
 
     @Override
     public void getHomeDataFailure(String fail) {
         ToastUtils.showLong(fail);
         p.getTypeDate(type);
+        isLoad = false;
         myTab_swipe.setRefreshing(false);
     }
 
@@ -403,8 +389,6 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
 
     private void getDate() {
         Map<String, Object> map = new HashMap<>();
-        map.put("latitude", Constants.Latitude);
-        map.put("longitude", Constants.Longitude);
         map.put("sessionId", Constants.sessionId);
         p.getHomeData(map);
     }

@@ -111,35 +111,10 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
 
     @Override
     public void initData() {
+        getLocationPermission();
         if (sessionId != null) {
-            getLocationPermission();
+            getDataList();
         }
-    }
-
-    @Override
-    public void onLocationSuccess(BDLocation location) {
-        KLog.d("首页定位------4------4-------4------4----4---" + "type");
-
-        KLog.d("定位成功fragment", location.getAddrStr());
-        Constants.Latitude = location.getLatitude();
-        Constants.Longitude = location.getLongitude();
-        Map<String, Object> map = new HashMap<>();
-        map.put("latitude", Constants.Latitude);
-        map.put("longitude", Constants.Longitude);
-        map.put("sessionId", Constants.sessionId);
-        KLog.d("首页定位------5------5-------5------5----5---" + "type");
-        p.getHomeData(map);
-
-    }
-
-    @Override
-    public void onLocationFailure(int failure) {
-
-        if (Constants.location_counts <= 3) {
-            Constants.location_counts++;
-            p.startLocation(1);
-        }
-
     }
 
     @Override
@@ -265,7 +240,7 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
         if (messageEvent.getIsLoad() == 1 && messageEvent.getPage() == 0) {
             sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, "sessionId", null);
            // p.startLocation(1);
-            getLocationPermission();
+            getDataList();
             KLog.d("首页定位------2----2-------2---------------2");
         }
     }
@@ -279,7 +254,7 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
                         @Override
                         public void PermissionSuccess(List<String> permissions) {
                             KLog.d("首页定位------3------3-------3------3----3---");
-                            p.startLocation(1);
+
                         }
 
                         @Override
@@ -290,18 +265,22 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
                         @Override
                         public void PermissionHave() {
                             KLog.d("首页定位------3------3-------3------3----3---");
-                            p.startLocation(1);
+
                         }
-                    }, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_WIFI_STATE
-                    , Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
+                    }, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
 
         } else {
             KLog.d("首页定位------3------3-------3------3----3---");
-            p.startLocation(1);
+
         }
     }
 
     private void setPager(){
         viewPager.setCurrentItem(0);
+    }
+    private void getDataList(){
+        Map<String, Object> map = new HashMap<>();
+        map.put("sessionId", Constants.sessionId);
+        p.getHomeData(map);
     }
 }

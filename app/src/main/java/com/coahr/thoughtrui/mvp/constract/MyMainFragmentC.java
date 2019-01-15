@@ -14,9 +14,9 @@ import java.util.Map;
 public interface MyMainFragmentC {
     interface View extends BaseContract.View {
 
-        void onLocationSuccess(BDLocation location);
+      /*  void onLocationSuccess(BDLocation location);
 
-        void onLocationFailure(int failure);
+        void onLocationFailure(int failure);*/
 
         void getHomeDataSuccess(HomeDataList homeDataList);
 
@@ -30,11 +30,11 @@ public interface MyMainFragmentC {
 
     interface Presenter extends BaseContract.Presenter {
 
-        void startLocation(int type);
+       /* void startLocation(int type);
 
         void onLocationSuccess(BDLocation location);
 
-        void onLocationFailure(int failure);
+        void onLocationFailure(int failure);*/
 
         void getHomeData(Map map);
 
@@ -51,7 +51,7 @@ public interface MyMainFragmentC {
 
     interface Model extends BaseContract.Model {
 
-        void startLocation(int type);
+        //void startLocation(int type);
 
         void getHomeData(Map map);
 

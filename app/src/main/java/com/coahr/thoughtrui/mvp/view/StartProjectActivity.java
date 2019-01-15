@@ -142,7 +142,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                     subjectsDB.setHt_id(questionList.get(i).getId());
                     subjectsDB.setType(questionList.get(i).getType());
                     subjectsDB.setOptions(questionList.get(i).getOptions());
-                    subjectsDB.setDescription(questionList.get(i).getDescription());
+                    subjectsDB.setDescription(questionList.get(i).getDescribes());
                     subjectsDB.setPhotoStatus(questionList.get(i).getPhotoStatus());
                     subjectsDB.setDescribeStatus(questionList.get(i).getDescribeStatus());
                     subjectsDB.setCensor(questionList.get(i).getCensor());
@@ -252,22 +252,16 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         if (complete) {
             if (isupOrDown == 1) {  //上翻页
                 KLog.d("上翻页" + isposition);
-                project_viewPage.setCurrentItem(isposition -= 1, true);
-                if (isposition == 0) {
-                    p_mytitle.getTvTittle().setText("第" + (1) + "题");
-                } else {
+                if (isposition>0){
+                    project_viewPage.setCurrentItem(project_viewPage.getCurrentItem()-1, true);
                     p_mytitle.getTvTittle().setText("第" + (isposition) + "题");
                 }
 
             }
             if (isupOrDown == 2) {
                 KLog.d("下翻页" + isposition);
-                project_viewPage.setCurrentItem(isposition += 1);
-                if (isposition == 1) {
-                    p_mytitle.getTvTittle().setText("第" + (2) + "题");
-                } else {
-                    p_mytitle.getTvTittle().setText("第" + (isposition + 1) + "题");
-                }
+                project_viewPage.setCurrentItem(project_viewPage.getCurrentItem()+1);
+                p_mytitle.getTvTittle().setText("第" + (isposition) + "题");
 
             }
         } else {

@@ -123,4 +123,5 @@ public class ReviewInfoList extends BaseFragment<ReviewInfoList_C.Presenter> imp
         map.put("status",String.valueOf(statues+1));
         p.getCensorInfoList(map);
     }
+
 }

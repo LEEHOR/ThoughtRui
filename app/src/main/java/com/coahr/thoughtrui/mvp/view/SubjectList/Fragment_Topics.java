@@ -63,7 +63,7 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
     @Override
     public void initView() {
         baseNodeList = new ArrayList<>();
-        subject_tittle.getTvTittle().setOnClickListener(new View.OnClickListener() {
+        subject_tittle.getLeftIcon().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 _mActivity.onBackPressed();

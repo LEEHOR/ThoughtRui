@@ -94,6 +94,15 @@
 
         <receiver android:name=".mvp.view.UMPush.NotificationBroadcast" />
         <service android:name=".mvp.view.recorder.RecorderService"/>
+
+        <!--监听网络状态-->
+        <receiver android:name=".widgets.BroadcastReceiver.NetWorkReceiver" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+                <action android:name="android.net.wifi.STATE_CHANGE" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

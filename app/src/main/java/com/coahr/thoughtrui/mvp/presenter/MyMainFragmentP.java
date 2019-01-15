@@ -26,7 +26,7 @@ public class MyMainFragmentP extends BasePresenter<MyMainFragmentC.View,MyMainFr
         super(mview, mModel);
     }
 
-    @Override
+/*    @Override
     public void startLocation(int type) {
         if (mModle != null) {
             mModle.startLocation(type);
@@ -45,7 +45,7 @@ public class MyMainFragmentP extends BasePresenter<MyMainFragmentC.View,MyMainFr
         if (getView() != null) {
             getView().onLocationFailure(failure);
         }
-    }
+    }*/
 
     @Override
     public void getHomeData(Map map) {

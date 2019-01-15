@@ -1,6 +1,8 @@
 package com.coahr.thoughtrui.mvp.view.mydata;
 
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -80,14 +82,63 @@ public class ChangePasswordFragment extends BaseFragment<ChangePassWord_C.Presen
                     ToastUtils.showLong("两次密码不相同");
                     return;
                 }
-                changePass();
+                changePass(change_title.getRightText());
             }
         });
     }
 
     @Override
     public void initData() {
-        ed_old_pass.setOnTouchListener(new View.OnTouchListener() {
+        ed_old_pass.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        ed_new_pass1.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        ed_new_pass2.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+    /*    ed_old_pass.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 setFocusable(1,ed_old_pass,ed_new_pass1,ed_new_pass2);
@@ -107,7 +158,7 @@ public class ChangePasswordFragment extends BaseFragment<ChangePassWord_C.Presen
                 setFocusable(1, ed_new_pass2, ed_new_pass1, ed_old_pass);
                 return true;
             }
-        });
+        });*/
 
 
     }
@@ -124,17 +175,18 @@ public class ChangePasswordFragment extends BaseFragment<ChangePassWord_C.Presen
     }
 
     private void setFocusable(int type,EditText e1,EditText e2,EditText e3){
-      if (type==1){
+     /* if (type==1){
           e1.setFocusable(true);
           e1.setFocusableInTouchMode(true);
       } else {
-          e2.setFocusable(true);
-          e2.setFocusableInTouchMode(true);
-          e3.setFocusable(true);
-          e3.setFocusableInTouchMode(true);
-      }
+          e2.setFocusable(false);
+          e2.setFocusableInTouchMode(false);
+          e3.setFocusable(false);
+          e3.setFocusableInTouchMode(false);
+      }*/
     }
-    private void changePass(){
+    private void changePass(View view){
+        KeyBoardUtils.hideKeybord(view,_mActivity);
         Map map=new HashMap();
         map.put("sessionId",Constants.sessionId);
         map.put("oldPassword",ed_old_pass.getText().toString());

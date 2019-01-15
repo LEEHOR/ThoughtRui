@@ -25,7 +25,7 @@ public class MyTabFragmentP extends BasePresenter<MyTabFragmentC.View,MyTabFragm
         super(mview, mModel);
     }
 
-    @Override
+ /*   @Override
     public void startLocation(int type) {
         if (mModle != null) {
             mModle.startLocation(type);
@@ -44,7 +44,7 @@ public class MyTabFragmentP extends BasePresenter<MyTabFragmentC.View,MyTabFragm
         if (getView() != null) {
             getView().onLocationFailure(failure);
         }
-    }
+    }*/
 
     @Override
     public void getHomeData(Map map) {
