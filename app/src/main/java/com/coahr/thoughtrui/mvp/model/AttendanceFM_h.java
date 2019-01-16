@@ -20,21 +20,6 @@ public class AttendanceFM_h extends BaseModel<AttendanceFC_h.Presenter> implemen
         super();
     }
 
-    @Override
-    public void getMainData(Map map) {
-      mRxManager.add(createFlowable(new SimpleFlowableOnSubscribe<Attendance>(getApiService().getAttendanceInfo(map))).subscribeWith(new SimpleDisposableSubscriber<Attendance>() {
-        @Override
-        public void _onNext(Attendance attendance) {
-          if (getPresenter() != null) {
-            if (attendance.getResult()==1) {
-              getPresenter().getMainDataSuccess(attendance);
-            }else {
-              getPresenter().getMainDataFailure(attendance.getMsg());
-            }
-          }
-        }
-      }));
-    }
 
   @Override
   public void getAttendanceHistory(Map<String, Object> map) {

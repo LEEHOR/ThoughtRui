@@ -1,16 +1,20 @@
 package com.coahr.thoughtrui.mvp.view.attence;
 
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.util.TouchEventUtil;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.DensityUtils;
+import com.coahr.thoughtrui.Utils.TimeUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
@@ -21,10 +25,14 @@ import com.coahr.thoughtrui.mvp.Base.BaseSupportActivity;
 import com.coahr.thoughtrui.mvp.constract.AttendanceFC_h;
 import com.coahr.thoughtrui.mvp.model.Bean.Attendance;
 import com.coahr.thoughtrui.mvp.model.Bean.AttendanceHistory;
+import com.coahr.thoughtrui.mvp.model.Bean.BaiduApiBean;
 import com.coahr.thoughtrui.mvp.model.Bean.Event_Attend;
 import com.coahr.thoughtrui.mvp.presenter.AttendanceFP_h;
 import com.coahr.thoughtrui.mvp.view.attence.adapter.AttendanceHistoryAdapter;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
+import com.coahr.thoughtrui.widgets.HttpUtils.BaiduApi;
+import com.coahr.thoughtrui.widgets.HttpUtils.HttpUtilListener;
+import com.google.gson.Gson;
 import com.jzxiang.pickerview.TimePickerDialog;
 import com.jzxiang.pickerview.data.Type;
 import com.jzxiang.pickerview.listener.OnDateSetListener;
@@ -32,6 +40,7 @@ import com.socks.library.KLog;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -40,6 +49,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import okhttp3.Response;
 
 /**
  * Created by Leehor
@@ -59,6 +69,12 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
     TextView tv_select_time;
     @BindView(R.id.iv_select_time)
     ImageView iv_select_time;
+    @BindView(R.id.tv_date_out)
+    TextView tv_date_out;
+    @BindView(R.id.tv_date_in)
+    TextView tv_date_in;
+    @BindView(R.id.tv_h_remark)
+    TextView tv_h_remark;
     private String projectId;
 
     private TextView attendance_time_k;
@@ -70,6 +86,24 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
     private TextView tv_attendance_address_e;
     private TimePickerDialog datePickerDialog;
     //
+    private static final int zao_daka = 1;
+    private static final int wan_daka = 2;
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case zao_daka:
+                    String s = msg.obj.toString();
+                    tv_attendance_address_k.setText(s);
+                    break;
+                case wan_daka:
+                    String s2 = msg.obj.toString();
+                    tv_attendance_address_e.setText(s2);
+                    break;
+            }
+        }
+    };
 
     public static AttendanceFragment_h newInstance() {
         AttendanceFragment_h attendanceFragment_h = new AttendanceFragment_h();
@@ -113,24 +147,74 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
 
     @Override
     public void initData() {
-        getHistory(Constants.ht_ProjectId);
-    }
-
-    @Override
-    public void getMainDataSuccess(Attendance attendance) {
-
-    }
-
-    @Override
-    public void getMainDataFailure(String failure) {
-        ToastUtils.showLong(failure);
+        //获取接触历史
+        getHistory(Constants.ht_ProjectId, System.currentTimeMillis());
     }
 
     @Override
     public void getAttendanceHistorySuccess(AttendanceHistory history) {
+        if (history.getData() != null) {
+            AttendanceHistory.DataBean.AttendanceBean attendance = history.getData().getAttendance();
+            if (attendance != null) {
+                //进度
+                tv_progress.setText(attendance.getProgress());
+                //时间
+                tv_select_time.setText(attendance.getDateTime());
+                //早班卡时间
+                tv_date_in.setText(Constants.zao_ka);
+                //晚班卡时间
+                tv_date_out.setText(Constants.wan_ka);
+                //早班卡
+                if (attendance.getInTime() == 0) {
+                    iv_attendance_tag_start.setImageResource(R.mipmap.kaoqinq);
+                    iv_attendance_tag_end.setImageResource(R.mipmap.kaoqinq);
+                    attendance_time_k.setText("");
+                    attendance_time_e.setText("");
+                    tv_attendance_address_k.setText("");
+                    tv_attendance_address_e.setText("");
+                } else {
+                    final double inLat = attendance.getInLat();
+                    final double inLng = attendance.getInLng();
+                    attendance_time_k.setText(attendance.getInType() == 0 ? "次日:" : "当日:" + TimeUtils.getStingHM(attendance.getInTime()));
+                    if (attendance.getStartTimeStatus() == 1 && attendance.getStartLocationStatus() == 1) {
+                        iv_attendance_tag_start.setImageResource(R.mipmap.kaoqinz);
+                    } else {
+                        iv_attendance_tag_start.setImageResource(R.mipmap.kaoqinyc);
+                    }
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            getAddress(1, inLat, inLng);
+                        }
+                    }).start();
 
+                    if (attendance.getOutTime() != 0) {
+                        attendance_time_e.setText(attendance.getOutType() == 0 ? "次日" : "当日" + TimeUtils.getStingHM(attendance.getOutTime()));
+                        final double outLat = attendance.getOutLat();
+                        final double outLng = attendance.getOutLng();
+                        if (attendance.getEndLocationStatus() == 1 && attendance.getEndTimeStatus() == 1) {
+                            iv_attendance_tag_end.setImageResource(R.mipmap.kaoqinz);
+                        } else {
+                            iv_attendance_tag_end.setImageResource(R.mipmap.kaoqinyc);
+                        }
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                getAddress(2, outLat, outLng);
+                            }
+                        }).start();
+                    } else {
+                        attendance_time_e.setText("");
+                        tv_attendance_address_e.setText("");
+                        iv_attendance_tag_end.setImageResource(R.mipmap.kaoqinq);
+                    }
 
-
+                    if (attendance.getRemark() != null) {
+                        tv_h_remark.setText(attendance.getRemark());
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -138,19 +222,12 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
         ToastUtils.showLong(failure);
     }
 
-    //网络请求
-    private void getData() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("projectId", Constants.ht_ProjectId);
-        map.put("sessionId", Constants.sessionId);
-        // p.getMainData(map);
-    }
-
     //打卡历史
-    private void getHistory(String projectId) {
+    private void getHistory(String projectId, long dateTime) {
         Map<String, Object> map = new HashMap<>();
         map.put("projectId", projectId);
         map.put("sessionId", Constants.sessionId);
+        map.put("dateTime", TimeUtils.getStingYMD(dateTime));
         p.getAttendanceHistory(map);
     }
 
@@ -173,16 +250,68 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
                 .setMaxMillseconds(System.currentTimeMillis() + tenYears)
                 .setCurrentMillseconds(System.currentTimeMillis())
                 .setThemeColor(getResources().getColor(R.color.material_blue_600))
-                .setType(Type.ALL)
+                .setType(Type.YEAR_MONTH_DAY)
                 .setWheelItemTextNormalColor(getResources().getColor(R.color.timetimepicker_default_text_color))
                 .setWheelItemTextSelectorColor(getResources().getColor(R.color.black))
                 .setWheelItemTextSize(12)
                 .build();
-
     }
 
     @Override
     public void onDateSet(TimePickerDialog timePickerView, long millseconds) {
+        KLog.d("选择的时间",millseconds);
+        getHistory(Constants.ht_ProjectId, millseconds);
+    }
 
+    /**
+     * 获取打卡地址
+     *
+     * @param type_daka
+     * @param lat
+     * @param lng
+     */
+    private void getAddress(final int type_daka, double lat, double lng) {
+        BaiduApi baiduApi = new BaiduApi.Builder()
+                .default_lat(String.valueOf(lat))
+                .default_lot(String.valueOf(lng))
+                .default_methodType(BaiduApi.OkHttpMethodType.POST)
+                .CallBack(new HttpUtilListener() {
+                    @Override
+                    public void getAddressSuccess(Response response) {
+                        if (response.isSuccessful()) {
+                            try {
+                                String string = response.body().string();
+                                Gson gson = new Gson();
+                                BaiduApiBean baiduApiBean = gson.fromJson(string, BaiduApiBean.class);
+                                if (baiduApiBean.getStatus() == 0) {
+                                    KLog.d("地址", baiduApiBean.getResult().getAddressComponent().getStreet());
+                                    if (type_daka == 1) {
+                                        Message message = new Message();
+                                        message.what = zao_daka;
+                                        message.obj = baiduApiBean.getResult().getAddressComponent().getStreet();
+                                        mHandler.sendMessage(message);
+                                        // tv_start_location.setText(baiduApiBean.getResult().getAddressComponent().getStreet());
+                                    } else {
+                                        // tv_end_location.setText(baiduApiBean.getResult().getAddressComponent().getStreet());
+                                        Message message = new Message();
+                                        message.what = wan_daka;
+                                        message.obj = baiduApiBean.getResult().getAddressComponent().getStreet();
+                                        mHandler.sendMessage(message);
+                                    }
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                    }
+
+                    @Override
+                    public void getAddressFailure(String e) {
+
+                    }
+                })
+                .build();
     }
 }

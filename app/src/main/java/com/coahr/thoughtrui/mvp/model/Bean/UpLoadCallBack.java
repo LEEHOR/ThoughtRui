@@ -7,13 +7,17 @@ package com.coahr.thoughtrui.mvp.model.Bean;
  * 描述：
  */
 public class UpLoadCallBack {
+    /**
+     * msg
+     * result
+     * data{}
+     */
     private String msg;
     private int result;
 
     public String getMsg() {
         return msg;
     }
-
     public void setMsg(String msg) {
         this.msg = msg;
     }
@@ -25,4 +29,5 @@ public class UpLoadCallBack {
     public void setResult(int result) {
         this.result = result;
     }
+
 }

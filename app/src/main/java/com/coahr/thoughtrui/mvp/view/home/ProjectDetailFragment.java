@@ -16,6 +16,7 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.model.Bean.Event_ProjectDetail;
+import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
 import com.coahr.thoughtrui.mvp.view.StartProjectActivity;
 import com.coahr.thoughtrui.mvp.view.attence.AttendanceRootActivity;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
@@ -67,12 +68,32 @@ public class   ProjectDetailFragment extends BaseFragment implements View.OnClic
             if (messageEvent.isOffline()){  //离线
               Constants.DbProjectId=String.valueOf(messageEvent.getDb_Id());
               Constants.name_Project=messageEvent.getPname();
+                String cname = messageEvent.getCname();
+                if (cname.equals("自由班次")) {
+                    Constants.zao_ka=cname;
+                    Constants.wan_ka=cname;
+                } else {
+                    String[] split = cname.split("-");
+                    if (split.length > 1) {
+                        Constants.zao_ka=split[0];
+                        Constants.wan_ka=split[1];
+                    }
+                }
               KLog.d("1项目id",Constants.DbProjectId);
           } else {                     //在线
               List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectBy_Where(ProjectsDB.class, new String[]{"id"}, "pid=?", messageEvent.getP_Id());
               if (projectsDBS != null && projectsDBS.size()>0) {
                   Constants.DbProjectId=String.valueOf(projectsDBS.get(0).getId());
                   Constants.name_Project=projectsDBS.get(0).getPname();
+                  String s = projectsDBS.get(0).getcName();
+                  if (s.equals("自由班次")) {
+
+                  } else {
+                      String[] split = s.split("-");
+                      if (split.length > 1) {
+
+                      }
+                  }
               }
               KLog.d("2项目id",Constants.DbProjectId);
           }
@@ -126,7 +147,7 @@ public class   ProjectDetailFragment extends BaseFragment implements View.OnClic
                 showDialog();
                 break;
             case R.id.attachment:
-
+                JumpToProjectAnnex();
                 break;
         }
     }
@@ -172,6 +193,17 @@ public class   ProjectDetailFragment extends BaseFragment implements View.OnClic
     private void JumpToStartProject(){
         Intent intent=new Intent(_mActivity,StartProjectActivity.class);
         startActivity(intent);
+    }
+
+    /**
+     * 跳转到项目附件
+     */
+    private void JumpToProjectAnnex(){
+        Intent intent=new Intent(_mActivity,ConstantsActivity.class);
+        intent.putExtra("from", Constants.MainActivityCode);
+        intent.putExtra("to", Constants.fragment_AnnexViewPager);
+        startActivity(intent);
+        // start(StartProjectFragment.newInstance());
     }
 
 }

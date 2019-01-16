@@ -27,11 +27,13 @@ import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.DBbean.UsersDB;
 import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
+import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.UploadC;
 import com.coahr.thoughtrui.mvp.model.Bean.QuestionBean;
 import com.coahr.thoughtrui.mvp.model.Bean.UpLoadCallBack;
+import com.socks.library.KLog;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -47,15 +49,19 @@ import javax.inject.Inject;
  * on 17:09
  */
 public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Model {
+    private PutObjectRequest put;
+
     @Inject
     public UploadM() {
         super();
     }
-    List<OSSAsyncTask> ossAsyncTaskList=new ArrayList<>();
+
+    List<OSSAsyncTask> ossAsyncTaskList = new ArrayList<>();
     //上传成功的个数
-    private int UpLoadSuccessCount=0;
+    private int UpLoadSuccessCount = 0;
     //上传失败的个数
-    private int UpLoadFailureCount=0;
+    private int UpLoadFailureCount = 0;
+
     @Override
     public void getSTS(String utl) {
         OSSAuthCredentialsProvider ossAuthCredentialsProvider = new OSSAuthCredentialsProvider(utl);
@@ -72,20 +78,20 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
         if (ossClient != null) {
             getPresenter().getOSSSuccess(ossClient);
         } else {
-            getPresenter().getOSSFailure("获取阿里云上传实例失败");
+            getPresenter().getOSSFailure("获取阿里云上传实例初始化失败");
         }
     }
 
     @Override
     public void getProjectList(String sessionId) {
         List<UsersDB> usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", sessionId);
-        if (usersDBS != null && usersDBS.size()>0) {
+        if (usersDBS != null && usersDBS.size() > 0) {
             UsersDB usersDB = usersDBS.get(0);
-            List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "usersdb_id =? and puploadstatus = ? and downloadtime!=? and isdeletes=? and iscomplete=?", String.valueOf(usersDB.getId()), String.valueOf(0),String.valueOf(-1),String.valueOf(0),String.valueOf(0));
-            if (projectsDBS != null && projectsDBS.size()>0) {
+            List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "usersdb_id =? and puploadstatus = ? and downloadtime!=? and isdeletes=? and iscomplete=?", String.valueOf(usersDB.getId()), String.valueOf(0), String.valueOf(-1), String.valueOf(0), String.valueOf(0));
+            if (projectsDBS != null && projectsDBS.size() > 0) {
                 getPresenter().getProjectListSuccess(projectsDBS);
             } else {
-                getPresenter().getProjectListFailure("获取项目列表失败或为空");
+                getPresenter().getProjectListFailure("没有可以上传的项目");
             }
         }
     }
@@ -93,10 +99,10 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
     @Override
     public void getSubjectList(ProjectsDB projectsDBList) {
         List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectByTogether_Where(SubjectsDB.class, "projectsdb_id=? and iscomplete=? and suploadstatus=?", String.valueOf(projectsDBList.getId()), String.valueOf(0), String.valueOf(0));
-        if (subjectsDBS != null && subjectsDBS.size()>0) {
-            getPresenter().getSubjectListSuccess(subjectsDBS,projectsDBList);
+        if (subjectsDBS != null && subjectsDBS.size() > 0) {
+            getPresenter().getSubjectListSuccess(subjectsDBS, projectsDBList);
         } else {
-            getPresenter().getSubjectListFailure("获取题目列表出错");
+            getPresenter().getSubjectListFailure("当前项目下没有可传的题目");
         }
 
     }
@@ -104,23 +110,32 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
     @Override
     public void UpLoadFileList(ProjectsDB projectsDB, SubjectsDB subjectsDB, Activity activity) {
         List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + projectsDB.getPid() + "/" + subjectsDB.getNumber() + "_" + subjectsDB.getHt_id());
-        if (fileList != null && fileList.size()>0) {
-            getPresenter().getUoLoadFileListSuccess(fileList,projectsDB,subjectsDB);
+        if (fileList != null && fileList.size() > 0) {
+            getPresenter().getUoLoadFileListSuccess(fileList, projectsDB, subjectsDB);
         } else {
-            getPresenter().getUpLoadFileListFailure("获取题目答案失败");
+            getPresenter().getUpLoadFileListFailure("当前题目下没有可以上传的数据");
         }
 
     }
 
     @Override
-    public void StartUpLoad(OSS oss,List<String> list, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
+    public void StartUpLoad(OSS oss, List<String> list, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
         ossAsyncTaskList.clear();
-        if (list != null && list.size()>0) {
-            for (int i = 0; i <list.size() ; i++) {
-                OSSAsyncTask ossAsyncTask = asyncPutImage(oss, projectsDB.getPid(), getName(list.get(i), "/"),
-                        list.get(i), list.size(), i,projectsDB,subjectsDB,list);
-                if (ossAsyncTask != null) {
-                    ossAsyncTaskList.add(ossAsyncTask);
+        int CountSize = 0;
+        if (list != null && list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
+                if (!list.get(i).endsWith("txt")) {
+                    CountSize++;
+                }
+            }
+
+            for (int i = 0; i < list.size(); i++) {
+                if (!list.get(i).endsWith("txt")) {
+                    OSSAsyncTask ossAsyncTask = asyncPutImage(oss,
+                            list.get(i), CountSize, projectsDB, subjectsDB, list);
+                    if (ossAsyncTask != null) {
+                        ossAsyncTaskList.add(ossAsyncTask);
+                    }
                 }
             }
         }
@@ -130,35 +145,28 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
     public void CallBack(Map<String, Object> map, final ProjectsDB projectsDB, final SubjectsDB subjectsDB) {
         mRxManager.add(createFlowable(new SimpleFlowableOnSubscribe<UpLoadCallBack>(getApiService().upLoadCallBack(map)))
                 .subscribeWith(new SimpleDisposableSubscriber<UpLoadCallBack>() {
-            @Override
-            public void _onNext(UpLoadCallBack upLoadCallBack) {
-                if (getPresenter() != null) {
-                    if (upLoadCallBack.getResult()==1) {
-                        getPresenter().CallBackSuccess(projectsDB,subjectsDB);
-                    }else {
-                        getPresenter().CallBackFailure(projectsDB,subjectsDB);
+                    @Override
+                    public void _onNext(UpLoadCallBack upLoadCallBack) {
+                        if (getPresenter() != null) {
+                            if (upLoadCallBack.getResult() == 1) {
+                                getPresenter().CallBackSuccess(projectsDB, subjectsDB);
+                            } else {
+                                getPresenter().CallBackFailure(projectsDB, subjectsDB);
+                            }
+                        }
                     }
-                }
-            }
-        }));
+                }));
     }
 
     /**
      * 上传
+     *
      * @param oss
-     * @param bucket
-     * 路径
-     * @param object
-     * 名字
-     * @param localFile
-     * 文件
-     * @param count
-     * 总大小
-     * @param position
-     * 当前位置
+     * @param localFile 文件
+     * @param count     总大小
      */
-    public OSSAsyncTask asyncPutImage(OSS oss, String bucket, String object, String localFile, final int count, int position, final ProjectsDB projectsDB, final SubjectsDB subjectsDB, final List<String> list) {
-        if (object.equals("")) {
+    public OSSAsyncTask asyncPutImage(OSS oss, String localFile, final int count, final ProjectsDB projectsDB, final SubjectsDB subjectsDB, final List<String> list) {
+        if (localFile.equals("")) {
             Log.w("AsyncPutImage", "ObjectNull");
             return null;
         }
@@ -169,9 +177,15 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
             Log.w("LocalFile", localFile);
             return null;
         }
-        // 构造上传请求
-        OSSLog.logDebug("create PutObjectRequest ");
-        PutObjectRequest put = new PutObjectRequest(bucket, object, localFile);
+        String name = getName(localFile, "/");
+        String object = null;
+        KLog.d("上传文件", Constants.bucket, name, localFile);
+        if (localFile.endsWith("wav")) {
+            object = projectsDB.getPid() + "/audios/" + name;
+        } else {
+            object = projectsDB.getPid() + "/pictures/" + subjectsDB.getNumber() + "/" + name;
+        }
+        PutObjectRequest put = new PutObjectRequest(Constants.bucket, object, localFile);
         put.setCRC64(OSSRequest.CRC64Config.YES);
     /*    if (ApiContact.callbackAddress != null) {
             // 传入对应的上传回调参数，这里默认使用OSS提供的公共测试回调服务器地址
@@ -192,23 +206,17 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
             }
         });*/
 
-        OSSLog.logDebug(" asyncPutObject ");
+
         OSSAsyncTask task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
             @Override
             public void onSuccess(PutObjectRequest request, PutObjectResult result) {
                 UpLoadSuccessCount++;
-                if (UpLoadSuccessCount == count){
+                if (UpLoadSuccessCount == count) {
                     //每题的回调
                     if (getPresenter() != null) {
-                        UpLoadSuccessCount=0;
-                        UpLoadFailureCount=0;
-                        getPresenter().StartUpLoadSuccess(projectsDB, subjectsDB,list);
-                    }
-                } else {
-                    if (getPresenter() != null) {
-                        UpLoadSuccessCount=0;
-                        UpLoadFailureCount=0;
-                        getPresenter().StartUpLoadFailure(projectsDB,subjectsDB);
+                        UpLoadSuccessCount = 0;
+                        UpLoadFailureCount = 0;
+                        getPresenter().StartUpLoadSuccess(projectsDB, subjectsDB, list);
                     }
                 }
             }
@@ -230,32 +238,35 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
                     Log.e("RawMessage", serviceException.getRawMessage());
                     info = serviceException.toString();
                 }
-                    UpLoadFailureCount++;
-                if (UpLoadSuccessCount+UpLoadFailureCount==count) {
+                OSSLog.logDebug(info);
+                ToastUtils.showLong(info);
+                UpLoadFailureCount++;
+                if (UpLoadSuccessCount + UpLoadFailureCount == count) {
                     if (getPresenter() != null) {
-                        UpLoadSuccessCount=0;
-                        UpLoadFailureCount=0;
-                        getPresenter().StartUpLoadFailure(projectsDB,subjectsDB);
+                        UpLoadSuccessCount = 0;
+                        UpLoadFailureCount = 0;
+                        getPresenter().StartUpLoadFailure(projectsDB, subjectsDB);
                     }
                 }
 
             }
         });
         if (task != null) {
-            return  task;
+            return task;
         }
         return null;
     }
 
     /**
      * 获取字符串
+     *
      * @param path
      * @param flag
      * @return
      */
-    public static String getName(String path,String flag){
+    public static String getName(String path, String flag) {
         int i = path.lastIndexOf(flag);
-        String substring_name = path.substring(i+1);
+        String substring_name = path.substring(i + 1);
         return substring_name;
     }
 }

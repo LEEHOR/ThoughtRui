@@ -10,6 +10,8 @@ import com.coahr.thoughtrui.mvp.view.mydata.ChangePasswordFragment;
 import com.coahr.thoughtrui.mvp.view.mydata.LoginFragment;
 import com.coahr.thoughtrui.mvp.view.SubjectList.Fragment_Topics;
 import com.coahr.thoughtrui.mvp.view.mydata.MyFragment;
+import com.coahr.thoughtrui.mvp.view.projectAnnex.FragmentAnnex;
+import com.coahr.thoughtrui.mvp.view.projectAnnex.FragmentAnnexViewPager;
 import com.coahr.thoughtrui.mvp.view.reviewed.ReViewStart;
 import com.coahr.thoughtrui.mvp.view.reviewed.ReviewInfoList;
 import com.coahr.thoughtrui.mvp.view.reviewed.ReviewPager;
@@ -81,4 +83,10 @@ public abstract class AllFragmentModule {
 
     @ContributesAndroidInjector()
     abstract ChangePasswordFragment ChangePasswordFragmentInjector();
+
+    @ContributesAndroidInjector()
+    abstract FragmentAnnexViewPager FragmentAnnexViewPagerInjector();
+
+    @ContributesAndroidInjector()
+    abstract FragmentAnnex FragmentAnnexInjector();
 }

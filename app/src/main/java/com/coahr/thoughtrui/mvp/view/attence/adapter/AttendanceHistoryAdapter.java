@@ -21,14 +21,14 @@ import com.socks.library.KLog;
  * on 16:30
  * 已弃用
  */
-public class AttendanceHistoryAdapter extends BaseQuickAdapter<AttendanceHistory.DataBean.AttendanceListBean, BaseViewHolder> {
+public class AttendanceHistoryAdapter extends BaseQuickAdapter<AttendanceHistory, BaseViewHolder> {
     public AttendanceHistoryAdapter() {
         super(R.layout.item_recycler_attedancehistory, null);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, final AttendanceHistory.DataBean.AttendanceListBean item) {
-        KLog.d("开始了2");
+    protected void convert(BaseViewHolder helper, final AttendanceHistory item) {
+      /*  KLog.d("开始了2");
         //开始
         View include_start = helper.getView(R.id.start_part);
         TextView attendance_time_k = include_start.findViewById(R.id.attendance_time_k);
@@ -55,7 +55,7 @@ public class AttendanceHistoryAdapter extends BaseQuickAdapter<AttendanceHistory
                 String address = GetAddressUtil.getAddress(BaseApplication.mContext, item.getInLat(), item.getInLat());
                 tv_attendance_address_k.setText(address);
             }
-/*            new Thread(new Runnable() {
+*//*            new Thread(new Runnable() {
                 @Override
                 public void run() {
                     if (item.getInLat() != 0 && item.getInLng() != 0) {
@@ -74,7 +74,7 @@ public class AttendanceHistoryAdapter extends BaseQuickAdapter<AttendanceHistory
                         });
                     }
                 }
-            }).start();*/
+            }).start();*//*
         } else {
             iv_attendance_tag_start.setImageResource(R.mipmap.kaoqinq);
         }
@@ -91,7 +91,7 @@ public class AttendanceHistoryAdapter extends BaseQuickAdapter<AttendanceHistory
                 String address = GetAddressUtil.getAddress(BaseApplication.mContext, item.getOutLng(), item.getOutLat());
                 tv_attendance_address_e.setText(address);
             }
-  /*          new Thread(new Runnable() {
+  *//*          new Thread(new Runnable() {
                 @Override
                 public void run() {
                     if (item.getOutLat() != 0 && item.getOutLng() != 0) {
@@ -110,10 +110,10 @@ public class AttendanceHistoryAdapter extends BaseQuickAdapter<AttendanceHistory
                         });
                     }
                 }
-            }).start();*/
+            }).start();*//*
 
         } else {
             iv_attendance_tag_end.setImageResource(R.mipmap.kaoqinq);
-        }
+        }*/
     }
 }

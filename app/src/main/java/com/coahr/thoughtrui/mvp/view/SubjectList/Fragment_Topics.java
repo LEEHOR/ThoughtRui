@@ -1,9 +1,11 @@
 package com.coahr.thoughtrui.mvp.view.SubjectList;
 
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.ListView;
 
 import com.coahr.thoughtrui.R;
+import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.FragmentTopicsC;
 import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
@@ -36,6 +38,9 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
     MyTittleBar subject_tittle;
     @BindView(R.id.id_tree)
     ListView treeList;
+    @BindView(R.id.su_swipe)
+    SwipeRefreshLayout su_swipe;
+    private boolean isLoading;
     private NodeTreeAdapter mAdapter;
     private LinkedList<BaseNode> mLinkedList = new LinkedList<>();
     private List<BaseNode> baseNodeList;
@@ -69,6 +74,7 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
                 _mActivity.onBackPressed();
             }
         });
+
         //   linearLayoutManager = new LinearLayoutManager(BaseApplication.mContext);
         //  subject_recycler.setLayoutManager(linearLayoutManager);
         mAdapter = new NodeTreeAdapter(_mActivity, treeList, mLinkedList);
@@ -79,6 +85,17 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
     @Override
     public void initData() {
         getHttp();
+        su_swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (!isLoading) {
+                    isLoading=true;
+                    getHttp();
+                }else {
+                    su_swipe.setRefreshing(false);
+                }
+            }
+        });
     }
 
     @Override
@@ -149,17 +166,22 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
     private void setAdapter(List<BaseNode> baseNodes) {
         // adapter = new ThreeItemAdapter(_mActivity,questionListBeanList);
         // subject_recycler.setAdapter(adapter);
+        mLinkedList.clear();
         mLinkedList.addAll(NodeHelper.sortNodes(baseNodes));
+        mAdapter.setLinkList(mLinkedList);
         mAdapter.notifyDataSetChanged();
+        isLoading=false;
+        su_swipe.setRefreshing(false);
     }
     @Override
     public void getSubjectListFailure(String failure) {
-
+        isLoading=false;
+        su_swipe.setRefreshing(false);
     }
 
     private void getHttp() {
         Map map = new HashMap();
-        map.put("projectId", "e274a447c8e44f4396c031d4e933606e");
+        map.put("projectId", Constants.ht_ProjectId);
         p.getSubjectList(map);
     }
 }

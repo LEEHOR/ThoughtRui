@@ -69,4 +69,13 @@ public class TimeUtils {
         return startTime;
 
     }
+
+    public static String getStingYMD(long date){
+        String startTime;
+        Date d = new Date(date);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        startTime = sdf.format(d);
+        return startTime;
+
+    }
 }

@@ -21,7 +21,7 @@ import java.io.OutputStreamWriter;
  */
 public class SaveOrGetAnswers {
     //保存文件到sd卡
-    public  static  boolean saveToFile(String FilePath,String massage,boolean append) {
+    public  static  boolean saveToFile(String FilePath,String name,String massage,boolean append) {
         BufferedWriter out = null;
       /*
       输出流的构造参数1：可以是File对象 也可以是文件路径
@@ -31,7 +31,7 @@ public class SaveOrGetAnswers {
         if (!filepath.exists()) {
             filepath.mkdirs();
         }
-        File file = new File(FilePath, "AnswerAndRemark.txt");
+        File file = new File(FilePath, name);
         if(!file.exists()) {
             try {
                 file.createNewFile();
@@ -108,7 +108,8 @@ public class SaveOrGetAnswers {
         }
 
         try {
-            fis = new FileInputStream(FilePath + "AnswerAndRemark.txt");
+           // fis = new FileInputStream(FilePath + "AnswerAndRemark.txt");
+            fis = new FileInputStream(FilePath);
             reader = new BufferedReader(new InputStreamReader(fis));
             String row;
             while ((row = reader.readLine()) != null) {

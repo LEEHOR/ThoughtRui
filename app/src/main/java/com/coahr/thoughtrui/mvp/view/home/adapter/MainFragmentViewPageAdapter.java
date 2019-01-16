@@ -25,7 +25,7 @@ public class MainFragmentViewPageAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 4;
+        return title.length;
     }
     @Nullable
     @Override

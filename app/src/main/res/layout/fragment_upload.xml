@@ -46,12 +46,17 @@
             android:layout_height="wrap_content" />
     </RelativeLayout>
     </FrameLayout>
-
-    <android.support.v7.widget.RecyclerView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/up_swipe"
         android:layout_below="@+id/fr_top"
-        android:id="@+id/up_recycler"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/up_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
     <android.support.v7.widget.CardView
         android:visibility="gone"
         android:id="@+id/card_bottom"

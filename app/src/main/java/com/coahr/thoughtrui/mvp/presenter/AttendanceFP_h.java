@@ -24,27 +24,6 @@ public class AttendanceFP_h extends BasePresenter<AttendanceFC_h.View,Attendance
     }
 
     @Override
-    public void getMainData(Map<String,Object> map) {
-        if (mModle != null) {
-            mModle.getMainData(map);
-        }
-    }
-
-    @Override
-    public void getMainDataSuccess(Attendance attendance) {
-        if (getView() != null) {
-            getView().getMainDataSuccess(attendance);
-        }
-    }
-
-    @Override
-    public void getMainDataFailure(String failure) {
-        if (getView() != null) {
-            getView().getMainDataFailure(failure);
-        }
-    }
-
-    @Override
     public void getAttendanceHistory(Map<String, Object> map) {
         if (mModle != null) {
             mModle.getAttendanceHistory(map);

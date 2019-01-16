@@ -7,6 +7,7 @@ import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +24,7 @@ import com.alibaba.sdk.android.oss.OSSClient;
 import com.alibaba.sdk.android.oss.common.OSSLog;
 import com.alibaba.sdk.android.oss.common.auth.OSSAuthCredentialsProvider;
 import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
+import com.alibaba.sdk.android.oss.common.auth.OSSFederationToken;
 import com.baidu.location.BDLocation;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
@@ -61,6 +63,8 @@ import butterknife.BindView;
 public class UploadFragment extends BaseFragment<UploadC.Presenter> implements UploadC.View, View.OnClickListener {
     @Inject
     UploadP p;
+    @BindView(R.id.up_swipe)
+    SwipeRefreshLayout up_swipe;
     @BindView(R.id.re_top)
     RelativeLayout re_top;
     @BindView(R.id.tv_data_count)
@@ -102,6 +106,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     private List<String> fileList = new ArrayList<>();
     private UpLoadAdapter upLoadAdapter;
     private LinearLayoutManager manager;
+    private boolean isLoading;
     //网络状态
     private int NetType;
     //是否连接
@@ -163,11 +168,24 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
             @Override
             public void getNetState(String netWorkType, boolean isConnect, NetworkInfo.DetailedState detailedState) {
                 isNetConnect = isConnect;
-                if (netWorkType.endsWith("WIFI")) {
-                    NetType = 1;
+                if (netWorkType != null) {
+                    if (netWorkType.equals("WIFI")) {
+                        NetType = 1;
+                    }
+                    if (netWorkType.equals("MOBILE")) {
+                        NetType = 2;
+                    }
                 }
-                if (netWorkType.endsWith("MOBILE")) {
-                    NetType = 2;
+            }
+        });
+        up_swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (!isLoading) {
+                    isLoading = true;
+                    p.getProjectList(Constants.sessionId);
+                } else {
+                    up_swipe.setRefreshing(false);
                 }
             }
         });
@@ -197,7 +215,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
 
     @Override
     public void showError(Throwable t) {
-
+        KLog.d("网络请求错误", t.toString());
     }
 
     @Override
@@ -247,6 +265,8 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
         this.allProjectList = projectsDB;
         this.all_project_size = projectsDB.size();
         upLoadAdapter.setNewData(projectsDB);
+        isLoading = false;
+        up_swipe.setRefreshing(false);
         //获取第一个项目下的题目
         // p.getSubjectList(listProjectDb.get(up_project_position));
 
@@ -255,6 +275,8 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     @Override
     public void getProjectListFailure(String failure) {
         ToastUtils.showLong(failure);
+        isLoading = false;
+        up_swipe.setRefreshing(false);
     }
 
     @Override
@@ -262,7 +284,8 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
         this.subjectsDBList = subjectsDBList;
         Subject_size = subjectsDBList.size();
         //获取第一个题目下的上传文件
-        p.UpLoadFileList(projectsDB, subjectsDBList.get(up_subject_position), _mActivity);
+        up_subject_position = 0;
+        p.UpLoadFileList(projectsDB, subjectsDBList.get(0), _mActivity);
     }
 
     @Override
@@ -284,21 +307,22 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
 
     @Override
     public void StartUpLoadSuccess(ProjectsDB projectsDB, SubjectsDB subjectsDB, List<String> list) {
-        String audioName = null;
+        String audioPath = null;
         String textMassage = null;
         fileList.clear();
+        KLog.d("阿里云上传成功" + projectsDB.getPname() + "/" + subjectsDB.getNumber());
         //当前题目下数据上传成功
         //执行回调
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).endsWith(".wav") || list.get(i).endsWith(".arm") || list.get(i).endsWith(".mp3")) {
-                audioName = list.get(i);
-            } else if (list.get(i).endsWith("txt")) {
+                audioPath = list.get(i);
+            } else if (list.get(i).endsWith(".txt")) {
                 textMassage = SaveOrGetAnswers.readFromFile(list.get(i));
             } else {
                 fileList.add(list.get(i));
             }
         }
-        callbackForServer(projectsDB, subjectsDB, audioName, fileList, textMassage);
+        callbackForServer(projectsDB, subjectsDB, audioPath, fileList, textMassage);
     }
 
     @Override
@@ -309,11 +333,13 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
 
     @Override
     public void CallBackSuccess(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
+        KLog.d("阿里云上传回调成功" + projectsDB.getPname() + "/" + subjectsDB.getNumber());
         upDateDB(projectsDB, subjectsDB, true);
     }
 
     @Override
     public void CallBackFailure(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
+        KLog.d("阿里云上传回调失败" + projectsDB.getPname() + "/" + subjectsDB.getNumber());
         upDateDB(projectsDB, subjectsDB, false);
     }
 
@@ -369,46 +395,71 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
         }
     }
 
-    private void callbackForServer(ProjectsDB projectsDB, SubjectsDB subjectsDB, String recorderName, List<String> picList, String text) {
-        Map map = new HashMap();
+    private void callbackForServer(final ProjectsDB projectsDB, final SubjectsDB subjectsDB, String recorderPath, List<String> picList, String text) {
+        final Map map = new HashMap();
         map.put("projectId", projectsDB.getPid());
         map.put("answerId", subjectsDB.getHt_id());
         map.put("number", subjectsDB.getNumber());
         map.put("stage", projectsDB.getStage());
+       /* map.put("answer","是");
+        map.put("description", "哈哈哈");*/
         if (text != null) {
             String[] split = text.split("&");
             if (split != null && split.length > 0) {
                 for (int i = 0; i < split.length; i++) {
                     if (i == 0) {
-                        map.put("answer", split[0]);
+                        String s = split[0];
+                        String string = SaveOrGetAnswers.getString(s, ":");
+                        if (string != null && !string.equals("") && !string.equals("null")) {
+                            map.put("answer", s);
+                            KLog.d("anwser" + string);
+                        } else {
+                            map.put("anwser", "");
+                        }
                     }
                     if (i == 1) {
-                        map.put("description", split[1]);
+                        String s1 = split[1];
+                        String string1 = SaveOrGetAnswers.getString(s1, ":");
+                        if (string1 != null && !string1.equals("") && !string1.equals("null")) {
+                            map.put("description", string1);
+                            KLog.d("description" + string1);
+                        } else {
+                            map.put("description", "");
+                        }
                     }
                 }
             }
         }
-        map.put("audioCount", 1);
-        map.put("audio", recorderName);
+        map.put("audioCount", recorderPath != null ? 0 : 1);
+        KLog.d("录音名字", recorderPath);
+        map.put("audio", recorderPath != null ? getName(recorderPath, "/") : "");
         map.put("pictureCount", picList.size());
 
         StringBuffer stringBuffer = new StringBuffer();
         for (int i = 0; i < picList.size(); i++) {
             if (picList.size() == 1) {
                 // stringBuffer.append(subjectsDB.getNumber() + "_" + (i + 1) + "." + "jpg");
-                stringBuffer.append(picList.get(i));
+                stringBuffer.append(getName(picList.get(i), "/"));
             } else {
                 if (i == (picList.size() - 1)) {
                     // stringBuffer.append(subjectsDB.getNumber() + "_" + (i + 1) + "." + "jpg");
-                    stringBuffer.append(picList.get(i));
+                    stringBuffer.append(getName(picList.get(i), "/"));
                 } else {
-                    stringBuffer.append(picList.get(i) + ";");
+                    stringBuffer.append(getName(picList.get(i), "/") + ";");
                     // stringBuffer.append(subjectsDB.getNumber() + "_" + (i + 1) + "." + "jpg" + ";");
                 }
             }
         }
         map.put("picture", stringBuffer.toString());
-        p.CallBack(map, projectsDB, subjectsDB);
+        KLog.d("回调", picList.size(), text);
+
+        _mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                p.CallBack(map, projectsDB, subjectsDB);
+            }
+        });
+
     }
 
 
@@ -426,6 +477,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                 int update = subjectsDB1.update(subjectsDB.getId());
             }
             if (up_subject_position == subjectsDBList.size() - 1) { //当前项目下的题目传完了
+                up_subject_position = 0;
                 //先判断项目下的题目是否传完
                 List<SubjectsDB> subjectsDBList = projectsDB.getSubjectsDBList();
                 if (subjectsDBList != null && subjectsDBList.size() > 0) {
@@ -448,12 +500,11 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                     up_project_position = 0;
                     p.getProjectList(Constants.sessionId);
                 } else {
-                    up_project_position = 0;
                     p.getSubjectList(allProjectList.get(up_project_position++));
                 }
 
             } else {  //当前项目没有传完传下一题
-                p.getSubjectList(allProjectList.get(up_project_position++));
+                p.UpLoadFileList(projectsDB, subjectsDBList.get(up_subject_position++), _mActivity);
             }
 
         }
@@ -464,6 +515,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                 int update = subjectsDB1.update(subjectsDB.getId());
             }
             if (up_subject_position == Subject_size - 1) { //当前项目下的题目传完了
+                up_subject_position = 0;
                 //先判断项目下的题目是否传完
                 List<SubjectsDB> subjectsDBList = projectsDB.getSubjectsDBList();
                 if (subjectsDBList != null && subjectsDBList.size() > 0) {
@@ -491,7 +543,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                 }
 
             } else {  //当前项目没有传完传下一题
-                p.getSubjectList(ck_listProjectDb.get(up_project_position++));
+                p.UpLoadFileList(projectsDB, subjectsDBList.get(up_subject_position++), _mActivity);
             }
         }
     }
@@ -556,12 +608,29 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
         //获取第一各项目的题目
         if (ossClient != null) {
             if (type == 1) {  //全部
-                p.getSubjectList(allProjectList.get(up_project_position));
+                p.getSubjectList(allProjectList.get(0));
             }
             if (type == 2) {    //批量
-                p.getSubjectList(ck_listProjectDb.get(up_project_position));
+                p.getSubjectList(ck_listProjectDb.get(0));
             }
         }
     }
 
+    /**
+     * 获取字符串
+     *
+     * @param path
+     * @param flag
+     * @return
+     */
+    public static String getName(String path, String flag) {
+        int i = path.lastIndexOf(flag);
+        String substring_name = path.substring(i + 1);
+        return substring_name;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
 }

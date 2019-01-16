@@ -15,9 +15,6 @@ import java.util.Map;
  */
 public interface AttendanceFC_h {
     interface View extends BaseContract.View {
-        void getMainDataSuccess(Attendance attendance);
-
-        void getMainDataFailure(String failure);
 
         void getAttendanceHistorySuccess(AttendanceHistory history);
 
@@ -25,12 +22,6 @@ public interface AttendanceFC_h {
     }
 
     interface Presenter extends BaseContract.Presenter {
-
-        void getMainData(Map<String,Object> map);
-
-        void getMainDataSuccess(Attendance attendance);
-
-        void getMainDataFailure(String failure);
 
         void getAttendanceHistory(Map<String,Object> map);
 
@@ -44,10 +35,6 @@ public interface AttendanceFC_h {
     }
 
     interface Model extends BaseContract.Model {
-
-
-        void getMainData(Map<String,Object> map);
-
         void getAttendanceHistory(Map<String,Object> map);
     }
 }

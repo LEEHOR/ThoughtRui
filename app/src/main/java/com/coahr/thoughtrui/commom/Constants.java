@@ -33,6 +33,12 @@ public class Constants {
     public static int timeout=15;
     //首页定位次数
     public static int location_counts;
+    //早班班次
+    public static String zao_ka;
+    //晚班次
+    public static String wan_ka;
+    //阿里云上传的bucket
+    public static final String bucket = "three-research";
 
     //SDCard路径
     public static String SDCARD_PATH = StoreSpaceUtils.getSDCardPath();
@@ -94,6 +100,8 @@ public class Constants {
     public static final int fragment_myFragment=7; //我的页面
 
     public static final int fragment_ChangePass=8; //修改密码
+
+    public static final int fragment_AnnexViewPager=9; //项目附件
 
 
 

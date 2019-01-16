@@ -136,7 +136,7 @@ public interface ApiService {
      * 上传回调
      */
     @FormUrlEncoded
-    @Headers("Content-Type: application/x-www-form-urlencoded charset=utf-8")
     @POST(ApiContact.uploadDate)
+   // @Headers("Content-Type:application/x-www-form-urlencoded ;charset=utf-8")
     Call<UpLoadCallBack>upLoadCallBack (@FieldMap Map<String,Object> para);
 }

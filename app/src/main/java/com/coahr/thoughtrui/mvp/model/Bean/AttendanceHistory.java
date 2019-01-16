@@ -1,7 +1,5 @@
 package com.coahr.thoughtrui.mvp.model.Bean;
 
-import java.util.List;
-
 /**
  * Created by Leehor
  * on 2018/12/24
@@ -10,7 +8,7 @@ import java.util.List;
 public class AttendanceHistory {
 
     /**
-     * data : {"attendanceList":[{"dateTime":"2018-12-01","endLocationStatus":-1,"endTimeStatus":-1,"inTime":0,"outTime":0,"startLocationStatus":-1,"startTimeStatus":-1},{"dateTime":"2018-05-14","endLocationStatus":-1,"endTimeStatus":1,"inTime":1526083200000,"outTime":1526119200000,"startLocationStatus":-1,"startTimeStatus":1},{"dateTime":"2018-05-15","endLocationStatus":-1,"endTimeStatus":-1,"inTime":1526365438826,"outTime":1526368036538,"startLocationStatus":-1,"startTimeStatus":-1}]}
+     * data : {"attendance":{"dateTime":"2019-01-09","id":"11bebb019e624067a2ebd62d76a9089c","inLat":30.512119,"inLng":114.165045,"inTime":1547013234914,"inType":1,"outTime":0,"outType":1,"progress":"506/48","startLocationStatus":1,"startTimeStatus":-1,"status":-1}}
      * msg : 请求成功
      * result : 1
      */
@@ -44,30 +42,52 @@ public class AttendanceHistory {
     }
 
     public static class DataBean {
-        private List<AttendanceListBean> attendanceList;
+        /**
+         * attendance : {"dateTime":"2019-01-09","id":"11bebb019e624067a2ebd62d76a9089c","inLat":30.512119,"inLng":114.165045,"inTime":1547013234914,"inType":1,"outTime":0,"outType":1,"progress":"506/48","startLocationStatus":1,"startTimeStatus":-1,"status":-1}
+         */
 
-        public List<AttendanceListBean> getAttendanceList() {
-            return attendanceList;
+        private AttendanceBean attendance;
+
+        public AttendanceBean getAttendance() {
+            return attendance;
         }
 
-        public void setAttendanceList(List<AttendanceListBean> attendanceList) {
-            this.attendanceList = attendanceList;
+        public void setAttendance(AttendanceBean attendance) {
+            this.attendance = attendance;
         }
 
-        public static class AttendanceListBean {
+        public static class AttendanceBean {
+            /**
+             * dateTime : 2019-01-09
+             * id : 11bebb019e624067a2ebd62d76a9089c
+             * inLat : 30.512119
+             * inLng : 114.165045
+             * inTime : 1547013234914
+             * inType : 1
+             * outTime : 0
+             * outType : 1
+             * progress : 506/48
+             * startLocationStatus : 1
+             * startTimeStatus : -1
+             * status : -1
+             */
+
             private String dateTime;
-            private int endLocationStatus;
+            private String id;
+            private double inLat;
+            private double inLng;
+            private long inTime;
+            private int inType;
+            private long outTime;
+            private int outType;
+            private String progress;
             private int startLocationStatus;
             private int startTimeStatus;
             private int endTimeStatus;
-            private long inTime;
-            private long outTime;
-            private double inLng;
-            private double inLat;
+            private int endLocationStatus;
             private double outLng;
             private double outLat;
-            private int    status;
-            private String progress;
+            private int status;
             private String remark;
 
             public String getDateTime() {
@@ -78,12 +98,68 @@ public class AttendanceHistory {
                 this.dateTime = dateTime;
             }
 
-            public int getEndLocationStatus() {
-                return endLocationStatus;
+            public String getId() {
+                return id;
             }
 
-            public void setEndLocationStatus(int endLocationStatus) {
-                this.endLocationStatus = endLocationStatus;
+            public void setId(String id) {
+                this.id = id;
+            }
+
+            public double getInLat() {
+                return inLat;
+            }
+
+            public void setInLat(double inLat) {
+                this.inLat = inLat;
+            }
+
+            public double getInLng() {
+                return inLng;
+            }
+
+            public void setInLng(double inLng) {
+                this.inLng = inLng;
+            }
+
+            public long getInTime() {
+                return inTime;
+            }
+
+            public void setInTime(long inTime) {
+                this.inTime = inTime;
+            }
+
+            public int getInType() {
+                return inType;
+            }
+
+            public void setInType(int inType) {
+                this.inType = inType;
+            }
+
+            public long getOutTime() {
+                return outTime;
+            }
+
+            public void setOutTime(long outTime) {
+                this.outTime = outTime;
+            }
+
+            public int getOutType() {
+                return outType;
+            }
+
+            public void setOutType(int outType) {
+                this.outType = outType;
+            }
+
+            public String getProgress() {
+                return progress;
+            }
+
+            public void setProgress(String progress) {
+                this.progress = progress;
             }
 
             public int getStartLocationStatus() {
@@ -102,6 +178,14 @@ public class AttendanceHistory {
                 this.startTimeStatus = startTimeStatus;
             }
 
+            public int getStatus() {
+                return status;
+            }
+
+            public void setStatus(int status) {
+                this.status = status;
+            }
+
             public int getEndTimeStatus() {
                 return endTimeStatus;
             }
@@ -110,36 +194,12 @@ public class AttendanceHistory {
                 this.endTimeStatus = endTimeStatus;
             }
 
-            public long getInTime() {
-                return inTime;
+            public int getEndLocationStatus() {
+                return endLocationStatus;
             }
 
-            public void setInTime(long inTime) {
-                this.inTime = inTime;
-            }
-
-            public long getOutTime() {
-                return outTime;
-            }
-
-            public void setOutTime(long outTime) {
-                this.outTime = outTime;
-            }
-
-            public double getInLng() {
-                return inLng;
-            }
-
-            public void setInLng(double inLng) {
-                this.inLng = inLng;
-            }
-
-            public double getInLat() {
-                return inLat;
-            }
-
-            public void setInLat(double inLat) {
-                this.inLat = inLat;
+            public void setEndLocationStatus(int endLocationStatus) {
+                this.endLocationStatus = endLocationStatus;
             }
 
             public double getOutLng() {
@@ -156,22 +216,6 @@ public class AttendanceHistory {
 
             public void setOutLat(double outLat) {
                 this.outLat = outLat;
-            }
-
-            public int getStatus() {
-                return status;
-            }
-
-            public void setStatus(int status) {
-                this.status = status;
-            }
-
-            public String getProgress() {
-                return progress;
-            }
-
-            public void setProgress(String progress) {
-                this.progress = progress;
             }
 
             public String getRemark() {

@@ -67,7 +67,7 @@ public class ReViewStart_M extends BaseModel<ReViewStart_C.Presenter> implements
 
     @Override
     public void getAnswer(String ht_ProjectId, Activity activity, int number, String ht_id) {
-        String s = SaveOrGetAnswers.readFromFile(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number+"_"+ht_id+"/" );
+        String s = SaveOrGetAnswers.readFromFile(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number+"_"+ht_id+"/"+"AnswerAndRemark.txt" );
         if (s != null) {
             getPresenter().getAnswerSuccess(s);
         } else {
@@ -88,7 +88,7 @@ public class ReViewStart_M extends BaseModel<ReViewStart_C.Presenter> implements
 
     @Override
     public void saveAnswers(String answers, String remark, String ht_ProjectId, int number, String ht_id) {
-        boolean b = SaveOrGetAnswers.saveToFile(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number+"_"+ht_id + "/", "1答案:"+answers + "&2备注:"+remark, false);
+        boolean b = SaveOrGetAnswers.saveToFile(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number+"_"+ht_id + "/", "AnswerAndRemark.txt","1答案:"+answers + "&2备注:"+remark, false);
         if (b) {
             getPresenter().saveAnswersSuccess();
         } else {

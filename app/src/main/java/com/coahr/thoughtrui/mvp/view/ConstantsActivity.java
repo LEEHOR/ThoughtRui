@@ -11,6 +11,7 @@ import com.coahr.thoughtrui.mvp.view.home.ProjectDetailFragment;
 import com.coahr.thoughtrui.mvp.view.mydata.ChangePasswordFragment;
 import com.coahr.thoughtrui.mvp.view.mydata.LoginFragment;
 import com.coahr.thoughtrui.mvp.view.SubjectList.Fragment_Topics;
+import com.coahr.thoughtrui.mvp.view.projectAnnex.FragmentAnnexViewPager;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -43,6 +44,9 @@ public class ConstantsActivity extends BaseSupportActivity {
                 break;
             case Constants.fragment_ChangePass:
                 loadRootFragment(R.id.Constants_Fragment,ChangePasswordFragment.newInstance());
+                break;
+            case Constants.fragment_AnnexViewPager:
+                loadRootFragment(R.id.Constants_Fragment,FragmentAnnexViewPager.newInstance());
                 break;
         }
     }

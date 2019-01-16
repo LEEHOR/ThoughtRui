@@ -48,7 +48,9 @@ public class NodeTreeAdapter extends BaseAdapter {
         //缩进值，大家可以将它配置在资源文件中，从而实现适配
         retract = (int)(context.getResources().getDisplayMetrics().density*10+0.5f);
     }
-
+    public void setLinkList(LinkedList<BaseNode> linkedList){
+        this.baseNodeLinkedList=linkedList;
+    }
     /**
      * 展开或收缩用户点击的条目
      * @param position

@@ -63,7 +63,7 @@ import okhttp3.Response;
  * Created by Leehor
  * on 2018/11/15
  * on 12:59
- * 考勤页面
+ * 考勤打卡页面
  */
 public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Presenter> implements AttendanceFC_k.View {
     @Inject
@@ -121,6 +121,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
     private TextView end_tv_time_d; //晚班打卡时间
     private TextView tv_end_location; //晚班打卡位置
     private View update_daka;  //更新打卡
+    private View end_tv_bz;  //考勤备注
 
     private int closeStatus;
     private String k_id;
@@ -240,7 +241,6 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
 
     @Override
     public void initView() {
-
         dialogFragment = new EvaluateInputDialogFragment();
         dialogFragment.setOnInputCallback(new EvaluateInputDialogFragment.InputCallback() {
             @Override
@@ -257,6 +257,8 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         end_tag = include_end.findViewById(R.id.iv_attendance_tag_end);
         tv_end_location = include_end.findViewById(R.id.tv_attendance_address_e);
         update_daka = include_end.findViewById(R.id.tv_update_daka);
+        end_tv_bz = include_end.findViewById(R.id.tv_bzhu);
+
   /*      //重新定位
         relocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -273,6 +275,9 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                 }
             }
         });*/
+        /**
+         * 晚班更新打卡
+         */
         update_daka.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -390,6 +395,13 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                             })
                             .build().show();
                 }
+            }
+        });
+        //考勤备注
+        end_tv_bz.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogFragment.show(_mActivity.getSupportFragmentManager(), TAG);
             }
         });
     }
@@ -743,6 +755,12 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         }
     }
 
+    /**
+     *
+     * @param type_daka
+     * @param lat
+     * @param lng
+     */
     private void getAddress(final int type_daka,double lat,double lng){
         BaiduApi baiduApi=new BaiduApi.Builder()
                 .default_lat(String.valueOf(lat))
