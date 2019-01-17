@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.coahr.thoughtrui.R;
+import com.coahr.thoughtrui.Utils.ScreenUtils;
 import com.coahr.thoughtrui.Utils.imageLoader.Imageloader;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 
@@ -137,7 +138,7 @@ public class PhotoAlbumDialogFragment extends AppCompatDialogFragment {
             size = this.imgList.size();
             for (int i = 0; i < size; i++) {
                 ImageView imageView = new ImageView(BaseApplication.mContext);
-                imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                imageView.setLayoutParams(new ViewGroup.LayoutParams(ScreenUtils.getScreenWidth(BaseApplication.mContext), ScreenUtils.getScreenWidth(BaseApplication.mContext)));
                 imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                 Imageloader.loadImage(imgList.get(i), imageView);
                 imageViews.add(imageView);

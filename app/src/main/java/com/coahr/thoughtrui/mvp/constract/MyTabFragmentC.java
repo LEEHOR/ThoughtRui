@@ -4,6 +4,7 @@ import com.baidu.location.BDLocation;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.model.Bean.HomeDataList;
+import com.coahr.thoughtrui.mvp.model.Bean.UnDownLoad;
 
 import java.util.List;
 import java.util.Map;
@@ -16,10 +17,6 @@ import java.util.Map;
 public interface MyTabFragmentC {
     interface View extends BaseContract.View {
 
-       /* void onLocationSuccess(BDLocation location);
-
-        void onLocationFailure(int failure);
-*/
         void getHomeDataSuccess(HomeDataList homeDataList);
 
         void getHomeDataFailure(String fail);
@@ -28,18 +25,16 @@ public interface MyTabFragmentC {
 
         void getHomeMoreFailure(String fail);
 
-        void  getTypeDateSuccess(List<ProjectsDB> projectsDB);
+        void getTypeDateSuccess(List<ProjectsDB> projectsDB);
 
-        void  getTypeDateFailure(int fail);
+        void getTypeDateFailure(int fail);
+
+        void getUnDownLoadSuccess(UnDownLoad unDownLoad);
+
+        void getUnDownLoadFailure(String failure);
     }
 
     interface Presenter extends BaseContract.Presenter {
-
-      /*  void startLocation(int type);
-
-        void onLocationSuccess(BDLocation location);
-
-        void onLocationFailure(int failure);*/
 
         void getHomeData(Map map);
 
@@ -56,20 +51,28 @@ public interface MyTabFragmentC {
         //获取离线数据
         void getTypeDate(int type);
 
-        void  getTypeDateSuccess(List<ProjectsDB> projectsDB);
+        void getTypeDateSuccess(List<ProjectsDB> projectsDB);
 
-        void  getTypeDateFailure(int fail);
+        void getTypeDateFailure(int fail);
+
+
+        //假下载
+        void getUnDownLoadProject(Map<String, Object> map);
+
+        void getUnDownLoadSuccess(UnDownLoad unDownLoad);
+
+        void getUnDownLoadFailure(String failure);
     }
 
     interface Model extends BaseContract.Model {
 
-       // void startLocation(int type);
-
+        void getUnDownLoadProject(Map<String, Object> map);
         void getHomeData(Map map);
 
         void getHomeMore(Map map);
 
         void getTypeDate(int type);
+
 
     }
 }

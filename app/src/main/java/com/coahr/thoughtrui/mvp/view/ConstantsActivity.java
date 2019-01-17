@@ -34,7 +34,7 @@ public class ConstantsActivity extends BaseSupportActivity {
                 loadRootFragment(R.id.Constants_Fragment, LoginFragment.newInstance(getIntent().getIntExtra("type", 0),getIntent().getIntExtra("from",-1)));
                 break;
             case Constants.ProjectDetailFragmentCode://项目详情页
-                loadRootFragment(R.id.Constants_Fragment, ProjectDetailFragment.newInstance());
+                loadRootFragment(R.id.Constants_Fragment, ProjectDetailFragment.newInstance(getIntent().getStringExtra("projectId")));
                 break;
 //            case Constants.startProjectFragment: //开始访问页
 //                loadRootFragment(R.id.Constants_Fragment, StartProjectFragment.newInstance());

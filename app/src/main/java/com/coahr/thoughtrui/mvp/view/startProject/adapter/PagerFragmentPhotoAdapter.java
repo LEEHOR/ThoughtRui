@@ -5,7 +5,6 @@ import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.coahr.thoughtrui.DBbean.ImagesDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.imageLoader.Imageloader;
 

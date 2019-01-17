@@ -11,6 +11,7 @@ import com.coahr.thoughtrui.mvp.model.Bean.LoginBean;
 import com.coahr.thoughtrui.mvp.model.Bean.PushAttendanceCard;
 import com.coahr.thoughtrui.mvp.model.Bean.QuestionBean;
 import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
+import com.coahr.thoughtrui.mvp.model.Bean.UnDownLoad;
 import com.coahr.thoughtrui.mvp.model.Bean.UpLoadCallBack;
 
 import java.util.Map;
@@ -47,7 +48,15 @@ public interface ApiService {
     @FormUrlEncoded
     @POST(ApiContact.getHomeData)
     Call<HomeDataList> getHomeData(@FieldMap Map<String, Object> para);
-
+    /**
+     * 首页数据请求接口
+     *
+     * @param para
+     * @return
+     */
+    @FormUrlEncoded
+    @POST(ApiContact.getUnDownLoad)
+    Call<UnDownLoad> getUnDownLoad(@FieldMap Map<String, Object> para);
 
     /**
      * 考勤打卡

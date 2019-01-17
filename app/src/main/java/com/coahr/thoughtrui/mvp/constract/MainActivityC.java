@@ -14,24 +14,18 @@ public interface MainActivityC {
 
     interface View extends BaseContract.View {
 
-        void onLocationSuccess(BDLocation location);
 
-        void onLocationFailure(int failure);
 
     }
 
     interface Presenter extends BaseContract.Presenter {
 
-        void startLocation();
 
-        void onLocationSuccess(BDLocation location);
-
-        void onLocationFailure(int failure);
     }
 
     interface Model extends BaseContract.Model {
 
-        void startLocation();
+
 
     }
 }

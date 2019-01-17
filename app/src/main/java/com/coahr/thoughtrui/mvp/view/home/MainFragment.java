@@ -97,9 +97,9 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
         tv_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(_mActivity, ConstantsActivity.class);
+               /* Intent intent = new Intent(_mActivity, ConstantsActivity.class);
                 intent.putExtra("to", Constants.fragment_topics);
-                startActivity(intent);
+                startActivity(intent);*/
             }
         });
         sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, "sessionId", null);

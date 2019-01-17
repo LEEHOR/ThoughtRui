@@ -10,10 +10,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.coahr.thoughtrui.R;
-import com.coahr.thoughtrui.Utils.FileIoUtils.SaveOrGetAnswers;
-import com.coahr.thoughtrui.Utils.ToastUtils;
+import com.coahr.thoughtrui.Utils.DensityUtils;
+import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
+import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
 import com.coahr.thoughtrui.mvp.view.startProject.adapter.PagerFragmentPhotoAdapter;
 import com.coahr.thoughtrui.mvp.view.startProject.adapter.PagerFragmentPhotoListener;
 
@@ -26,82 +28,93 @@ import java.util.List;
  * 创建日期：2019/1/16
  * 描述：
  */
-public class AnnexAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<List<String>> listList;
+public class AnnexAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private List<List<String>> listList = new ArrayList<>();
     private int type;
     private Context context;
     private annexAdapterOnClick annexAdapterOnClick;
-    private String audioPath;
+    private List<List<String>> zkList = new ArrayList<>();
+    private List<String> listPic;
 
     public AnnexAdapter(Context context) {
         this.context = context;
     }
-    public void setAdapterList(List<List<String>> list,int types){
-        this.listList=list;
-        this.type=types;
+
+    public void setAdapterList(List<List<String>> list, int types) {
+        listList.clear();
+        this.listList.addAll(list);
+        this.type = types;
+        getItemCount();
     }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        return new MyAdapter(LayoutInflater.from(context).inflate(R.layout.item_fragment_annex, viewGroup, false));
+
+        if (i == 0) {
+            return new MyAdapter_q(LayoutInflater.from(context).inflate(R.layout.item_fragment_annex_q, viewGroup, false));
+        } else if (i == 1) {
+            return new MyAdapter_t(LayoutInflater.from(context).inflate(R.layout.item_fragment_annex_t, viewGroup, false));
+        } else if (i == 2) {
+            return new MyAdapter_l(LayoutInflater.from(context).inflate(R.layout.item_fragment_annex_l, viewGroup, false));
+        } else {
+            return null;
+        }
+
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-        if (viewHolder instanceof MyAdapter) {
-            if (type==0){  //全部
-                ((MyAdapter) viewHolder).audio_re.setVisibility(View.VISIBLE);
-                ((MyAdapter) viewHolder).audio_images.setVisibility(View.VISIBLE);
-            } else if (type==1){ //图片
-                ((MyAdapter) viewHolder).audio_re.setVisibility(View.GONE);
-                ((MyAdapter) viewHolder).audio_images.setVisibility(View.VISIBLE);
-            } else if (type==2){ //录音
-                ((MyAdapter) viewHolder).audio_re.setVisibility(View.VISIBLE);
-                ((MyAdapter) viewHolder).audio_images.setVisibility(View.GONE);
-            } else {
-                ((MyAdapter) viewHolder).audio_re.setVisibility(View.VISIBLE);
-                ((MyAdapter) viewHolder).audio_images.setVisibility(View.VISIBLE);
-            }
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder viewHolder, final int i) {
 
-            if (listList  !=null && listList.size()>0) {
-            List<String> listPath = listList.get(i);
-                audioPath = null;
-            if (listPath !=null && listPath.size()>0) {
-                List<String> picList=new ArrayList<>();
-                for (int j = 0; j <listPath.size() ; j++) {
-                    if (listPath.get(j).endsWith("wav") || listPath.get(j).endsWith("arm") || listPath.get(j).endsWith("mp3")) {
-                        audioPath =listPath.get(j);
-                    } else if (listPath.get(j).endsWith("txt")){
+        if (viewHolder instanceof MyAdapter_q) {
+            String audioPath = null;
+            if (listList != null && listList.size() > 0) {
+                ((MyAdapter_q) viewHolder).annex_tv_tittle_q.setText("题目" + String.valueOf(i + 1));
+                final List<String> listPath = listList.get(i);
+                if (listPath != null && listPath.size() > 0) {
+                    listPic = new ArrayList<>();
+                    for (int j = 0; j < listPath.size(); j++) {
+                        if (listPath.get(j).endsWith("wav")) {
+                            audioPath = listPath.get(j);
 
-                    } else {
-                        picList.add(listPath.get(j));
+                        }
+                        if (!listPath.get(j).endsWith("wav") && !listPath.get(j).endsWith("txt")) {
+                            listPic.add(listPath.get(j));
+                        }
                     }
-                }
-                if (audioPath !=null && ((MyAdapter) viewHolder).audio_name.getVisibility()==View.VISIBLE){
-                        ((MyAdapter) viewHolder).audio_name.setText(SaveOrGetAnswers.getString(audioPath,"/"));
-
                 } else {
-                        ((MyAdapter) viewHolder).audio_name.setText("无录音");
+                    audioPath = null;
 
+                    listPic = new ArrayList<>();
                 }
-                ((MyAdapter) viewHolder).audio_paly.setOnClickListener(new View.OnClickListener() {
+
+
+                if (audioPath != null) {
+                    ((MyAdapter_q) viewHolder).audio_name.setText(FileIOUtils.getE(audioPath, "/"));
+                } else {
+                    ((MyAdapter_q) viewHolder).audio_name.setText("无录音");
+                }
+
+                final String finalAudioPath = audioPath;
+                ((MyAdapter_q) viewHolder).audio_paly.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (annexAdapterOnClick != null) {
-                            annexAdapterOnClick.playAudio(audioPath);
+                            annexAdapterOnClick.playAudio(finalAudioPath);
                         }
                     }
                 });
-                if (picList.size()>0 && ((MyAdapter) viewHolder).audio_images.getVisibility()==View.VISIBLE) {
-                    ((MyAdapter) viewHolder).pic_count.setText("共"+picList.size()+"张");
-                    PagerFragmentPhotoAdapter adapter=new PagerFragmentPhotoAdapter();
-                    GridLayoutManager gridLayoutManager = new GridLayoutManager(BaseApplication.mContext, 3);
-                    adapter.setImageList(picList);
+                if (listPic.size() > 0) {
+                    ((MyAdapter_q) viewHolder).pic_count.setText("共" + listPic.size() + "张");
+                    PagerFragmentPhotoAdapter adapter = new PagerFragmentPhotoAdapter();
+                    adapter.setNewData(listPic);
+                    adapter.setImageList(listPic);
+                    adapter.notifyDataSetChanged();
                     adapter.setListener(new PagerFragmentPhotoListener() {
                         @Override
                         public void onClick(List<String> imagePathList, int position) {
                             if (annexAdapterOnClick != null) {
-                                annexAdapterOnClick.BrowserPic(imagePathList,position);
+                                annexAdapterOnClick.BrowserPic(imagePathList, position);
                             }
                         }
 
@@ -115,14 +128,175 @@ public class AnnexAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>
 
                         }
                     });
-                    ((MyAdapter) viewHolder).annex_child_recycler.setLayoutManager(gridLayoutManager);
-                    ((MyAdapter) viewHolder).annex_child_recycler.setAdapter(adapter);
+                    GridLayoutManager gridLayoutManager = new GridLayoutManager(BaseApplication.mContext, 3);
+                    ((MyAdapter_q) viewHolder).annex_child_recycler.setLayoutManager(gridLayoutManager);
+                    ((MyAdapter_q) viewHolder).annex_child_recycler.setAdapter(adapter);
+                    ((MyAdapter_q) viewHolder).annex_child_recycler.addItemDecoration(new SpacesItemDecoration(DensityUtils.dp2px(BaseApplication.mContext, 5), DensityUtils.dp2px(BaseApplication.mContext, 5)), context.getResources().getColor(R.color.material_grey_200));
+                    for (int k = 0; k < ((MyAdapter_q) viewHolder).annex_child_recycler.getItemDecorationCount(); k++) {
+                        if (k != 0) {
+                            ((MyAdapter_q) viewHolder).annex_child_recycler.removeItemDecorationAt(k);
+                        }
+                    }
                 } else {
-                    ((MyAdapter) viewHolder).pic_count.setText("无图片");
+                    PagerFragmentPhotoAdapter adapter = new PagerFragmentPhotoAdapter();
+                    GridLayoutManager gridLayoutManager = new GridLayoutManager(BaseApplication.mContext, 3);
+                    adapter.setImageList(listPic);
+                    adapter.setNewData(listPic);
+                    ((MyAdapter_q) viewHolder).annex_child_recycler.setLayoutManager(gridLayoutManager);
+                    ((MyAdapter_q) viewHolder).annex_child_recycler.setAdapter(adapter);
+                    ((MyAdapter_q) viewHolder).pic_count.setText("无图片");
+                }
+                //   ((MyAdapter_q) viewHolder).iv_zk.setTag(String.valueOf(i));
+                ((MyAdapter_q) viewHolder).iv_zk.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //展开
+                        if (!zkList.contains(listList.get(i))) {
+                            ((MyAdapter_q) viewHolder).annex_child_recycler.setVisibility(View.VISIBLE);
+                            ((MyAdapter_q) viewHolder).iv_zk.setImageResource(R.mipmap.back);
+                            ((MyAdapter_q) viewHolder).iv_zk.setRotation(-90);
+                            zkList.add(listList.get(i));
+                        } else {
+                            ((MyAdapter_q) viewHolder).annex_child_recycler.setVisibility(View.GONE);
+                            ((MyAdapter_q) viewHolder).iv_zk.setImageResource(R.mipmap.back);
+                            ((MyAdapter_q) viewHolder).iv_zk.setRotation(90);
+                            zkList.remove(listList.get(i));
+                        }
+                    }
+                });
+
+                if (zkList.contains(listList.get(i))) {
+                    ((MyAdapter_q) viewHolder).annex_child_recycler.setVisibility(View.VISIBLE);
+                    ((MyAdapter_q) viewHolder).iv_zk.setImageResource(R.mipmap.back);
+                    ((MyAdapter_q) viewHolder).iv_zk.setRotation(-90);
+                } else {
+                    ((MyAdapter_q) viewHolder).annex_child_recycler.setVisibility(View.GONE);
+                    ((MyAdapter_q) viewHolder).iv_zk.setImageResource(R.mipmap.back);
+                    ((MyAdapter_q) viewHolder).iv_zk.setRotation(90);
                 }
             }
-            }
 
+        }
+
+
+        if (viewHolder instanceof MyAdapter_t) {
+            if (listList != null && listList.size() > 0) {
+
+                ((MyAdapter_t) viewHolder).annex_tv_tittle_t.setText("题目" + String.valueOf(i + 1));
+                final List<String> listPath = listList.get(i);
+                if (listPath != null && listPath.size() > 0) {
+                    listPic = new ArrayList<>();
+                    for (int j = 0; j < listPath.size(); j++) {
+                        if (!listPath.get(j).endsWith("wav") && !listPath.get(j).endsWith("txt")) {
+                            listPic.add(listPath.get(j));
+                        }
+                    }
+                } else {
+                    listPic = new ArrayList<>();
+                }
+                if (listPic.size() > 0) {
+                    ((MyAdapter_t) viewHolder).annex_pic_count_t.setText("共" + listPic.size() + "张");
+                    PagerFragmentPhotoAdapter adapter = new PagerFragmentPhotoAdapter();
+                    adapter.setNewData(listPic);
+                    adapter.setImageList(listPic);
+                    adapter.setListener(new PagerFragmentPhotoListener() {
+                        @Override
+                        public void onClick(List<String> imagePathList, int position) {
+                            if (annexAdapterOnClick != null) {
+                                annexAdapterOnClick.BrowserPic(imagePathList, position);
+                            }
+                        }
+
+                        @Override
+                        public void onLongClick(List<String> imagePathList, int position) {
+
+                        }
+
+                        @Override
+                        public void onDel(List<String> imagePathList, int position) {
+
+                        }
+                    });
+                    GridLayoutManager gridLayoutManager = new GridLayoutManager(BaseApplication.mContext, 3);
+                    ((MyAdapter_t) viewHolder).annex_child_recycler_t.setLayoutManager(gridLayoutManager);
+                    ((MyAdapter_t) viewHolder).annex_child_recycler_t.setAdapter(adapter);
+                    ((MyAdapter_t) viewHolder).annex_child_recycler_t.addItemDecoration(new SpacesItemDecoration(DensityUtils.dp2px(BaseApplication.mContext, 5), DensityUtils.dp2px(BaseApplication.mContext, 5)), context.getResources().getColor(R.color.material_grey_200));
+                    for (int k = 0; k < ((MyAdapter_t) viewHolder).annex_child_recycler_t.getItemDecorationCount(); k++) {
+                        if (k != 0) {
+                            ((MyAdapter_t) viewHolder).annex_child_recycler_t.removeItemDecorationAt(k);
+                        }
+                    }
+                } else {
+                    PagerFragmentPhotoAdapter adapter = new PagerFragmentPhotoAdapter();
+                    GridLayoutManager gridLayoutManager = new GridLayoutManager(BaseApplication.mContext, 3);
+                    adapter.setNewData(listPic);
+                    adapter.setImageList(listPic);
+                    ((MyAdapter_t) viewHolder).annex_child_recycler_t.setLayoutManager(gridLayoutManager);
+                    ((MyAdapter_t) viewHolder).annex_child_recycler_t.setAdapter(adapter);
+                    ((MyAdapter_t) viewHolder).annex_pic_count_t.setText("无图片");
+                }
+                ((MyAdapter_t) viewHolder).iv_zk_t.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //展开
+                        if (!zkList.contains(listList.get(i))) {
+                            ((MyAdapter_t) viewHolder).annex_child_recycler_t.setVisibility(View.VISIBLE);
+                            ((MyAdapter_t) viewHolder).iv_zk_t.setImageResource(R.mipmap.back);
+                            ((MyAdapter_t) viewHolder).iv_zk_t.setRotation(-90);
+                            zkList.add(listList.get(i));
+                        } else {
+                            ((MyAdapter_t) viewHolder).annex_child_recycler_t.setVisibility(View.GONE);
+                            ((MyAdapter_t) viewHolder).iv_zk_t.setImageResource(R.mipmap.back);
+                            ((MyAdapter_t) viewHolder).iv_zk_t.setRotation(90);
+                            zkList.remove(listList.get(i));
+                        }
+                    }
+                });
+                if (zkList.contains(listList.get(i))) {
+                    ((MyAdapter_t) viewHolder).annex_child_recycler_t.setVisibility(View.VISIBLE);
+                    ((MyAdapter_t) viewHolder).iv_zk_t.setImageResource(R.mipmap.back);
+                    ((MyAdapter_t) viewHolder).iv_zk_t.setRotation(-90);
+                } else {
+                    ((MyAdapter_t) viewHolder).annex_child_recycler_t.setVisibility(View.GONE);
+                    ((MyAdapter_t) viewHolder).iv_zk_t.setImageResource(R.mipmap.back);
+                    ((MyAdapter_t) viewHolder).iv_zk_t.setRotation(90);
+                }
+            }
+        }
+
+
+        if (viewHolder instanceof MyAdapter_l) {
+            if (listList != null && listList.size() > 0) {
+                ((MyAdapter_l) viewHolder).annex_tv_tittle_l.setText("题目" + String.valueOf(i + 1));
+                final List<String> listPath = listList.get(i);
+                String audioPath = null;
+                if (listPath != null && listPath.size() > 0) {
+                    for (int j = 0; j < listPath.size(); j++) {
+                        if (listPath.get(j).endsWith("wav")) {
+                            audioPath = listPath.get(j);
+                        }
+                    }
+                } else {
+                    audioPath = null;
+                }
+
+                if (audioPath != null) {
+                    ((MyAdapter_l) viewHolder).annex_audio_name_l.setText(FileIOUtils.getE(audioPath, "/"));
+                } else {
+                    ((MyAdapter_l) viewHolder).annex_audio_name_l.setText("无录音");
+                }
+
+                final String finalAudioPath = audioPath;
+                ((MyAdapter_l) viewHolder).annex_audio_play_l.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (annexAdapterOnClick != null) {
+                            annexAdapterOnClick.playAudio(finalAudioPath);
+                        }
+                    }
+                });
+
+            }
         }
     }
 
@@ -130,19 +304,24 @@ public class AnnexAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>
     public int getItemCount() {
         return listList.size();
     }
-    public class  MyAdapter extends RecyclerView.ViewHolder {
+
+    @Override
+    public int getItemViewType(int position) {
+        return type;
+    }
+
+    public class MyAdapter_q extends RecyclerView.ViewHolder {
         private final ImageView iv_zk;
         private final RecyclerView annex_child_recycler;
         private final TextView pic_count;
-        private  TextView audio_paly;
-        private  TextView audio_name;
-        private RelativeLayout audio_re;
-        private RelativeLayout audio_images;
+        private TextView audio_paly;
+        private TextView audio_name;
 
-        public MyAdapter(View itemView) {
+        private final TextView annex_tv_tittle_q;
+
+        public MyAdapter_q(View itemView) {
             super(itemView);
-            audio_re= itemView.findViewById(R.id.audio_re);
-            audio_images=itemView.findViewById(R.id.audio_images);
+            annex_tv_tittle_q = itemView.findViewById(R.id.annex_tv_tittle_q);
             audio_name = itemView.findViewById(R.id.annex_audio_name);
             audio_paly = itemView.findViewById(R.id.annex_audio_play);
             iv_zk = itemView.findViewById(R.id.iv_zk);
@@ -151,9 +330,41 @@ public class AnnexAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         }
     }
-public interface  annexAdapterOnClick{
+
+    public class MyAdapter_t extends RecyclerView.ViewHolder {
+        private final ImageView iv_zk_t;
+        private final RecyclerView annex_child_recycler_t;
+        private final TextView annex_pic_count_t;
+        private final TextView annex_tv_tittle_t;
+
+        public MyAdapter_t(View itemView) {
+            super(itemView);
+            annex_tv_tittle_t = itemView.findViewById(R.id.annex_tv_tittle_t);
+            iv_zk_t = itemView.findViewById(R.id.iv_zk_t);
+            annex_pic_count_t = itemView.findViewById(R.id.annex_pic_count_t);
+            annex_child_recycler_t = itemView.findViewById(R.id.annex_child_recycler_t);
+        }
+    }
+
+    public class MyAdapter_l extends RecyclerView.ViewHolder {
+
+        private TextView annex_tv_tittle_l;
+        private TextView annex_audio_play_l;
+        private TextView annex_audio_name_l;
+
+        public MyAdapter_l(View itemView) {
+            super(itemView);
+            annex_tv_tittle_l = itemView.findViewById(R.id.annex_tv_tittle_l);
+            annex_audio_name_l = itemView.findViewById(R.id.annex_audio_name_l);
+            annex_audio_play_l = itemView.findViewById(R.id.annex_audio_play_l);
+        }
+    }
+
+    public interface annexAdapterOnClick {
         void playAudio(String audioPath);
-        void BrowserPic(List<String> picList,int position);
+
+        void BrowserPic(List<String> picList, int position);
+
     }
 
     public void setAnnexAdapterOnClick(AnnexAdapter.annexAdapterOnClick annexAdapterOnClick) {

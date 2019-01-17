@@ -18,36 +18,4 @@ public class MainActivityM extends BaseModel<MainActivityC.Presenter> implements
     public MainActivityM() {
         super();
     }
-    @Inject
-    BaiduLocationHelper baiduLocationHelper;
-    private BaiduLocationHelper.OnLocationCallBack onLocationCallBack = new BaiduLocationHelper.OnLocationCallBack() {
-        @Override
-        public void onLocationSuccess(BDLocation location) {
-            if (getPresenter() != null) {
-                getPresenter().onLocationSuccess(location);
-                baiduLocationHelper.stopLocation();
-            }
-        }
-
-        @Override
-        public void onLocationFailure(int locType) {
-            if (getPresenter() != null) {
-                getPresenter().onLocationFailure(locType);
-            }
-        }
-    };
-
-    @Override
-    public void startLocation() {
-        initlocation();
-        baiduLocationHelper.startLocation();
-    }
-    private void initlocation() {
-        baiduLocationHelper.registerLocationCallback(onLocationCallBack);
-    }
-    @Override
-    public void detachPresenter() {
-        super.detachPresenter();
-        baiduLocationHelper.unRegisterLocationCallback(onLocationCallBack);
-    }
 }

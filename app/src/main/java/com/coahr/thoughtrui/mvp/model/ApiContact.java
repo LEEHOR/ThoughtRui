@@ -20,6 +20,8 @@ public class ApiContact {
     public static final String login="app/login.htm";
     //首页请求接口
     public static final String getHomeData="app/home/list.htm";
+    //首页加下载
+    public  static final String getUnDownLoad="app/home/download.htm";
     //考勤打卡
     public static final String attendanceInfo="app/attendance/infor.htm";
     //考勤备注
@@ -38,7 +40,6 @@ public class ApiContact {
     public static final String getCensorInfoList="app/censor/infor.htm";
     //修改密码
     public static final String getChangePassWord="app/update/password.htm";
-
     //上传回调
     public static final String uploadDate="app/answer/callback.htm";
 

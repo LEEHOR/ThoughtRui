@@ -35,12 +35,10 @@
                            <TextView
                                android:id="@+id/project_detail_name"
                                android:textColor="#333333"
-                               android:text="dsdsdsdsdsdsd"
                                android:textSize="@dimen/dp_20"
                                android:layout_width="wrap_content"
                                android:layout_height="wrap_content" />
                            <TextView
-                               android:text="dsdsadadasdasdasd"
                                android:id="@+id/project_detail_time"
                                android:layout_marginTop="@dimen/dp_10"
                                android:textColor="#B1B1B1"
@@ -48,6 +46,7 @@
                                android:layout_width="wrap_content"
                                android:layout_height="wrap_content" />
                            <ProgressBar
+                               android:id="@+id/project_detail_progress"
                                android:layout_below="@+id/project_detail_time"
                                android:layout_marginTop="@dimen/dp_10"
                                style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
@@ -85,7 +84,6 @@
                                     android:id="@+id/tv_type"
                                     android:layout_toRightOf="@+id/iv_4"
                                     android:layout_alignTop="@+id/iv_4"
-                                    android:text="明访"
                                     android:textColor="#555555"
                                     android:layout_marginLeft="@dimen/dp_10"
                                     android:layout_width="wrap_content"
@@ -116,7 +114,6 @@
                                     android:id="@+id/tv_project_manager"
                                     android:layout_toRightOf="@+id/iv_5"
                                     android:layout_alignTop="@+id/iv_5"
-                                    android:text="明访"
                                     android:textColor="#555555"
                                     android:layout_marginLeft="@dimen/dp_10"
                                     android:layout_width="wrap_content"
@@ -147,7 +144,6 @@
                                     android:id="@+id/tv_project_user"
                                     android:layout_toRightOf="@+id/iv_6"
                                     android:layout_alignTop="@+id/iv_6"
-                                    android:text="明访"
                                     android:textColor="#555555"
                                     android:layout_marginLeft="@dimen/dp_10"
                                     android:layout_width="wrap_content"
@@ -188,6 +184,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content" />
                                 <TextView
+                                    android:id="@+id/tv_cName"
                                     android:textSize="@dimen/dp_14"
                                     android:textColor="@color/colorWhite"
                                     android:lines="1"
@@ -209,6 +206,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content" />
                                 <TextView
+                                    android:id="@+id/tv_cCode"
                                     android:textSize="@dimen/dp_14"
                                     android:textColor="@color/colorWhite"
                                     android:lines="1"
@@ -230,6 +228,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content" />
                                 <TextView
+                                    android:id="@+id/tv_cLevel"
                                     android:textSize="@dimen/dp_14"
                                     android:textColor="@color/colorWhite"
                                     android:lines="1"
@@ -251,6 +250,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content" />
                                 <TextView
+                                    android:id="@+id/tv_cAddress"
                                     android:textSize="@dimen/dp_14"
                                     android:textColor="@color/colorWhite"
                                     android:lines="1"
@@ -267,17 +267,18 @@
                                 android:layout_height="1dp"/>
 
                             <LinearLayout
+                                android:layout_marginTop="@dimen/dp_10"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal">
                                 <TextView
-                                    android:layout_marginTop="@dimen/dp_10"
                                     android:textSize="@dimen/dp_14"
                                     android:textColor="@color/colorWhite"
-                                    android:text="访问期间:"
+                                    android:text="访问周期:"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content" />
                                 <TextView
+                                    android:id="@+id/tv_time_cycle"
                                     android:textSize="@dimen/dp_14"
                                     android:textColor="@color/colorWhite"
                                     android:lines="1"
@@ -299,6 +300,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content" />
                                 <TextView
+                                    android:id="@+id/tv_Kclass"
                                     android:textSize="@dimen/dp_14"
                                     android:textColor="@color/colorWhite"
                                     android:lines="1"
@@ -320,6 +322,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content" />
                                 <TextView
+                                    android:id="@+id/tv_fstatus"
                                     android:textSize="@dimen/dp_14"
                                     android:textColor="@color/colorWhite"
                                     android:lines="1"
@@ -341,6 +344,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content" />
                                 <TextView
+                                    android:id="@+id/tv_upload_status"
                                     android:textSize="@dimen/dp_14"
                                     android:textColor="@color/colorWhite"
                                     android:lines="1"
@@ -389,11 +393,11 @@
                                 android:background="@color/gray_2"
                                 android:layout_height="1dp"/>
                             <TextView
+                                android:id="@+id/tv_project_describe"
                                 android:layout_marginTop="15dp"
                                 android:gravity="top"
                                 android:textSize="@dimen/dp_12"
                                 android:textColor="#666666"
-                                android:text="dsdsdsdsdsdsdsdsdsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
                         </LinearLayout>

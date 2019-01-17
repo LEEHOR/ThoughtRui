@@ -10,6 +10,7 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.MyTabFragmentC;
 import com.coahr.thoughtrui.mvp.model.Bean.HomeDataList;
+import com.coahr.thoughtrui.mvp.model.Bean.UnDownLoad;
 
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,23 @@ public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implemen
     @Inject
     public MyTabFragmentM() {
         super();
+    }
+
+    @Override
+    public void getUnDownLoadProject(Map<String, Object> map) {
+        mRxManager.add(createFlowable(new SimpleFlowableOnSubscribe<UnDownLoad>(getApiService().getUnDownLoad(map)))
+                .subscribeWith(new SimpleDisposableSubscriber<UnDownLoad>() {
+                    @Override
+                    public void _onNext(UnDownLoad unDownLoad) {
+                        if (getPresenter() != null) {
+                            if (unDownLoad.getResult()==1) {
+                                getPresenter().getUnDownLoadSuccess(unDownLoad);
+                            } else {
+                                getPresenter().getUnDownLoadFailure(unDownLoad.getMsg());
+                            }
+                        }
+                    }
+                }));
     }
 
     @Override

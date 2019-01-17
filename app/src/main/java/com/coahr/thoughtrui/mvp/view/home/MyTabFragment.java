@@ -19,6 +19,7 @@ import com.baidu.location.BDLocation;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.DensityUtils;
+import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.NetWorkAvailable;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
@@ -27,6 +28,7 @@ import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.constract.MyTabFragmentC;
 import com.coahr.thoughtrui.mvp.model.Bean.Event_ProjectDetail;
 import com.coahr.thoughtrui.mvp.model.Bean.HomeDataList;
+import com.coahr.thoughtrui.mvp.model.Bean.UnDownLoad;
 import com.coahr.thoughtrui.mvp.presenter.MyTabFragmentP;
 import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
@@ -97,6 +99,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
     private MyTabFOffLineAdapter myTabFOffLineAdapter;
     private LinearLayoutManager lm_off;
     private SpacesItemDecoration spacesItemDecoration;
+    private String DownLoadProject_Id;
 
 
     @Override
@@ -128,11 +131,11 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
             public void onRefresh() {
                 if (!isLoad) {
                     if (isNetworkAvailable()) {
-                        isLoad=true;
-                            getDate();
-                    }  else {
-                        isLoad=true;
-                            p.getTypeDate(type);
+                        isLoad = true;
+                        getDate();
+                    } else {
+                        isLoad = true;
+                        p.getTypeDate(type);
                     }
                 } else {
                     myTab_swipe.setRefreshing(false);
@@ -176,7 +179,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
             tab_off_recyclerView.removeItemDecoration(spacesItemDecoration);
         }
         if (isNetworkAvailable()) {  //有网络
-          //  p.startLocation(3);
+            //  p.startLocation(3);
             getDate();
         } else { //无网络
             p.getTypeDate(type);
@@ -186,45 +189,46 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
         tabFAdapter.setAdapter_online(new MyTabFOnLineAdapter.adapter_online() {
             @Override
             public void newListClick(HomeDataList.DataBean.newListBean newListBean) {
-                JumpToProject();
-                setDate_onLine_newList(newListBean);
+                // setDate_onLine_newList(newListBean);
+                JumpToProject(newListBean.getId());
             }
 
             @Override
             public void newListLongClick(HomeDataList.DataBean.newListBean newListBean) {
-
+                showDialog("新的项目", "无法删除", false);
             }
 
             @Override
             public void completeClick(HomeDataList.DataBean.CompleteListBean completeListBean) {
-                JumpToProject();
-                setDate_onLine_Complete(completeListBean);
+                // setDate_onLine_Complete(completeListBean);
+                JumpToProject(completeListBean.getId());
             }
 
             @Override
             public void completeLongClick(HomeDataList.DataBean.CompleteListBean completeListBean) {
-                showDialog("已完成", "确定删除", true);
+                showDialog("已完成的项目", "确定删除", true);
             }
 
             @Override
             public void unCompleteClick(HomeDataList.DataBean.UnCompleteListBean unCompleteListBean) {
-                JumpToProject();
-                setDate_onLine_unComplete(unCompleteListBean);
+                //  setDate_onLine_unComplete(unCompleteListBean);
+                JumpToProject(unCompleteListBean.getId());
             }
 
             @Override
             public void unCompleteLongClick(HomeDataList.DataBean.UnCompleteListBean unCompleteListBean) {
-                showDialog("未完成", "确定删除", false);
+                showDialog("未完成的项目", "无法删除", false);
             }
 
             @Override
             public void unDownLoadClick(HomeDataList.DataBean.newListBean newListBean) {
-                setDate_onLine_newList(newListBean);
+                DownLoadProject_Id=newListBean.getId();
+                getUnDownLoad(newListBean.getId());
             }
 
             @Override
             public void unDownLoadLongClick(HomeDataList.DataBean.newListBean newListBean) {
-
+                showDialog("未下载的项目", "无法删除", false);
             }
         });
 
@@ -232,46 +236,48 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
         myTabFOffLineAdapter.setAdapter_offline(new MyTabFOffLineAdapter.adapter_offline() {
             @Override
             public void newListClick(ProjectsDB projectsDB) {
-
+                JumpToProject(projectsDB.getPid());
             }
 
             @Override
             public void newListLongClick(ProjectsDB projectsDB) {
-
+                showDialog("新的项目", "无法删除", false);
             }
 
             @Override
             public void completeClick(ProjectsDB projectsDB) {
-
+                JumpToProject(projectsDB.getPid());
             }
 
             @Override
             public void completeLongClick(ProjectsDB projectsDB) {
-
+                showDialog("已完成的项目", "确定删除", true);
             }
 
             @Override
             public void unCompleteClick(ProjectsDB projectsDB) {
-
+                JumpToProject(projectsDB.getPid());
             }
 
             @Override
             public void unCompleteLongClick(ProjectsDB projectsDB) {
-
+                showDialog("未完成的项目", "无法删除", false);
             }
 
             @Override
             public void unDownLoadClick(ProjectsDB projectsDB) {
-
+              DownLoadProject_Id=projectsDB.getPid();
+                getUnDownLoad(projectsDB.getPid());
             }
 
             @Override
             public void unDownLoadLongClick(ProjectsDB projectsDB) {
-
+                showDialog("未下载的项目", "无法删除", false);
             }
         });
 
     }
+
     @Override
     public void getHomeDataSuccess(HomeDataList homeDataList) {
         tabFAdapter.setType(type);
@@ -318,17 +324,38 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
         myTabFOffLineAdapter.setType(type);
         myTabFOffLineAdapter.setHomeDataList(projectsDB, BaseApplication.mContext);
         change_offline();
-        isLoad=false;
+        isLoad = false;
         myTab_swipe.setRefreshing(false);
     }
 
     @Override
     public void getTypeDateFailure(int fail) {
         if (fail == 0) {
-            ToastUtils.showLong( "没有更多本地数据");
+            ToastUtils.showLong("没有更多本地数据");
         }
-        isLoad=false;
+        isLoad = false;
         myTab_swipe.setRefreshing(false);
+    }
+
+    @Override
+    public void getUnDownLoadSuccess(UnDownLoad unDownLoad) {
+        List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", DownLoadProject_Id);
+        if (projectsDBS!=null && projectsDBS.size()>0){
+            ProjectsDB projectsDB=new ProjectsDB();
+            projectsDB.setDownloadTime(System.currentTimeMillis());
+            projectsDB.update(projectsDBS.get(0).getId());
+        }
+
+        if (isNetworkAvailable()) {
+            getDate();
+        } else {
+            p.getTypeDate(type);
+        }
+    }
+
+    @Override
+    public void getUnDownLoadFailure(String failure) {
+        ToastUtils.showLong(failure);
     }
 
     @Override
@@ -338,7 +365,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
                 if (isNetworkAvailable()) {
 
                 } else {
-                    
+
                 }
                 setChecked(R.id.rl_start_time);
                 break;
@@ -425,60 +452,39 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        if (delete) {
-                            dialog.dismiss();
-                        } else {
-                            dialog.dismiss();
-                        }
+                       dialog.dismiss();
                     }
-                }).onPositive(new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                })
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            if (delete){
 
-            }
-        }).build().show();
+                            }
+                            dialog.dismiss();
+                    }
+                }).build().show();
     }
 
-    private void JumpToProject() {
+    /**
+     * 跳转到详情页
+     * @param projectId
+     */
+    private void JumpToProject(String projectId) {
         Intent intent = new Intent(getActivity(), ConstantsActivity.class);
         intent.putExtra("from", Constants.MyTabFragmentCode);
         intent.putExtra("to", Constants.ProjectDetailFragmentCode);
+        intent.putExtra("projectId", projectId);
         startActivity(intent);
-        //start(ProjectDetailFragment.newInstance());
     }
 
     /**
-     * 在线数据
-     *
-     * @param newListBean
+     * 假下载
      */
-    //新项目或未下载
-    private void setDate_onLine_newList(HomeDataList.DataBean.newListBean newListBean) {
-        EventBus.getDefault().postSticky(new Event_ProjectDetail(newListBean.getCname(), newListBean.getDname(), newListBean.getPname(), newListBean.getAreaAddress(), newListBean.getCode(), newListBean.getCompleteStatus()
-                , newListBean.getDownloadTime(), newListBean.getEndTime(), newListBean.getGrade(), 0, newListBean.getId(), newListBean.getInspect(), newListBean.getLatitude(), newListBean.getLocation(), newListBean.getLongitude(), newListBean.getManager()
-                , newListBean.getModifyTime(), newListBean.getNotice(), newListBean.getProgress(), newListBean.getRecord(), newListBean.getStartTime(), false));
-    }
-
-    //未完成
-    private void setDate_onLine_unComplete(HomeDataList.DataBean.UnCompleteListBean unComplete) {
-        EventBus.getDefault().postSticky(new Event_ProjectDetail(unComplete.getCname(), unComplete.getDname(), unComplete.getPname(), unComplete.getAreaAddress(), unComplete.getCode(), unComplete.getCompleteStatus()
-                , unComplete.getDownloadTime(), unComplete.getEndTime(), unComplete.getGrade(), 0, unComplete.getId(), unComplete.getInspect(), unComplete.getLatitude(), unComplete.getLocation(), unComplete.getLongitude(), unComplete.getManager()
-                , unComplete.getModifyTime(), unComplete.getNotice(), unComplete.getProgress(), unComplete.getRecord(), unComplete.getStartTime(), false));
-    }
-
-    //已完成
-    private void setDate_onLine_Complete(HomeDataList.DataBean.CompleteListBean complete) {
-        EventBus.getDefault().postSticky(new Event_ProjectDetail(complete.getCname(), complete.getDname(), complete.getPname(), complete.getAreaAddress(), complete.getCode(), complete.getCompleteStatus()
-                , complete.getDownloadTime(), complete.getEndTime(), complete.getGrade(), 0, complete.getId(), complete.getInspect(), complete.getLatitude(), complete.getLocation(), complete.getLongitude(), complete.getManager()
-                , complete.getModifyTime(), complete.getNotice(), complete.getProgress(), complete.getRecord(), complete.getStartTime(), false));
-    }
-
-    /**
-     * 离线数据
-     */
-    private void setDate_offline(ProjectsDB projectsDB) {
-        EventBus.getDefault().postSticky(new Event_ProjectDetail(projectsDB.getcName(), projectsDB.getdName(), projectsDB.getPname(), projectsDB.getAddress(), projectsDB.getCode(), projectsDB.getCompleteStatus()
-                , projectsDB.getDownloadTime(), projectsDB.getEndTime(), projectsDB.getGrade(), projectsDB.getId(), projectsDB.getPid(), projectsDB.getInspect(), projectsDB.getLatitude(), projectsDB.getLocation(), projectsDB.getLongitude(), projectsDB.getManager()
-                , projectsDB.getModifyTime(), projectsDB.getNotice(), projectsDB.getProgress(), projectsDB.getRecord(), projectsDB.getStartTime(), true));
+    private void getUnDownLoad(String projectId){
+        Map map=new HashMap();
+        map.put("projectId",projectId);
+        map.put("sessionId",Constants.sessionId);
+        p.getUnDownLoadProject(map);
     }
 }

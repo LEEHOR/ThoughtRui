@@ -129,20 +129,6 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     }
 
     @Override
-    public void onLocationSuccess(BDLocation location) {
-        KLog.d("定位成功activity", location.getAddrStr());
-        Toast.makeText(BaseApplication.mContext, location.getAddrStr(), Toast.LENGTH_LONG).show();
-
-    }
-
-    @Override
-    public void onLocationFailure(int failure) {
-        KLog.d("定位失败activity", failure);
-        Toast.makeText(BaseApplication.mContext, failure + "", Toast.LENGTH_LONG).show();
-
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == 100 && requestCode == 100) {

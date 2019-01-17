@@ -20,6 +20,7 @@ import com.coahr.thoughtrui.mvp.view.reviewed.ReviewedFragment;
 import com.coahr.thoughtrui.mvp.view.startProject.PagerFragment_a;
 import com.coahr.thoughtrui.mvp.view.upload.UploadFragment;
 import com.coahr.thoughtrui.widgets.AltDialog.DialogFragmentAudioPlay;
+import com.coahr.thoughtrui.widgets.AltDialog.ProjectSuccessDialog;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
@@ -48,7 +49,7 @@ public abstract class AllFragmentModule {
     @ContributesAndroidInjector()
     abstract LoginFragment LoginFragmentInjector();
 
-    @ContributesAndroidInjector()
+    @ContributesAndroidInjector(modules = ProjectDetailFragment_Module.class)
     abstract ProjectDetailFragment ProjectDetailFragmentInjector();
 
     @ContributesAndroidInjector()
@@ -89,4 +90,7 @@ public abstract class AllFragmentModule {
 
     @ContributesAndroidInjector()
     abstract FragmentAnnex FragmentAnnexInjector();
+
+    @ContributesAndroidInjector()
+    abstract ProjectSuccessDialog  ProjectSuccessDialogInjector();
 }

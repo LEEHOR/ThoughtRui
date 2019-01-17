@@ -20,24 +20,4 @@ public class MainActivityP extends BasePresenter<MainActivityC.View,MainActivity
         super(mview, mModel);
     }
 
-    @Override
-    public void startLocation() {
-        if (mModle != null) {
-            mModle.startLocation();
-        }
-    }
-
-    @Override
-    public void onLocationSuccess(BDLocation location) {
-        if (getView() != null) {
-            getView().onLocationSuccess(location);
-        }
-    }
-
-    @Override
-    public void onLocationFailure(int failure) {
-        if (getView() != null) {
-            getView().onLocationFailure(failure);
-        }
-    }
 }

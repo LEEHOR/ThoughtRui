@@ -62,11 +62,14 @@ import com.coahr.thoughtrui.mvp.view.startProject.adapter.PagerFragmentPhotoAdap
 import com.coahr.thoughtrui.mvp.view.startProject.adapter.PagerFragmentPhotoListener;
 import com.coahr.thoughtrui.widgets.AltDialog.DialogFragmentAudioPlay;
 import com.coahr.thoughtrui.widgets.AltDialog.EvaluateInputDialogFragment;
+import com.coahr.thoughtrui.widgets.AltDialog.ProjectSuccessDialog;
 import com.socks.library.KLog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.litepal.crud.async.UpdateOrDeleteExecutor;
+import org.litepal.crud.callback.UpdateOrDeleteCallback;
 
 import java.io.File;
 import java.io.IOException;
@@ -173,6 +176,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     private int type=1;
     private String audioName;
     private boolean isHavePermission=false;
+    private SubjectsDB subjectsDB_now;
 
     public static PagerFragment_a newInstance(int position, String DbProjectId, String ht_ProjectId, int countSize, String name_project, String ht_id) {
         PagerFragment_a pagerFragment_a = new PagerFragment_a();
@@ -312,7 +316,18 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             case R.id.re_bottom_le:
                 if (number > 1) {
                     if (isComplete()) {
-                        EventBus.getDefault().post(new isCompleteBean(true, number-1, 1));
+                        SubjectsDB subjectsDB=new SubjectsDB();
+                        subjectsDB.setIsComplete(1);
+                        UpdateOrDeleteExecutor updateOrDeleteExecutor = subjectsDB.updateAsync(subjectsDB_now.getId());
+                        updateOrDeleteExecutor.listen(new UpdateOrDeleteCallback() {
+                            @Override
+                            public void onFinish(int rowsAffected) {
+                                if (rowsAffected==1){
+                                    EventBus.getDefault().post(new isCompleteBean(true, number-1, 1));
+                                }
+                            }
+                        });
+
                     } else {
                         ToastUtils.showLong("当前题目未完成");
                     }
@@ -324,11 +339,34 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             case R.id.re_bottom_ri:
                 if (number < countSize) {
                     if (isComplete()) {
-                        EventBus.getDefault().post(new isCompleteBean(true, number+1, 2));
+                        SubjectsDB subjectsDB=new SubjectsDB();
+                        subjectsDB.setIsComplete(1);
+                        UpdateOrDeleteExecutor updateOrDeleteExecutor = subjectsDB.updateAsync(subjectsDB_now.getId());
+                        updateOrDeleteExecutor.listen(new UpdateOrDeleteCallback() {
+                            @Override
+                            public void onFinish(int rowsAffected) {
+                                if (rowsAffected==1){
+                                    EventBus.getDefault().post(new isCompleteBean(true, number+1, 2));
+                                }
+                            }
+                        });
+
                     } else {
                         ToastUtils.showLong("当前题目未完成");
                     }
                 } else {
+                    SubjectsDB subjectsDB=new SubjectsDB();
+                    subjectsDB.setIsComplete(1);
+                    UpdateOrDeleteExecutor updateOrDeleteExecutor = subjectsDB.updateAsync(subjectsDB_now.getId());
+                    updateOrDeleteExecutor.listen(new UpdateOrDeleteCallback() {
+                        @Override
+                        public void onFinish(int rowsAffected) {
+                            if (rowsAffected==1){
+                                 ProjectSuccessDialog projectSuccessDialog= ProjectSuccessDialog.newInstance(ht_projectId);
+                                 projectSuccessDialog.show(getChildFragmentManager(),TAG);
+                            }
+                        }
+                    });
                     ToastUtils.showLong("已经是最后一题");
                 }
                 break;
@@ -363,6 +401,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
     @Override
     public void getSubjectSuccess(SubjectsDB subjectsDB) {
+       this.subjectsDB_now=subjectsDB;
         if (subjectsDB != null) {
             //题目
             project_detail_titlle.setText(subjectsDB.getTitle());

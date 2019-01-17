@@ -3,6 +3,7 @@ package com.coahr.thoughtrui.mvp.view;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -32,6 +33,7 @@ import com.coahr.thoughtrui.mvp.view.recorder.AudioRecordListener;
 import com.coahr.thoughtrui.mvp.view.recorder.RecorderService;
 import com.coahr.thoughtrui.mvp.view.startProject.adapter.AudioListenerComplete;
 import com.coahr.thoughtrui.mvp.view.startProject.adapter.StartProjectAdapter;
+import com.coahr.thoughtrui.widgets.AltDialog.ProjectSuccessDialog;
 import com.coahr.thoughtrui.widgets.CustomScrollViewPager;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
 import com.socks.library.KLog;
@@ -92,9 +94,11 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         p_mytitle.getRightText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(StartProjectActivity.this, ConstantsActivity.class);
+                ProjectSuccessDialog projectSuccessDialog=ProjectSuccessDialog.newInstance(Constants.ht_ProjectId);
+                projectSuccessDialog.show(getSupportFragmentManager(),TAG);
+                /*Intent intent = new Intent(StartProjectActivity.this, ConstantsActivity.class);
                 intent.putExtra("to", Constants.fragment_topics);
-                startActivity(intent);
+                startActivity(intent);*/
             }
         });
         p_mytitle.getLeftIcon().setOnClickListener(new View.OnClickListener() {

@@ -5,6 +5,7 @@ import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.mvp.Base.BasePresenter;
 import com.coahr.thoughtrui.mvp.constract.MyTabFragmentC;
 import com.coahr.thoughtrui.mvp.model.Bean.HomeDataList;
+import com.coahr.thoughtrui.mvp.model.Bean.UnDownLoad;
 import com.coahr.thoughtrui.mvp.model.MyTabFragmentM;
 import com.coahr.thoughtrui.mvp.view.home.MyTabFragment;
 
@@ -106,6 +107,27 @@ public class MyTabFragmentP extends BasePresenter<MyTabFragmentC.View,MyTabFragm
     public void getTypeDateFailure(int fail) {
         if (getView() != null) {
             getView().getTypeDateFailure(fail);
+        }
+    }
+
+    @Override
+    public void getUnDownLoadProject(Map<String, Object> map) {
+        if (mModle != null) {
+            mModle.getUnDownLoadProject(map);
+        }
+    }
+
+    @Override
+    public void getUnDownLoadSuccess(UnDownLoad unDownLoad) {
+        if (getView() != null) {
+            getView().getUnDownLoadSuccess(unDownLoad);
+        }
+    }
+
+    @Override
+    public void getUnDownLoadFailure(String failure) {
+        if (getView() != null) {
+            getView().getUnDownLoadFailure(failure);
         }
     }
 }

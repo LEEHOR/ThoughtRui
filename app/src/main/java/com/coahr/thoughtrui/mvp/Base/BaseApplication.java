@@ -70,6 +70,13 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
         PlatformConfig.setWeixin("wx89f3b1477df1aa39", "b3ad27916ad0fa404f5d1478f3cc0bc2");
         PlatformConfig.setQQZone("","");
         initPush();
+        if (PreferenceUtils.contains(mContext, Constants.user_key)) {
+           Constants.user_name= PreferenceUtils.getPrefString(mContext, Constants.user_key, "");
+        }
+        if (PreferenceUtils.contains(mContext, Constants.sessionId_key)) {
+           Constants.sessionId= PreferenceUtils.getPrefString(mContext, Constants.sessionId_key, "");
+        }
+
     }
 
     @Override

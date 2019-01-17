@@ -69,6 +69,7 @@ public class DialogFragmentAudioPlay extends BaseDialogFragment implements View.
                 public void PausePlay() {
                     if (mediaPlayer != null && isPrepare){
                         mediaPlayer.stop();
+                        release();
                         upDateUi(4);
                     }
                 }
