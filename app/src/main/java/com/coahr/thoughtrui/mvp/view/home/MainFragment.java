@@ -102,7 +102,7 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
                 startActivity(intent);*/
             }
         });
-        sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, "sessionId", null);
+        sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, Constants.sessionId_key, null);
         pageAdapter = new MainFragmentViewPageAdapter(getFragmentManager());
         viewPager.setAdapter(pageAdapter);
         home_tab.setupWithViewPager(viewPager);
@@ -112,7 +112,7 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
     @Override
     public void initData() {
         getLocationPermission();
-        if (sessionId != null) {
+        if (haslogin()) {
             getDataList();
         }
     }
@@ -238,10 +238,11 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void Event(Event_Main messageEvent) {
         if (messageEvent.getIsLoad() == 1 && messageEvent.getPage() == 0) {
-            sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, "sessionId", null);
-           // p.startLocation(1);
-            getDataList();
-            KLog.d("首页定位------2----2-------2---------------2");
+            sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, Constants.sessionId_key, null);
+           if (haslogin()){
+               getDataList();
+           }
+
         }
     }
     /**
@@ -253,7 +254,6 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
             RequestPermissionUtils.requestPermission(_mActivity, new OnRequestPermissionListener() {
                         @Override
                         public void PermissionSuccess(List<String> permissions) {
-                            KLog.d("首页定位------3------3-------3------3----3---");
 
                         }
 
@@ -261,16 +261,13 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
                         public void PermissionFail(List<String> permissions) {
                             Toast.makeText(_mActivity, "获取权限失败", Toast.LENGTH_LONG).show();
                         }
-
                         @Override
                         public void PermissionHave() {
-                            KLog.d("首页定位------3------3-------3------3----3---");
 
                         }
                     }, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
 
         } else {
-            KLog.d("首页定位------3------3-------3------3----3---");
 
         }
     }

@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import com.coahr.thoughtrui.DBbean.UsersDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.DensityUtils;
+import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWorkAsync;
 import com.coahr.thoughtrui.Utils.JDBC.JDBCSelectMultiListener;
 import com.coahr.thoughtrui.Utils.KeyBoardUtils;
@@ -79,25 +80,31 @@ public abstract class BaseFragment<P extends BaseContract.Presenter> extends Sup
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(bindLayout(), container, false);
-        String sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext,"sessionId", null);
-        if (sessionId!=null){
-            Constants.sessionId=sessionId;
-        DataBaseWorkAsync.DBSelectByTogether_Where(UsersDB.class, new JDBCSelectMultiListener() {
-            @Override
-            public <T> void SelectMulti(List<T> t) {
 
-                if (t != null && t.size()>0) {
-                    UsersDB usersDB = (UsersDB) t.get(0);
-                    int user_id = usersDB.getId();
-                    Constants.user_id=String.valueOf(user_id);
-                    KLog.d("设置userid",user_id);
-                   // PreferenceUtils.setPrefString(BaseApplication.mContext,"DbUserId",String.valueOf(user_id));
-
+        if (PreferenceUtils.contains(BaseApplication.mContext, Constants.sessionId_key)) {
+            String sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext,Constants.sessionId_key, null);
+            if (sessionId!=null && !sessionId.equals("")){
+                Constants.sessionId=sessionId;
+                List<UsersDB> usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", sessionId);
+                if (usersDBS!=null && usersDBS.size()>0){
+                    Constants.user_id=String.valueOf(usersDBS.get(0).getId());
                 }
-
-            }
-        }, "sessionid=?", sessionId);
-
+//                DataBaseWorkAsync.DBSelectByTogether_Where(UsersDB.class, new JDBCSelectMultiListener() {
+//                    @Override
+//                    public <T> void SelectMulti(List<T> t) {
+//
+//                        if (t != null && t.size()>0) {
+//                            UsersDB usersDB = (UsersDB) t.get(0);
+//                            int user_id = usersDB.getId();
+//                            Constants.user_id=String.valueOf(user_id);
+//                            KLog.d("设置userid",user_id);
+//                            // PreferenceUtils.setPrefString(BaseApplication.mContext,"DbUserId",String.valueOf(user_id));
+//
+//                        }
+//
+//                    }
+//                }, "sessionid=?", sessionId);
+        }
 
         }
         unbinder = ButterKnife.bind(this, view);
@@ -237,5 +244,16 @@ public abstract class BaseFragment<P extends BaseContract.Presenter> extends Sup
         Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + tel));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         _mActivity.startActivity(intent);
+    }
+
+    public boolean haslogin() {
+        if (PreferenceUtils.contains(BaseApplication.mContext, Constants.sessionId_key)) {
+            if (Constants.sessionId.equals("")) {
+                Constants.sessionId = PreferenceUtils.getPrefString(_mActivity, Constants.sessionId_key, "");
+                Constants.user_name = PreferenceUtils.getPrefString(_mActivity, Constants.user_key, "");
+            }
+            return true;
+        }
+        return false;
     }
 }

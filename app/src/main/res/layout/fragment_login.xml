@@ -3,25 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite">
+    android:background="@mipmap/login_bg">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <TextView
-            android:layout_toLeftOf="@+id/re_center"
+        <ImageView
+            android:layout_centerHorizontal="true"
             android:layout_above="@+id/re_center"
-            android:textSize="@dimen/dp_18"
-            android:layout_marginRight="-10dp"
-            android:textStyle="bold"
-            android:layout_marginBottom="30dp"
-            android:textColor="@color/black"
-            android:text="登录"
+            android:src="@mipmap/logo_by_leinuo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     <RelativeLayout
         android:id="@+id/re_center"
         android:layout_width="260dp"
-        android:layout_height="280dp"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true">
         <LinearLayout
             android:id="@+id/userView"
@@ -106,7 +101,7 @@
             android:text="登录"
             android:textSize="18dp"
             android:textColor="#fff"
-            android:background="@drawable/bg_loginbtn"
+            android:background="@drawable/bg_blue_white_frame_background"
             android:layout_below="@id/passwordView"/>
     </RelativeLayout>
     </RelativeLayout>

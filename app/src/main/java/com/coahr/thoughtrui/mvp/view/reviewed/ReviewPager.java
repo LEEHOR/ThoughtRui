@@ -89,8 +89,9 @@ public class ReviewPager extends BaseChildFragment<ReviewPagerFragment_C.Present
         }
         adapter = new pageAdapter();
         manager = new LinearLayoutManager(BaseApplication.mContext);
+        pager_recycler.setLayoutManager(manager);
         pager_recycler.setAdapter(adapter);
-       // pager_recycler.addItemDecoration(new SpacesItemDecoration(0, DensityUtils.dp2px(BaseApplication.mContext, 5), getResources().getColor(R.color.material_grey_200)));
+        // pager_recycler.addItemDecoration(new SpacesItemDecoration(0, DensityUtils.dp2px(BaseApplication.mContext, 5), getResources().getColor(R.color.material_grey_200)));
       /*  for (int i = 0; i < pager_recycler.getItemDecorationCount(); i++) {
             if (i != 0) {
                 pager_recycler.removeItemDecorationAt(i);
@@ -110,7 +111,7 @@ public class ReviewPager extends BaseChildFragment<ReviewPagerFragment_C.Present
         adapter.setOnItemClick(new pageAdapter.OnItemClick() {
             @Override
             public void OnClick(CensorBean.DataBean.ListBean bean, int position) {
-                    start(ReviewInfoList.newInstance(bean.getId(),Constants.sessionId,type));
+                start(ReviewInfoList.newInstance(bean.getId(), Constants.sessionId, type));
             }
         });
     }
@@ -122,6 +123,7 @@ public class ReviewPager extends BaseChildFragment<ReviewPagerFragment_C.Present
 
     @Override
     public void getCensorListSuccess(CensorBean censorBean) {
+
         adapter.setNewData(censorBean.getData().getList());
         isLoading = false;
         pager_swipe.setRefreshing(false);
@@ -149,7 +151,7 @@ public class ReviewPager extends BaseChildFragment<ReviewPagerFragment_C.Present
     private void getDataList(String search) {
         Map map = new HashMap();
         map.put("sessionId", Constants.sessionId);
-        map.put("status", String.valueOf(type == 0 ? 1 : -1));
+        map.put("status", String.valueOf(type == 0 ? -1 : type == 1 ? 1 : -1));
         if (search != null) {
             map.put("search", search);
         }

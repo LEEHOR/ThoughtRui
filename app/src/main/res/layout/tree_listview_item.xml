@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:id="@+id/three_re">
 
     <ImageView
         android:id="@+id/id_treenode_icon"
@@ -26,6 +27,7 @@
         android:paddingTop="8dp">
 
         <ImageView
+            android:visibility="invisible"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:background="@drawable/login_checkbox_selector"

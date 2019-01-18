@@ -29,9 +29,10 @@ public class FileIOUtils {
      * @return boolean
      * @Param name      String   复制后名字
      */
-    public static void copyFile(String oldPath, String newPath, String name) {
+    public static boolean copyFile(String oldPath, String newPath, String name) {
+        boolean Success=false;
         if (oldPath == null || newPath == null) {
-            return;
+            return false;
         }
         try {
             int bytesum = 0;
@@ -59,16 +60,18 @@ public class FileIOUtils {
                     }
                     KLog.d("截取的地址", substring);
                     ToastUtils.showShort( name + "保存完成");
+                    return true;
                 } else {
                     ToastUtils.showShort( name + "文件已存在");
-                    return;
+                    return true;
                 }
             }
         } catch (Exception e) {
             ToastUtils.showLong(e.toString());
             e.printStackTrace();
+            return  false;
         }
-
+        return false;
     }
 
 

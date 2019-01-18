@@ -12,7 +12,9 @@ import android.widget.Toast;
 import com.coahr.thoughtrui.Utils.KeyBoardUtils;
 import com.coahr.thoughtrui.Utils.Permission.OnRequestPermissionListener;
 import com.coahr.thoughtrui.Utils.Permission.RequestPermissionUtils;
+import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.commom.ActivityManager;
+import com.coahr.thoughtrui.commom.Constants;
 import com.gyf.barlibrary.ImmersionBar;
 import com.taobao.sophix.SophixManager;
 
@@ -84,8 +86,15 @@ public abstract class BaseActivity<P extends BaseContract.Presenter> extends Sup
         }
     }
 
-    public void hsaLogin(){
-
+    public boolean haslogin() {
+        if (PreferenceUtils.contains(BaseApplication.mContext, Constants.sessionId_key)) {
+            if (Constants.sessionId.equals("")) {
+                Constants.sessionId = PreferenceUtils.getPrefString(this, Constants.sessionId_key, "");
+                Constants.user_name = PreferenceUtils.getPrefString(this, Constants.user_key, "");
+            }
+            return true;
+        }
+        return false;
     }
 
 }

@@ -106,10 +106,10 @@ public class ReViewStart extends BaseFragment<ReViewStart_C.Presenter> implement
     TextView tv_play_recorder;  //播放录音
     @BindView(R.id.img_recycler)
     RecyclerView img_recycler;  //图片列表
-    @BindView(R.id.re_bottom_le)
-    RelativeLayout re_bottom_le; //上一页
-    @BindView(R.id.re_bottom_ri)
-    RelativeLayout re_bottom_ri;  //下一页
+    @BindView(R.id.tv_last)
+    TextView tv_last; //上一页
+    @BindView(R.id.tv_next)
+    TextView tv_next;  //下一页
     private String dbProjectId;
     private String ht_projectId;
     private int countSize;
@@ -192,8 +192,8 @@ public class ReViewStart extends BaseFragment<ReViewStart_C.Presenter> implement
             }
         }
         tv_Unfold.setOnClickListener(this);
-        re_bottom_le.setOnClickListener(this);
-        re_bottom_ri.setOnClickListener(this);
+        tv_last.setOnClickListener(this);
+        tv_next.setOnClickListener(this);
         Fr_takePhoto.setOnClickListener(this);
         tv_bianji.setOnClickListener(this);
         tv_play_recorder.setOnClickListener(this);
@@ -387,12 +387,19 @@ public class ReViewStart extends BaseFragment<ReViewStart_C.Presenter> implement
 
     @Override
     public void saveAnswersFailure() {
+        _mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                p.getImage(ht_projectId,_mActivity,number,ht_id);
+            }
+        });
         ToastUtils.showShort("图片保存成功");
     }
 
     @Override
     public void SaveImagesSuccess() {
-        ToastUtils.showShort("图片保存失败");
+
+        ToastUtils.showShort("图片保存成功");
     }
 
     @Override
@@ -487,7 +494,7 @@ public class ReViewStart extends BaseFragment<ReViewStart_C.Presenter> implement
     public void onClick(View v) {
         switch (v.getId()) {
             //上一题
-            case R.id.re_bottom_le:
+            case R.id.tv_last:
                 if (number > 1) {
                     if (isComplete()) {
                         SubjectsDB subjectsDB=new SubjectsDB();
@@ -510,7 +517,7 @@ public class ReViewStart extends BaseFragment<ReViewStart_C.Presenter> implement
                 }
                 break;
             //下一题
-            case R.id.re_bottom_ri:
+            case R.id.tv_next:
                 if (number < countSize) {
                     if (isComplete()) {
                         SubjectsDB subjectsDB=new SubjectsDB();

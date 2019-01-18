@@ -16,9 +16,11 @@ import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
+import com.coahr.thoughtrui.Utils.NetWorkAvailable;
 import com.coahr.thoughtrui.Utils.TimeUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
+import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.ProjectDetailFragment_C;
@@ -236,15 +238,24 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
      * 跳转到考勤页面
      */
     private void JumpToAttendance(){
-        Intent intent=new Intent(_mActivity,AttendanceRootActivity.class);
-        startActivity(intent);
+        if (NetWorkAvailable.isNetworkAvailable(BaseApplication.mContext)) {
+            Intent intent=new Intent(_mActivity,AttendanceRootActivity.class);
+            startActivity(intent);
+        } else {
+            ToastUtils.showLong("没有网络，无法打卡");
+        }
+
     }
     /**
      * 跳转到开始访问页面
      */
     private void JumpToStartProject(){
-        Intent intent=new Intent(_mActivity,StartProjectActivity.class);
-        startActivity(intent);
+        if (NetWorkAvailable.isNetworkAvailable(BaseApplication.mContext)) {
+            Intent intent = new Intent(_mActivity, StartProjectActivity.class);
+            startActivity(intent);
+        }else {
+            ToastUtils.showLong("没有网络，无法访问");
+        }
     }
 
     /**
@@ -323,6 +334,5 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
             }
             p.getSubjectList(projectsDB);
         }
-
     }
 }

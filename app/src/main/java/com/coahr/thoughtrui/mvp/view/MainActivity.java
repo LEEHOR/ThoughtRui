@@ -87,11 +87,20 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
 
     @Override
     public void initView() {
-        sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, "sessionId", null);
+        //sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, "sessionId", null);
         myBottomNavigation.setOnTabPositionListener(new MyBottomNavigation.OnTabPositionListener() {
             @Override
             public void onPositionTab(int position) {
                 showFragment(position);
+             /*   if (haslogin()){
+
+                }  else {
+                    Intent intent = new Intent(MainActivity.this, ConstantsActivity.class);
+                    intent.putExtra("from", Constants.MainActivityCode);
+                    intent.putExtra("to", Constants.loginFragmentCode);
+                    intent.putExtra("type", 1);
+                    startActivity(intent);
+                }*/
             }
         });
 
@@ -115,7 +124,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
 
     private void showFragment(int position) {
         page = position;
-        if (sessionId == null) {
+        if (!haslogin()) {
             Intent intent = new Intent(MainActivity.this, ConstantsActivity.class);
             intent.putExtra("from", Constants.MainActivityCode);
             intent.putExtra("to", Constants.loginFragmentCode);
@@ -123,9 +132,10 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
             startActivity(intent);
         } else {
             showHideFragment(mFragments[position], mFragments[bottomNavigationPreposition]);
+            myBottomNavigation.beanSelect(position);
+            bottomNavigationPreposition = position;
         }
-        myBottomNavigation.beanSelect(position);
-        bottomNavigationPreposition = position;
+
     }
 
     @Override
@@ -139,7 +149,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void Event(EvenBus_LoginSuccess loginSuccess) {
         if (loginSuccess.getLoginType() == 100) {
-            sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, "sessionId", null);
+            //sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, "sessionId", null);
             showFragment(0);
             // p.startLocation();
             EventBus.getDefault().postSticky(new Event_Main(1, "登陆成功", page));

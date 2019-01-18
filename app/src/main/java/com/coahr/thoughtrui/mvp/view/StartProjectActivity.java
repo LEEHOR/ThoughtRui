@@ -94,11 +94,11 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         p_mytitle.getRightText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ProjectSuccessDialog projectSuccessDialog=ProjectSuccessDialog.newInstance(Constants.ht_ProjectId);
-                projectSuccessDialog.show(getSupportFragmentManager(),TAG);
-                /*Intent intent = new Intent(StartProjectActivity.this, ConstantsActivity.class);
+              //  ProjectSuccessDialog projectSuccessDialog=ProjectSuccessDialog.newInstance(Constants.ht_ProjectId);
+               // projectSuccessDialog.show(getSupportFragmentManager(),TAG);
+                Intent intent = new Intent(StartProjectActivity.this, ConstantsActivity.class);
                 intent.putExtra("to", Constants.fragment_topics);
-                startActivity(intent);*/
+                startActivity(intent);
             }
         });
         p_mytitle.getLeftIcon().setOnClickListener(new View.OnClickListener() {
@@ -190,6 +190,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
 
     @Override
     public void getOfflineSuccess(int size, String dbProjectId, String ht_projectId, List<String> ht_list) {
+
         this.subject_size = size;
         startProjectAdapter = new StartProjectAdapter(getSupportFragmentManager(), size, dbProjectId, ht_projectId, Constants.name_Project, ht_list);
         project_viewPage.setAdapter(startProjectAdapter);

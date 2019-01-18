@@ -131,10 +131,10 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     TextView tv_Unfold; //图片展开收起
     @BindView(R.id.img_recycler)
     RecyclerView img_recycler;  //图片列表
-    @BindView(R.id.re_bottom_le)
-    RelativeLayout re_bottom_le; //上一页
-    @BindView(R.id.re_bottom_ri)
-    RelativeLayout re_bottom_ri;  //下一页
+    @BindView(R.id.tv_last)
+    TextView tv_last; //上一页
+    @BindView(R.id.tv_next)
+    TextView tv_next;  //下一页
     //==========================================================
     //项目本地数据库Id
     private String dbProjectId;
@@ -229,8 +229,8 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             }
         }
         tv_Unfold.setOnClickListener(this);
-        re_bottom_le.setOnClickListener(this);
-        re_bottom_ri.setOnClickListener(this);
+        tv_last.setOnClickListener(this);
+        tv_next.setOnClickListener(this);
         Fr_takePhoto.setOnClickListener(this);
         tv_bianji.setOnClickListener(this);
         tv_play_recorder.setOnClickListener(this);
@@ -268,13 +268,13 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        type = 1;
 
                         Fr_takeRecorder.postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 p.getAudio(ht_projectId, _mActivity, number, ht_id);
                                 Fr_takeRecorder.setEnabled(true);
+                                type = 1;
                             }
                         }, 1500);
 
@@ -313,7 +313,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     public void onClick(View v) {
         switch (v.getId()) {
             //上一题
-            case R.id.re_bottom_le:
+            case R.id.tv_last:
                 if (number > 1) {
                     if (isComplete()) {
                         SubjectsDB subjectsDB=new SubjectsDB();
@@ -336,7 +336,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 }
                 break;
             //下一题
-            case R.id.re_bottom_ri:
+            case R.id.tv_next:
                 if (number < countSize) {
                     if (isComplete()) {
                         SubjectsDB subjectsDB=new SubjectsDB();
@@ -531,6 +531,13 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
     @Override
     public void SaveImagesSuccess() {
+        _mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                p.getImage(ht_projectId,_mActivity,number,ht_id);
+            }
+        });
+
         ToastUtils.showShort("图片保存成功");
     }
 

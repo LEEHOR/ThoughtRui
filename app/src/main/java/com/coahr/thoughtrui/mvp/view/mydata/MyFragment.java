@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
+import android.view.TouchDelegate;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,7 +18,9 @@ import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.Permission.OnRequestPermissionListener;
 import com.coahr.thoughtrui.Utils.Permission.RequestPermissionUtils;
 import com.coahr.thoughtrui.Utils.PreferenceUtils;
+import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
+import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
@@ -66,6 +69,8 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
     ImageView iv_xgmm_back; //修改密码
     @BindView(R.id.iv_bzfk_back)
     ImageView iv_bzfk_back; //帮助与反馈
+    @BindView(R.id.tv_quit_account)
+    TextView tv_quit_account; //退出登录
 
     public static MyFragment newInstance() {
         return new MyFragment();
@@ -88,12 +93,13 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
         iv_qchc_back.setOnClickListener(this);
         iv_xgmm_back.setOnClickListener(this);
         iv_bzfk_back.setOnClickListener(this);
+        tv_quit_account.setOnClickListener(this);
         getAudioPermission();
     }
     @Override
     public void initData() {
         featchProjectInfo(tv_dxz,tv_dsc,tv_dks,tv_wwc);
-        String user_name = PreferenceUtils.getPrefString(_mActivity, Constants.user_name, "未知");
+        String user_name = PreferenceUtils.getPrefString(_mActivity, Constants.user_name, "");
         tv_user_name.setText(user_name);
     }
 
@@ -110,6 +116,10 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
                 goOtherPage(ConstantsActivity.class,Constants.fragment_myFragment,Constants.fragment_ChangePass);
                 break;
             case R.id.iv_bzfk_back: //帮助与反馈
+
+                break;
+            case R.id.tv_quit_account:  //退出登录
+                quitAccount();
                 break;
         }
     }
@@ -223,5 +233,25 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
                 star.setText(String.valueOf(unStart));
             }
         }
+    }
+
+    /**
+     * 退出登录
+     */
+    private  void  quitAccount(){
+        if (haslogin()) {
+            Constants.wan_ka=null;
+            Constants.zao_ka=null;
+            Constants.DbProjectId=null;
+            Constants.ht_ProjectId=null;
+            Constants.user_name="";
+            Constants.sessionId="";
+            PreferenceUtils.remove(BaseApplication.mContext,Constants.user_key);
+            PreferenceUtils.remove(BaseApplication.mContext,Constants.sessionId_key);
+            goOtherPage(ConstantsActivity.class,Constants.fragment_myFragment,Constants.loginFragmentCode);
+        } else {
+            ToastUtils.showLong("当前设备未登录");
+        }
+
     }
 }

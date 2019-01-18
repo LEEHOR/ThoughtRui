@@ -17,10 +17,12 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.baidu.location.BDLocation;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
+import com.coahr.thoughtrui.DBbean.UsersDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.DensityUtils;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.NetWorkAvailable;
+import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
@@ -155,6 +157,14 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
 
     @Override
     public void initData() {
+        if (PreferenceUtils.contains(BaseApplication.mContext, Constants.sessionId_key)) {
+            String sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext,Constants.sessionId_key, null);
+            Constants.sessionId=sessionId;
+            List<UsersDB> usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", sessionId);
+            if (usersDBS!=null && usersDBS.size()>0){
+                Constants.user_id=String.valueOf(usersDBS.get(0).getId());
+            }
+        }
         lm_on = new LinearLayoutManager(BaseApplication.mContext);
         tab_on_recyclerView.setLayoutManager(lm_on);
         lm_off = new LinearLayoutManager(BaseApplication.mContext);
@@ -178,56 +188,59 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
         } else {
             tab_off_recyclerView.removeItemDecoration(spacesItemDecoration);
         }
-        if (isNetworkAvailable()) {  //有网络
-            //  p.startLocation(3);
-            getDate();
-        } else { //无网络
-            p.getTypeDate(type);
+        if (haslogin()) {
+            if (isNetworkAvailable()) {  //有网络
+                //  p.startLocation(3);
+                getDate();
+            } else { //无网络
+                p.getTypeDate(type);
+            }
         }
+
 
         //有网络adapter监听
         tabFAdapter.setAdapter_online(new MyTabFOnLineAdapter.adapter_online() {
             @Override
-            public void newListClick(HomeDataList.DataBean.newListBean newListBean) {
+            public void newListClick(HomeDataList.DataBean.AllListBean newListBean) {
                 // setDate_onLine_newList(newListBean);
                 JumpToProject(newListBean.getId());
             }
 
             @Override
-            public void newListLongClick(HomeDataList.DataBean.newListBean newListBean) {
+            public void newListLongClick(HomeDataList.DataBean.AllListBean newListBean) {
                 showDialog("新的项目", "无法删除", false);
             }
 
             @Override
-            public void completeClick(HomeDataList.DataBean.CompleteListBean completeListBean) {
+            public void completeClick(HomeDataList.DataBean.AllListBean completeListBean) {
                 // setDate_onLine_Complete(completeListBean);
                 JumpToProject(completeListBean.getId());
             }
 
             @Override
-            public void completeLongClick(HomeDataList.DataBean.CompleteListBean completeListBean) {
+            public void completeLongClick(HomeDataList.DataBean.AllListBean completeListBean) {
                 showDialog("已完成的项目", "确定删除", true);
             }
 
             @Override
-            public void unCompleteClick(HomeDataList.DataBean.UnCompleteListBean unCompleteListBean) {
+            public void unCompleteClick(HomeDataList.DataBean.AllListBean unCompleteListBean) {
                 //  setDate_onLine_unComplete(unCompleteListBean);
                 JumpToProject(unCompleteListBean.getId());
             }
 
             @Override
-            public void unCompleteLongClick(HomeDataList.DataBean.UnCompleteListBean unCompleteListBean) {
+            public void unCompleteLongClick(HomeDataList.DataBean.AllListBean unCompleteListBean) {
                 showDialog("未完成的项目", "无法删除", false);
             }
 
             @Override
-            public void unDownLoadClick(HomeDataList.DataBean.newListBean newListBean) {
+            public void unDownLoadClick(HomeDataList.DataBean.AllListBean newListBean) {
                 DownLoadProject_Id=newListBean.getId();
                 getUnDownLoad(newListBean.getId());
             }
 
             @Override
-            public void unDownLoadLongClick(HomeDataList.DataBean.newListBean newListBean) {
+            public void unDownLoadLongClick(HomeDataList.DataBean.AllListBean newListBean) {
                 showDialog("未下载的项目", "无法删除", false);
             }
         });
@@ -283,7 +296,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
         tabFAdapter.setType(type);
         tabFAdapter.setHomeDataList(homeDataList, BaseApplication.mContext);
         change_online();
-        isLoad = true;
+        isLoad = false;
         myTab_swipe.setRefreshing(false);
     }
 
@@ -345,7 +358,6 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
             projectsDB.setDownloadTime(System.currentTimeMillis());
             projectsDB.update(projectsDBS.get(0).getId());
         }
-
         if (isNetworkAvailable()) {
             getDate();
         } else {
@@ -471,20 +483,29 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
      * @param projectId
      */
     private void JumpToProject(String projectId) {
-        Intent intent = new Intent(getActivity(), ConstantsActivity.class);
-        intent.putExtra("from", Constants.MyTabFragmentCode);
-        intent.putExtra("to", Constants.ProjectDetailFragmentCode);
-        intent.putExtra("projectId", projectId);
-        startActivity(intent);
+        if (haslogin()) {
+            Intent intent = new Intent(getActivity(), ConstantsActivity.class);
+            intent.putExtra("from", Constants.MyTabFragmentCode);
+            intent.putExtra("to", Constants.ProjectDetailFragmentCode);
+            intent.putExtra("projectId", projectId);
+            startActivity(intent);
+        }else {
+            ToastUtils.showLong("请登录后再操作");
+        }
     }
 
     /**
      * 假下载
      */
     private void getUnDownLoad(String projectId){
-        Map map=new HashMap();
-        map.put("projectId",projectId);
-        map.put("sessionId",Constants.sessionId);
-        p.getUnDownLoadProject(map);
+        if (haslogin()) {
+            Map map=new HashMap();
+            map.put("projectId",projectId);
+            map.put("sessionId",Constants.sessionId);
+            p.getUnDownLoadProject(map);
+        } else {
+            ToastUtils.showLong("请登录后再操作");
+        }
+
     }
 }

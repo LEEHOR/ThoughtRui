@@ -102,7 +102,12 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
             public void run() {
                 for (int i = 0; i <mediaBeanList.size() ; i++) {
                     String originalPath = mediaBeanList.get(i).getOriginalPath();
-                    FileIOUtils.copyFile(originalPath, Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number+"_"+ht_id + "/", FileIOUtils.getE(originalPath, "/"));
+                    boolean b = FileIOUtils.copyFile(originalPath, Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id + "/", FileIOUtils.getE(originalPath, "/"));
+                    if (b){
+                        getPresenter().SaveImagesSuccess();
+                    } else {
+                        getPresenter().SaveImagesFailure();
+                    }
                 }
             }
         }).start();

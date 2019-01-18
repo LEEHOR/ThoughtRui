@@ -385,19 +385,11 @@
                 android:background="@color/colorWhite"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <LinearLayout
-                    android:gravity="center_vertical"
+                <RelativeLayout
                     android:paddingTop="@dimen/dp_10"
                     android:paddingBottom="@dimen/dp_10"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <RelativeLayout
-                        android:padding="@dimen/dp_5"
-                        android:layout_gravity="center"
-                        android:id="@+id/re_bottom_le"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content">
                         <ImageView
                             android:id="@+id/iv_last"
                             android:layout_alignParentLeft="true"
@@ -406,6 +398,7 @@
                             android:layout_width="@dimen/dp_14"
                             android:layout_height="@dimen/dp_14" />
                         <TextView
+                            android:id="@+id/tv_last"
                             android:layout_marginLeft="@dimen/dp_5"
                             android:layout_toRightOf="@+id/iv_last"
                             android:textColor="#2D7DFF"
@@ -414,24 +407,17 @@
                             android:text="上一项"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
-                    </RelativeLayout>
 
-                    <RelativeLayout
-                        android:padding="@dimen/dp_5"
-                        android:id="@+id/re_bottom_ri"
-                        android:layout_gravity="center"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content">
                         <ImageView
-                            android:rotation="180"
-                            android:id="@+id/iv_next"
                             android:layout_centerVertical="true"
                             android:layout_alignParentRight="true"
+                            android:rotation="180"
+                            android:id="@+id/iv_next"
                             android:src="@mipmap/last"
                             android:layout_width="@dimen/dp_14"
                             android:layout_height="@dimen/dp_14" />
                         <TextView
+                            android:id="@+id/tv_next"
                            android:layout_marginRight="@dimen/dp_5"
                            android:layout_toLeftOf="@+id/iv_next"
                             android:textColor="#2D7DFF"
@@ -440,8 +426,7 @@
                             android:text="下一项"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
-                    </RelativeLayout>
-                </LinearLayout>
+                </RelativeLayout>
             </FrameLayout>
             <FrameLayout
                 android:paddingBottom="@dimen/dp_5"

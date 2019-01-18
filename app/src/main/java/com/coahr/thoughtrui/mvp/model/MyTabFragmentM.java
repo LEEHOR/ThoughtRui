@@ -71,7 +71,13 @@ public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implemen
     @Override
     public void getTypeDate(int type) {
         if (type == 0){ //新项目
-          DataBaseWorkAsync.DBSelectByTogether_Where(ProjectsDB.class, new JDBCSelectMultiListener() {
+            List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "usersdb_id=? and completestatus=? and isdeletes =? and downloadtime !=? ", Constants.user_id, String.valueOf(1), String.valueOf(0), String.valueOf(0));
+            if (projectsDBS !=null && projectsDBS.size()>0){
+                getPresenter().getTypeDateSuccess(projectsDBS);
+            } else {
+                getPresenter().getTypeDateFailure(0);
+            }
+           /* DataBaseWorkAsync.DBSelectByTogether_Where(ProjectsDB.class, new JDBCSelectMultiListener() {
               @Override
               public <T> void SelectMulti(List<T> t) {
                   if (t !=null && t.size()>0) {
@@ -80,52 +86,78 @@ public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implemen
                       getPresenter().getTypeDateFailure(0);
                   }
               }
-          }, "usersdb_id=? and completestatus=? and isdeletes =? and downloadtime !=? ", Constants.user_id, String.valueOf(1), String.valueOf(0), String.valueOf(0));
+          }, "usersdb_id=? and completestatus=? and isdeletes =? and downloadtime !=? ", Constants.user_id, String.valueOf(1), String.valueOf(0), String.valueOf(0));*/
 
         } else if (type == 1){ //已完成
-            DataBaseWorkAsync.DBSelectByTogether_Where(ProjectsDB.class, new JDBCSelectMultiListener() {
-                @Override
-                public <T> void SelectMulti(List<T> t) {
-                    if (t !=null && t.size()>0) {
-                        getPresenter().getTypeDateSuccess((List<ProjectsDB>) t);
-                    } else {
-                        getPresenter().getTypeDateFailure(0);
-                    }
-                }
-            }, "usersdb_id=? and completestatus=? and isdeletes =?",Constants.user_id, String.valueOf(3),String.valueOf(0));
+            List<ProjectsDB> projectsDBS_complete = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "usersdb_id=? and completestatus=? and isdeletes =?", Constants.user_id, String.valueOf(3), String.valueOf(0));
+          //  List<ProjectsDB> projectsDBS = projectsDBS1;
+            if (projectsDBS_complete != null && projectsDBS_complete.size()>0) {
+                getPresenter().getTypeDateSuccess(projectsDBS_complete);
+            } else {
+                getPresenter().getTypeDateFailure(0);
+            }
+//            DataBaseWorkAsync.DBSelectByTogether_Where(ProjectsDB.class, new JDBCSelectMultiListener() {
+//                @Override
+//                public <T> void SelectMulti(List<T> t) {
+//                    if (t !=null && t.size()>0) {
+//                        getPresenter().getTypeDateSuccess((List<ProjectsDB>) t);
+//                    } else {
+//                        getPresenter().getTypeDateFailure(0);
+//                    }
+//                }
+//            }, "usersdb_id=? and completestatus=? and isdeletes =?",Constants.user_id, String.valueOf(3),String.valueOf(0));
         } else if (type == 2){  //未完成
-            DataBaseWorkAsync.DBSelectByTogether_Where(ProjectsDB.class, new JDBCSelectMultiListener() {
-                @Override
-                public <T> void SelectMulti(List<T> t) {
-                    if (t !=null && t.size()>0) {
-                        getPresenter().getTypeDateSuccess((List<ProjectsDB>) t);
-                    } else {
-                        getPresenter().getTypeDateFailure(0);
-                    }
-                }
-            }, "usersdb_id=? and completestatus=? and isdeletes =?",Constants.user_id, String.valueOf(2),String.valueOf(0));
+            List<ProjectsDB> projectsDBS_unComplete = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "usersdb_id=? and completestatus=? and isdeletes =?",Constants.user_id, String.valueOf(2),String.valueOf(0));
+            if (projectsDBS_unComplete != null && projectsDBS_unComplete.size()>0) {
+                getPresenter().getTypeDateSuccess(projectsDBS_unComplete);
+            } else {
+                getPresenter().getTypeDateFailure(0);
+            }
+
+//            DataBaseWorkAsync.DBSelectByTogether_Where(ProjectsDB.class, new JDBCSelectMultiListener() {
+//                @Override
+//                public <T> void SelectMulti(List<T> t) {
+//                    if (t !=null && t.size()>0) {
+//                        getPresenter().getTypeDateSuccess((List<ProjectsDB>) t);
+//                    } else {
+//                        getPresenter().getTypeDateFailure(0);
+//                    }
+//                }
+//            }, "usersdb_id=? and completestatus=? and isdeletes =?",Constants.user_id, String.valueOf(2),String.valueOf(0));
         } else if(type == 3 ){ //全部
-            DataBaseWorkAsync.DBSelectByTogether_Where(ProjectsDB.class, new JDBCSelectMultiListener() {
-                @Override
-                public <T> void SelectMulti(List<T> t) {
-                    if (t !=null && t.size()>0) {
-                        getPresenter().getTypeDateSuccess((List<ProjectsDB>) t);
-                    } else {
-                        getPresenter().getTypeDateFailure(0);
-                    }
-                }
-            }, " usersdb_id=? and isdeletes =?",Constants.user_id,String.valueOf(0));
+            List<ProjectsDB> projectsDBS_all = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, " usersdb_id=? and isdeletes=?",Constants.user_id,String.valueOf(0));
+            if (projectsDBS_all != null && projectsDBS_all.size()>0) {
+                getPresenter().getTypeDateSuccess(projectsDBS_all);
+            } else {
+                getPresenter().getTypeDateFailure(0);
+            }
+//            DataBaseWorkAsync.DBSelectByTogether_Where(ProjectsDB.class, new JDBCSelectMultiListener() {
+//                @Override
+//                public <T> void SelectMulti(List<T> t) {
+//                    if (t !=null && t.size()>0) {
+//                        getPresenter().getTypeDateSuccess((List<ProjectsDB>) t);
+//                    } else {
+//                        getPresenter().getTypeDateFailure(0);
+//                    }
+//                }
+//            }, " usersdb_id=? and isdeletes =?",Constants.user_id,String.valueOf(0));
         } else {
-            DataBaseWorkAsync.DBSelectByTogether_Where(ProjectsDB.class, new JDBCSelectMultiListener() {
-                @Override
-                public <T> void SelectMulti(List<T> t) {
-                    if (t !=null && t.size()>0) {
-                        getPresenter().getTypeDateSuccess((List<ProjectsDB>) t);
-                    } else {
-                        getPresenter().getTypeDateFailure(0);
-                    }
-                }
-            }, "usersdb_id=? and completestatus=? and isdeletes =? and downloadtime !=? ", Constants.user_id, String.valueOf(1), String.valueOf(0), String.valueOf(0));
+            List<ProjectsDB> projectsDBS_other = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "usersdb_id=? and completestatus=? and isdeletes =? and downloadtime !=? ", Constants.user_id, String.valueOf(1), String.valueOf(0), String.valueOf(0));
+            if (projectsDBS_other != null && projectsDBS_other.size()>0) {
+                getPresenter().getTypeDateSuccess(projectsDBS_other);
+            } else {
+                getPresenter().getTypeDateFailure(0);
+            }
+//            DataBaseWorkAsync.DBSelectByTogether_Where(ProjectsDB.class, new JDBCSelectMultiListener() {
+//                @Override
+//                public <T> void SelectMulti(List<T> t) {
+//                    if (t !=null && t.size()>0) {
+//                        getPresenter().getTypeDateSuccess((List<ProjectsDB>) t);
+//                    } else {
+//                        getPresenter().getTypeDateFailure(0);
+//                    }
+//                }
+//            }, "usersdb_id=? and completestatus=? and isdeletes =? and downloadtime !=? ", Constants.user_id, String.valueOf(1), String.valueOf(0), String.valueOf(0));
         }
     }
 
