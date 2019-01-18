@@ -153,10 +153,10 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
         //查询数据库有没有当前项目
         List<ProjectsDB> ProjectDBList = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", Pid);
         //当前使用用户
-        List<UsersDB> usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionId=?", Constants.sessionId);
+        List<UsersDB> usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", Constants.sessionId);
         if (ProjectDBList != null && !ProjectDBList.isEmpty() && ProjectDBList.size() > 0) {
             ProjectDBList.get(0).setRecord(listBean.getRecord()); //录音方式
-            ProjectDBList.get(0).setInspect(listBean.getInspect()); //检验方式
+            ProjectDBList.get(0).setInspect(listBean.getInspect()); //检验方式i
             ProjectDBList.get(0).setPname(listBean.getPname());  //项目名
             ProjectDBList.get(0).setAddress(listBean.getAreaAddress());
             ProjectDBList.get(0).setDownloadTime(listBean.getDownloadTime());
@@ -177,9 +177,6 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
             ProjectDBList.get(0).setGrade(listBean.getGrade());
             ProjectDBList.get(0).setModifyTime(listBean.getModifyTime());
             ProjectDBList.get(0).setNotice(listBean.getNotice());
-            if (usersDBS != null && usersDBS.size() > 0) {
-                ProjectDBList.get(0).setUser(usersDBS.get(0));
-            }
             int update = ProjectDBList.get(0).update(ProjectDBList.get(0).getId());
             if (update > 0) {
                 updateSize++;

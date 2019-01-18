@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ProgressBar
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:indeterminateBehavior="repeat"
-    android:indeterminateDrawable="@drawable/dialog_loading_anim_progress" />
+    android:background="@color/material_grey_100">
+    <ProgressBar
+        android:padding="@dimen/dp_10"
+        android:layout_centerInParent="true"
+        android:indeterminateBehavior="repeat"
+        android:indeterminateDrawable="@drawable/dialog_loading_anim_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

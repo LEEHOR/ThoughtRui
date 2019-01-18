@@ -100,7 +100,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     private int Subject_size;
     //当前正在上传的题目位置(从0开始)
     private int up_subject_position = 0;
-    //全部上传or批量上传
+    //全部上传or批量上传or点击上传
     private int type;
     //上传文件的数组
     private List<String> fileList = new ArrayList<>();
@@ -141,7 +141,6 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
 
     @Override
     public void initView() {
-
         //注册网络状态监听广播
         netWorkReceiver = new NetWorkReceiver();
         IntentFilter filter = new IntentFilter();
@@ -158,7 +157,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
         manager = new LinearLayoutManager(BaseApplication.mContext);
         up_recycler.setLayoutManager(manager);
         up_recycler.setAdapter(upLoadAdapter);
-        up_recycler.addItemDecoration(new SpacesItemDecoration(0, DensityUtils.dp2px(BaseApplication.mContext, 4), getResources().getColor(R.color.material_grey_200)));
+        up_recycler.addItemDecoration(new SpacesItemDecoration(0, DensityUtils.dp2px(BaseApplication.mContext, 5)));
         for (int i = 0; i < up_recycler.getItemDecorationCount(); i++) {
             if (i != 0) {
                 up_recycler.removeItemDecorationAt(i);
@@ -210,17 +209,17 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                     ck_bottom.setChecked(false);
                 }
             }
+
+            @Override
+            public void OnClickItem(ProjectsDB projectsDB) {
+                showDialog(projectsDB);
+            }
         });
     }
 
     @Override
     public void showError(Throwable t) {
         KLog.d("网络请求错误", t.toString());
-    }
-
-    @Override
-    public void dismissLoading() {
-
     }
 
     @Override
@@ -262,6 +261,9 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
 
     @Override
     public void getProjectListSuccess(List<ProjectsDB> projectsDB) {
+        up_recycler.setVisibility(View.VISIBLE);
+        tv_all_upload.setEnabled(true);
+        tv_Batch_Management.setEnabled(true);
         this.allProjectList = projectsDB;
         this.all_project_size = projectsDB.size();
         upLoadAdapter.setNewData(projectsDB);
@@ -275,6 +277,9 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     @Override
     public void getProjectListFailure(String failure) {
         ToastUtils.showLong(failure);
+        up_recycler.setVisibility(View.GONE);
+        tv_all_upload.setEnabled(false);
+        tv_Batch_Management.setEnabled(false);
         isLoading = false;
         up_swipe.setRefreshing(false);
     }
@@ -291,6 +296,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     @Override
     public void getSubjectListFailure(String failure) {
         ToastUtils.showLong(failure);
+        dismissLoading();
     }
 
     @Override
@@ -302,7 +308,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     @Override
     public void getUpLoadFileListFailure(String failure) {
         ToastUtils.showLong(failure);
-
+        dismissLoading();
     }
 
     @Override
@@ -329,6 +335,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     public void StartUpLoadFailure(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
         KLog.d("阿里云上传失败" + projectsDB.getPname() + "/" + subjectsDB.getNumber());
         upDateDB(projectsDB, subjectsDB, false);
+
     }
 
     @Override
@@ -493,12 +500,15 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                         projectsDB1.setIsComplete(1);
                         projectsDB1.setpUploadStatus(1);
                         projectsDB1.update(projectsDB.getId());
+                    } else {
+                        up_project_position = 0;
                     }
                 }
                 //开始上传下一个项目
                 if (up_project_position == all_project_size - 1) {  //如果所有项目都传完了
                     up_project_position = 0;
                     p.getProjectList(Constants.sessionId);
+                    dismissLoading();
                 } else {
                     p.getSubjectList(allProjectList.get(up_project_position++));
                 }
@@ -537,12 +547,45 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                 if (up_project_position == ck_Project_size - 1) {  //如果所有项目都传完了
                     up_project_position = 0;
                     p.getProjectList(Constants.sessionId);
+                    dismissLoading();
                 } else {
                     up_project_position = 0;
                     p.getSubjectList(ck_listProjectDb.get(up_project_position++));
                 }
 
             } else {  //当前项目没有传完传下一题
+                p.UpLoadFileList(projectsDB, subjectsDBList.get(up_subject_position++), _mActivity);
+            }
+        }
+
+        if (type==3){  //点击上传
+            if (isSuccess) {
+                SubjectsDB subjectsDB1 = new SubjectsDB();
+                subjectsDB1.setsUploadStatus(1);
+                int update = subjectsDB1.update(subjectsDB.getId());
+            }
+
+            if (up_subject_position == Subject_size - 1) { //当前项目下的题目传完了
+                up_subject_position = 0;
+                //先判断项目下的题目是否传完
+                List<SubjectsDB> subjectsDBList = projectsDB.getSubjectsDBList();
+                if (subjectsDBList != null && subjectsDBList.size() > 0) {
+                    int up_subject = 0;
+                    for (int i = 0; i < subjectsDBList.size(); i++) {
+                        if (subjectsDBList.get(i).getsUploadStatus() == 1) {
+                            up_subject++;
+                        }
+                    }
+                    //题目是否都传完了
+                    if (up_subject == subjectsDBList.size()) {
+                        ProjectsDB projectsDB1 = new ProjectsDB();
+                        projectsDB1.setIsComplete(1);
+                        projectsDB1.setpUploadStatus(1);
+                        projectsDB1.update(projectsDB.getId());
+                    }
+                }
+                dismissLoading();
+            } else {
                 p.UpLoadFileList(projectsDB, subjectsDBList.get(up_subject_position++), _mActivity);
             }
         }
@@ -632,5 +675,42 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            KLog.d("onResume", "上传页面");
+            p.getProjectList(Constants.sessionId);
+        }
+    }
+
+    /**
+     * 点击提示
+     *
+     * @param projectsDB
+     */
+    private void showDialog(final ProjectsDB projectsDB) {
+        new MaterialDialog.Builder(_mActivity)
+                .title("提示")
+                .content("是否上传")
+                .negativeText("取消")
+                .positiveText("确定")
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        type=3;
+                        //获取当前题目
+                        showLoading();
+                       p.getSubjectList(projectsDB);
+                    }
+                }).build().show();
     }
 }

@@ -91,12 +91,12 @@ public class ReviewPager extends BaseChildFragment<ReviewPagerFragment_C.Present
         manager = new LinearLayoutManager(BaseApplication.mContext);
         pager_recycler.setLayoutManager(manager);
         pager_recycler.setAdapter(adapter);
-        // pager_recycler.addItemDecoration(new SpacesItemDecoration(0, DensityUtils.dp2px(BaseApplication.mContext, 5), getResources().getColor(R.color.material_grey_200)));
-      /*  for (int i = 0; i < pager_recycler.getItemDecorationCount(); i++) {
+         pager_recycler.addItemDecoration(new SpacesItemDecoration(0, DensityUtils.dp2px(BaseApplication.mContext, 5)));
+        for (int i = 0; i < pager_recycler.getItemDecorationCount(); i++) {
             if (i != 0) {
                 pager_recycler.removeItemDecorationAt(i);
             }
-        }*/
+        }
         pager_swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

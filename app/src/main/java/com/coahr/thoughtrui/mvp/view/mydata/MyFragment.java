@@ -26,6 +26,7 @@ import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
 import com.coahr.thoughtrui.widgets.CircularImageView;
+import com.socks.library.KLog;
 
 import java.io.File;
 import java.math.RoundingMode;
@@ -99,8 +100,11 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
     @Override
     public void initData() {
         featchProjectInfo(tv_dxz,tv_dsc,tv_dks,tv_wwc);
-        String user_name = PreferenceUtils.getPrefString(_mActivity, Constants.user_name, "");
-        tv_user_name.setText(user_name);
+        if (PreferenceUtils.contains(BaseApplication.mContext,Constants.user_key)) {
+            String user_name = PreferenceUtils.getPrefString(_mActivity, Constants.user_key, "");
+            tv_user_name.setText(user_name);
+        }
+
     }
 
     @Override
@@ -227,11 +231,12 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
                         unStart++;
                     }
                 }
-                download.setText(String.valueOf(unLoad));
-                upload.setText(String.valueOf(unUpload));
-                complete.setText(String.valueOf(unComplete));
-                star.setText(String.valueOf(unStart));
             }
+            download.setText(String.valueOf(unLoad));
+            upload.setText(String.valueOf(unUpload));
+            complete.setText(String.valueOf(unComplete));
+            star.setText(String.valueOf(unStart));
+            KLog.d("onResume",unLoad,unStart,unUpload,unComplete);
         }
     }
 
@@ -253,5 +258,20 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
             ToastUtils.showLong("当前设备未登录");
         }
 
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden){
+            KLog.d("onResume","我的页面");
+            if (tv_dxz!=null &&tv_dsc!=null &&tv_dks!=null && tv_wwc!=null){
+                featchProjectInfo(tv_dxz,tv_dsc,tv_dks,tv_wwc);
+            }
+            if (PreferenceUtils.contains(BaseApplication.mContext,Constants.user_key)) {
+                String user_name = PreferenceUtils.getPrefString(_mActivity, Constants.user_key, "");
+                tv_user_name.setText(user_name);
+            }
+        }
     }
 }

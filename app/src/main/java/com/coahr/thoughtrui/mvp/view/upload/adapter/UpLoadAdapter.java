@@ -3,6 +3,7 @@ package com.coahr.thoughtrui.mvp.view.upload.adapter;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -71,9 +72,18 @@ public class UpLoadAdapter extends BaseQuickAdapter<ProjectsDB,BaseViewHolder> {
             ((CheckBox) helper.getView(R.id.ck_check)).setChecked(false);
         }
 
+        ((ImageView)helper.getView(R.id.iv_upload_btn)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (selectChangeListener != null) {
+                    selectChangeListener.OnClickItem(item);
+                }
+            }
+        });
     }
     public interface onSelectChangeListener {
         void onChange();
+        void OnClickItem(ProjectsDB projectsDB);
     }
 
     public List<ProjectsDB> getSelectedProject() {

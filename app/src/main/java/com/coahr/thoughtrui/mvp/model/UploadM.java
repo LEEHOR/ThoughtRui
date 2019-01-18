@@ -87,7 +87,7 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
         List<UsersDB> usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", sessionId);
         if (usersDBS != null && usersDBS.size() > 0) {
             UsersDB usersDB = usersDBS.get(0);
-            List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "usersdb_id =? and puploadstatus = ? and downloadtime!=? and isdeletes=? and iscomplete=?", String.valueOf(usersDB.getId()), String.valueOf(0), String.valueOf(-1), String.valueOf(0), String.valueOf(0));
+            List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "usersdb_id =? and puploadstatus =? and downloadtime!=? and isdeletes=? and iscomplete=?", String.valueOf(usersDB.getId()), String.valueOf(0), String.valueOf(-1), String.valueOf(0), String.valueOf(0));
             if (projectsDBS != null && projectsDBS.size() > 0) {
                 getPresenter().getProjectListSuccess(projectsDBS);
             } else {
@@ -98,7 +98,7 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
 
     @Override
     public void getSubjectList(ProjectsDB projectsDBList) {
-        List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectByTogether_Where(SubjectsDB.class, "projectsdb_id=? and iscomplete=? and suploadstatus=?", String.valueOf(projectsDBList.getId()), String.valueOf(0), String.valueOf(0));
+        List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectByTogether_Where(SubjectsDB.class, "projectsdb_id=? and iscomplete=? and suploadstatus=?", String.valueOf(projectsDBList.getId()), String.valueOf(1), String.valueOf(0));
         if (subjectsDBS != null && subjectsDBS.size() > 0) {
             getPresenter().getSubjectListSuccess(subjectsDBS, projectsDBList);
         } else {
