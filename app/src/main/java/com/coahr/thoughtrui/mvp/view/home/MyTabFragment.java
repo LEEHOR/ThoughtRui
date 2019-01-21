@@ -43,6 +43,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,7 +103,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
     private LinearLayoutManager lm_off;
     private SpacesItemDecoration spacesItemDecoration;
     private String DownLoadProject_Id;
-
+    private List<HomeDataList.DataBean.AllListBean> allListBeanList = new ArrayList<>();
 
     @Override
     public MyTabFragmentC.Presenter getPresenter() {
@@ -157,21 +158,22 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
 
     @Override
     public void initData() {
+        if (getArguments() != null) {
+            type = getArguments().getInt("type");
+        }
         if (PreferenceUtils.contains(BaseApplication.mContext, Constants.sessionId_key)) {
-            String sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext,Constants.sessionId_key, null);
-            Constants.sessionId=sessionId;
+            String sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, Constants.sessionId_key, null);
+            Constants.sessionId = sessionId;
             List<UsersDB> usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", sessionId);
-            if (usersDBS!=null && usersDBS.size()>0){
-                Constants.user_id=String.valueOf(usersDBS.get(0).getId());
+            if (usersDBS != null && usersDBS.size() > 0) {
+                Constants.user_id = String.valueOf(usersDBS.get(0).getId());
             }
         }
         lm_on = new LinearLayoutManager(BaseApplication.mContext);
         tab_on_recyclerView.setLayoutManager(lm_on);
         lm_off = new LinearLayoutManager(BaseApplication.mContext);
         tab_off_recyclerView.setLayoutManager(lm_off);
-        if (getArguments() != null) {
-            type = getArguments().getInt("type");
-        }
+
         tabFAdapter = new MyTabFOnLineAdapter();
         tab_on_recyclerView.setAdapter(tabFAdapter);
         myTabFOffLineAdapter = new MyTabFOffLineAdapter();
@@ -235,7 +237,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
 
             @Override
             public void unDownLoadClick(HomeDataList.DataBean.AllListBean newListBean) {
-                DownLoadProject_Id=newListBean.getId();
+                DownLoadProject_Id = newListBean.getId();
                 getUnDownLoad(newListBean.getId());
             }
 
@@ -279,7 +281,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
 
             @Override
             public void unDownLoadClick(ProjectsDB projectsDB) {
-              DownLoadProject_Id=projectsDB.getPid();
+                DownLoadProject_Id = projectsDB.getPid();
                 getUnDownLoad(projectsDB.getPid());
             }
 
@@ -293,8 +295,35 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
 
     @Override
     public void getHomeDataSuccess(HomeDataList homeDataList) {
+        allListBeanList.clear();
+        if (homeDataList != null) {
+            if (homeDataList.getData().getAllList() != null && homeDataList.getData().getAllList().size() > 0) {
+                for (int i = 0; i < homeDataList.getData().getAllList().size(); i++) {
+                    if (type == 0) {  //新项目
+                        if (homeDataList.getData().getAllList().get(i).getCompleteStatus() == 1) {
+                            allListBeanList.add(homeDataList.getData().getAllList().get(i));
+                        }
+                    }
+                    if (type == 1) {  //已完成
+                        if (homeDataList.getData().getAllList().get(i).getCompleteStatus() == 3) {
+                            allListBeanList.add(homeDataList.getData().getAllList().get(i));
+                        }
+                    }
+                    if (type == 2) {  //未完成
+                        if (homeDataList.getData().getAllList().get(i).getCompleteStatus() == 2) {
+                            allListBeanList.add(homeDataList.getData().getAllList().get(i));
+                        }
+                    }
+
+                    if (type == 3) {  //全部
+                        allListBeanList.add(homeDataList.getData().getAllList().get(i));
+                    }
+
+                }
+            }
+        }
         tabFAdapter.setType(type);
-        tabFAdapter.setHomeDataList(homeDataList, BaseApplication.mContext);
+        tabFAdapter.setHomeDataList(allListBeanList, BaseApplication.mContext);
         change_online();
         isLoad = false;
         myTab_swipe.setRefreshing(false);
@@ -353,8 +382,8 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
     @Override
     public void getUnDownLoadSuccess(UnDownLoad unDownLoad) {
         List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", DownLoadProject_Id);
-        if (projectsDBS!=null && projectsDBS.size()>0){
-            ProjectsDB projectsDB=new ProjectsDB();
+        if (projectsDBS != null && projectsDBS.size() > 0) {
+            ProjectsDB projectsDB = new ProjectsDB();
             projectsDB.setDownloadTime(System.currentTimeMillis());
             projectsDB.update(projectsDBS.get(0).getId());
         }
@@ -464,22 +493,23 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                       dialog.dismiss();
+                        dialog.dismiss();
                     }
                 })
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            if (delete){
+                        if (delete) {
 
-                            }
-                            dialog.dismiss();
+                        }
+                        dialog.dismiss();
                     }
                 }).build().show();
     }
 
     /**
      * 跳转到详情页
+     *
      * @param projectId
      */
     private void JumpToProject(String projectId) {
@@ -489,7 +519,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
             intent.putExtra("to", Constants.ProjectDetailFragmentCode);
             intent.putExtra("projectId", projectId);
             startActivity(intent);
-        }else {
+        } else {
             ToastUtils.showLong("请登录后再操作");
         }
     }
@@ -497,11 +527,11 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
     /**
      * 假下载
      */
-    private void getUnDownLoad(String projectId){
+    private void getUnDownLoad(String projectId) {
         if (haslogin()) {
-            Map map=new HashMap();
-            map.put("projectId",projectId);
-            map.put("sessionId",Constants.sessionId);
+            Map map = new HashMap();
+            map.put("projectId", projectId);
+            map.put("sessionId", Constants.sessionId);
             p.getUnDownLoadProject(map);
         } else {
             ToastUtils.showLong("请登录后再操作");

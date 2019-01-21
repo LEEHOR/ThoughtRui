@@ -347,6 +347,8 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                             public void onFinish(int rowsAffected) {
                                 if (rowsAffected==1){
                                     EventBus.getDefault().post(new isCompleteBean(true, number+1, 2));
+                                    ProjectSuccessDialog projectSuccessDialog = ProjectSuccessDialog.newInstance(ht_projectId);
+                                    projectSuccessDialog.show(getChildFragmentManager(), TAG);
                                 }
                             }
                         });
@@ -355,19 +357,23 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                         ToastUtils.showLong("当前题目未完成");
                     }
                 } else {
-                    SubjectsDB subjectsDB=new SubjectsDB();
-                    subjectsDB.setIsComplete(1);
-                    UpdateOrDeleteExecutor updateOrDeleteExecutor = subjectsDB.updateAsync(subjectsDB_now.getId());
-                    updateOrDeleteExecutor.listen(new UpdateOrDeleteCallback() {
-                        @Override
-                        public void onFinish(int rowsAffected) {
-                            if (rowsAffected==1){
-                                 ProjectSuccessDialog projectSuccessDialog= ProjectSuccessDialog.newInstance(ht_projectId);
-                                 projectSuccessDialog.show(getChildFragmentManager(),TAG);
+                    if (isComplete()) {
+                        SubjectsDB subjectsDB = new SubjectsDB();
+                        subjectsDB.setIsComplete(1);
+                        UpdateOrDeleteExecutor updateOrDeleteExecutor = subjectsDB.updateAsync(subjectsDB_now.getId());
+                        updateOrDeleteExecutor.listen(new UpdateOrDeleteCallback() {
+                            @Override
+                            public void onFinish(int rowsAffected) {
+                                if (rowsAffected == 1) {
+                                    ProjectSuccessDialog projectSuccessDialog = ProjectSuccessDialog.newInstance(ht_projectId);
+                                    projectSuccessDialog.show(getChildFragmentManager(), TAG);
+                                }
                             }
-                        }
-                    });
-                    ToastUtils.showLong("已经是最后一题");
+                        });
+                    } else {
+                        ToastUtils.showLong("已经是最后一题");
+                        ToastUtils.showLong("当前题目未完成");
+                    }
                 }
                 break;
             //拍照

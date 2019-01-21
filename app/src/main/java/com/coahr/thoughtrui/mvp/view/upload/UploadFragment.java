@@ -107,6 +107,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     private UpLoadAdapter upLoadAdapter;
     private LinearLayoutManager manager;
     private boolean isLoading;
+    private ProjectsDB projectsDB_click; //点击上传的项目
     //网络状态
     private int NetType;
     //是否连接
@@ -212,7 +213,13 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
 
             @Override
             public void OnClickItem(ProjectsDB projectsDB) {
-                showDialog(projectsDB);
+                projectsDB_click=projectsDB;
+                type=3;
+                if (NetType == 2) {
+                    Dialog("提示", "当前为4G信号是否继续上传", type);
+                } else {
+                    getOSS();
+                }
             }
         });
     }
@@ -233,7 +240,6 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     @Override
     public void getSTSSuccess(OSSCredentialProvider ossCredentialProvider) {
         //获取阿里云上传实例
-
         //  p.getOSS(BaseApplication.mContext, ApiContact.endpoint, ossCredentialProvider, conf);
     }
 
@@ -558,7 +564,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
             }
         }
 
-        if (type==3){  //点击上传
+        if (type==3){  //
             if (isSuccess) {
                 SubjectsDB subjectsDB1 = new SubjectsDB();
                 subjectsDB1.setsUploadStatus(1);
@@ -584,6 +590,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                         projectsDB1.update(projectsDB.getId());
                     }
                 }
+                p.getProjectList(Constants.sessionId);
                 dismissLoading();
             } else {
                 p.UpLoadFileList(projectsDB, subjectsDBList.get(up_subject_position++), _mActivity);
@@ -606,10 +613,11 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        showLoading();
                         if (type == 1 || type == 2) {
                             getOSS();
                         } else {
-
+                            getOSS();
                         }
                         dialog.dismiss();
                     }
@@ -655,6 +663,9 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
             }
             if (type == 2) {    //批量
                 p.getSubjectList(ck_listProjectDb.get(0));
+            }
+            if (type==3){  //点击上传
+                p.getSubjectList(projectsDB_click);
             }
         }
     }
@@ -706,10 +717,9 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        type=3;
                         //获取当前题目
                         showLoading();
-                       p.getSubjectList(projectsDB);
+                        getOSS();
                     }
                 }).build().show();
     }

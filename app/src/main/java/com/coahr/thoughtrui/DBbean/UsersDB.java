@@ -20,11 +20,8 @@ public class UsersDB extends DataSupport {
      * userName 用户名
      * sessionId 用户sessionId
      */
-
     private int id;
-    @Column(nullable = true)
     private String userName;
-    @Column(unique =true)
     private String sessionId;
     private List<ProjectsDB> projectsDBSList=new ArrayList<>();
     public UsersDB() {

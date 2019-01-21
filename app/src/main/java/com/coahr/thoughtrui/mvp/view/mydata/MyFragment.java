@@ -5,12 +5,15 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
+import android.support.annotation.NonNull;
 import android.view.TouchDelegate;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.UsersDB;
 import com.coahr.thoughtrui.R;
@@ -123,7 +126,12 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
 
                 break;
             case R.id.tv_quit_account:  //退出登录
-                quitAccount();
+               // quitAccount();
+                if (haslogin()){
+                    showDialog();
+                } else {
+                    ToastUtils.showLong("当前没有账户登录");
+                }
                 break;
         }
     }
@@ -244,7 +252,7 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
      * 退出登录
      */
     private  void  quitAccount(){
-        if (haslogin()) {
+
             Constants.wan_ka=null;
             Constants.zao_ka=null;
             Constants.DbProjectId=null;
@@ -254,10 +262,6 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
             PreferenceUtils.remove(BaseApplication.mContext,Constants.user_key);
             PreferenceUtils.remove(BaseApplication.mContext,Constants.sessionId_key);
             goOtherPage(ConstantsActivity.class,Constants.fragment_myFragment,Constants.loginFragmentCode);
-        } else {
-            ToastUtils.showLong("当前设备未登录");
-        }
-
     }
 
     @Override
@@ -273,5 +277,29 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
                 tv_user_name.setText(user_name);
             }
         }
+    }
+
+    /**
+     * 是否退出登录
+     */
+    private void showDialog(){
+        new MaterialDialog.Builder(_mActivity)
+                .title("提示")
+                .content("是否退出登录")
+                .negativeText("取消")
+                .positiveText("确定")
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        quitAccount();
+                        dialog.dismiss();
+                    }
+                }).build().show();
     }
 }

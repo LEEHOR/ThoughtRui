@@ -144,7 +144,7 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
                             }
                         } else if (code == PatchStatus.CODE_LOAD_MFITEM) {////补丁SOPHIX.MF文件解析异常
                             // 内部引擎异常, 推荐此时清空本地补丁, 防止失败补丁重复加载
-                            //SophixManager.getInstance().cleanPatches();
+                            SophixManager.getInstance().cleanPatches();
                             if (listeners != null) {
                                 listeners.CODE_LOAD_MFITEM(info,handlePatchVersion);
                             }

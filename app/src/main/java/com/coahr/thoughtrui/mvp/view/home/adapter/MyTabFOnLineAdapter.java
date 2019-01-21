@@ -13,6 +13,9 @@ import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.TimeUtils;
 import com.coahr.thoughtrui.mvp.model.Bean.HomeDataList;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Leehor
  * on 2018/11/13
@@ -20,7 +23,7 @@ import com.coahr.thoughtrui.mvp.model.Bean.HomeDataList;
  * 首页项目adapter
  */
 public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private HomeDataList homeDataList;
+    private List<HomeDataList.DataBean.AllListBean> allListBean=new ArrayList<>();
     private Context context;
     private int type;
     // 0 1 2  3 新项目 已完成 未完成  全部
@@ -28,12 +31,12 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private int complete = 1;
     private int uncomplete = 2;
     private int undownload = 3;
-    private int unknow = 4;
-    private int thisType = 0;
+    private int unKnow=4;
     private adapter_online adapter_online;
 
-    public void setHomeDataList(HomeDataList homeDataList, Context context) {
-        this.homeDataList = homeDataList;
+    public void setHomeDataList(List<HomeDataList.DataBean.AllListBean> allListBean_a, Context context) {
+        allListBean.clear();
+        this.allListBean.addAll(allListBean_a);
         this.context = context;
         notifyDataSetChanged();
     }
@@ -54,7 +57,7 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         } else if (i == undownload) {
             return new unDownLoadListHaveBeenCancelViewHolder(LayoutInflater.from(context).inflate(R.layout.item_mytabfragment_undownload, viewGroup, false));
         } else {
-            return new EmpViewHolder(LayoutInflater.from(context).inflate(R.layout.item_mytabfragment_undownload, viewGroup, false));
+            return null;
         }
     }
 
@@ -62,21 +65,22 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, final int i) {
         if (viewHolder != null && viewHolder.itemView != null) {
             if (viewHolder instanceof newListHaveBeenCancelViewHolder) {
-                ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_schedule.setText(homeDataList.getData().getAllList().get(i).getProgress());
-                ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_explain.setText(homeDataList.getData().getAllList().get(i).getInspect() == 1 ? "飞检"
-                        : homeDataList.getData().getAllList().get(i).getInspect() == 2 ? "神秘顾客"
-                        : homeDataList.getData().getAllList().get(i).getInspect() == 3 ? "新店验收" : "飞检");
-                ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_times.setText("[" + TimeUtils.getStringDate_start(homeDataList.getData().getAllList().get(i).getStartTime()) + "," + TimeUtils.getStringDate_end(homeDataList.getData().getAllList().get(i).getEndTime()) + "]");
-                ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_code.setText(homeDataList.getData().getAllList().get(i).getCode());
-                ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_name.setText(homeDataList.getData().getAllList().get(i).getPname());
-                ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_company.setText(homeDataList.getData().getAllList().get(i).getDname());
-                ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_address.setText(homeDataList.getData().getAllList().get(i).getAreaAddress());
-                ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_update_time.setText(TimeUtils.getStringDate_start(homeDataList.getData().getAllList().get(i).getModifyTime()));
+                ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_schedule.setText(allListBean.get(i).getProgress());
+                ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_explain.setText(allListBean.get(i).getInspect() == 1 ? "飞检"
+                        : allListBean.get(i).getInspect() == 2 ? "神秘顾客"
+                        : allListBean.get(i).getInspect() == 3 ? "新店验收" : "飞检");
+                ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_times.setText("[" + TimeUtils.getStringDate_start(allListBean.get(i).getStartTime()) + ","
+                        + TimeUtils.getStringDate_end(allListBean.get(i).getEndTime()) + "]");
+                ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_code.setText(allListBean.get(i).getCode());
+                ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_name.setText(allListBean.get(i).getPname());
+                ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_company.setText(allListBean.get(i).getDname());
+                ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_address.setText(allListBean.get(i).getAreaAddress());
+                ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_update_time.setText(TimeUtils.getStringDate_start(allListBean.get(i).getModifyTime()));
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_cardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if (adapter_online != null) {
-                            adapter_online.newListClick(homeDataList.getData().getAllList().get(i));
+                            adapter_online.newListClick(allListBean.get(i));
                         }
                     }
                 });
@@ -84,28 +88,30 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     @Override
                     public boolean onLongClick(View view) {
                         if (adapter_online != null) {
-                            adapter_online.newListLongClick(homeDataList.getData().getAllList().get(i));
+                            adapter_online.newListLongClick(allListBean.get(i));
                         }
                         return false;
                     }
                 });
             }
             if (viewHolder instanceof completeListHaveBeenCancelViewHolder) {
-                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_schedule.setText(homeDataList.getData().getAllList().get(i).getProgress());
-                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_explain.setText(homeDataList.getData().getAllList().get(i).getInspect() == 1 ? "飞检"
-                        : homeDataList.getData().getAllList().get(i).getInspect() == 2 ? "神秘顾客"
-                        : homeDataList.getData().getAllList().get(i).getInspect() == 3 ? "新店验收" : "飞检");
-                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_times.setText("[" + TimeUtils.getStringDate_start(homeDataList.getData().getAllList().get(i).getStartTime()) + "," + TimeUtils.getStringDate_end(homeDataList.getData().getAllList().get(i).getEndTime()) + "]");
-                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_code.setText(homeDataList.getData().getAllList().get(i).getCode());
-                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_name.setText(homeDataList.getData().getAllList().get(i).getPname());
-                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_company.setText(homeDataList.getData().getAllList().get(i).getDname());
-                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_address.setText(homeDataList.getData().getAllList().get(i).getAreaAddress());
-                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_update_time.setText(TimeUtils.getStringDate_start(homeDataList.getData().getAllList().get(i).getModifyTime()));
+                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_schedule.setText(allListBean.get(i).getProgress());
+                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_explain.setText(allListBean.get(i).getInspect() == 1 ? "飞检"
+                        :allListBean.get(i).getInspect() == 2 ? "神秘顾客"
+                        : allListBean.get(i).getInspect() == 3 ? "新店验收" : "飞检");
+                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_times.setText("["
+                        + TimeUtils.getStringDate_start(allListBean.get(i).getStartTime()) + ","
+                        + TimeUtils.getStringDate_end(allListBean.get(i).getEndTime()) + "]");
+                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_code.setText(allListBean.get(i).getCode());
+                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_name.setText(allListBean.get(i).getPname());
+                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_company.setText(allListBean.get(i).getDname());
+                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_address.setText(allListBean.get(i).getAreaAddress());
+                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_update_time.setText(TimeUtils.getStringDate_start(allListBean.get(i).getModifyTime()));
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_cardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if (adapter_online != null) {
-                            adapter_online.completeClick(homeDataList.getData().getAllList().get(i));
+                            adapter_online.completeClick(allListBean.get(i));
                         }
                     }
                 });
@@ -113,7 +119,7 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     @Override
                     public boolean onLongClick(View view) {
                         if (adapter_online != null) {
-                            adapter_online.completeLongClick(homeDataList.getData().getAllList().get(i));
+                            adapter_online.completeLongClick(allListBean.get(i));
                         }
                         return false;
                     }
@@ -121,22 +127,23 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
 
             if (viewHolder instanceof unCompleteListHaveBeenCancelViewHolder) {
-                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_schedule.setText(homeDataList.getData().getAllList().get(i).getProgress());
-                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_explain.setText(homeDataList.getData().getAllList().get(i).getInspect() == 1 ? "飞检"
-                        : homeDataList.getData().getAllList().get(i).getInspect() == 2 ? "神秘顾客"
-                        : homeDataList.getData().getAllList().get(i).getInspect() == 3 ? "新店验收" : "飞检");
-                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_times.setText("[" + TimeUtils.getStringDate_start(homeDataList.getData().getAllList().get(i).getStartTime()) + ","
-                        + TimeUtils.getStringDate_end(homeDataList.getData().getAllList().get(i).getEndTime()) + "]");
-                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_code.setText(homeDataList.getData().getAllList().get(i).getCode());
-                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_name.setText(homeDataList.getData().getAllList().get(i).getPname());
-                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_company.setText(homeDataList.getData().getAllList().get(i).getDname());
-                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_address.setText(homeDataList.getData().getAllList().get(i).getAreaAddress());
-                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_update_time.setText(TimeUtils.getStringDate_start(homeDataList.getData().getAllList().get(i).getModifyTime()));
+                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_schedule.setText(allListBean.get(i).getProgress());
+                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_explain.setText(allListBean.get(i).getInspect() == 1 ? "飞检"
+                        : allListBean.get(i).getInspect() == 2 ? "神秘顾客"
+                        : allListBean.get(i).getInspect() == 3 ? "新店验收" : "飞检");
+                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_times.setText("["
+                        + TimeUtils.getStringDate_start(allListBean.get(i).getStartTime()) + ","
+                        + TimeUtils.getStringDate_end(allListBean.get(i).getEndTime()) + "]");
+                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_code.setText(allListBean.get(i).getCode());
+                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_name.setText(allListBean.get(i).getPname());
+                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_company.setText(allListBean.get(i).getDname());
+                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_address.setText(allListBean.get(i).getAreaAddress());
+                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_update_time.setText(TimeUtils.getStringDate_start(allListBean.get(i).getModifyTime()));
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).uncomplete_cardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if (adapter_online != null) {
-                            adapter_online.unCompleteClick(homeDataList.getData().getAllList().get(i));
+                            adapter_online.unCompleteClick(allListBean.get(i));
                         }
                     }
                 });
@@ -144,7 +151,7 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     @Override
                     public boolean onLongClick(View view) {
                         if (adapter_online != null) {
-                            adapter_online.unCompleteLongClick(homeDataList.getData().getAllList().get(i));
+                            adapter_online.unCompleteLongClick(allListBean.get(i));
                         }
                         return false;
                     }
@@ -152,21 +159,22 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
 
             if (viewHolder instanceof unDownLoadListHaveBeenCancelViewHolder) {
-                ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_schedule.setText(homeDataList.getData().getAllList().get(i).getProgress());
-                ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_explain.setText(homeDataList.getData().getAllList().get(i).getInspect() == 1 ? "飞检"
-                        : homeDataList.getData().getAllList().get(i).getInspect() == 2 ? "神秘顾客"
-                        : homeDataList.getData().getAllList().get(i).getInspect() == 3 ? "新店验收" : "飞检");
-                ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_times.setText("[" + TimeUtils.getStringDate_start(homeDataList.getData().getAllList().get(i).getStartTime()) + ","
-                        + TimeUtils.getStringDate_end(homeDataList.getData().getAllList().get(i).getEndTime()) + "]");
-                ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_code.setText(homeDataList.getData().getAllList().get(i).getCode());
-                ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_name.setText(homeDataList.getData().getAllList().get(i).getPname());
-                ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_company.setText(homeDataList.getData().getAllList().get(i).getDname());
-                ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_address.setText(homeDataList.getData().getAllList().get(i).getAreaAddress());
+                ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_schedule.setText(allListBean.get(i).getProgress());
+                ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_explain.setText(allListBean.get(i).getInspect() == 1 ? "飞检"
+                        : allListBean.get(i).getInspect() == 2 ? "神秘顾客"
+                        : allListBean.get(i).getInspect() == 3 ? "新店验收" : "飞检");
+                ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_times.setText("["
+                        + TimeUtils.getStringDate_start(allListBean.get(i).getStartTime()) + ","
+                        + TimeUtils.getStringDate_end(allListBean.get(i).getEndTime()) + "]");
+                ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_code.setText(allListBean.get(i).getCode());
+                ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_name.setText(allListBean.get(i).getPname());
+                ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_company.setText(allListBean.get(i).getDname());
+                ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_address.setText(allListBean.get(i).getAreaAddress());
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_cardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if (adapter_online != null) {
-                            adapter_online.unDownLoadClick(homeDataList.getData().getAllList().get(i));
+                            adapter_online.unDownLoadClick(allListBean.get(i));
                         }
                     }
                 });
@@ -174,7 +182,7 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     @Override
                     public boolean onLongClick(View view) {
                         if (adapter_online != null) {
-                            adapter_online.unDownLoadLongClick(homeDataList.getData().getAllList().get(i));
+                            adapter_online.unDownLoadLongClick(allListBean.get(i));
                         }
                         return false;
                     }
@@ -189,102 +197,49 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemCount() {
-        if (homeDataList != null) {
-            if (type == 0) {
-                return homeDataList.getData().getNewList().size();
-            } else if (type == 1) {
-                return homeDataList.getData().getCompleteList().size();
-            } else if (type == 2) {
-                return homeDataList.getData().getUnCompleteList().size();
-            } else if (type == 3) {
-                return homeDataList.getData().getAllList().size();
-            } else {
-                return 0;
-            }
+        if (allListBean != null) {
+            return  allListBean.size();
         }
         return 0;
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (type == 0) {
-            if (homeDataList.getData().getAllList().get(position).getCompleteStatus() == 1 && homeDataList.getData().getAllList().get(position).getDownloadTime() != -1) {
+        if (type == 0) { //新项目
+            if (allListBean.get(position).getCompleteStatus() == 1 && allListBean.get(position).getDownloadTime() != -1) {
                 return newProject;
-            } else if (homeDataList.getData().getAllList().get(position).getCompleteStatus() == 1 && homeDataList.getData().getAllList().get(position).getDownloadTime() == -1) {
+            } else if (allListBean.get(position).getCompleteStatus() == 1 && allListBean.get(position).getDownloadTime() == -1) {
                 return undownload;
             }
         }
 
-        if (type == 1) {
-            if (homeDataList.getData().getAllList().get(position).getCompleteStatus() == 3) {
+        if (type == 1) {  //已完成
+            if (allListBean.get(position).getCompleteStatus() == 3) {
                 return complete;
             }
         }
 
-        if (type == 2) {
-            if (homeDataList.getData().getAllList().get(position).getCompleteStatus() == 2) {
+        if (type == 2) {  //未完成
+            if (allListBean.get(position).getCompleteStatus() == 2) {
                 return uncomplete;
             }
         }
 
-        if (type == 3) {
-            if (homeDataList.getData().getAllList().get(position).getCompleteStatus() == 1 && homeDataList.getData().getAllList().get(position).getDownloadTime() != -1) {//新项目
+        if (type == 3) {  //全部
+            if (allListBean.get(position).getCompleteStatus() == 1 && allListBean.get(position).getDownloadTime() != -1) {//新项目
                 return newProject;
             }
-            if (homeDataList.getData().getAllList().get(position).getCompleteStatus() == 2) {  //未完成
+            if (allListBean.get(position).getCompleteStatus() == 2) {  //未完成
                 return uncomplete;
             }
-            if (homeDataList.getData().getAllList().get(position).getCompleteStatus() == 3) {  //完成
+            if (allListBean.get(position).getCompleteStatus() == 3) {  //完成
                 return complete;
             }
-            if (homeDataList.getData().getAllList().get(position).getCompleteStatus() == 1 && homeDataList.getData().getAllList().get(position).getDownloadTime() == -1) { //未下载
+            if (allListBean.get(position).getCompleteStatus() == 1 && allListBean.get(position).getDownloadTime() == -1) { //未下载
                 return undownload;
             }
         }
-//        if (type == 0) {  //新项目
-//            if (homeDataList.getData().getAllList().get(position).getCompleteStatus() == 1 && homeDataList.getData().getAllList().get(position).getDownloadTime() != -1) {
-//                return newProject;
-//            } else if (homeDataList.getData().getAllList().get(position).getCompleteStatus() == 1 && homeDataList.getData().getAllList().get(position).getDownloadTime() == -1) {
-//                return undownload;
-//            } else {
-//                return unknow;
-//            }
-//          /* if( homeDataList.getData().getNewList().get(position).getCompleteStatus() ==1 && homeDataList.getData().getNewList().get(position).getDownloadTime() != -1){
-//                return newProject;
-//            } else if (homeDataList.getData().getNewList().get(position).getCompleteStatus() ==1 && homeDataList.getData().getNewList().get(position).getDownloadTime() == -1){
-//               return undownload;
-//           } else {
-//               return newProject;
-//           }*/
-//        } else if (type == 1) {  //已完成
-//            if (homeDataList.getData().getAllList().get(position).getCompleteStatus() == 3) {
-//                return complete;
-//            } else {
-//                return unknow;
-//            }
-//        } else if (type == 2) { //未完成
-//            if (homeDataList.getData().getAllList().get(position).getCompleteStatus() == 2) {
-//                return uncomplete;
-//            } else {
-//                return unknow;
-//            }
-//
-//        } else if (type == 3) { //全部
-//            if (homeDataList.getData().getAllList().get(position).getCompleteStatus() == 1 && homeDataList.getData().getAllList().get(position).getDownloadTime() != -1) {//新项目
-//                return newProject;
-//            } else if (homeDataList.getData().getAllList().get(position).getCompleteStatus() == 2) {  //未完成
-//                return uncomplete;
-//            } else if (homeDataList.getData().getAllList().get(position).getCompleteStatus() == 3) {  //完成
-//                return complete;
-//            } else if (homeDataList.getData().getAllList().get(position).getCompleteStatus() == 1 && homeDataList.getData().getAllList().get(position).getDownloadTime() == -1) { //未下载
-//                return undownload;
-//            } else {
-//                return unknow;
-//            }
-//        } else {
-//            return unknow;
-//        }
-        return newProject;
+        return unKnow;
     }
 
     public class newListHaveBeenCancelViewHolder extends RecyclerView.ViewHolder {
@@ -386,29 +341,6 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             undownload_tv_project_name = itemView.findViewById(R.id.undownload_tv_project_name);
             undownload_tv_project_company = itemView.findViewById(R.id.undownload_tv_project_company);
             undownload_tv_project_address = itemView.findViewById(R.id.undownload_tv_project_address);
-        }
-    }
-
-    public class EmpViewHolder extends RecyclerView.ViewHolder {
-       /* private CardView undownload_cardView;
-        private TextView undownload_tv_schedule;
-        private TextView undownload_tv_explain;
-        private TextView undownload_tv_project_times;
-        private TextView undownload_tv_project_code;
-        private TextView undownload_tv_project_name;
-        private TextView undownload_tv_project_company;
-        private TextView undownload_tv_project_address;*/
-
-        public EmpViewHolder(final View itemView) {
-            super(itemView);
-           /* undownload_cardView = itemView.findViewById(R.id.undownload_cardView);
-            undownload_tv_schedule = itemView.findViewById(R.id.undownload_tv_schedule);
-            undownload_tv_explain = itemView.findViewById(R.id.undownload_tv_explain);
-            undownload_tv_project_times = itemView.findViewById(R.id.undownload_tv_project_times);
-            undownload_tv_project_code = itemView.findViewById(R.id.undownload_tv_project_code);
-            undownload_tv_project_name = itemView.findViewById(R.id.undownload_tv_project_name);
-            undownload_tv_project_company = itemView.findViewById(R.id.undownload_tv_project_company);
-            undownload_tv_project_address = itemView.findViewById(R.id.undownload_tv_project_address);*/
         }
     }
 

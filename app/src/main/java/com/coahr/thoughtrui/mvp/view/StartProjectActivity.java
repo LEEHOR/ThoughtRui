@@ -132,54 +132,58 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     @Override
     public void getMainDataSuccess(QuestionBean questionBean) {
         final List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "id=?", Constants.DbProjectId);
-        final List<QuestionBean.DataBean.QuestionListBean> questionList = questionBean.getData().getQuestionList();
-        if (questionList != null && questionList.size() > 0) {
-            for (int i = 0; i < questionList.size(); i++) {
-                List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectBy_Where(SubjectsDB.class, new String[]{"ht_id"}, "ht_id=?", questionList.get(i).getId());
-                if (subjectsDBS != null && subjectsDBS.size() > 0) {
-                    for (int j = 0; j < subjectsDBS.size(); j++) {
+        if (projectsDBS !=null && projectsDBS.size()>0) {
+            final List<QuestionBean.DataBean.QuestionListBean> questionList = questionBean.getData().getQuestionList();
+            if (questionList != null && questionList.size() > 0) {
+                for (int i = 0; i < questionList.size(); i++) {
+                    List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectBy_Where(SubjectsDB.class, new String[]{"ht_id"}, "ht_id=?", questionList.get(i).getId());
+                    if (subjectsDBS != null && subjectsDBS.size() > 0) {
+                        for (int j = 0; j < subjectsDBS.size(); j++) {
 
-                    }
-                } else {
-                    SubjectsDB subjectsDB = new SubjectsDB();
-                    subjectsDB.setTitle(questionList.get(i).getTitle());
-                    subjectsDB.setHt_id(questionList.get(i).getId());
-                    subjectsDB.setType(questionList.get(i).getType());
-                    subjectsDB.setOptions(questionList.get(i).getOptions());
-                    subjectsDB.setDescription(questionList.get(i).getDescribes());
-                    subjectsDB.setPhotoStatus(questionList.get(i).getPhotoStatus());
-                    subjectsDB.setDescribeStatus(questionList.get(i).getDescribeStatus());
-                    subjectsDB.setCensor(questionList.get(i).getCensor());
-                    subjectsDB.setIsComplete(0);
-                    subjectsDB.setDh("0");
-                    subjectsDB.setNumber(i+1);
-                    subjectsDB.setsUploadStatus(0);
-                    if (questionList.get(i).getQuota1() != null) {
-                        subjectsDB.setQuota1(questionList.get(i).getQuota1());
-                        if (questionList.get(i).getQuota2() != null) {
-                            subjectsDB.setQuota2(questionList.get(i).getQuota2());
-                            if (questionList.get(i).getQuota3() != null) {
-                                subjectsDB.setQuota3(questionList.get(i).getQuota3());
+                        }
+                    } else {
+                        SubjectsDB subjectsDB = new SubjectsDB();
+                        subjectsDB.setTitle(questionList.get(i).getTitle());
+                        subjectsDB.setHt_id(questionList.get(i).getId());
+                        subjectsDB.setType(questionList.get(i).getType());
+                        subjectsDB.setOptions(questionList.get(i).getOptions());
+                        subjectsDB.setDescription(questionList.get(i).getDescribes());
+                        subjectsDB.setPhotoStatus(questionList.get(i).getPhotoStatus());
+                        subjectsDB.setDescribeStatus(questionList.get(i).getDescribeStatus());
+                        subjectsDB.setCensor(questionList.get(i).getCensor());
+                        subjectsDB.setIsComplete(0);
+                        subjectsDB.setDh("0");
+                        subjectsDB.setNumber(i + 1);
+                        subjectsDB.setsUploadStatus(0);
+                        if (questionList.get(i).getQuota1() != null) {
+                            subjectsDB.setQuota1(questionList.get(i).getQuota1());
+                            if (questionList.get(i).getQuota2() != null) {
+                                subjectsDB.setQuota2(questionList.get(i).getQuota2());
+                                if (questionList.get(i).getQuota3() != null) {
+                                    subjectsDB.setQuota3(questionList.get(i).getQuota3());
+                                } else {
+                                    subjectsDB.setQuota3(null);
+                                }
                             } else {
+                                subjectsDB.setQuota2(null);
                                 subjectsDB.setQuota3(null);
                             }
+
                         } else {
+                            subjectsDB.setQuota1(null);
                             subjectsDB.setQuota2(null);
                             subjectsDB.setQuota3(null);
                         }
-
-                    } else {
-                        subjectsDB.setQuota1(null);
-                        subjectsDB.setQuota2(null);
-                        subjectsDB.setQuota3(null);
+                        subjectsDB.setProjectsDB(projectsDBS.get(0));
+                        subjectsDB.save();
                     }
-                    subjectsDB.setProjectsDB(projectsDBS.get(0));
-                    subjectsDB.save();
                 }
-            }
 
+            }
+            p.getOfflineDate(Constants.DbProjectId, Constants.ht_ProjectId);
+        }else {
+            ToastUtils.showLong("当前项目不存在");
         }
-        p.getOfflineDate(Constants.DbProjectId, Constants.ht_ProjectId);
     }
 
     @Override
@@ -199,7 +203,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
 
     @Override
     public void getOfflineFailure(int failure) {
-        ToastUtils.showLong("没有本地题目");
+        ToastUtils.showLong("当前题目不存在");
     }
 
     private void getData() {
