@@ -54,7 +54,7 @@ public class ReviewInfoList extends BaseFragment<ReviewInfoList_C.Presenter> imp
     private String sessionId;
     private int statues;
     private List<CensorInfoList.DataBean.ListBean> list;
-    private List<String> targetList=new ArrayList<>();
+    private ArrayList<String> targetList=new ArrayList<>();
 
     public static ReviewInfoList newInstance(String projectId,String sessionId,int statues) {
         ReviewInfoList infoList=new ReviewInfoList();
@@ -106,8 +106,8 @@ public class ReviewInfoList extends BaseFragment<ReviewInfoList_C.Presenter> imp
                     for (int i = 0; i <list.size() ; i++) {
                         targetList.add(list.get(i).getId());
                     }
-                    start(ReviewStartPager.newInstance());
-                    EventBus.getDefault().postSticky(new Evenbus_Review(projectId,position,targetList));
+                    start(ReviewStartPager.newInstance(targetList,position,projectId));
+                  //  EventBus.getDefault().postSticky(new Evenbus_Review(projectId,position,targetList));
                 }
             }
         });

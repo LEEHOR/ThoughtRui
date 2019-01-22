@@ -137,7 +137,7 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
     private boolean isRecorder;
     private String audioPath;
     private boolean isHaveRecorder;
-    private double type;
+    private int type=1;
     private String audioName;
     private SubjectsDB subjectsDB_now;
     public static ReViewStart newInstance(int position, String DbProjectId, String ht_ProjectId, int countSize,  String ht_id) {
@@ -371,34 +371,39 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
     @Override
     public void DeleteImageSuccess(String Massage) {
         ToastUtils.showLong(Massage);
-        p.getImage(ht_projectId, _mActivity, number, ht_id);
+        _mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                p.getImage(ht_projectId, _mActivity, number, ht_id);
+            }
+        });
     }
 
     @Override
     public void DeleteImageFailure(String Massage) {
         p.getAnswer(ht_projectId,_mActivity,number,ht_id);
-        ToastUtils.showLong("答案保存成功");
+        ToastUtils.showLong("图片删除失败");
     }
 
     @Override
     public void saveAnswersSuccess() {
-        ToastUtils.showLong("答案保存失败");
+        ToastUtils.showLong("答案保存成功");
     }
 
     @Override
     public void saveAnswersFailure() {
+
+        ToastUtils.showShort("答案保存失败");
+    }
+
+    @Override
+    public void SaveImagesSuccess() {
         _mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 p.getImage(ht_projectId,_mActivity,number,ht_id);
             }
         });
-        ToastUtils.showShort("图片保存成功");
-    }
-
-    @Override
-    public void SaveImagesSuccess() {
-
         ToastUtils.showShort("图片保存成功");
     }
 

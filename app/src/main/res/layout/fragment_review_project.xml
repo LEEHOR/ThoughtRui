@@ -35,7 +35,6 @@
                 android:gravity="top"
                 android:textSize="@dimen/dp_14"
                 android:textColor="#333333"
-                android:text="hahahahahhhhahahahaahahahahahahahahahahahhahahahahahahaahahah"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             <RadioGroup

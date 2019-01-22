@@ -34,9 +34,9 @@ public class ReViewStart_M extends BaseModel<ReViewStart_C.Presenter> implements
         List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectByTogether_Where(SubjectsDB.class, "ht_id=?", ht_id);
         if (subjectsDBS != null && subjectsDBS.size() > 0) {
             KLog.d("题目Id", subjectsDBS.get(0).getHt_id());
-            getImage(ht_ProjectId,activity,number,ht_id);
-            getAnswer(ht_ProjectId,activity,number,ht_id);
-            getAudio(ht_ProjectId,activity,number,ht_id);
+            getImage(ht_ProjectId, activity, number, ht_id);
+            getAnswer(ht_ProjectId, activity, number, ht_id);
+            getAudio(ht_ProjectId, activity, number, ht_id);
             getPresenter().getSubjectSuccess(subjectsDBS.get(0));
         } else {
             getPresenter().getSubjectFailure("0");
@@ -47,27 +47,22 @@ public class ReViewStart_M extends BaseModel<ReViewStart_C.Presenter> implements
 
     @Override
     public void getImage(final String ht_ProjectId, Activity activity, final int number, final String ht_id) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                List<String> picturesList = FileIOUtils.getPictures(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number+"_"+ht_id);
-                if (picturesList != null && picturesList.size()>0) {
-                    if (getPresenter() != null) {
-                        getPresenter().getImageSuccess(picturesList);
-                    }
-                } else {
-                    if (getPresenter() != null) {
-                        getPresenter().getImageFailure();
-                    }
-                }
+        List<String> picturesList = FileIOUtils.getPictures(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id);
+        if (picturesList != null && picturesList.size() > 0) {
+            if (getPresenter() != null) {
+                getPresenter().getImageSuccess(picturesList);
             }
-        }).start();
+        } else {
+            if (getPresenter() != null) {
+                getPresenter().getImageFailure();
+            }
+        }
 
     }
 
     @Override
     public void getAnswer(String ht_ProjectId, Activity activity, int number, String ht_id) {
-        String s = SaveOrGetAnswers.readFromFile(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number+"_"+ht_id+"/"+"AnswerAndRemark.txt" );
+        String s = SaveOrGetAnswers.readFromFile(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id + "/" + "AnswerAndRemark.txt");
         if (s != null) {
             getPresenter().getAnswerSuccess(s);
         } else {
@@ -88,7 +83,7 @@ public class ReViewStart_M extends BaseModel<ReViewStart_C.Presenter> implements
 
     @Override
     public void saveAnswers(String answers, String remark, String ht_ProjectId, int number, String ht_id) {
-        boolean b = SaveOrGetAnswers.saveToFile(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number+"_"+ht_id + "/", "AnswerAndRemark.txt","1答案:"+answers + "&2备注:"+remark, false);
+        boolean b = SaveOrGetAnswers.saveToFile(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id + "/", "AnswerAndRemark.txt", "1答案:" + answers + "&2备注:" + remark, false);
         if (b) {
             getPresenter().saveAnswersSuccess();
         } else {
@@ -101,9 +96,14 @@ public class ReViewStart_M extends BaseModel<ReViewStart_C.Presenter> implements
         new Thread(new Runnable() {
             @Override
             public void run() {
-                for (int i = 0; i <mediaBeanList.size() ; i++) {
+                for (int i = 0; i < mediaBeanList.size(); i++) {
                     String originalPath = mediaBeanList.get(i).getOriginalPath();
-                    FileIOUtils.copyFile(originalPath, Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number+"_"+ht_id + "/", FileIOUtils.getE(originalPath, "/"));
+                    boolean b = FileIOUtils.copyFile(originalPath, Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id + "/", FileIOUtils.getE(originalPath, "/"));
+                    if (b) {
+                        getPresenter().SaveImagesSuccess();
+                    } else {
+                        getPresenter().SaveImagesFailure();
+                    }
                 }
             }
         }).start();
@@ -111,7 +111,7 @@ public class ReViewStart_M extends BaseModel<ReViewStart_C.Presenter> implements
 
     @Override
     public void getAudio(String ht_ProjectId, Activity activity, int number, String ht_id) {
-        List<String> audiosList = FileIOUtils.getAudios(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number+"_"+ht_id);
+        List<String> audiosList = FileIOUtils.getAudios(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id);
         if (audiosList != null) {
             getPresenter().getAudioSuccess(audiosList);
         } else {

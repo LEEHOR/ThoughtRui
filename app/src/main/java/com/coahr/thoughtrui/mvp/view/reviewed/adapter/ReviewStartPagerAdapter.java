@@ -29,7 +29,7 @@ public class ReviewStartPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int i) {
-        return ReViewStart.newInstance(i,db_projectId,stringList.get(i),size,ht_projectId);
+        return ReViewStart.newInstance(i,db_projectId,ht_projectId,size,stringList.get(i));
     }
 
     @Override

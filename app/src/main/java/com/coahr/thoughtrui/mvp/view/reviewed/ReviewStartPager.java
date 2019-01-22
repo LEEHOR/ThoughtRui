@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
+import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.ToastUtils;
@@ -42,13 +43,17 @@ public class ReviewStartPager extends BaseFragment {
     @BindView(R.id.review_tittle)
     MyTittleBar myTittleBar;
     private ReviewStartPagerAdapter adapter;
-    private List<String> pagerList = new ArrayList<>();
-    private int position_s;
     private String ht_projectId;
     private static final int MSG_1 = 1;
-
-    public static ReviewStartPager newInstance() {
+    private ArrayList<String> ht_id_list;
+    private int position;
+    public static ReviewStartPager newInstance(ArrayList<String> ht_id_List,int position,String ht_projectId) {
         ReviewStartPager reviewStartPager = new ReviewStartPager();
+        Bundle bundle=new Bundle();
+        bundle.putStringArrayList("ht_id_list",ht_id_List);
+        bundle.putInt("position",position);
+        bundle.putString("ht_projectId",ht_projectId);
+        reviewStartPager.setArguments(bundle);
         return reviewStartPager;
     }
 
@@ -92,7 +97,12 @@ public class ReviewStartPager extends BaseFragment {
 
     @Override
     public void initData() {
-
+        if (getArguments() != null) {
+            ht_id_list = getArguments().getStringArrayList("ht_id_list");
+            position = getArguments().getInt("position");
+            ht_projectId= getArguments().getString("ht_projectId");
+            setViewPager();
+        }
     }
 
     /**
@@ -132,23 +142,20 @@ public class ReviewStartPager extends BaseFragment {
      */
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void EventInfoList(Evenbus_Review evenbus_review) {
-        if (evenbus_review != null) {
-            List<String> list = evenbus_review.getList();
-            if (list != null && list.size() > 0) {
-                this.pagerList=list;
-                this.position_s = evenbus_review.getPosition();
-                this.ht_projectId = evenbus_review.getProjectId();
-                mHandler.sendEmptyMessage(MSG_1);
-            }
-        }
+
     }
 
     private void setViewPager() {
         List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", ht_projectId);
         if (projectsDBS != null && projectsDBS.size() > 0) {
-            adapter = new ReviewStartPagerAdapter(getChildFragmentManager(), pagerList, pagerList.size(), String.valueOf(projectsDBS.get(0).getId()), ht_projectId);
-            review_start_viewpager.setAdapter(adapter);
-            review_start_viewpager.setCurrentItem(position_s);
+            List<SubjectsDB> subjectsDBList = projectsDBS.get(0).getSubjectsDBList();
+            if (subjectsDBList != null && subjectsDBList.size()>0) {
+                adapter = new ReviewStartPagerAdapter(getChildFragmentManager(), ht_id_list, ht_id_list.size(), String.valueOf(projectsDBS.get(0).getId()), ht_projectId);
+                review_start_viewpager.setAdapter(adapter);
+                review_start_viewpager.setCurrentItem(position);
+            } else {
+               ToastUtils.showLong("当前项目下没有题目");
+            }
         }
 
     }
