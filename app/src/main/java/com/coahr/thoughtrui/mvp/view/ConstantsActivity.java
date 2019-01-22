@@ -9,9 +9,11 @@ import com.coahr.thoughtrui.mvp.Base.BaseSupportActivity;
 import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_LoginSuccess;
 import com.coahr.thoughtrui.mvp.view.home.ProjectDetailFragment;
 import com.coahr.thoughtrui.mvp.view.mydata.ChangePasswordFragment;
+import com.coahr.thoughtrui.mvp.view.mydata.Fragment_Feedback;
 import com.coahr.thoughtrui.mvp.view.mydata.LoginFragment;
 import com.coahr.thoughtrui.mvp.view.SubjectList.Fragment_Topics;
 import com.coahr.thoughtrui.mvp.view.projectAnnex.FragmentAnnexViewPager;
+import com.coahr.thoughtrui.mvp.view.reviewed.ReviewInfoList;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -39,14 +41,20 @@ public class ConstantsActivity extends BaseSupportActivity {
 //            case Constants.startProjectFragment: //开始访问页
 //                loadRootFragment(R.id.Constants_Fragment, StartProjectFragment.newInstance());
 //                break;
-            case Constants.fragment_topics:
+            case Constants.fragment_topics: //题目列表
                 loadRootFragment(R.id.Constants_Fragment,Fragment_Topics.newInstance());
                 break;
-            case Constants.fragment_ChangePass:
+            case Constants.fragment_ChangePass://修改密码
                 loadRootFragment(R.id.Constants_Fragment,ChangePasswordFragment.newInstance());
                 break;
-            case Constants.fragment_AnnexViewPager:
+            case Constants.fragment_AnnexViewPager: //项目附件
                 loadRootFragment(R.id.Constants_Fragment,FragmentAnnexViewPager.newInstance());
+                break;
+            case Constants.fragment_review_list:  //审核列表
+                loadRootFragment(R.id.Constants_Fragment,ReviewInfoList.newInstance(getIntent().getStringExtra("projectId"),getIntent().getStringExtra("sessionId"),getIntent().getIntExtra("type",0)));
+                break;
+            case Constants.fragment_feedback://帮助与反馈
+                loadRootFragment(R.id.Constants_Fragment,Fragment_Feedback.newInstance());
                 break;
         }
     }

@@ -6,6 +6,7 @@ import com.coahr.thoughtrui.mvp.model.Bean.AttendanceHistory;
 import com.coahr.thoughtrui.mvp.model.Bean.CensorBean;
 import com.coahr.thoughtrui.mvp.model.Bean.CensorInfoList;
 import com.coahr.thoughtrui.mvp.model.Bean.ChangePassWord;
+import com.coahr.thoughtrui.mvp.model.Bean.FeedBack;
 import com.coahr.thoughtrui.mvp.model.Bean.HomeDataList;
 import com.coahr.thoughtrui.mvp.model.Bean.LoginBean;
 import com.coahr.thoughtrui.mvp.model.Bean.PushAttendanceCard;
@@ -146,6 +147,13 @@ public interface ApiService {
      */
     @FormUrlEncoded
     @POST(ApiContact.uploadDate)
-   // @Headers("Content-Type:application/x-www-form-urlencoded ;charset=utf-8")
     Call<UpLoadCallBack>upLoadCallBack (@FieldMap Map<String,Object> para);
+
+
+    /**
+     * 意见反馈
+     */
+    @FormUrlEncoded
+    @POST(ApiContact.FeedBack)
+    Call<FeedBack>feedback (@FieldMap Map<String,Object> para);
 }

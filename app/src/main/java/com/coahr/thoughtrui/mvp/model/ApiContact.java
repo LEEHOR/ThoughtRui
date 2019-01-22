@@ -42,5 +42,7 @@ public class ApiContact {
     public static final String getChangePassWord="app/update/password.htm";
     //上传回调
     public static final String uploadDate="app/answer/callback.htm";
+    //意见反馈
+    public static final String FeedBack="app/opinion/add.htm";
 
 }

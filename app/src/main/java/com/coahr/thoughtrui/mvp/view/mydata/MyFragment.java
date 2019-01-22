@@ -100,10 +100,11 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
         tv_quit_account.setOnClickListener(this);
         getAudioPermission();
     }
+
     @Override
     public void initData() {
-        featchProjectInfo(tv_dxz,tv_dsc,tv_dks,tv_wwc);
-        if (PreferenceUtils.contains(BaseApplication.mContext,Constants.user_key)) {
+        featchProjectInfo(tv_dxz, tv_dsc, tv_dks, tv_wwc);
+        if (PreferenceUtils.contains(BaseApplication.mContext, Constants.user_key)) {
             String user_name = PreferenceUtils.getPrefString(_mActivity, Constants.user_key, "");
             tv_user_name.setText(user_name);
         }
@@ -120,14 +121,14 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
             case R.id.iv_qchc_back: //清除缓存
                 break;
             case R.id.iv_xgmm_back: //修改密码
-                goOtherPage(ConstantsActivity.class,Constants.fragment_myFragment,Constants.fragment_ChangePass);
+                goOtherPage(ConstantsActivity.class, Constants.fragment_myFragment, Constants.fragment_ChangePass);
                 break;
             case R.id.iv_bzfk_back: //帮助与反馈
-
+                goOtherPage(ConstantsActivity.class, Constants.fragment_myFragment, Constants.fragment_feedback);
                 break;
             case R.id.tv_quit_account:  //退出登录
-               // quitAccount();
-                if (haslogin()){
+                // quitAccount();
+                if (haslogin()) {
                     showDialog();
                 } else {
                     ToastUtils.showLong("当前没有账户登录");
@@ -136,14 +137,16 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
         }
     }
 
-    private void goOtherPage(Class c,int from,int to){
-        Intent intent=new Intent(_mActivity,c);
+    private void goOtherPage(Class c, int from, int to) {
+        Intent intent = new Intent(_mActivity, c);
         intent.putExtra("from", from);
         intent.putExtra("to", to);
         startActivity(intent);
     }
+
     /**
      * 获取可用空间/总大小
+     *
      * @return
      */
     public String readSDCard() {
@@ -158,16 +161,17 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
             long blockCount = sf.getBlockCountLong();
             //可用大小
             long availCount = sf.getAvailableBlocksLong();
-            String freeSize = formatDouble(blockSize * blockCount / 1024 / 1024 / 1024-availCount * blockSize / 1024 / 1024 / 1024);
-            String TotalSize = formatDouble( blockSize * blockCount / 1024 / 1024 / 1024 );
-            storageSize = freeSize+ "GB" +"/"+ TotalSize + "GB";
-            return  storageSize;
+            String freeSize = formatDouble(blockSize * blockCount / 1024 / 1024 / 1024 - availCount * blockSize / 1024 / 1024 / 1024);
+            String TotalSize = formatDouble(blockSize * blockCount / 1024 / 1024 / 1024);
+            storageSize = freeSize + "GB" + "/" + TotalSize + "GB";
+            return storageSize;
         }
         return "获取存储大小失败";
     }
 
     /**
      * 保留两位小数
+     *
      * @param d
      * @return
      */
@@ -193,6 +197,7 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
                             String s = readSDCard();
                             tv_cckj.setText(s);
                         }
+
                         @Override
                         public void PermissionFail(List<String> permissions) {
                             tv_cckj.setText("没有读取权限");
@@ -214,28 +219,29 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
 
     /**
      * 获取当前数目
+     *
      * @param star
      * @param download
      * @param upload
      * @param complete
      */
-    public void featchProjectInfo(TextView star,TextView download,TextView upload,TextView complete) {
-        int unLoad=0,unStart=0,unUpload=0,unComplete=0;
+    public void featchProjectInfo(TextView star, TextView download, TextView upload, TextView complete) {
+        int unLoad = 0, unStart = 0, unUpload = 0, unComplete = 0;
         List<UsersDB> usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", Constants.sessionId);
-        if (usersDBS!=null && usersDBS.size()>0){
+        if (usersDBS != null && usersDBS.size() > 0) {
             List<ProjectsDB> projectsDBSList = usersDBS.get(0).getProjectsDBSList();
-            if (projectsDBSList !=null && projectsDBSList.size()>0){
-                for (int i = 0; i <projectsDBSList.size() ; i++) {
-                    if (projectsDBSList.get(i).getDownloadTime()== -1){
+            if (projectsDBSList != null && projectsDBSList.size() > 0) {
+                for (int i = 0; i < projectsDBSList.size(); i++) {
+                    if (projectsDBSList.get(i).getDownloadTime() == -1) {
                         unLoad++;
                     }
-                    if (projectsDBSList.get(i).getpUploadStatus()==0){
+                    if (projectsDBSList.get(i).getpUploadStatus() == 0) {
                         unUpload++;
                     }
-                    if (projectsDBSList.get(i).getIsComplete()==0){
+                    if (projectsDBSList.get(i).getIsComplete() == 0) {
                         unComplete++;
                     }
-                    if (projectsDBSList.get(i).getSubjectsDBList()==null ){
+                    if (projectsDBSList.get(i).getSubjectsDBList() == null) {
                         unStart++;
                     }
                 }
@@ -244,35 +250,39 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
             upload.setText(String.valueOf(unUpload));
             complete.setText(String.valueOf(unComplete));
             star.setText(String.valueOf(unStart));
-            KLog.d("onResume",unLoad,unStart,unUpload,unComplete);
+            KLog.d("onResume", unLoad, unStart, unUpload, unComplete);
         }
     }
 
     /**
      * 退出登录
      */
-    private  void  quitAccount(){
-
-            Constants.wan_ka=null;
-            Constants.zao_ka=null;
-            Constants.DbProjectId=null;
-            Constants.ht_ProjectId=null;
-            Constants.user_name="";
-            Constants.sessionId="";
-            PreferenceUtils.remove(BaseApplication.mContext,Constants.user_key);
-            PreferenceUtils.remove(BaseApplication.mContext,Constants.sessionId_key);
-            goOtherPage(ConstantsActivity.class,Constants.fragment_myFragment,Constants.loginFragmentCode);
+    private void quitAccount() {
+        Constants.wan_ka = null;
+        Constants.zao_ka = null;
+        Constants.DbProjectId = null;
+        Constants.ht_ProjectId = null;
+        Constants.user_name = "";
+        Constants.sessionId = "";
+        tv_dxz.setText(String.valueOf(0));
+        tv_dsc.setText(String.valueOf(0));
+        tv_wwc.setText(String.valueOf(0));
+        tv_dks.setText(String.valueOf(0));
+        tv_user_name.setText("");
+        PreferenceUtils.remove(BaseApplication.mContext, Constants.user_key);
+        PreferenceUtils.remove(BaseApplication.mContext, Constants.sessionId_key);
+        goOtherPage(ConstantsActivity.class, Constants.fragment_myFragment, Constants.loginFragmentCode);
     }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if (!hidden){
-            KLog.d("onResume","我的页面");
-            if (tv_dxz!=null &&tv_dsc!=null &&tv_dks!=null && tv_wwc!=null){
-                featchProjectInfo(tv_dxz,tv_dsc,tv_dks,tv_wwc);
+        if (!hidden) {
+            KLog.d("onResume", "我的页面");
+            if (tv_dxz != null && tv_dsc != null && tv_dks != null && tv_wwc != null) {
+                featchProjectInfo(tv_dxz, tv_dsc, tv_dks, tv_wwc);
             }
-            if (PreferenceUtils.contains(BaseApplication.mContext,Constants.user_key)) {
+            if (PreferenceUtils.contains(BaseApplication.mContext, Constants.user_key)) {
                 String user_name = PreferenceUtils.getPrefString(_mActivity, Constants.user_key, "");
                 tv_user_name.setText(user_name);
             }
@@ -282,7 +292,7 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
     /**
      * 是否退出登录
      */
-    private void showDialog(){
+    private void showDialog() {
         new MaterialDialog.Builder(_mActivity)
                 .title("提示")
                 .content("是否退出登录")

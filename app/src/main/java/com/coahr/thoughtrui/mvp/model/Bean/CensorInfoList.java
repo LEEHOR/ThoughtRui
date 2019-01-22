@@ -1,5 +1,6 @@
 package com.coahr.thoughtrui.mvp.model.Bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -55,7 +56,7 @@ public class CensorInfoList {
             this.list = list;
         }
 
-        public static class ListBean {
+        public static class ListBean  {
             /**
              * id : 4654654
              * name : 王五

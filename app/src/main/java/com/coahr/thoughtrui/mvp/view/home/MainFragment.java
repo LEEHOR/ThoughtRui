@@ -34,11 +34,13 @@ import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.MyMainFragmentC;
 import com.coahr.thoughtrui.mvp.model.Bean.Event_Main;
 import com.coahr.thoughtrui.mvp.model.Bean.HomeDataList;
+import com.coahr.thoughtrui.mvp.model.Bean.LoginBean;
 import com.coahr.thoughtrui.mvp.presenter.MyMainFragmentP;
 import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
 import com.coahr.thoughtrui.mvp.view.MainActivity;
 import com.coahr.thoughtrui.mvp.view.home.adapter.MainFragmentViewPageAdapter;
 import com.socks.library.KLog;
+import com.taobao.sophix.SophixManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -46,6 +48,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.litepal.crud.DataSupport;
 import org.litepal.crud.async.FindMultiExecutor;
 import org.litepal.crud.callback.FindMultiCallback;
+import org.litepal.crud.callback.UpdateOrDeleteCallback;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -88,6 +91,7 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
     private List<String> db_list;
     private static final int MSG_1 = 1;
     private static final int MSG_2 = 2;
+    private static final int MSG_3=3;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -99,6 +103,9 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
                 case MSG_2:
                     String obj = (String) msg.obj;
                     deleteByDb(obj);
+                    break;
+                case MSG_3:
+                    setPager();
                     break;
             }
         }
@@ -144,7 +151,7 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
 
     @Override
     public void initData() {
-        getLocationPermission();
+     //   getLocationPermission();
         //当前使用用户
         usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", Constants.sessionId);
         KLog.d("sessionId", Constants.sessionId, sessionId);
@@ -192,36 +199,24 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
         //查询数据库有没有当前项目
         List<ProjectsDB> ProjectDBList = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", Pid);
         if (ProjectDBList != null && !ProjectDBList.isEmpty() && ProjectDBList.size() > 0) {
-            ProjectDBList.get(0).setRecord(listBean.getRecord()); //录音方式
-            ProjectDBList.get(0).setInspect(listBean.getInspect()); //检验方式i
-            ProjectDBList.get(0).setPname(listBean.getPname());  //项目名
-            ProjectDBList.get(0).setAddress(listBean.getAreaAddress());
-            ProjectDBList.get(0).setDownloadTime(listBean.getDownloadTime());
-            ProjectDBList.get(0).setcName(listBean.getCname());
-            ProjectDBList.get(0).setCode(listBean.getCode());
-            ProjectDBList.get(0).setGrade(listBean.getGrade());
-            ProjectDBList.get(0).setManager(listBean.getManager());
-            ProjectDBList.get(0).setStartTime(listBean.getStartTime());
-            ProjectDBList.get(0).setCompleteStatus(listBean.getCompleteStatus());
+            ProjectsDB projectsDB=new ProjectsDB();
+            projectsDB.setDownloadTime(listBean.getDownloadTime());
+            projectsDB.setCompleteStatus(listBean.getCompleteStatus());
+            projectsDB.setEndTime(listBean.getEndTime());
+            projectsDB.setProgress(listBean.getProgress());
+            projectsDB.setModifyTime(listBean.getModifyTime());
+            projectsDB.setNotice(listBean.getNotice());
+         projectsDB.updateAsync(ProjectDBList.get(0).getId()).listen(new UpdateOrDeleteCallback() {
+             @Override
+             public void onFinish(int rowsAffected) {
+                 if (rowsAffected > 0) {
+                     updateSize++;
+                     KLog.a("修改了",rowsAffected);
+                     mHandler.sendEmptyMessage(MSG_3);
+                 }
+             }
+         });
 
-            ProjectDBList.get(0).setEndTime(listBean.getEndTime());
-            ProjectDBList.get(0).setdName(listBean.getDname());
-            ProjectDBList.get(0).setLatitude(listBean.getLatitude());
-            ProjectDBList.get(0).setLocation(listBean.getLocation());
-            ProjectDBList.get(0).setLongitude(listBean.getLongitude());
-            ProjectDBList.get(0).setProgress(listBean.getProgress());
-            ProjectDBList.get(0).setManager(listBean.getManager());
-            ProjectDBList.get(0).setGrade(listBean.getGrade());
-            ProjectDBList.get(0).setModifyTime(listBean.getModifyTime());
-            ProjectDBList.get(0).setNotice("xixixixixixixixixixiixixx");
-           /* if (usersDBS != null && usersDBS.size() > 0) {
-                ProjectDBList.get(0).setUser(usersDBS.get(0));
-            }*/
-            //   List<UsersDB> usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", Constants.sessionId);
-            int update = ProjectDBList.get(0).update(ProjectDBList.get(0).getId());
-            if (update > 0) {
-                updateSize++;
-            }
         } else {
             ProjectsDB projectsDB = new ProjectsDB();
             KLog.d("缓存", listBean.getId());
@@ -252,15 +247,8 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
             boolean save = projectsDB.save();
             if (save) {
                 saveSize++;
+                mHandler.sendEmptyMessage(MSG_3);
             }
-        }
-
-        if (totalSize == (updateSize + saveSize)) {
-            KLog.d("缓存", (updateSize + saveSize));
-            ToastUtils.showLong("项目数据缓存完成");
-            setPager();
-            //开启handler
-            mHandler.sendEmptyMessage(MSG_1);
         }
     }
 
@@ -292,36 +280,15 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
         }
     }
 
-    /**
-     * 动态获取定位权限
-     */
-    private void getLocationPermission() {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            RequestPermissionUtils.requestPermission(_mActivity, new OnRequestPermissionListener() {
-                @Override
-                public void PermissionSuccess(List<String> permissions) {
-
-                }
-
-                @Override
-                public void PermissionFail(List<String> permissions) {
-                    Toast.makeText(_mActivity, "获取权限失败", Toast.LENGTH_LONG).show();
-                }
-
-                @Override
-                public void PermissionHave() {
-
-                }
-            }, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
-
-        } else {
-
-        }
-    }
-
     private void setPager() {
-        viewPager.setCurrentItem(0);
+        if (totalSize == (updateSize + saveSize)) {
+            KLog.d("缓存", (updateSize + saveSize));
+            ToastUtils.showLong("项目数据缓存完成");
+            viewPager.setCurrentItem(0);
+            //开启handler
+            mHandler.sendEmptyMessage(MSG_1);
+        }
+
     }
 
     private void getDataList() {
@@ -336,21 +303,23 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
     private void deleteByDb(final String pid) {
         List<ProjectsDB> ProjectDBList = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", pid);
         if (ProjectDBList != null && ProjectDBList.size() > 0) {
-            List<SubjectsDB> subjectsDBList = ProjectDBList.get(0).getSubjectsDBList();
-            new Thread(new Runnable() {
+           // List<SubjectsDB> subjectsDBList = ProjectDBList.get(0).getSubjectsDBList();
+           /* new Thread(new Runnable() {
                 @Override
                 public void run() {
                     FileIOUtils.deleteFile(new File(Constants.SAVE_DIR_PROJECT_Document + pid));
                 }
-            }).start();
-            if (subjectsDBList != null && subjectsDBList.size() > 0) {
+            }).start();*/
+       /*     if (subjectsDBList != null && subjectsDBList.size() > 0) {
                 for (int i = 0; i < subjectsDBList.size(); i++) {
                     int d = DataBaseWork.DBDeleteById(SubjectsDB.class, subjectsDBList.get(i).getId());
                     KLog.d("删除题目", subjectsDBList.get(i).getId());
 
                 }
-            }
-            int i = DataBaseWork.DBDeleteById(ProjectsDB.class, ProjectDBList.get(0).getId());
+            }*/
+            //int i = DataBaseWork.DBDeleteById(ProjectsDB.class, ProjectDBList.get(0).getId());
+            ProjectDBList.get(0).setIsDeletes(1);
+            ProjectDBList.get(0).update(ProjectDBList.get(0).getId());
 
         }
 

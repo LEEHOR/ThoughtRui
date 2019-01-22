@@ -175,12 +175,12 @@ public class LoginFragment extends BaseFragment<LoginFragmentC.Presenter> implem
         ToastUtils.showLong(failure);
     }
 
-//    @Override
-//    public boolean onBackPressedSupport() {
-//        if (type == Constants.MainActivityCode){
-//            return true;
-//        } else {
-//            return super.onBackPressedSupport();
-//        }
-//    }
+    @Override
+    public boolean onBackPressedSupport() {
+        if (type == Constants.MainActivityCode){
+            return true;
+        } else {
+            return super.onBackPressedSupport();
+        }
+    }
 }

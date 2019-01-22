@@ -323,7 +323,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                             @Override
                             public void onFinish(int rowsAffected) {
                                 if (rowsAffected==1){
-                                    EventBus.getDefault().post(new isCompleteBean(true, number-1, 1));
+                                    EventBus.getDefault().postSticky(new isCompleteBean(true, number-1, 1));
                                 }
                             }
                         });
@@ -346,7 +346,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                             @Override
                             public void onFinish(int rowsAffected) {
                                 if (rowsAffected==1){
-                                    EventBus.getDefault().post(new isCompleteBean(true, number+1, 2));
+                                    EventBus.getDefault().postSticky(new isCompleteBean(true, number+1, 2));
                                     ProjectSuccessDialog projectSuccessDialog = ProjectSuccessDialog.newInstance(ht_projectId);
                                     projectSuccessDialog.show(getChildFragmentManager(), TAG);
                                 }

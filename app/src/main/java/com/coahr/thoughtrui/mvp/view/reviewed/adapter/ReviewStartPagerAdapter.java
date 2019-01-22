@@ -4,6 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.coahr.thoughtrui.mvp.view.reviewed.ReViewStart;
+
 import java.util.List;
 
 /**
@@ -15,15 +17,19 @@ import java.util.List;
 public class ReviewStartPagerAdapter extends FragmentPagerAdapter {
     private List<String> stringList;
     private int size;
-    public ReviewStartPagerAdapter(FragmentManager fm, List<String> list,int size) {
+    private String ht_projectId;
+    private String db_projectId;
+    public ReviewStartPagerAdapter(FragmentManager fm, List<String> list,int size,String db_ProjectId,String ht_ProjectId) {
         super(fm);
         this.stringList=list;
         this.size=size;
+        this.db_projectId=db_ProjectId;
+        this.ht_projectId=ht_ProjectId;
     }
 
     @Override
     public Fragment getItem(int i) {
-        return null;
+        return ReViewStart.newInstance(i,db_projectId,stringList.get(i),size,ht_projectId);
     }
 
     @Override

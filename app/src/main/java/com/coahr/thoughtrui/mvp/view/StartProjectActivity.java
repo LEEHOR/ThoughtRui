@@ -252,7 +252,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
      *
      * @param isCompleteBean
      */
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky =true)
     public void Event(isCompleteBean isCompleteBean) {
         int isposition = isCompleteBean.getPosition();
         int isupOrDown = isCompleteBean.getUpOrDown();

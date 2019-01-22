@@ -11,7 +11,7 @@ import com.coahr.thoughtrui.Utils.StoreSpaceUtils;
 public class Constants {
     public static String  devicestoken="";
     //是否需要自杀进程以便打补丁
-    public static boolean isKill=true;
+    public static boolean need_kill;
     //Latitude
     public  static  double Latitude;
     //Longitude
@@ -55,8 +55,9 @@ public class Constants {
      * 相机拍摄图片存储位置
      */
     public static String SAVE_DIR_TAKE_PHOTO = SAVE_DIR_BASE.concat("takePhoto/");
+
     /**
-     * 工程图片位置
+     * 工程文件位置
      */
     public static String SAVE_DIR_PROJECT_Document = SAVE_DIR_BASE.concat("projectDocument/");
     /**
@@ -103,6 +104,12 @@ public class Constants {
 
     public static final int fragment_AnnexViewPager=9; //项目附件
 
+    public static final int fragment_review_pager=10;//审核首页
+
+    public static final int fragment_review_list=11; //审核列表
+
+    public static final int fragment_feedback=12; //帮助与反馈
+
 
 
 
@@ -118,4 +125,7 @@ public class Constants {
     public static  String uid_key="uid";
     //devicestoken
     public static  String devicestoken_key="devicestoken";
+
+
+    public static String AliYunHot_key="aliyun_hot";
 }

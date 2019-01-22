@@ -1,5 +1,6 @@
 package com.coahr.thoughtrui.mvp.view.reviewed;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -17,6 +18,7 @@ import com.coahr.thoughtrui.mvp.constract.ReviewPagerFragment_C;
 import com.coahr.thoughtrui.mvp.model.Bean.CensorBean;
 import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_censor;
 import com.coahr.thoughtrui.mvp.presenter.ReviewPagerFragment_P;
+import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
 import com.coahr.thoughtrui.mvp.view.MainActivity;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
 import com.coahr.thoughtrui.mvp.view.reviewed.adapter.pageAdapter;
@@ -111,7 +113,8 @@ public class ReviewPager extends BaseChildFragment<ReviewPagerFragment_C.Present
         adapter.setOnItemClick(new pageAdapter.OnItemClick() {
             @Override
             public void OnClick(CensorBean.DataBean.ListBean bean, int position) {
-                start(ReviewInfoList.newInstance(bean.getId(), Constants.sessionId, type));
+                startOtherActivity(ConstantsActivity.class,Constants.fragment_review_pager,Constants.fragment_review_list,bean.getId());
+                //start(ReviewInfoList.newInstance(bean.getId(), Constants.sessionId, type));
             }
         });
     }
@@ -146,7 +149,7 @@ public class ReviewPager extends BaseChildFragment<ReviewPagerFragment_C.Present
     /**
      * 联网
      *
-     * @param search 查询
+     * @param search
      */
     private void getDataList(String search) {
         Map map = new HashMap();
@@ -158,10 +161,24 @@ public class ReviewPager extends BaseChildFragment<ReviewPagerFragment_C.Present
         p.getCensorList(map);
     }
 
+    /**
+     * 首页查询时传递的值
+     * @param messageEvent
+     */
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void Event(EvenBus_censor messageEvent) {
         if (type == messageEvent.getType()) {
             getDataList(messageEvent.getInputText());
         }
+    }
+
+    private void startOtherActivity(Class c, int from, int to,String projectId){
+        Intent intent = new Intent(_mActivity, c);
+        intent.putExtra("from", from);
+        intent.putExtra("to", to);
+        intent.putExtra("type",type);
+        intent.putExtra("projectId",projectId);
+        intent.putExtra("sessionId",Constants.sessionId);
+        startActivity(intent);
     }
 }

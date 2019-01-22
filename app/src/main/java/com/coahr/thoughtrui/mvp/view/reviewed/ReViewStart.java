@@ -32,6 +32,7 @@ import com.coahr.thoughtrui.Utils.Permission.RequestPermissionUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
+import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.ReViewStart_C;
 import com.coahr.thoughtrui.mvp.model.Bean.isCompleteBean;
@@ -77,7 +78,7 @@ import omrecorder.WriteAction;
  * 创建日期：2019/1/10
  * 描述：
  */
-public class ReViewStart extends BaseFragment<ReViewStart_C.Presenter> implements ReViewStart_C.View, View.OnClickListener {
+public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> implements ReViewStart_C.View, View.OnClickListener {
     @Inject
     ReViewStart_P p;
     @BindView(R.id.project_detail_titlle)
@@ -139,17 +140,16 @@ public class ReViewStart extends BaseFragment<ReViewStart_C.Presenter> implement
     private double type;
     private String audioName;
     private SubjectsDB subjectsDB_now;
-    public static ReViewStart newInstance(int position, String DbProjectId, String ht_ProjectId, int countSize, String name_project, String ht_id) {
-        ReViewStart pagerFragment_a = new ReViewStart();
+    public static ReViewStart newInstance(int position, String DbProjectId, String ht_ProjectId, int countSize,  String ht_id) {
+        ReViewStart reViewStart = new ReViewStart();
         Bundle bundle = new Bundle();
         bundle.putInt("position", position);
         bundle.putString("DbProjectId", DbProjectId);
         bundle.putString("ht_ProjectId", ht_ProjectId);
         bundle.putInt("countSize", countSize);
-        bundle.putString("name_project", name_project);
         bundle.putString("ht_id", ht_id);
-        pagerFragment_a.setArguments(bundle);
-        return pagerFragment_a;
+        reViewStart.setArguments(bundle);
+        return reViewStart;
     }
 
     @Override
@@ -504,7 +504,7 @@ public class ReViewStart extends BaseFragment<ReViewStart_C.Presenter> implement
                             @Override
                             public void onFinish(int rowsAffected) {
                                 if (rowsAffected==1){
-                                    EventBus.getDefault().post(new isCompleteBean(true, number-1, 1));
+                                    EventBus.getDefault().postSticky(new isCompleteBean(true, number-1, 1));
                                 }
                             }
                         });
@@ -527,7 +527,7 @@ public class ReViewStart extends BaseFragment<ReViewStart_C.Presenter> implement
                             @Override
                             public void onFinish(int rowsAffected) {
                                 if (rowsAffected==1){
-                                    EventBus.getDefault().post(new isCompleteBean(true, number+1, 2));
+                                    EventBus.getDefault().postSticky(new isCompleteBean(true, number+1, 2));
                                 }
                             }
                         });

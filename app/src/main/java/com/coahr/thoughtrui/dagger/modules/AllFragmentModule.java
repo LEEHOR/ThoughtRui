@@ -7,6 +7,7 @@ import com.coahr.thoughtrui.mvp.view.home.MainFragment;
 import com.coahr.thoughtrui.mvp.view.home.MyTabFragment;
 import com.coahr.thoughtrui.mvp.view.home.ProjectDetailFragment;
 import com.coahr.thoughtrui.mvp.view.mydata.ChangePasswordFragment;
+import com.coahr.thoughtrui.mvp.view.mydata.Fragment_Feedback;
 import com.coahr.thoughtrui.mvp.view.mydata.LoginFragment;
 import com.coahr.thoughtrui.mvp.view.SubjectList.Fragment_Topics;
 import com.coahr.thoughtrui.mvp.view.mydata.MyFragment;
@@ -93,4 +94,7 @@ public abstract class AllFragmentModule {
 
     @ContributesAndroidInjector()
     abstract ProjectSuccessDialog  ProjectSuccessDialogInjector();
+
+    @ContributesAndroidInjector()
+    abstract Fragment_Feedback Fragment_FeedbackInjector();
 }
