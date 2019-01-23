@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar>
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_below="@+id/naviBar"
             android:layout_above="@+id/bottom_menu"
             android:layout_marginBottom="@dimen/dp_10"
@@ -160,7 +160,7 @@
                             </RelativeLayout>
                         </LinearLayout>
                     </RelativeLayout>
-                    <android.support.v7.widget.CardView
+                    <androidx.cardview.widget.CardView
                         android:layout_marginLeft="@dimen/dp_10"
                         android:layout_marginRight="@dimen/dp_10"
                         app:cardCornerRadius="@dimen/dp_5"
@@ -354,9 +354,9 @@
                                     android:layout_height="wrap_content" />
                             </LinearLayout>
                         </LinearLayout>
-                    </android.support.v7.widget.CardView>
+                    </androidx.cardview.widget.CardView>
 
-                    <android.support.v7.widget.CardView
+                    <androidx.cardview.widget.CardView
                        android:layout_margin="@dimen/dp_10"
                         app:cardCornerRadius="@dimen/dp_5"
                         app:cardBackgroundColor="@color/colorWhite"
@@ -401,11 +401,11 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
                         </LinearLayout>
-                    </android.support.v7.widget.CardView>
+                    </androidx.cardview.widget.CardView>
 
                 </LinearLayout>
 
-        </android.support.v4.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
     <FrameLayout
         android:id="@+id/bottom_menu"
         android:layout_alignParentBottom="true"

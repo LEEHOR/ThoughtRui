@@ -8,7 +8,7 @@
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="0dp"/>
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:layout_margin="@dimen/dp_5"
         app:contentPadding="@dimen/dp_10"
         android:layout_width="match_parent"
@@ -107,5 +107,5 @@
            </RelativeLayout>
        </RelativeLayout>
    </LinearLayout>
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 </LinearLayout>

@@ -6,11 +6,11 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.RelativeLayout;
@@ -24,14 +24,11 @@ import com.alibaba.sdk.android.oss.OSSClient;
 import com.alibaba.sdk.android.oss.common.OSSLog;
 import com.alibaba.sdk.android.oss.common.auth.OSSAuthCredentialsProvider;
 import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
-import com.alibaba.sdk.android.oss.common.auth.OSSFederationToken;
-import com.baidu.location.BDLocation;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.DensityUtils;
 import com.coahr.thoughtrui.Utils.FileIoUtils.SaveOrGetAnswers;
-import com.coahr.thoughtrui.Utils.ScreenUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
@@ -39,7 +36,6 @@ import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.UploadC;
 import com.coahr.thoughtrui.mvp.model.ApiContact;
 import com.coahr.thoughtrui.mvp.presenter.UploadP;
-import com.coahr.thoughtrui.mvp.view.MainActivity;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
 import com.coahr.thoughtrui.mvp.view.upload.adapter.UpLoadAdapter;
 import com.coahr.thoughtrui.widgets.BroadcastReceiver.NetWorkReceiver;
@@ -51,7 +47,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.security.auth.Subject;
 
 import butterknife.BindView;
 
@@ -659,13 +654,16 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
         //获取第一各项目的题目
         if (ossClient != null) {
             if (type == 1) {  //全部
-                p.getSubjectList(allProjectList.get(0));
+              //  p.getSubjectList(allProjectList.get(0));
+                ToastUtils.showLong("暂未完成，敬请期待");
             }
             if (type == 2) {    //批量
-                p.getSubjectList(ck_listProjectDb.get(0));
+               // p.getSubjectList(ck_listProjectDb.get(0));
+                ToastUtils.showLong("暂未完成，敬请期待");
             }
             if (type==3){  //点击上传
-                p.getSubjectList(projectsDB_click);
+               // p.getSubjectList(projectsDB_click);
+                ToastUtils.showLong("暂未完成，敬请期待");
             }
         }
     }

@@ -1,9 +1,11 @@
 package com.coahr.thoughtrui.mvp.view.home;
 
+import android.Manifest;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -14,27 +16,21 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
-import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.NetWorkAvailable;
+import com.coahr.thoughtrui.Utils.Permission.OnRequestPermissionListener;
+import com.coahr.thoughtrui.Utils.Permission.RequestPermissionUtils;
 import com.coahr.thoughtrui.Utils.TimeUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
-import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.ProjectDetailFragment_C;
-import com.coahr.thoughtrui.mvp.model.Bean.Event_ProjectDetail;
 import com.coahr.thoughtrui.mvp.presenter.ProjectDetailFragment_P;
 import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
 import com.coahr.thoughtrui.mvp.view.StartProjectActivity;
 import com.coahr.thoughtrui.mvp.view.attence.AttendanceRootActivity;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
-import com.socks.library.KLog;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -90,6 +86,7 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
     @BindView(R.id.tv_project_describe)
     TextView tv_project_describe;  //项目描述
     private String projectId;
+    private boolean isHavePermission=false;
 
     public static ProjectDetailFragment newInstance(String projectId) {
         ProjectDetailFragment projectDetailFragment=new ProjectDetailFragment();
@@ -98,60 +95,6 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
         projectDetailFragment.setArguments(bundle);
         return  projectDetailFragment;
     }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-      //  EventBus.getDefault().register(this);
-    }
-
-/*    *//**
-     * Evenbus首页或搜索页数据
-     *//*
-    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
-    public void Event(Event_ProjectDetail messageEvent) {
-        if (messageEvent != null) {
-            Constants.ht_ProjectId=messageEvent.getP_Id();
-            KLog.d("项目idht",Constants.ht_ProjectId);
-            if (messageEvent.isOffline()){  //离线
-              Constants.DbProjectId=String.valueOf(messageEvent.getDb_Id());
-              Constants.name_Project=messageEvent.getPname();
-                String cname = messageEvent.getCname();
-                if (cname.equals("自由班次")) {
-                    Constants.zao_ka=cname;
-                    Constants.wan_ka=cname;
-                } else {
-                    String[] split = cname.split("-");
-                    if (split.length > 1) {
-                        Constants.zao_ka=split[0];
-                        Constants.wan_ka=split[1];
-                    }
-                }
-
-              KLog.d("1项目id",Constants.DbProjectId);
-          } else {                     //在线
-              List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class,"pid=?", messageEvent.getP_Id());
-              if (projectsDBS != null && projectsDBS.size()>0) {
-                  Constants.DbProjectId=String.valueOf(projectsDBS.get(0).getId());
-                  Constants.name_Project=projectsDBS.get(0).getPname();
-                  String s = projectsDBS.get(0).getcName();
-                  if (s.equals("自由班次")) {
-                      Constants.zao_ka=s;
-                      Constants.wan_ka=s;
-                  } else {
-                      String[] split = s.split("-");
-                      if (split.length > 1) {
-                          Constants.zao_ka=split[0];
-                          Constants.wan_ka=split[1];
-                      }
-                  }
-              }
-              KLog.d("2项目id",Constants.DbProjectId);
-          }
-        }
-    }*/
-
-
     @Override
     public ProjectDetailFragment_C.Presenter getPresenter() {
         return p;
@@ -199,7 +142,9 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
                 JumpToAttendance();
                 break;
             case R.id.fangwen:
-                showDialog();
+                if (getAudioPermission()) {
+                    showDialog();
+                }
                 break;
             case R.id.attachment:
                 JumpToProjectAnnex();
@@ -210,9 +155,7 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
     @Override
     public void onDestroy() {
         super.onDestroy();
-        /*if(EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this);
-        }*/
+
     }
 
     private void showDialog(){
@@ -334,5 +277,39 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
             }
             p.getSubjectList(projectsDB);
         }
+    }
+
+    /*    *
+     * 动态获取录音权限
+     */
+    private boolean getAudioPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            RequestPermissionUtils.requestPermission(_mActivity, new OnRequestPermissionListener() {
+                        @Override
+                        public void PermissionSuccess(List<String> permissions) {
+                            isHavePermission = false;
+                            // EventBus.getDefault().postSticky(new EvenBus_recorderType(1, String.valueOf(number), Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id));
+                        }
+
+                        @Override
+                        public void PermissionFail(List<String> permissions) {
+                            ToastUtils.showLong("获取"+permissions.get(0)+"失败");
+                            isHavePermission = false;
+                        }
+
+                        @Override
+                        public void PermissionHave() {
+                            isHavePermission = true;
+                            //EventBus.getDefault().postSticky(new EvenBus_recorderType(1, String.valueOf(number), Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id));
+                        }
+                    }, Manifest.permission.RECORD_AUDIO
+                    , Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    , Manifest.permission.READ_EXTERNAL_STORAGE);
+
+        } else {
+            isHavePermission = true;
+            // EventBus.getDefault().postSticky(new EvenBus_recorderType(1, String.valueOf(number), Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id));
+        }
+        return isHavePermission;
     }
 }

@@ -5,13 +5,12 @@ import android.Manifest;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.baidu.location.BDLocation;
 
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.ActivityManagerUtils;
@@ -31,7 +30,6 @@ import com.coahr.thoughtrui.mvp.view.mydata.MyFragment;
 import com.coahr.thoughtrui.mvp.view.reviewed.ReviewedFragment;
 import com.coahr.thoughtrui.mvp.view.upload.UploadFragment;
 import com.coahr.thoughtrui.widgets.MyBottomNavigation.MyBottomNavigation;
-import com.socks.library.KLog;
 import com.taobao.sophix.SophixManager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -170,9 +168,9 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     public void Event(EvenBus_LoginSuccess loginSuccess) {
         if (loginSuccess.getLoginType() == 100) {
             //sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, "sessionId", null);
-            showFragment(0);
+         //   showFragment(0);
             // p.startLocation();
-            EventBus.getDefault().postSticky(new Event_Main(1, "登陆成功", page));
+            //EventBus.getDefault().postSticky(new Event_Main(1, "登陆成功", page));
         }
     }
 

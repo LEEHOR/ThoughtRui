@@ -1,6 +1,6 @@
 package com.coahr.thoughtrui.mvp.view.SubjectList;
 
-import android.support.v4.widget.SwipeRefreshLayout;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.ListView;
 

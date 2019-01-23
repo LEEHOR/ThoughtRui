@@ -1,56 +1,35 @@
 package com.coahr.thoughtrui.mvp.view.home;
 
-import android.Manifest;
-import android.content.BroadcastReceiver;
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
+import androidx.annotation.Nullable;
+import com.google.android.material.tabs.TabLayout;
+import androidx.viewpager.widget.ViewPager;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.baidu.location.BDLocation;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
-import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.DBbean.UsersDB;
 import com.coahr.thoughtrui.R;
-import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
-import com.coahr.thoughtrui.Utils.Permission.OnRequestPermissionListener;
-import com.coahr.thoughtrui.Utils.Permission.RequestPermissionUtils;
 import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
-import com.coahr.thoughtrui.mvp.Base.BaseActivity;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
-import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.MyMainFragmentC;
 import com.coahr.thoughtrui.mvp.model.Bean.Event_Main;
 import com.coahr.thoughtrui.mvp.model.Bean.HomeDataList;
-import com.coahr.thoughtrui.mvp.model.Bean.LoginBean;
 import com.coahr.thoughtrui.mvp.presenter.MyMainFragmentP;
-import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
-import com.coahr.thoughtrui.mvp.view.MainActivity;
 import com.coahr.thoughtrui.mvp.view.home.adapter.MainFragmentViewPageAdapter;
 import com.socks.library.KLog;
-import com.taobao.sophix.SophixManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.litepal.crud.DataSupport;
-import org.litepal.crud.async.FindMultiExecutor;
-import org.litepal.crud.callback.FindMultiCallback;
 import org.litepal.crud.callback.UpdateOrDeleteCallback;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,9 +38,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-
-import static com.coahr.thoughtrui.commom.Constants.ht_ProjectId;
-import static com.coahr.thoughtrui.commom.Constants.sessionId;
 
 /**
  * Created by Leehor
@@ -202,10 +178,11 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
             ProjectsDB projectsDB=new ProjectsDB();
             projectsDB.setDownloadTime(listBean.getDownloadTime());
             projectsDB.setCompleteStatus(listBean.getCompleteStatus());
-            projectsDB.setEndTime(listBean.getEndTime());
             projectsDB.setProgress(listBean.getProgress());
-            projectsDB.setModifyTime(listBean.getModifyTime());
-            projectsDB.setNotice(listBean.getNotice());
+            if (usersDBS != null && usersDBS.size()>0) {
+                projectsDB.setUser(usersDBS.get(0));
+            }
+
          projectsDB.updateAsync(ProjectDBList.get(0).getId()).listen(new UpdateOrDeleteCallback() {
              @Override
              public void onFinish(int rowsAffected) {
@@ -272,10 +249,11 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void Event(Event_Main messageEvent) {
         if (messageEvent.getIsLoad() == 1 && messageEvent.getPage() == 0) {
+            KLog.d("加载",messageEvent.getIsLoad(),messageEvent.getPage());
             sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, Constants.sessionId_key, null);
             usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", sessionId);
             if (haslogin()) {
-                getDataList();
+              //  getDataList();
             }
         }
     }
@@ -293,7 +271,7 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
 
     private void getDataList() {
         Map<String, Object> map = new HashMap<>();
-        map.put("sessionId", Constants.sessionId);
+        map.put("sessionId", sessionId);
         p.getHomeData(map);
     }
 
@@ -318,8 +296,8 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
                 }
             }*/
             //int i = DataBaseWork.DBDeleteById(ProjectsDB.class, ProjectDBList.get(0).getId());
-            ProjectDBList.get(0).setIsDeletes(1);
-            ProjectDBList.get(0).update(ProjectDBList.get(0).getId());
+          //  ProjectDBList.get(0).setIsDeletes(1);
+           // ProjectDBList.get(0).update(ProjectDBList.get(0).getId());
 
         }
 
@@ -349,6 +327,19 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
                         mHandler.sendMessage(message);
                     }
                 }
+            }
+        }
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden){
+            KLog.d("加载");
+            sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, Constants.sessionId_key, null);
+            usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", sessionId);
+            if (haslogin()) {
+                getDataList();
             }
         }
     }

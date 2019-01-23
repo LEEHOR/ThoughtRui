@@ -1,15 +1,10 @@
 package com.coahr.thoughtrui.mvp.view;
 
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.nfc.Tag;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.view.View;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -25,15 +20,10 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseActivity;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.constract.StartProjectActivity_C;
-import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_recorderType;
 import com.coahr.thoughtrui.mvp.model.Bean.QuestionBean;
 import com.coahr.thoughtrui.mvp.model.Bean.isCompleteBean;
 import com.coahr.thoughtrui.mvp.presenter.StartProjectActivity_P;
-import com.coahr.thoughtrui.mvp.view.recorder.AudioRecordListener;
-import com.coahr.thoughtrui.mvp.view.recorder.RecorderService;
-import com.coahr.thoughtrui.mvp.view.startProject.adapter.AudioListenerComplete;
 import com.coahr.thoughtrui.mvp.view.startProject.adapter.StartProjectAdapter;
-import com.coahr.thoughtrui.widgets.AltDialog.ProjectSuccessDialog;
 import com.coahr.thoughtrui.widgets.CustomScrollViewPager;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
 import com.socks.library.KLog;

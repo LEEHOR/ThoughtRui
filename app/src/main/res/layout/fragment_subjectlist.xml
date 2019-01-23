@@ -13,7 +13,7 @@
         <!--android:id="@+id/subject_recycler"-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent"/>-->
-    <android.support.v4.widget.SwipeRefreshLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/su_swipe"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -26,6 +26,6 @@
             android:layout_alignParentTop="true"
             android:divider="#aaa"
             android:dividerHeight="1px" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>

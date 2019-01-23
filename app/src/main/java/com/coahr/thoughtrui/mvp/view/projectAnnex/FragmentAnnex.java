@@ -3,31 +3,27 @@ package com.coahr.thoughtrui.mvp.view.projectAnnex;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.FragmentManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
-import com.coahr.thoughtrui.Utils.DensityUtils;
 import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
-import com.coahr.thoughtrui.Utils.TimeUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.constract.FragmentAnnex_C;
 import com.coahr.thoughtrui.mvp.presenter.FragmentAnnex_P;
-import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
 import com.coahr.thoughtrui.mvp.view.projectAnnex.adapter.AnnexAdapter;
 import com.coahr.thoughtrui.mvp.view.startProject.PhotoAlbumDialogFragment;
 import com.coahr.thoughtrui.widgets.AltDialog.DialogFragmentAudioPlay;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 

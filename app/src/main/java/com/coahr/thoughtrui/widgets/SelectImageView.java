@@ -3,13 +3,11 @@ package com.coahr.thoughtrui.widgets;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.support.v7.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.widget.Checkable;
 
 import com.coahr.thoughtrui.R;
-import com.socks.library.KLog;
 
 /**
  * Created by Leehor

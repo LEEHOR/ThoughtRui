@@ -1,41 +1,27 @@
 package com.coahr.thoughtrui.mvp.view.startProject;
 
 import android.Manifest;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.graphics.Color;
-import android.graphics.ColorSpace;
 import android.graphics.drawable.Drawable;
 import android.media.AudioFormat;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatDialogFragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
+import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.DensityUtils;
@@ -44,30 +30,25 @@ import com.coahr.thoughtrui.Utils.FileIoUtils.SaveOrGetAnswers;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.Permission.OnRequestPermissionListener;
 import com.coahr.thoughtrui.Utils.Permission.RequestPermissionUtils;
+import com.coahr.thoughtrui.Utils.Permission.RuntimeRationale;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.constract.PagerFragment_aC;
-import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_recorderType;
-import com.coahr.thoughtrui.mvp.model.Bean.PagePostEvent;
 import com.coahr.thoughtrui.mvp.model.Bean.isCompleteBean;
 import com.coahr.thoughtrui.mvp.presenter.PagerFragment_aP;
-import com.coahr.thoughtrui.mvp.view.StartProjectActivity;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
-import com.coahr.thoughtrui.mvp.view.recorder.AudioRecordListener;
-import com.coahr.thoughtrui.mvp.view.recorder.RecorderService;
-import com.coahr.thoughtrui.mvp.view.startProject.adapter.AudioListenerComplete;
 import com.coahr.thoughtrui.mvp.view.startProject.adapter.PagerFragmentPhotoAdapter;
 import com.coahr.thoughtrui.mvp.view.startProject.adapter.PagerFragmentPhotoListener;
 import com.coahr.thoughtrui.widgets.AltDialog.DialogFragmentAudioPlay;
 import com.coahr.thoughtrui.widgets.AltDialog.EvaluateInputDialogFragment;
 import com.coahr.thoughtrui.widgets.AltDialog.ProjectSuccessDialog;
 import com.socks.library.KLog;
+import com.yanzhenjie.permission.Action;
+import com.yanzhenjie.permission.AndPermission;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.litepal.crud.async.UpdateOrDeleteExecutor;
 import org.litepal.crud.callback.UpdateOrDeleteCallback;
 
@@ -75,7 +56,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import javax.crypto.spec.DESedeKeySpec;
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -92,8 +72,6 @@ import omrecorder.PullTransport;
 import omrecorder.PullableSource;
 import omrecorder.Recorder;
 import omrecorder.WriteAction;
-
-import static android.content.Context.BIND_AUTO_CREATE;
 
 /**
  * Created by Leehor
@@ -173,9 +151,8 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             , BaseApplication.mContext.getResources().getDrawable(R.mipmap.recordering, null)
             , BaseApplication.mContext.getResources().getDrawable(R.mipmap.recorder_play_w, null)};
     private Recorder recorder;
-    private int type=1;
+    private int type = 1;
     private String audioName;
-    private boolean isHavePermission=false;
     private SubjectsDB subjectsDB_now;
 
     public static PagerFragment_a newInstance(int position, String DbProjectId, String ht_ProjectId, int countSize, String name_project, String ht_id) {
@@ -206,6 +183,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         super.onCreate(savedInstanceState);
         spacesItemDecoration = new SpacesItemDecoration(DensityUtils.dp2px(BaseApplication.mContext, 2), DensityUtils.dp2px(BaseApplication.mContext, 2), getResources().getColor(R.color.colorPrimaryDark));
     }
+
     @Override
     public void initView() {
         if (getArguments() != null) {
@@ -222,9 +200,9 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         gridLayoutManager = new GridLayoutManager(BaseApplication.mContext, 5);
         img_recycler.setLayoutManager(gridLayoutManager);
         img_recycler.setAdapter(adapter);
-        img_recycler.addItemDecoration(new SpacesItemDecoration(DensityUtils.dp2px(BaseApplication.mContext,4),DensityUtils.dp2px(BaseApplication.mContext,4),getResources().getColor(R.color.colorWhite)));
-        for (int i = 0; i <img_recycler.getItemDecorationCount(); i++) {
-            if (i!=0){
+        img_recycler.addItemDecoration(new SpacesItemDecoration(DensityUtils.dp2px(BaseApplication.mContext, 4), DensityUtils.dp2px(BaseApplication.mContext, 4), getResources().getColor(R.color.colorWhite)));
+        for (int i = 0; i < img_recycler.getItemDecorationCount(); i++) {
+            if (i != 0) {
                 img_recycler.removeItemDecorationAt(i);
             }
         }
@@ -240,48 +218,18 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             @Override
             public void onClick(View v) {
                 if (isHaveRecorder) {  //有无录音
-                       ToastUtils.showLong("当前题目下有录音");
+                    ToastUtils.showLong("当前题目下有录音");
                 } else {
-                    if (getAudioPermission()) {
                     if (type == 1) { //开始录音
-                        Fr_takeRecorder.setEnabled(false);
-                        isRecorder = true;
-                        recorder.startRecording();
-                        updateUi(2);
-                        Fr_takeRecorder.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                type = 4;
-                                Fr_takeRecorder.setEnabled(true);
-                            }
-                        },1000);
-
+                       startAudio();
                     } else if (type == 2) { //暂停录音
 
                     } else if (type == 3) { //继续录音
 
                     } else if (type == 4) {  //停止录音
-                        Fr_takeRecorder.setEnabled(false);
-                        isRecorder = false;
-                        try {
-                            recorder.stopRecording();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                        Fr_takeRecorder.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                p.getAudio(ht_projectId, _mActivity, number, ht_id);
-                                Fr_takeRecorder.setEnabled(true);
-                                type = 1;
-                            }
-                        }, 1500);
-
-                    } else {
-
+                        StopAudio();
                     }
-                    }
+
                 }
 
             }
@@ -316,14 +264,14 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             case R.id.tv_last:
                 if (number > 1) {
                     if (isComplete()) {
-                        SubjectsDB subjectsDB=new SubjectsDB();
+                        SubjectsDB subjectsDB = new SubjectsDB();
                         subjectsDB.setIsComplete(1);
                         UpdateOrDeleteExecutor updateOrDeleteExecutor = subjectsDB.updateAsync(subjectsDB_now.getId());
                         updateOrDeleteExecutor.listen(new UpdateOrDeleteCallback() {
                             @Override
                             public void onFinish(int rowsAffected) {
-                                if (rowsAffected==1){
-                                    EventBus.getDefault().postSticky(new isCompleteBean(true, number-1, 1));
+                                if (rowsAffected == 1) {
+                                    EventBus.getDefault().postSticky(new isCompleteBean(true, number - 1, 1));
                                 }
                             }
                         });
@@ -339,14 +287,14 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             case R.id.tv_next:
                 if (number < countSize) {
                     if (isComplete()) {
-                        SubjectsDB subjectsDB=new SubjectsDB();
+                        SubjectsDB subjectsDB = new SubjectsDB();
                         subjectsDB.setIsComplete(1);
                         UpdateOrDeleteExecutor updateOrDeleteExecutor = subjectsDB.updateAsync(subjectsDB_now.getId());
                         updateOrDeleteExecutor.listen(new UpdateOrDeleteCallback() {
                             @Override
                             public void onFinish(int rowsAffected) {
-                                if (rowsAffected==1){
-                                    EventBus.getDefault().postSticky(new isCompleteBean(true, number+1, 2));
+                                if (rowsAffected == 1) {
+                                    EventBus.getDefault().postSticky(new isCompleteBean(true, number + 1, 2));
                                     ProjectSuccessDialog projectSuccessDialog = ProjectSuccessDialog.newInstance(ht_projectId);
                                     projectSuccessDialog.show(getChildFragmentManager(), TAG);
                                 }
@@ -390,8 +338,8 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             case R.id.tv_play_recorder:
                 if (!isRecorder) {
                     if (audioPath != null) {
-                        DialogFragmentAudioPlay audioPlay=DialogFragmentAudioPlay.newInstance(audioPath,audioName);
-                        audioPlay.show(getChildFragmentManager(),TAG);
+                        DialogFragmentAudioPlay audioPlay = DialogFragmentAudioPlay.newInstance(audioPath, audioName);
+                        audioPlay.show(getChildFragmentManager(), TAG);
                     } else {
                         ToastUtils.showLong("没有录音文件");
                     }
@@ -407,7 +355,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
     @Override
     public void getSubjectSuccess(SubjectsDB subjectsDB) {
-       this.subjectsDB_now=subjectsDB;
+        this.subjectsDB_now = subjectsDB;
         if (subjectsDB != null) {
             //题目
             project_detail_titlle.setText(subjectsDB.getTitle());
@@ -526,7 +474,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
     @Override
     public void saveAnswersSuccess() {
-        p.getAnswer(ht_projectId,_mActivity,number,ht_id);
+        p.getAnswer(ht_projectId, _mActivity, number, ht_id);
         ToastUtils.showLong("答案保存成功");
     }
 
@@ -540,7 +488,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         _mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                p.getImage(ht_projectId,_mActivity,number,ht_id);
+                p.getImage(ht_projectId, _mActivity, number, ht_id);
             }
         });
 
@@ -555,12 +503,12 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     @Override
     public void getAudioSuccess(List<String> audioList) {
         if (!isRecorder) {
-                audioPath = audioList.get(0);
-                audioName = FileIOUtils.getE(audioPath, "/");
-                isHaveRecorder = true;
-                updateUi(1); //开始录音
-                tv_recorder_name.setText(audioName);
-                tv_recorder_name.setTextColor(getResources().getColor(R.color.origin_3));
+            audioPath = audioList.get(0);
+            audioName = FileIOUtils.getE(audioPath, "/");
+            isHaveRecorder = true;
+            updateUi(1); //开始录音
+            tv_recorder_name.setText(audioName);
+            tv_recorder_name.setTextColor(getResources().getColor(R.color.origin_3));
 
         }
     }
@@ -568,7 +516,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     @Override
     public void getAudioFailure(String failure) {
         isHaveRecorder = false;
-        ToastUtils.showLong(failure+number);
+        ToastUtils.showLong(failure + number);
         if (!isRecorder) {
             updateUi(1); //开始录音
             tv_recorder_name.setText("暂无录音");
@@ -623,39 +571,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         RxGalleryFinalApi.setImgSaveRxCropDir(new File(Constants.SAVE_DIR_ZIP_PHOTO));//裁剪会自动生成路径；也可以手动设置裁剪的路径；
     }
 
-    /**
-     * 动态获取录音权限
-     */
-    private boolean getAudioPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            RequestPermissionUtils.requestPermission(_mActivity, new OnRequestPermissionListener() {
-                        @Override
-                        public void PermissionSuccess(List<String> permissions) {
-                           isHavePermission=true;
-                            // EventBus.getDefault().postSticky(new EvenBus_recorderType(1, String.valueOf(number), Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id));
-                        }
 
-                        @Override
-                        public void PermissionFail(List<String> permissions) {
-                            Toast.makeText(_mActivity, "获取权限失败", Toast.LENGTH_LONG).show();
-                            isHavePermission=false;
-                        }
-
-                        @Override
-                        public void PermissionHave() {
-                            isHavePermission=true;
-                            //EventBus.getDefault().postSticky(new EvenBus_recorderType(1, String.valueOf(number), Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id));
-                        }
-                    }, Manifest.permission.RECORD_AUDIO
-                    , Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    , Manifest.permission.READ_EXTERNAL_STORAGE);
-
-        } else {
-            isHavePermission=true;
-            // EventBus.getDefault().postSticky(new EvenBus_recorderType(1, String.valueOf(number), Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id));
-        }
-        return isHavePermission;
-    }
 
     /**
      * 图片监听
@@ -724,21 +640,21 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
      * @param types;
      */
     private void updateUi(final int types) {
-                if (types == 1) {
-                    this.tv_recorderBtn.setText("开始录音");
-                    imgs[0].setBounds(0, 0, DensityUtils.dp2px(BaseApplication.mContext,15), DensityUtils.dp2px(BaseApplication.mContext,15));
-                    this.tv_recorderBtn.setCompoundDrawables(imgs[0], null, null, null);
-                }
-                if (types == 2) {
-                   this.tv_recorderBtn.setText("正在录音");
-                    imgs[1].setBounds(0, 0, DensityUtils.dp2px(BaseApplication.mContext,15), DensityUtils.dp2px(BaseApplication.mContext,15));
-                    this.tv_recorderBtn.setCompoundDrawables(imgs[1], null, null, null);
-                }
-                if (types == 4) {
-                    this. tv_recorderBtn.setText("播放录音");
-                    imgs[2].setBounds(0, 0, DensityUtils.dp2px(BaseApplication.mContext,15), DensityUtils.dp2px(BaseApplication.mContext,15));
-                    this.tv_recorderBtn.setCompoundDrawables(imgs[2], null, null, null);
-                }
+        if (types == 1) {
+            this.tv_recorderBtn.setText("开始录音");
+            imgs[0].setBounds(0, 0, DensityUtils.dp2px(BaseApplication.mContext, 15), DensityUtils.dp2px(BaseApplication.mContext, 15));
+            this.tv_recorderBtn.setCompoundDrawables(imgs[0], null, null, null);
+        }
+        if (types == 2) {
+            this.tv_recorderBtn.setText("正在录音");
+            imgs[1].setBounds(0, 0, DensityUtils.dp2px(BaseApplication.mContext, 15), DensityUtils.dp2px(BaseApplication.mContext, 15));
+            this.tv_recorderBtn.setCompoundDrawables(imgs[1], null, null, null);
+        }
+        if (types == 4) {
+            this.tv_recorderBtn.setText("播放录音");
+            imgs[2].setBounds(0, 0, DensityUtils.dp2px(BaseApplication.mContext, 15), DensityUtils.dp2px(BaseApplication.mContext, 15));
+            this.tv_recorderBtn.setCompoundDrawables(imgs[2], null, null, null);
+        }
     }
 
     @Override
@@ -752,7 +668,8 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     private void setupRecorder() {
         recorder = OmRecorder.wav(
                 new PullTransport.Default(mic(), new PullTransport.OnAudioChunkPulledListener() {
-                    @Override public void onAudioChunkPulled(AudioChunk audioChunk) {
+                    @Override
+                    public void onAudioChunkPulled(AudioChunk audioChunk) {
                         animateVoice((float) (audioChunk.maxAmplitude() / 200.0));
                     }
                 }), file());
@@ -765,13 +682,15 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         recorder = OmRecorder.wav(
                 new PullTransport.Noise(mic(),
                         new PullTransport.OnAudioChunkPulledListener() {
-                            @Override public void onAudioChunkPulled(AudioChunk audioChunk) {
+                            @Override
+                            public void onAudioChunkPulled(AudioChunk audioChunk) {
                                 animateVoice((float) (audioChunk.maxAmplitude() / 200.0));
                             }
                         },
                         new WriteAction.Default(),
                         new Recorder.OnSilenceListener() {
-                            @Override public void onSilence(long silenceTime) {
+                            @Override
+                            public void onSilence(long silenceTime) {
                                 Log.e("silenceTime", String.valueOf(silenceTime));
                               /*  Toast.makeText(WavRecorderActivity.this, "silence of " + silenceTime + " detected",
                                         Toast.LENGTH_SHORT).show();*/
@@ -782,7 +701,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     }
 
     private void animateVoice(final float maxPeak) {
-       // recordButton.animate().scaleX(1 + maxPeak).scaleY(1 + maxPeak).setDuration(10).start();
+        // recordButton.animate().scaleX(1 + maxPeak).scaleY(1 + maxPeak).setDuration(10).start();
     }
 
     private PullableSource mic() {
@@ -796,10 +715,51 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
     @NonNull
     private File file() {
-        File file=new File(Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number+"_"+ht_id);
+        File file = new File(Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id);
         if (!file.exists()) {
             file.mkdirs();
         }
-        return new File(file, "录音"+number+".wav");
+        return new File(file, "录音" + number + ".wav");
     }
+
+    /**
+     * 开始录音
+     */
+    private void startAudio() {
+        isRecorder = true;
+        recorder.startRecording();
+        Fr_takeRecorder.setEnabled(false);
+        Fr_takeRecorder.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                updateUi(2);
+                type = 4;
+                Fr_takeRecorder.setEnabled(true);
+            }
+        }, 1000);
+
+    }
+
+    /**
+     * 停止录音
+     */
+    private void StopAudio() {
+        Fr_takeRecorder.setEnabled(false);
+        isRecorder = false;
+        try {
+            recorder.stopRecording();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Fr_takeRecorder.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                p.getAudio(ht_projectId, _mActivity, number, ht_id);
+                Fr_takeRecorder.setEnabled(true);
+                type = 1;
+            }
+        }, 1500);
+    }
+
 }

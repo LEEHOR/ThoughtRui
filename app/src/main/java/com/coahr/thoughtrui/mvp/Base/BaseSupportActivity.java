@@ -1,17 +1,13 @@
 package com.coahr.thoughtrui.mvp.Base;
 
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.KeyBoardUtils;
-import com.coahr.thoughtrui.Utils.ScreenUtils;
 import com.coahr.thoughtrui.commom.ActivityManager;
-import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
 import com.gyf.barlibrary.ImmersionBar;
-
-import org.greenrobot.eventbus.EventBus;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;

@@ -1,26 +1,17 @@
 package com.coahr.thoughtrui.mvp.view.attence;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.ScreenUtils;
-import com.coahr.thoughtrui.Utils.TimeUtils;
-import com.coahr.thoughtrui.mvp.Base.BaseActivity;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
-import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.Base.BaseSupportActivity;
-import com.coahr.thoughtrui.mvp.model.Bean.Event_Attend;
 import com.coahr.thoughtrui.widgets.SelectImageView;
 import com.coahr.thoughtrui.widgets.SelectTextView;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import me.yokeyword.fragmentation.SupportFragment;

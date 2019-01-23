@@ -91,7 +91,7 @@
     </RelativeLayout>
 
 </LinearLayout>
-<android.support.v4.widget.SwipeRefreshLayout
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
     android:id="@+id/myTab_swipe"
     android:layout_width="match_parent"
     android:layout_height="0dp"
@@ -99,18 +99,18 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/tab_off_recyclerView"
             android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        </android.support.v7.widget.RecyclerView>
-        <android.support.v7.widget.RecyclerView
+        </androidx.recyclerview.widget.RecyclerView>
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/tab_on_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        </android.support.v7.widget.RecyclerView>
+        </androidx.recyclerview.widget.RecyclerView>
     </FrameLayout>
 
-</android.support.v4.widget.SwipeRefreshLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>

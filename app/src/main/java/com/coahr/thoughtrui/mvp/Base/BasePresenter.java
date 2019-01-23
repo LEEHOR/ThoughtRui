@@ -1,6 +1,6 @@
 package com.coahr.thoughtrui.mvp.Base;
 
-import android.support.annotation.UiThread;
+import androidx.annotation.UiThread;
 
 import java.lang.ref.WeakReference;
 

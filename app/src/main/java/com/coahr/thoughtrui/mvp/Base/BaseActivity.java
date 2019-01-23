@@ -1,27 +1,16 @@
 package com.coahr.thoughtrui.mvp.Base;
 
-import android.Manifest;
 import android.app.Dialog;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.widget.Toast;
+import androidx.annotation.Nullable;
 
 import com.coahr.thoughtrui.Utils.KeyBoardUtils;
-import com.coahr.thoughtrui.Utils.Permission.OnRequestPermissionListener;
-import com.coahr.thoughtrui.Utils.Permission.RequestPermissionUtils;
 import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.commom.ActivityManager;
 import com.coahr.thoughtrui.commom.Constants;
 import com.gyf.barlibrary.ImmersionBar;
-import com.taobao.sophix.SophixManager;
 
 import org.litepal.LitePal;
-import org.litepal.tablemanager.Connector;
-
-import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;

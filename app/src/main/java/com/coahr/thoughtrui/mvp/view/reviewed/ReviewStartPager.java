@@ -3,8 +3,8 @@ package com.coahr.thoughtrui.mvp.view.reviewed;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
+import androidx.annotation.Nullable;
+
 import android.view.View;
 
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
@@ -14,7 +14,6 @@ import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
-import com.coahr.thoughtrui.mvp.model.Bean.CensorInfoList;
 import com.coahr.thoughtrui.mvp.model.Bean.Evenbus_Review;
 import com.coahr.thoughtrui.mvp.model.Bean.isCompleteBean;
 import com.coahr.thoughtrui.mvp.view.reviewed.adapter.ReviewStartPagerAdapter;

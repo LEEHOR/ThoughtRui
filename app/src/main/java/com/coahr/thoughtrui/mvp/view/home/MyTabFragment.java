@@ -2,20 +2,17 @@ package com.coahr.thoughtrui.mvp.view.home;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.baidu.location.BDLocation;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.UsersDB;
 import com.coahr.thoughtrui.R;
@@ -28,7 +25,6 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.constract.MyTabFragmentC;
-import com.coahr.thoughtrui.mvp.model.Bean.Event_ProjectDetail;
 import com.coahr.thoughtrui.mvp.model.Bean.HomeDataList;
 import com.coahr.thoughtrui.mvp.model.Bean.UnDownLoad;
 import com.coahr.thoughtrui.mvp.presenter.MyTabFragmentP;
@@ -39,10 +35,6 @@ import com.coahr.thoughtrui.mvp.view.home.adapter.MyTabFOnLineAdapter;
 import com.coahr.thoughtrui.widgets.SelectImageView;
 import com.coahr.thoughtrui.widgets.SelectTextView;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,11 +43,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
-import cn.finalteam.rxgalleryfinal.bean.MediaBean;
-import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
-import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultDisposable;
-import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 
 /**
  * Created by Leehor

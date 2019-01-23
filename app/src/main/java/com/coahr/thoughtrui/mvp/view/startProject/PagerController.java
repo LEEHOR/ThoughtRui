@@ -1,23 +1,14 @@
 package com.coahr.thoughtrui.mvp.view.startProject;
 
-import android.support.v4.app.Fragment;
-
-import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
-import com.coahr.thoughtrui.Utils.JDBC.DataBaseWorkAsync;
-import com.coahr.thoughtrui.Utils.JDBC.JDBCSelectMultiListener;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
-import com.coahr.thoughtrui.mvp.Base.BaseFragment;
-import com.socks.library.KLog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import me.yokeyword.fragmentation.SupportFragment;
 
 /**
  * Created by Leehor

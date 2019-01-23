@@ -4,12 +4,11 @@ import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
-import android.print.PrinterId;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatDialog;
-import android.support.v7.app.AppCompatDialogFragment;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDialog;
+import androidx.appcompat.app.AppCompatDialogFragment;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,31 +20,23 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.baidu.location.BDLocation;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
-import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.BaiDuLocation.BaiduLocationHelper;
 import com.coahr.thoughtrui.Utils.TimeUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
-import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.AttendanceFC_k;
 import com.coahr.thoughtrui.mvp.model.Bean.AttendRemark;
 import com.coahr.thoughtrui.mvp.model.Bean.Attendance;
 import com.coahr.thoughtrui.mvp.model.Bean.BaiduApiBean;
-import com.coahr.thoughtrui.mvp.model.Bean.Event_Attend;
 import com.coahr.thoughtrui.mvp.model.Bean.PushAttendanceCard;
 import com.coahr.thoughtrui.mvp.presenter.AttendanceFP_k;
 import com.coahr.thoughtrui.widgets.AltDialog.EvaluateInputDialogFragment;
 import com.coahr.thoughtrui.widgets.HttpUtils.BaiduApi;
 import com.coahr.thoughtrui.widgets.HttpUtils.HttpUtilListener;
-import com.coahr.thoughtrui.widgets.HttpUtils.HttpUtils;
-import com.coahr.thoughtrui.widgets.HttpUtils.OkCallBack;
-import com.coahr.thoughtrui.widgets.HttpUtils.OkHttpHelper;
 import com.google.gson.Gson;
 import com.socks.library.KLog;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -56,7 +47,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import okhttp3.Request;
 import okhttp3.Response;
 
 /**

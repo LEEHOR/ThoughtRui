@@ -3,8 +3,8 @@ package com.coahr.thoughtrui.mvp.Base;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.support.multidex.MultiDexApplication;
-import android.support.v4.app.Fragment;
+import androidx.multidex.MultiDexApplication;
+import androidx.fragment.app.Fragment;
 
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
@@ -23,7 +23,6 @@ import com.umeng.message.PushAgent;
 import com.umeng.socialize.PlatformConfig;
 
 import org.litepal.LitePal;
-import org.litepal.LitePalDB;
 
 import javax.inject.Inject;
 

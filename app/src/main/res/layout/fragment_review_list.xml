@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </RelativeLayout>
-    <android.support.design.widget.TabLayout
+    <com.google.android.material.tabs.TabLayout
         android:id="@+id/censor_tab"
         app:tabTextColor="#EDEDED"
         app:tabSelectedTextColor="@color/colorWhite"
@@ -42,10 +42,10 @@
         app:tabMode="fixed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    </android.support.design.widget.TabLayout>
-            <android.support.v4.view.ViewPager
+    </com.google.android.material.tabs.TabLayout>
+            <androidx.viewpager.widget.ViewPager
                 android:id="@+id/censor_viewpager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-            </android.support.v4.view.ViewPager>
+            </androidx.viewpager.widget.ViewPager>
 </LinearLayout>

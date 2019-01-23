@@ -11,7 +11,7 @@
     android:layout_height="wrap_content">
 
 </com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar>
-    <android.support.design.widget.TabLayout
+    <com.google.android.material.tabs.TabLayout
         android:id="@+id/annex_tab"
         android:background="@drawable/bg_fff_background"
         app:tabIndicatorColor="#333333"
@@ -19,7 +19,7 @@
         app:tabMode="fixed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/annex_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

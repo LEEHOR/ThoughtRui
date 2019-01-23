@@ -6,18 +6,19 @@ import android.media.AudioFormat;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatDialogFragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
+import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,12 +34,10 @@ import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
-import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.ReViewStart_C;
 import com.coahr.thoughtrui.mvp.model.Bean.isCompleteBean;
 import com.coahr.thoughtrui.mvp.presenter.ReViewStart_P;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
-import com.coahr.thoughtrui.mvp.view.startProject.PagerFragment_a;
 import com.coahr.thoughtrui.mvp.view.startProject.PhotoAlbumDialogFragment;
 import com.coahr.thoughtrui.mvp.view.startProject.adapter.PagerFragmentPhotoAdapter;
 import com.coahr.thoughtrui.mvp.view.startProject.adapter.PagerFragmentPhotoListener;
@@ -137,10 +136,11 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
     private boolean isRecorder;
     private String audioPath;
     private boolean isHaveRecorder;
-    private int type=1;
+    private int type = 1;
     private String audioName;
     private SubjectsDB subjectsDB_now;
-    public static ReViewStart newInstance(int position, String DbProjectId, String ht_ProjectId, int countSize,  String ht_id) {
+
+    public static ReViewStart newInstance(int position, String DbProjectId, String ht_ProjectId, int countSize, String ht_id) {
         ReViewStart reViewStart = new ReViewStart();
         Bundle bundle = new Bundle();
         bundle.putInt("position", position);
@@ -217,37 +217,13 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
 
                 } else {
                     if (type == 1) { //开始录音
-                        Fr_takeRecorder.setEnabled(false);
-                        isRecorder = true;
-                        recorder.startRecording();
-                        updateUi(2);
-                        Fr_takeRecorder.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                type = 4;
-                                Fr_takeRecorder.setEnabled(true);
-                            }
-                        },1000);
+                        startAudio();
                     } else if (type == 2) { //暂停录音
 
                     } else if (type == 3) { //继续录音
 
                     } else if (type == 4) {  //停止录音
-                        Fr_takeRecorder.setEnabled(false);
-                        isRecorder = false;
-                        try {
-                            recorder.stopRecording();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        Fr_takeRecorder.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                p.getAudio(ht_projectId, _mActivity, number, ht_id);
-                                Fr_takeRecorder.setEnabled(true);
-                                type = 1;
-                            }
-                        }, 1500);
+                        stopAudio();
                     } else {
 
                     }
@@ -268,7 +244,7 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
 
     @Override
     public void getSubjectSuccess(SubjectsDB subjectsDB) {
-        this.subjectsDB_now=subjectsDB;
+        this.subjectsDB_now = subjectsDB;
         if (subjectsDB != null) {
             //题目
             project_detail_titlle.setText(subjectsDB.getTitle());
@@ -381,7 +357,7 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
 
     @Override
     public void DeleteImageFailure(String Massage) {
-        p.getAnswer(ht_projectId,_mActivity,number,ht_id);
+        p.getAnswer(ht_projectId, _mActivity, number, ht_id);
         ToastUtils.showLong("图片删除失败");
     }
 
@@ -401,7 +377,7 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
         _mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                p.getImage(ht_projectId,_mActivity,number,ht_id);
+                p.getImage(ht_projectId, _mActivity, number, ht_id);
             }
         });
         ToastUtils.showShort("图片保存成功");
@@ -429,7 +405,7 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
     @Override
     public void getAudioFailure(String failure) {
         isHaveRecorder = false;
-        ToastUtils.showLong(failure+number);
+        ToastUtils.showLong(failure + number);
         if (!isRecorder) {
             updateUi(1); //开始录音
             tv_recorder_name.setText("暂无录音");
@@ -437,6 +413,7 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
         }
     }
 //=========================================录音=====================================================
+
     /**
      * 正常模式录音
      */
@@ -494,7 +471,8 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
         }
         return new File(file, "录音" + number + ".wav");
     }
-//==========================================点击监听====================================================
+
+    //==========================================点击监听====================================================
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -502,22 +480,22 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
             case R.id.tv_last:
                 if (number > 1) {
                     if (isComplete()) {
-                        SubjectsDB subjectsDB=new SubjectsDB();
+                        SubjectsDB subjectsDB = new SubjectsDB();
                         subjectsDB.setIsComplete(1);
                         UpdateOrDeleteExecutor updateOrDeleteExecutor = subjectsDB.updateAsync(subjectsDB_now.getId());
                         updateOrDeleteExecutor.listen(new UpdateOrDeleteCallback() {
                             @Override
                             public void onFinish(int rowsAffected) {
-                                if (rowsAffected==1){
-                                    EventBus.getDefault().postSticky(new isCompleteBean(true, number-1, 1));
+                                if (rowsAffected == 1) {
+                                    EventBus.getDefault().postSticky(new isCompleteBean(true, number - 1, 1));
                                 }
                             }
                         });
-                      //  EventBus.getDefault().post(new isCompleteBean(true, number-1, 1));
+                        //  EventBus.getDefault().post(new isCompleteBean(true, number-1, 1));
                     } else {
                         ToastUtils.showLong("当前题目未完成");
                     }
-                }else {
+                } else {
                     ToastUtils.showLong("已经是第一题");
                 }
                 break;
@@ -525,31 +503,31 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
             case R.id.tv_next:
                 if (number < countSize) {
                     if (isComplete()) {
-                        SubjectsDB subjectsDB=new SubjectsDB();
+                        SubjectsDB subjectsDB = new SubjectsDB();
                         subjectsDB.setIsComplete(1);
                         UpdateOrDeleteExecutor updateOrDeleteExecutor = subjectsDB.updateAsync(subjectsDB_now.getId());
                         updateOrDeleteExecutor.listen(new UpdateOrDeleteCallback() {
                             @Override
                             public void onFinish(int rowsAffected) {
-                                if (rowsAffected==1){
-                                    EventBus.getDefault().postSticky(new isCompleteBean(true, number+1, 2));
+                                if (rowsAffected == 1) {
+                                    EventBus.getDefault().postSticky(new isCompleteBean(true, number + 1, 2));
                                 }
                             }
                         });
-                       // EventBus.getDefault().post(new isCompleteBean(true, number+1, 2));
+                        // EventBus.getDefault().post(new isCompleteBean(true, number+1, 2));
                     } else {
                         ToastUtils.showLong("当前题目未完成");
                     }
-                }else {
-                    SubjectsDB subjectsDB=new SubjectsDB();
+                } else {
+                    SubjectsDB subjectsDB = new SubjectsDB();
                     subjectsDB.setIsComplete(1);
                     UpdateOrDeleteExecutor updateOrDeleteExecutor = subjectsDB.updateAsync(subjectsDB_now.getId());
                     updateOrDeleteExecutor.listen(new UpdateOrDeleteCallback() {
                         @Override
                         public void onFinish(int rowsAffected) {
-                            if (rowsAffected==1){
-                                ProjectSuccessDialog projectSuccessDialog= ProjectSuccessDialog.newInstance(ht_projectId);
-                                projectSuccessDialog.show(getChildFragmentManager(),TAG);
+                            if (rowsAffected == 1) {
+                                ProjectSuccessDialog projectSuccessDialog = ProjectSuccessDialog.newInstance(ht_projectId);
+                                projectSuccessDialog.show(getChildFragmentManager(), TAG);
                             }
                         }
                     });
@@ -570,8 +548,8 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
             case R.id.tv_play_recorder:
                 if (!isRecorder) {
                     if (audioPath != null) {
-                        DialogFragmentAudioPlay audioPlay=DialogFragmentAudioPlay.newInstance(audioPath,audioName);
-                        audioPlay.show(getChildFragmentManager(),TAG);
+                        DialogFragmentAudioPlay audioPlay = DialogFragmentAudioPlay.newInstance(audioPath, audioName);
+                        audioPlay.show(getChildFragmentManager(), TAG);
                     } else {
                         ToastUtils.showLong("没有录音文件");
                     }
@@ -581,6 +559,7 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
                 break;
         }
     }
+
     /**
      * 拍照
      */
@@ -618,6 +597,7 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
         RxGalleryFinalApi.setImgSaveRxDir(new File(Constants.SAVE_DIR_TAKE_PHOTO));
         RxGalleryFinalApi.setImgSaveRxCropDir(new File(Constants.SAVE_DIR_ZIP_PHOTO));//裁剪会自动生成路径；也可以手动设置裁剪的路径；
     }
+
     /**
      * 判断是否完成
      *
@@ -691,20 +671,21 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
     private void updateUi(final int types) {
         if (types == 1) {
             this.tv_recorderBtn.setText("开始录音");
-            imgs[0].setBounds(0, 0, DensityUtils.dp2px(BaseApplication.mContext,15), DensityUtils.dp2px(BaseApplication.mContext,15));
+            imgs[0].setBounds(0, 0, DensityUtils.dp2px(BaseApplication.mContext, 15), DensityUtils.dp2px(BaseApplication.mContext, 15));
             this.tv_recorderBtn.setCompoundDrawables(imgs[0], null, null, null);
         }
         if (types == 2) {
             this.tv_recorderBtn.setText("正在录音");
-            imgs[1].setBounds(0, 0, DensityUtils.dp2px(BaseApplication.mContext,15), DensityUtils.dp2px(BaseApplication.mContext,15));
+            imgs[1].setBounds(0, 0, DensityUtils.dp2px(BaseApplication.mContext, 15), DensityUtils.dp2px(BaseApplication.mContext, 15));
             this.tv_recorderBtn.setCompoundDrawables(imgs[1], null, null, null);
         }
         if (types == 4) {
-            this. tv_recorderBtn.setText("播放录音");
-            imgs[2].setBounds(0, 0, DensityUtils.dp2px(BaseApplication.mContext,15), DensityUtils.dp2px(BaseApplication.mContext,15));
+            this.tv_recorderBtn.setText("播放录音");
+            imgs[2].setBounds(0, 0, DensityUtils.dp2px(BaseApplication.mContext, 15), DensityUtils.dp2px(BaseApplication.mContext, 15));
             this.tv_recorderBtn.setCompoundDrawables(imgs[2], null, null, null);
         }
     }
+
     /**
      * 动态获取录音权限
      */
@@ -713,14 +694,14 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
             RequestPermissionUtils.requestPermission(_mActivity, new OnRequestPermissionListener() {
                         @Override
                         public void PermissionSuccess(List<String> permissions) {
-                          //  isHavePermission = true;
-                                recorder.startRecording();
+                            //  isHavePermission = true;
+                            recorder.startRecording();
                             // EventBus.getDefault().postSticky(new EvenBus_recorderType(1, String.valueOf(number), Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id));
                         }
 
                         @Override
                         public void PermissionFail(List<String> permissions) {
-                           // isHavePermission = false;
+                            // isHavePermission = false;
                             Toast.makeText(_mActivity, "获取权限失败无法录音", Toast.LENGTH_LONG).show();
                         }
 
@@ -737,5 +718,44 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
             recorder.startRecording();
             // EventBus.getDefault().postSticky(new EvenBus_recorderType(1, String.valueOf(number), Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id));
         }
+    }
+
+    /**
+     * 开始录音
+     */
+    private void startAudio() {
+        Fr_takeRecorder.setEnabled(false);
+        isRecorder = true;
+        recorder.startRecording();
+
+        Fr_takeRecorder.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                type = 4;
+                updateUi(2);
+                Fr_takeRecorder.setEnabled(true);
+            }
+        }, 1000);
+    }
+
+    /**
+     * 关闭录音
+     */
+    private void stopAudio() {
+        Fr_takeRecorder.setEnabled(false);
+        isRecorder = false;
+        try {
+            recorder.stopRecording();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Fr_takeRecorder.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                p.getAudio(ht_projectId, _mActivity, number, ht_id);
+                Fr_takeRecorder.setEnabled(true);
+                type = 1;
+            }
+        }, 1500);
     }
 }

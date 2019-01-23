@@ -2,34 +2,20 @@ package com.coahr.thoughtrui.mvp.view.attence;
 
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 
-import com.chad.library.adapter.base.util.TouchEventUtil;
 import com.coahr.thoughtrui.R;
-import com.coahr.thoughtrui.Utils.DensityUtils;
 import com.coahr.thoughtrui.Utils.TimeUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
-import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
-import com.coahr.thoughtrui.mvp.Base.BaseContract;
-import com.coahr.thoughtrui.mvp.Base.BaseFragment;
-import com.coahr.thoughtrui.mvp.Base.BaseSupportActivity;
 import com.coahr.thoughtrui.mvp.constract.AttendanceFC_h;
-import com.coahr.thoughtrui.mvp.model.Bean.Attendance;
 import com.coahr.thoughtrui.mvp.model.Bean.AttendanceHistory;
 import com.coahr.thoughtrui.mvp.model.Bean.BaiduApiBean;
-import com.coahr.thoughtrui.mvp.model.Bean.Event_Attend;
 import com.coahr.thoughtrui.mvp.presenter.AttendanceFP_h;
-import com.coahr.thoughtrui.mvp.view.attence.adapter.AttendanceHistoryAdapter;
-import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
 import com.coahr.thoughtrui.widgets.HttpUtils.BaiduApi;
 import com.coahr.thoughtrui.widgets.HttpUtils.HttpUtilListener;
 import com.google.gson.Gson;
@@ -38,11 +24,7 @@ import com.jzxiang.pickerview.data.Type;
 import com.jzxiang.pickerview.listener.OnDateSetListener;
 import com.socks.library.KLog;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 

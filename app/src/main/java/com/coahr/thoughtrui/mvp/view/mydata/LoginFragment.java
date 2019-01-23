@@ -10,6 +10,7 @@ import android.widget.EditText;
 
 import com.coahr.thoughtrui.DBbean.UsersDB;
 import com.coahr.thoughtrui.R;
+import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
@@ -25,6 +26,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.litepal.crud.callback.SaveCallback;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -154,10 +156,15 @@ public class LoginFragment extends BaseFragment<LoginFragmentC.Presenter> implem
     @Override
     public void onLoginSuccess(final LoginBean loginBean) {
         ToastUtils.showLong("登录成功");
-        UsersDB usersDB=new UsersDB();
-        usersDB.setUserName(loginBean.getData().getName());
-        usersDB.setSessionId(loginBean.getData().getSessionId());
-        usersDB.saveOrUpdate("sessionid=?",loginBean.getData().getSessionId());
+        List<UsersDB> usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", loginBean.getData().getSessionId());
+        if (usersDBS != null && usersDBS.size()>0) {
+
+        } else {
+            UsersDB usersDB=new UsersDB();
+            usersDB.setUserName(loginBean.getData().getName());
+            usersDB.setSessionId(loginBean.getData().getSessionId());
+            usersDB.save();
+        }
         Constants.sessionId=loginBean.getData().getSessionId();
         Constants.user_name=loginBean.getData().getName();
         PreferenceUtils.setPrefString(_mActivity,Constants.sessionId_key,loginBean.getData().getSessionId());
@@ -165,7 +172,7 @@ public class LoginFragment extends BaseFragment<LoginFragmentC.Presenter> implem
         if (from == Constants.MainActivityCode){
             EventBus.getDefault().postSticky(new EvenBus_LoginSuccess(100));
         }
-        _mActivity.onBackPressed();
+        _mActivity.finish();
 
 
     }

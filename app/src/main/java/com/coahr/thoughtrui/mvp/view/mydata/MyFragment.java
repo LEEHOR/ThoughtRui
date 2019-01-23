@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
-import android.support.annotation.NonNull;
-import android.view.TouchDelegate;
+import androidx.annotation.NonNull;
+
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,7 +26,6 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
-import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
 import com.coahr.thoughtrui.widgets.CircularImageView;
 import com.socks.library.KLog;
@@ -115,16 +114,19 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_xx_back: //消息中心
+                ToastUtils.showLong("暂未完成，敬请期待");
                 break;
             case R.id.iv_sjsc_back: //数据上传设置
+                ToastUtils.showLong("暂未完成，敬请期待");
                 break;
             case R.id.iv_qchc_back: //清除缓存
+                ToastUtils.showLong("暂未完成，敬请期待");
                 break;
             case R.id.iv_xgmm_back: //修改密码
                 goOtherPage(ConstantsActivity.class, Constants.fragment_myFragment, Constants.fragment_ChangePass);
                 break;
             case R.id.iv_bzfk_back: //帮助与反馈
-                goOtherPage(ConstantsActivity.class, Constants.fragment_myFragment, Constants.fragment_feedback);
+               goOtherPage(ConstantsActivity.class, Constants.fragment_myFragment, Constants.fragment_feedback);
                 break;
             case R.id.tv_quit_account:  //退出登录
                 // quitAccount();

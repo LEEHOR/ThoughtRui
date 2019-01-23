@@ -1,13 +1,11 @@
 package com.coahr.thoughtrui.mvp.view.projectAnnex;
 
-import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
+import com.google.android.material.tabs.TabLayout;
+import androidx.viewpager.widget.ViewPager;
 import android.view.View;
 
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.commom.Constants;
-import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.view.projectAnnex.adapter.AnnexViewPagerAdapter;

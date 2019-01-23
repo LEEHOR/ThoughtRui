@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,16 +17,11 @@ import com.coahr.thoughtrui.DBbean.UsersDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.DensityUtils;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
-import com.coahr.thoughtrui.Utils.JDBC.DataBaseWorkAsync;
-import com.coahr.thoughtrui.Utils.JDBC.JDBCSelectMultiListener;
 import com.coahr.thoughtrui.Utils.KeyBoardUtils;
 import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.Utils.ScreenUtils;
 import com.coahr.thoughtrui.Utils.imageLoader.Imageloader;
 import com.coahr.thoughtrui.commom.Constants;
-import com.socks.library.KLog;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 

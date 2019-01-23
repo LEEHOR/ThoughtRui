@@ -2,13 +2,11 @@ package com.coahr.thoughtrui.widgets;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.v7.widget.AppCompatTextView;
+import androidx.appcompat.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.widget.Checkable;
-import android.widget.TextView;
 
 import com.coahr.thoughtrui.R;
-import com.socks.library.KLog;
 
 /**
  * Created by Leehor
