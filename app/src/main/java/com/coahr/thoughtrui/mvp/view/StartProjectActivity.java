@@ -129,7 +129,10 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                     List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectBy_Where(SubjectsDB.class, new String[]{"ht_id"}, "ht_id=?", questionList.get(i).getId());
                     if (subjectsDBS != null && subjectsDBS.size() > 0) {
                         for (int j = 0; j < subjectsDBS.size(); j++) {
-
+                            SubjectsDB subjectsDB=new SubjectsDB();
+                            subjectsDB.setType(questionList.get(i).getType());
+                            subjectsDB.setOptions(questionList.get(i).getOptions());
+                            subjectsDB.update(subjectsDBS.get(0).getId());
                         }
                     } else {
                         SubjectsDB subjectsDB = new SubjectsDB();
@@ -142,6 +145,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                         subjectsDB.setDescribeStatus(questionList.get(i).getDescribeStatus());
                         subjectsDB.setCensor(questionList.get(i).getCensor());
                         subjectsDB.setIsComplete(0);
+                        subjectsDB.setType(questionList.get(i).getType());
                         subjectsDB.setDh("0");
                         subjectsDB.setNumber(i + 1);
                         subjectsDB.setsUploadStatus(0);

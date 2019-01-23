@@ -24,6 +24,7 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
         manifestPlaceholders = [qqappid: "1232323"]
         testInstrumentationRunner "android.support.ThreeNode.runner.AndroidJUnitRunner"
        // ndk { abiFilters "armeabi", "arm64-v8a", "x86", "x86_64", "armeabi-v7a" }
@@ -138,7 +139,7 @@ dependencies {
     implementation 'com.yanzhenjie:permission:2.0.0-rc12'
 
     //阿里云热更新
-    implementation('com.aliyun.ams:alicloud-android-hotfix:3.2.6') {
+    implementation('com.aliyun.ams:alicloud-android-hotfix:3.2.8') {
         exclude(module: 'alicloud-android-utdid')
         exclude(module: 'alicloud-android-utils')
     }

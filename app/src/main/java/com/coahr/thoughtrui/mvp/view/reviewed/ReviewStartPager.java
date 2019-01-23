@@ -84,7 +84,7 @@ public class ReviewStartPager extends BaseFragment {
 
     @Override
     public void initView() {
-        myTittleBar.getTvTittle().setText("第一题");
+
         review_start_viewpager.setScrollable(false);
         myTittleBar.getLeftIcon().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +100,8 @@ public class ReviewStartPager extends BaseFragment {
             ht_id_list = getArguments().getStringArrayList("ht_id_list");
             position = getArguments().getInt("position");
             ht_projectId= getArguments().getString("ht_projectId");
+
+
             setViewPager();
         }
     }
@@ -147,6 +149,10 @@ public class ReviewStartPager extends BaseFragment {
     private void setViewPager() {
         List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", ht_projectId);
         if (projectsDBS != null && projectsDBS.size() > 0) {
+            List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectByTogether_Where(SubjectsDB.class, "ht_id=?", ht_id_list.get(position));
+            if (subjectsDBS != null && subjectsDBS.size()>0) {
+                myTittleBar.getTvTittle().setText("第"+subjectsDBS.get(0).getNumber()+"题");
+            }
             List<SubjectsDB> subjectsDBList = projectsDBS.get(0).getSubjectsDBList();
             if (subjectsDBList != null && subjectsDBList.size()>0) {
                 adapter = new ReviewStartPagerAdapter(getChildFragmentManager(), ht_id_list, ht_id_list.size(), String.valueOf(projectsDBS.get(0).getId()), ht_projectId);

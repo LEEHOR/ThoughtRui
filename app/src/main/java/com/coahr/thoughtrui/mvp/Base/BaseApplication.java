@@ -1,6 +1,7 @@
 package com.coahr.thoughtrui.mvp.Base;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import androidx.multidex.MultiDexApplication;
@@ -91,10 +92,9 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-       initSophix();
+      // initSophix();
     }
     private void initPush() {
-
         PushAgent mPushAgent = PushAgent.getInstance(this);
         //sdk开启通知声音
         mPushAgent.setNotificationPlaySound(MsgConstant.NOTIFICATION_PLAY_SDK_ENABLE);

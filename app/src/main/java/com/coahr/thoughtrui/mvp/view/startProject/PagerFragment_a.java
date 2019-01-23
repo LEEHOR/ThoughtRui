@@ -14,11 +14,19 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +36,7 @@ import com.coahr.thoughtrui.Utils.DensityUtils;
 import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.Utils.FileIoUtils.SaveOrGetAnswers;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
+import com.coahr.thoughtrui.Utils.KeyBoardUtils;
 import com.coahr.thoughtrui.Utils.Permission.OnRequestPermissionListener;
 import com.coahr.thoughtrui.Utils.Permission.RequestPermissionUtils;
 import com.coahr.thoughtrui.Utils.Permission.RuntimeRationale;
@@ -93,6 +102,13 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     RadioButton rb_yes;  //选择是
     @BindView(R.id.rb_no)
     RadioButton rb_no;  //选择否
+    //===============填空题组=================
+    @BindView(R.id.re_score)
+    RelativeLayout re_score;  //填空控制
+    @BindView(R.id.tv_standard_score)
+    TextView tv_standard_score;  //填空标准分
+    @BindView(R.id.ed_score)
+    EditText ed_score;    //填写得分
     @BindView(R.id.Fr_takePhoto)
     FrameLayout Fr_takePhoto;  //拍照
     @BindView(R.id.tv_recorderBtn)
@@ -154,6 +170,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     private int type = 1;
     private String audioName;
     private SubjectsDB subjectsDB_now;
+    private int subjectsDBType;
 
     public static PagerFragment_a newInstance(int position, String DbProjectId, String ht_ProjectId, int countSize, String name_project, String ht_id) {
         PagerFragment_a pagerFragment_a = new PagerFragment_a();
@@ -246,6 +263,44 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 }
             }
         });
+
+        ed_score.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ed_score.setFocusable(true);
+                ed_score.setFocusableInTouchMode(true);
+            }
+        });
+        ed_score.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                //发送键
+                if(actionId == EditorInfo.IME_ACTION_SEND){
+                    if (v.getText() != null && !v.getText().equals("")) {
+                        p.saveAnswers(v.getText().toString(), remark, ht_projectId, number, ht_id);
+                    }
+                }
+                return true;
+            }
+        });
+      /*  ed_score.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (TextUtils.isEmpty(s) || s.toString().equals("")){
+                    p.saveAnswers(s.toString(), remark, ht_projectId, number, ht_id);
+                }
+            }
+        });*/
     }
 
     @Override
@@ -295,8 +350,8 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                             public void onFinish(int rowsAffected) {
                                 if (rowsAffected == 1) {
                                     EventBus.getDefault().postSticky(new isCompleteBean(true, number + 1, 2));
-                                    ProjectSuccessDialog projectSuccessDialog = ProjectSuccessDialog.newInstance(ht_projectId);
-                                    projectSuccessDialog.show(getChildFragmentManager(), TAG);
+                                 //  ProjectSuccessDialog projectSuccessDialog = ProjectSuccessDialog.newInstance(ht_projectId);
+                                  //  projectSuccessDialog.show(getChildFragmentManager(), TAG);
                                 }
                             }
                         });
@@ -359,26 +414,28 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         if (subjectsDB != null) {
             //题目
             project_detail_titlle.setText(subjectsDB.getTitle());
-            //选项
-            String options = subjectsDB.getOptions();
-            if (options != null) {    //选项
-                String[] split = options.split("&");
-                if (split != null && split.length > 0) {
-                    for (int i = 0; i < split.length; i++) {
-                        if (i == 0) {
-                            rb_yes.setText(split[0]);
-                        }
-                        if (i == 1) {
-                            rb_no.setText(split[1]);
-                        }
-                    }
-                }
+            //String options = subjectsDB.getOptions();
+            //判断是填空题还是选择题
+           this.subjectsDBType = subjectsDB.getType();
+            if (subjectsDB.getType()==0) {  //判断
+                re_score.setVisibility(View.GONE);
+                rg_gr.setVisibility(View.VISIBLE);
             }
-            //描述
+
+            if (subjectsDB.getType()==1){  //填空题
+                re_score.setVisibility(View.VISIBLE);
+                rg_gr.setVisibility(View.GONE);
+                tv_standard_score.setText("标准分数："+subjectsDB.getOptions());
+
+            }
+            p.getAnswer(ht_projectId,_mActivity,number,ht_id);
+            p.getImage(ht_projectId,_mActivity,number,ht_id);
+            p.getAudio(ht_projectId,_mActivity,number,ht_id);
+         /*   //描述
             String description = subjectsDB.getDescription();
             if (description != null && !description.equals("")) {
                 tv_describe.setText(description);
-            }
+            }*/
         }
     }
 
@@ -425,34 +482,63 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     @Override
     public void getAnswerSuccess(String Massage) {
         if (Massage != null) {
-            String[] split = Massage.split("&");
-            if (split != null && split.length > 0) {
-                for (int i = 0; i < split.length; i++) {
-                    if (i == 0) {
-                        String s = split[0];
-                        String string = SaveOrGetAnswers.getString(s, ":");
-                        if (string != null && !string.equals("") && !string.equals("null")) {
-                            answers = string;
-                            isAnswer = true;
-                            if (string.equals("是")) {
-                                rb_yes.toggle();
+            if (subjectsDBType==0) { //判断题
+                String[] split = Massage.split("&");
+                if (split != null && split.length > 0) {
+                    for (int i = 0; i < split.length; i++) {
+                        if (i == 0) {
+                            String s = split[0];
+                            String string = SaveOrGetAnswers.getString(s, ":");
+                            if (string != null && !string.equals("") && !string.equals("null")) {
+                                answers = string;
+                                isAnswer = true;
+                                if (string.equals("是")) {
+                                    rb_yes.toggle();
+                                }
+                                if (string.equals("否")) {
+                                    rb_no.toggle();
+                                }
+                                KLog.d("选择" + string);
                             }
-                            if (string.equals("否")) {
-                                rb_no.toggle();
-                            }
-                            KLog.d("选择" + string);
                         }
-                    }
-                    if (i == 1) {
-                        String s1 = split[1];
-                        String string1 = SaveOrGetAnswers.getString(s1, ":");
-                        if (string1 != null && !string1.equals("") && !string1.equals("null")) {
-                            remark = string1;
-                            tv_bianji.setText(string1);
+                        if (i == 1) {
+                            String s1 = split[1];
+                            String string1 = SaveOrGetAnswers.getString(s1, ":");
+                            if (string1 != null && !string1.equals("") && !string1.equals("null")) {
+                                remark = string1;
+                                tv_bianji.setText(string1);
+                            }
                         }
                     }
                 }
             }
+
+            if (subjectsDBType==1) {    //填空题
+                String[] split = Massage.split("&");
+                if (split != null && split.length > 0) {
+                    for (int i = 0; i < split.length; i++) {
+                        if (i == 0) {
+                            String s = split[0];
+                            String string = SaveOrGetAnswers.getString(s, ":");
+                            if (string != null && !string.equals("") && !string.equals("null")) {
+                                answers = string;
+                                isAnswer = true;
+                              ed_score.setText(string);
+                                KLog.d("选择" + string);
+                            }
+                        }
+                        if (i == 1) {
+                            String s1 = split[1];
+                            String string1 = SaveOrGetAnswers.getString(s1, ":");
+                            if (string1 != null && !string1.equals("") && !string1.equals("null")) {
+                                remark = string1;
+                                tv_bianji.setText(string1);
+                            }
+                        }
+                    }
+                }
+            }
+
         }
     }
 
@@ -474,6 +560,10 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
     @Override
     public void saveAnswersSuccess() {
+        ed_score.setFocusable(false);
+        ed_score.setFocusableInTouchMode(false);
+        KeyBoardUtils.hideKeybord(ed_score,_mActivity);
+
         p.getAnswer(ht_projectId, _mActivity, number, ht_id);
         ToastUtils.showLong("答案保存成功");
     }

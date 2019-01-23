@@ -38,9 +38,9 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
         List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectByTogether_Where(SubjectsDB.class, "ht_id=?", ht_id);
         if (subjectsDBS != null && subjectsDBS.size() > 0) {
             KLog.d("题目Id", subjectsDBS.get(0).getHt_id());
-            getImage(ht_ProjectId,activity,number,ht_id);
-            getAnswer(ht_ProjectId,activity,number,ht_id);
-            getAudio(ht_ProjectId,activity,number,ht_id);
+           // getImage(ht_ProjectId,activity,number,ht_id);
+          //  getAnswer(ht_ProjectId,activity,number,ht_id);
+          //  getAudio(ht_ProjectId,activity,number,ht_id);
             getPresenter().getSubjectSuccess(subjectsDBS.get(0));
         } else {
             getPresenter().getSubjectFailure("0");

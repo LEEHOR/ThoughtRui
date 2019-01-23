@@ -10,8 +10,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.View;
 
+import com.coahr.thoughtrui.DBbean.ProjectsDB;
+import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.DensityUtils;
+import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.Permission.OnRequestPermissionListener;
 import com.coahr.thoughtrui.Utils.Permission.RequestPermissionUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
@@ -23,6 +26,7 @@ import com.coahr.thoughtrui.mvp.presenter.ReviewInfoList_P;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
 import com.coahr.thoughtrui.mvp.view.reviewed.adapter.ReviewInfoListAdapter;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
+import com.socks.library.KLog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -111,9 +115,8 @@ public class ReviewInfoList extends BaseFragment<ReviewInfoList_C.Presenter> imp
                         for (int i = 0; i < list.size(); i++) {
                             targetList.add(list.get(i).getId());
                         }
-                        ToastUtils.showLong("暂未完成，敬请期待");
-                     //   start(ReviewStartPager.newInstance(targetList, position, projectId));
-                        //  EventBus.getDefault().postSticky(new Evenbus_Review(projectId,position,targetList));
+                        ToastUtils.showLong("尚未完成，敬请期待");
+                       // start(ReviewStartPager.newInstance(targetList, position, projectId));
                     }
                 }
 
@@ -144,6 +147,29 @@ public class ReviewInfoList extends BaseFragment<ReviewInfoList_C.Presenter> imp
         if (censorInfoList.getData() != null) {
             list = censorInfoList.getData().getList();
             if (list != null && list.size() > 0) {
+                for (int i = 0; i < list.size(); i++) {
+                    List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectByTogether_Where(SubjectsDB.class, "ht_id=?", list.get(i).getId());
+                    if (subjectsDBS != null && subjectsDBS.size()>0) {
+                        SubjectsDB subjectsDB=new SubjectsDB();
+                       // subjectsDB.setIsComplete(0);
+                        subjectsDB.setToDefault("isComplete");
+                       // subjectsDB.setsUploadStatus(0);
+                        subjectsDB.setToDefault("sUploadStatus");
+                        subjectsDB.update(subjectsDBS.get(0).getId());
+                        KLog.d("题目修改",subjectsDBS.get(0).getId());
+                    }
+                }
+
+                List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", projectId);
+                if (projectsDBS != null && projectsDBS.size()>0) {
+                    ProjectsDB projectsDB=new ProjectsDB();
+                    //projectsDB.setpUploadStatus(0);
+                  //  projectsDB.setIsComplete(0);
+                    projectsDB.setToDefault("isComplete");
+                    projectsDB.setToDefault("pUploadStatus");
+                    projectsDB.update(projectsDBS.get(0).getId());
+                    KLog.d("项目修改",projectsDBS.get(0).getId());
+                }
                 adapter.setTag(statues);
                 adapter.setNewData(censorInfoList.getData().getList());
             }

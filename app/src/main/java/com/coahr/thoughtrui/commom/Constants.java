@@ -126,6 +126,12 @@ public class Constants {
     //devicestoken
     public static  String devicestoken_key="devicestoken";
 
-
+    //阿里云热更新
     public static String AliYunHot_key="aliyun_hot";
+    //补丁说明
+    public static String path_key="aliyun_path";
+    //补丁版本
+    public static String pathVersion_key="aliyun_path_version";
+    //app版本
+    public static String app_version_key="app_version";
 }

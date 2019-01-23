@@ -86,7 +86,8 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
     @BindView(R.id.tv_project_describe)
     TextView tv_project_describe;  //项目描述
     private String projectId;
-    private boolean isHavePermission=false;
+    private boolean isHaveAudioPermission=false;
+    private boolean isHaveLocationPermission=false;
 
     public static ProjectDetailFragment newInstance(String projectId) {
         ProjectDetailFragment projectDetailFragment=new ProjectDetailFragment();
@@ -139,7 +140,9 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.kaoqing:
-                JumpToAttendance();
+                if (getLocationPermission()) {
+                    JumpToAttendance();
+                }
                 break;
             case R.id.fangwen:
                 if (getAudioPermission()) {
@@ -167,7 +170,9 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        JumpToAttendance();
+                        if (getLocationPermission()) {
+                            JumpToAttendance();
+                        }
                     }
                 }).onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
@@ -287,19 +292,19 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
             RequestPermissionUtils.requestPermission(_mActivity, new OnRequestPermissionListener() {
                         @Override
                         public void PermissionSuccess(List<String> permissions) {
-                            isHavePermission = false;
+                            isHaveAudioPermission = false;
                             // EventBus.getDefault().postSticky(new EvenBus_recorderType(1, String.valueOf(number), Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id));
                         }
 
                         @Override
                         public void PermissionFail(List<String> permissions) {
                             ToastUtils.showLong("获取"+permissions.get(0)+"失败");
-                            isHavePermission = false;
+                            isHaveAudioPermission = false;
                         }
 
                         @Override
                         public void PermissionHave() {
-                            isHavePermission = true;
+                            isHaveAudioPermission = true;
                             //EventBus.getDefault().postSticky(new EvenBus_recorderType(1, String.valueOf(number), Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id));
                         }
                     }, Manifest.permission.RECORD_AUDIO
@@ -307,9 +312,43 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
                     , Manifest.permission.READ_EXTERNAL_STORAGE);
 
         } else {
-            isHavePermission = true;
+            isHaveAudioPermission = true;
             // EventBus.getDefault().postSticky(new EvenBus_recorderType(1, String.valueOf(number), Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id));
         }
-        return isHavePermission;
+        return isHaveAudioPermission;
+    }
+
+
+    /*    *
+     * 动态获取录音权限
+     */
+    private boolean getLocationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            RequestPermissionUtils.requestPermission(_mActivity, new OnRequestPermissionListener() {
+                        @Override
+                        public void PermissionSuccess(List<String> permissions) {
+                            isHaveLocationPermission = false;
+                            // EventBus.getDefault().postSticky(new EvenBus_recorderType(1, String.valueOf(number), Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id));
+                        }
+
+                        @Override
+                        public void PermissionFail(List<String> permissions) {
+                            ToastUtils.showLong("获取"+permissions.get(0)+"失败");
+                            isHaveLocationPermission = false;
+                        }
+
+                        @Override
+                        public void PermissionHave() {
+                            isHaveLocationPermission = true;
+                            //EventBus.getDefault().postSticky(new EvenBus_recorderType(1, String.valueOf(number), Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id));
+                        }
+                    }, Manifest.permission.ACCESS_FINE_LOCATION
+                    , Manifest.permission.ACCESS_COARSE_LOCATION);
+
+        } else {
+            isHaveLocationPermission = true;
+            // EventBus.getDefault().postSticky(new EvenBus_recorderType(1, String.valueOf(number), Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id));
+        }
+        return isHaveLocationPermission;
     }
 }

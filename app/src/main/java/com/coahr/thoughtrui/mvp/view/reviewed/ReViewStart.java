@@ -15,10 +15,14 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +32,7 @@ import com.coahr.thoughtrui.Utils.DensityUtils;
 import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.Utils.FileIoUtils.SaveOrGetAnswers;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
+import com.coahr.thoughtrui.Utils.KeyBoardUtils;
 import com.coahr.thoughtrui.Utils.Permission.OnRequestPermissionListener;
 import com.coahr.thoughtrui.Utils.Permission.RequestPermissionUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
@@ -90,6 +95,13 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
     RadioButton rb_yes;  //选择是
     @BindView(R.id.rb_no)
     RadioButton rb_no;  //选择否
+    //===============填空题组=================
+    @BindView(R.id.re_score)
+    RelativeLayout re_score;  //填空控制
+    @BindView(R.id.tv_standard_score)
+    TextView tv_standard_score;  //填空标准分
+    @BindView(R.id.ed_score)
+    EditText ed_score;    //填写得分
     @BindView(R.id.Fr_takePhoto)
     FrameLayout Fr_takePhoto;  //拍照
     @BindView(R.id.tv_recorderBtn)
@@ -139,6 +151,8 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
     private int type = 1;
     private String audioName;
     private SubjectsDB subjectsDB_now;
+    private int subjectsDBType;
+    private int position;
 
     public static ReViewStart newInstance(int position, String DbProjectId, String ht_ProjectId, int countSize, String ht_id) {
         ReViewStart reViewStart = new ReViewStart();
@@ -176,6 +190,7 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
             ht_projectId = getArguments().getString("ht_ProjectId");
             countSize = getArguments().getInt("countSize");
             ht_id = getArguments().getString("ht_id");
+            position = getArguments().getInt("position");
             List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectBy_Where(SubjectsDB.class, new String[]{"number"}, "ht_id=?", ht_id);
             if (subjectsDBS != null && subjectsDBS.size() > 0) {
                 number = subjectsDBS.get(0).getNumber();
@@ -231,6 +246,25 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
             }
 
         });
+        ed_score.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ed_score.setFocusable(true);
+                ed_score.setFocusableInTouchMode(true);
+            }
+        });
+        ed_score.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                //发送键
+                if(actionId == EditorInfo.IME_ACTION_SEND){
+                    if (v.getText() != null && !v.getText().equals("")) {
+                        p.saveAnswers(v.getText().toString(), remark, ht_projectId, number, ht_id);
+                    }
+                }
+                return true;
+            }
+        });
     }
 
     @Override
@@ -245,29 +279,24 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
     @Override
     public void getSubjectSuccess(SubjectsDB subjectsDB) {
         this.subjectsDB_now = subjectsDB;
+        this.subjectsDBType = subjectsDB.getType();
         if (subjectsDB != null) {
             //题目
             project_detail_titlle.setText(subjectsDB.getTitle());
-            //选项
-            String options = subjectsDB.getOptions();
-            if (options != null) {    //选项
-                String[] split = options.split("&");
-                if (split != null && split.length > 0) {
-                    for (int i = 0; i < split.length; i++) {
-                        if (i == 0) {
-                            rb_yes.setText(split[0]);
-                        }
-                        if (i == 1) {
-                            rb_no.setText(split[1]);
-                        }
-                    }
-                }
+            if (subjectsDB.getType()==0) {  //判断
+                re_score.setVisibility(View.GONE);
+                rg_gr.setVisibility(View.VISIBLE);
             }
-            //描述
-            String description = subjectsDB.getDescription();
-            if (description != null && !description.equals("")) {
-                tv_describe.setText(description);
+
+            if (subjectsDB.getType()==1){  //填空题
+                re_score.setVisibility(View.VISIBLE);
+                rg_gr.setVisibility(View.GONE);
+                tv_standard_score.setText("标准分数："+subjectsDB.getOptions());
+
             }
+            p.getAnswer(ht_projectId,_mActivity,number,ht_id);
+            p.getImage(ht_projectId,_mActivity,number,ht_id);
+            p.getAudio(ht_projectId,_mActivity,number,ht_id);
         }
     }
 
@@ -308,34 +337,63 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
     @Override
     public void getAnswerSuccess(String Massage) {
         if (Massage != null) {
-            String[] split = Massage.split("&");
-            if (split != null && split.length > 0) {
-                for (int i = 0; i < split.length; i++) {
-                    if (i == 0) {
-                        String s = split[0];
-                        String string = SaveOrGetAnswers.getString(s, ":");
-                        if (string != null && !string.equals("") && !string.equals("null")) {
-                            answers = string;
-                            isAnswer = true;
-                            if (string.equals("是")) {
-                                rb_yes.toggle();
+            if (subjectsDBType==0) { //判断题
+                String[] split = Massage.split("&");
+                if (split != null && split.length > 0) {
+                    for (int i = 0; i < split.length; i++) {
+                        if (i == 0) {
+                            String s = split[0];
+                            String string = SaveOrGetAnswers.getString(s, ":");
+                            if (string != null && !string.equals("") && !string.equals("null")) {
+                                answers = string;
+                                isAnswer = true;
+                                if (string.equals("是")) {
+                                    rb_yes.toggle();
+                                }
+                                if (string.equals("否")) {
+                                    rb_no.toggle();
+                                }
+                                KLog.d("选择" + string);
                             }
-                            if (string.equals("否")) {
-                                rb_no.toggle();
-                            }
-                            KLog.d("选择" + string);
                         }
-                    }
-                    if (i == 1) {
-                        String s1 = split[1];
-                        String string1 = SaveOrGetAnswers.getString(s1, ":");
-                        if (string1 != null && !string1.equals("") && !string1.equals("null")) {
-                            remark = string1;
-                            tv_bianji.setText(string1);
+                        if (i == 1) {
+                            String s1 = split[1];
+                            String string1 = SaveOrGetAnswers.getString(s1, ":");
+                            if (string1 != null && !string1.equals("") && !string1.equals("null")) {
+                                remark = string1;
+                                tv_bianji.setText(string1);
+                            }
                         }
                     }
                 }
             }
+
+            if (subjectsDBType==1) {    //填空题
+                String[] split = Massage.split("&");
+                if (split != null && split.length > 0) {
+                    for (int i = 0; i < split.length; i++) {
+                        if (i == 0) {
+                            String s = split[0];
+                            String string = SaveOrGetAnswers.getString(s, ":");
+                            if (string != null && !string.equals("") && !string.equals("null")) {
+                                answers = string;
+                                isAnswer = true;
+                                ed_score.setText(string);
+                                KLog.d("选择" + string);
+                            }
+                        }
+                        if (i == 1) {
+                            String s1 = split[1];
+                            String string1 = SaveOrGetAnswers.getString(s1, ":");
+                            if (string1 != null && !string1.equals("") && !string1.equals("null")) {
+                                remark = string1;
+                                tv_bianji.setText(string1);
+                            }
+                        }
+                    }
+                }
+            }
+
         }
     }
 
@@ -363,6 +421,11 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
 
     @Override
     public void saveAnswersSuccess() {
+        ed_score.setFocusable(false);
+        ed_score.setFocusableInTouchMode(false);
+        KeyBoardUtils.hideKeybord(ed_score,_mActivity);
+
+        p.getAnswer(ht_projectId, _mActivity, number, ht_id);
         ToastUtils.showLong("答案保存成功");
     }
 
@@ -478,7 +541,7 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
         switch (v.getId()) {
             //上一题
             case R.id.tv_last:
-                if (number > 1) {
+                if (position >0) {
                     if (isComplete()) {
                         SubjectsDB subjectsDB = new SubjectsDB();
                         subjectsDB.setIsComplete(1);
@@ -501,7 +564,7 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
                 break;
             //下一题
             case R.id.tv_next:
-                if (number < countSize) {
+                if (position <countSize-1) {
                     if (isComplete()) {
                         SubjectsDB subjectsDB = new SubjectsDB();
                         subjectsDB.setIsComplete(1);
@@ -686,39 +749,6 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
         }
     }
 
-    /**
-     * 动态获取录音权限
-     */
-    private void getAudioPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            RequestPermissionUtils.requestPermission(_mActivity, new OnRequestPermissionListener() {
-                        @Override
-                        public void PermissionSuccess(List<String> permissions) {
-                            //  isHavePermission = true;
-                            recorder.startRecording();
-                            // EventBus.getDefault().postSticky(new EvenBus_recorderType(1, String.valueOf(number), Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id));
-                        }
-
-                        @Override
-                        public void PermissionFail(List<String> permissions) {
-                            // isHavePermission = false;
-                            Toast.makeText(_mActivity, "获取权限失败无法录音", Toast.LENGTH_LONG).show();
-                        }
-
-                        @Override
-                        public void PermissionHave() {
-                            recorder.startRecording();
-                            //EventBus.getDefault().postSticky(new EvenBus_recorderType(1, String.valueOf(number), Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id));
-                        }
-                    }, Manifest.permission.RECORD_AUDIO
-                    , Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    , Manifest.permission.READ_EXTERNAL_STORAGE);
-
-        } else {
-            recorder.startRecording();
-            // EventBus.getDefault().postSticky(new EvenBus_recorderType(1, String.valueOf(number), Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id));
-        }
-    }
 
     /**
      * 开始录音

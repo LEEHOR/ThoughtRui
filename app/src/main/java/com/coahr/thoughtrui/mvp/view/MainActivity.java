@@ -103,9 +103,9 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
                 showFragment(position);
             }
         });
-        /**
+   /*     *//**
          * 阿里云热更新监听
-         */
+         *//*
         BaseApplication.setListener(new BaseApplication.MsgDisplayListener() {
             @Override
             public void CODE_DOWNLOAD_SUCCESS(String appVersion,String Info, int HandlePatchVersion) {
@@ -131,7 +131,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
             public void Other(String appVersion,int code, String Info, int HandlePatchVersion) {
 
             }
-        });
+        });*/
     }
 
     @Override
