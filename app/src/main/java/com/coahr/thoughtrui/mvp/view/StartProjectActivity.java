@@ -5,13 +5,18 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.baidu.location.BDLocation;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
+import com.coahr.thoughtrui.Utils.BaiDuLocation.BaiduLocationHelper;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.NetWorkAvailable;
 import com.coahr.thoughtrui.Utils.ScreenUtils;
@@ -32,6 +37,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +62,19 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     MyTittleBar p_mytitle;
     private StartProjectAdapter startProjectAdapter;
     private int subject_size; //题目个数
-
+        //定位是否成功
+    private boolean isLocationSuccess;
+    //是否首次定位
+    private boolean isFirstLocation;
+    private double latitude;
+    private double longitude;
+    private Handler mHandler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+        }
+    };
+    private BaiduLocationHelper baiduLocationHelper_s;
     @Override
     public StartProjectActivity_C.Presenter getPresenter() {
         return p;
@@ -84,8 +103,8 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         p_mytitle.getRightText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              //  ProjectSuccessDialog projectSuccessDialog=ProjectSuccessDialog.newInstance(Constants.ht_ProjectId);
-               // projectSuccessDialog.show(getSupportFragmentManager(),TAG);
+                //  ProjectSuccessDialog projectSuccessDialog=ProjectSuccessDialog.newInstance(Constants.ht_ProjectId);
+                // projectSuccessDialog.show(getSupportFragmentManager(),TAG);
                 Intent intent = new Intent(StartProjectActivity.this, ConstantsActivity.class);
                 intent.putExtra("to", Constants.fragment_topics);
                 startActivity(intent);
@@ -103,9 +122,10 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     @Override
     public void initData() {
         if (getNetWork()) {
-            getData();
+            p.getLocation(2);
         } else {
-            p.getOfflineDate(Constants.DbProjectId, Constants.ht_ProjectId);
+            ToastUtils.showLong("请开启网络以定位");
+            //p.getOfflineDate(Constants.DbProjectId, Constants.ht_ProjectId);
         }
     }
 
@@ -120,16 +140,35 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     }
 
     @Override
+    public void getLocationSuccess(BDLocation location, BaiduLocationHelper baiduLocationHelper) {
+        this.isLocationSuccess = true;
+        this.baiduLocationHelper_s=baiduLocationHelper;
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+        if (!isFirstLocation) {
+            mHandler.post(run_location);
+            getData();
+        }
+        isFirstLocation=true;
+
+    }
+
+    @Override
+    public void getLocationFailure(int failure, BaiduLocationHelper baiduLocationHelper) {
+        this.isLocationSuccess=false;
+    }
+
+    @Override
     public void getMainDataSuccess(QuestionBean questionBean) {
         final List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "id=?", Constants.DbProjectId);
-        if (projectsDBS !=null && projectsDBS.size()>0) {
+        if (projectsDBS != null && projectsDBS.size() > 0) {
             final List<QuestionBean.DataBean.QuestionListBean> questionList = questionBean.getData().getQuestionList();
             if (questionList != null && questionList.size() > 0) {
                 for (int i = 0; i < questionList.size(); i++) {
                     List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectBy_Where(SubjectsDB.class, new String[]{"ht_id"}, "ht_id=?", questionList.get(i).getId());
                     if (subjectsDBS != null && subjectsDBS.size() > 0) {
                         for (int j = 0; j < subjectsDBS.size(); j++) {
-                            SubjectsDB subjectsDB=new SubjectsDB();
+                            SubjectsDB subjectsDB = new SubjectsDB();
                             subjectsDB.setType(questionList.get(i).getType());
                             subjectsDB.setOptions(questionList.get(i).getOptions());
                             subjectsDB.update(subjectsDBS.get(0).getId());
@@ -175,7 +214,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
 
             }
             p.getOfflineDate(Constants.DbProjectId, Constants.ht_ProjectId);
-        }else {
+        } else {
             ToastUtils.showLong("当前项目不存在");
         }
     }
@@ -193,6 +232,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         startProjectAdapter = new StartProjectAdapter(getSupportFragmentManager(), size, dbProjectId, ht_projectId, Constants.name_Project, ht_list);
         project_viewPage.setAdapter(startProjectAdapter);
         project_viewPage.setCurrentItem(0);
+
     }
 
     @Override
@@ -227,6 +267,10 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                 }).onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                if (baiduLocationHelper_s != null) {
+                    baiduLocationHelper_s.stopLocation();
+                }
+                mHandler.removeCallbacks(run_location);
                 finish();
             }
         }).build().show();
@@ -237,8 +281,8 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
+        mHandler.removeCallbacks(run_location);
         super.onDestroy();
-
     }
 
     /**
@@ -246,7 +290,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
      *
      * @param isCompleteBean
      */
-    @Subscribe(threadMode = ThreadMode.MAIN,sticky =true)
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void Event(isCompleteBean isCompleteBean) {
         int isposition = isCompleteBean.getPosition();
         int isupOrDown = isCompleteBean.getUpOrDown();
@@ -255,15 +299,15 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         if (complete) {
             if (isupOrDown == 1) {  //上翻页
                 KLog.d("上翻页" + isposition);
-                if (isposition>0){
-                    project_viewPage.setCurrentItem(project_viewPage.getCurrentItem()-1, true);
+                if (isposition > 0) {
+                    project_viewPage.setCurrentItem(project_viewPage.getCurrentItem() - 1, true);
                     p_mytitle.getTvTittle().setText("第" + (isposition) + "题");
                 }
 
             }
             if (isupOrDown == 2) {
                 KLog.d("下翻页" + isposition);
-                project_viewPage.setCurrentItem(project_viewPage.getCurrentItem()+1);
+                project_viewPage.setCurrentItem(project_viewPage.getCurrentItem() + 1);
                 p_mytitle.getTvTittle().setText("第" + (isposition) + "题");
 
             }
@@ -280,4 +324,16 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         }
     }
 
+    /**
+     * 设置系统时间
+     */
+    private Runnable run_location = new Runnable() {
+        @Override
+        public void run() {
+                if (isLocationSuccess){
+                    KLog.d("发送数据");
+                }
+            mHandler.postDelayed(run_location, 1000*3);
+        }
+    };
 }

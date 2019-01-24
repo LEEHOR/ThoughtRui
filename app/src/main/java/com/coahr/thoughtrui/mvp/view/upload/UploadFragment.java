@@ -182,7 +182,6 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                     if (haslogin()) {
                         p.getProjectList(Constants.sessionId);
                     }
-
                 } else {
                     up_swipe.setRefreshing(false);
                 }
@@ -216,11 +215,12 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
             public void OnClickItem(ProjectsDB projectsDB) {
                 projectsDB_click=projectsDB;
                 type=3;
-                if (NetType == 2) {
-                    Dialog("提示", "当前为4G信号是否继续上传", type);
-                } else {
-                    getOSS();
-                }
+//                if (NetType == 2) {
+//                    Dialog("提示", "当前为4G信号是否继续上传", type);
+//                } else {
+//                    getOSS();
+//                }
+                ToastUtils.showLong("暂未完成，敬请期待");
             }
         });
     }

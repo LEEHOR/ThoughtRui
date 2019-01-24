@@ -1,5 +1,7 @@
 package com.coahr.thoughtrui.mvp.presenter;
 
+import com.baidu.location.BDLocation;
+import com.coahr.thoughtrui.Utils.BaiDuLocation.BaiduLocationHelper;
 import com.coahr.thoughtrui.mvp.Base.BasePresenter;
 import com.coahr.thoughtrui.mvp.constract.StartProjectActivity_C;
 import com.coahr.thoughtrui.mvp.model.Bean.QuestionBean;
@@ -20,6 +22,27 @@ public class StartProjectActivity_P extends BasePresenter<StartProjectActivity_C
     @Inject
     public StartProjectActivity_P(StartProjectActivity mview, StartProjectActivity_M mModel) {
         super(mview, mModel);
+    }
+
+    @Override
+    public void getLocation(int type) {
+        if (mModle != null) {
+            mModle.getLocation(type);
+        }
+    }
+
+    @Override
+    public void getLocationSuccess(BDLocation location, BaiduLocationHelper baiduLocationHelper) {
+        if (getView() != null) {
+            getView().getLocationSuccess(location,baiduLocationHelper);
+        }
+    }
+
+    @Override
+    public void getLocationFailure(int failure, BaiduLocationHelper baiduLocationHelper) {
+        if (getView() != null) {
+            getView().getLocationFailure(failure,baiduLocationHelper);
+        }
     }
 
     @Override

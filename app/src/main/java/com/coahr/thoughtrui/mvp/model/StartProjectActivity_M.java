@@ -1,6 +1,8 @@
 package com.coahr.thoughtrui.mvp.model;
 
+import com.baidu.location.BDLocation;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
+import com.coahr.thoughtrui.Utils.BaiDuLocation.BaiduLocationHelper;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.StartProjectActivity_C;
@@ -21,6 +23,39 @@ public class StartProjectActivity_M extends BaseModel<StartProjectActivity_C.Pre
     @Inject
     public StartProjectActivity_M() {
         super();
+    }
+    private int locationType=2;
+    private int type;
+    @Inject
+    BaiduLocationHelper baiduLocationHelper;
+
+    private BaiduLocationHelper.OnLocationCallBack onLocationCallBack = new BaiduLocationHelper.OnLocationCallBack() {
+        @Override
+        public void onLocationSuccess(BDLocation location) {
+            //连续定位成功
+            if (locationType == type){
+                if (getPresenter() != null) {
+                    getPresenter().getLocationSuccess(location,baiduLocationHelper);
+                }
+            }
+
+        }
+
+        @Override
+        public void onLocationFailure(int locType) {
+            //连续定位失败
+            if (locationType == type){
+                if (getPresenter() != null) {
+                    getPresenter().getLocationFailure(locType,baiduLocationHelper);
+                }
+            }
+        }
+    };
+    @Override
+    public void getLocation(int type) {
+        this.type = type;
+        initlocation();
+        baiduLocationHelper.startLocation();
     }
 
     @Override
@@ -53,5 +88,13 @@ public class StartProjectActivity_M extends BaseModel<StartProjectActivity_C.Pre
         } else {
             getPresenter().getOfflineFailure(0);
         }
+    }
+    private void initlocation() {
+        baiduLocationHelper.registerLocationCallback(onLocationCallBack);
+    }
+    @Override
+    public void detachPresenter() {
+        super.detachPresenter();
+        baiduLocationHelper.unRegisterLocationCallback(onLocationCallBack);
     }
 }

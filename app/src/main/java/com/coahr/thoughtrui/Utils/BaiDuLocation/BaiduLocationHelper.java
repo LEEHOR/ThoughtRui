@@ -18,7 +18,7 @@ import java.util.Set;
 public class BaiduLocationHelper {
     // 百度地图获取经纬度
     private LocationClient locationClient;
-    private static final int UPDATE_TIME = 3*1000; //默认三秒定位一次
+    private static final int UPDATE_TIME = 10*1000; //默认三秒定位一次
     private static int LOCATION_COUTNS = 0;
 
     private Set<OnLocationCallBack> locationCallBacks = new HashSet<>();

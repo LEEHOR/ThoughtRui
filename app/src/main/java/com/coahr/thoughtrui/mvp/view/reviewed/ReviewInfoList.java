@@ -26,15 +26,11 @@ import com.coahr.thoughtrui.mvp.presenter.ReviewInfoList_P;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
 import com.coahr.thoughtrui.mvp.view.reviewed.adapter.ReviewInfoListAdapter;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
-import com.socks.library.KLog;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.inject.Inject;
-
 import butterknife.BindView;
 
 /**
@@ -116,7 +112,7 @@ public class ReviewInfoList extends BaseFragment<ReviewInfoList_C.Presenter> imp
                             targetList.add(list.get(i).getId());
                         }
                        // ToastUtils.showLong("尚未完成，敬请期待");
-                        start(ReviewStartPager.newInstance(targetList, position, projectId));
+                    //    start(ReviewStartPager.newInstance(targetList, position, projectId));
                     }
                 }
 

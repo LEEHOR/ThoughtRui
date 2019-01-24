@@ -23,7 +23,6 @@ public class AttendanceFM_k extends BaseModel<AttendanceFC_k.Presenter> implemen
         super();
     }
 
-  private int LocationType = 2;
   private int  continuously=4;
   private int type;
   @Inject
