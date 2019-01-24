@@ -3,9 +3,13 @@ package com.coahr.thoughtrui.mvp.Base;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.coahr.thoughtrui.DBbean.UsersDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.DensityUtils;
@@ -22,9 +28,14 @@ import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.Utils.ScreenUtils;
 import com.coahr.thoughtrui.Utils.imageLoader.Imageloader;
 import com.coahr.thoughtrui.commom.Constants;
+import com.coahr.thoughtrui.widgets.BroadcastReceiver.AliyunHotReceiver;
+import com.coahr.thoughtrui.widgets.BroadcastReceiver.isRegister;
+import com.socks.library.KLog;
+import com.taobao.sophix.SophixManager;
 
 import java.util.List;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import dagger.android.support.AndroidSupportInjection;
@@ -39,13 +50,15 @@ import me.yokeyword.fragmentation.SupportFragment;
  * on 2018/11/6
  * on 16:53
  */
-public abstract class BaseFragment<P extends BaseContract.Presenter> extends SupportFragment  implements BaseContract.View {
+public abstract class BaseFragment<P extends BaseContract.Presenter> extends SupportFragment implements BaseContract.View {
     /**
      * 日志输出标志
      **/
     protected final String TAG = this.getClass().getSimpleName();
     Unbinder unbinder;
     private Dialog dialog;
+    private AliyunHotReceiver aliyunHotReceiver;
+
     public abstract P getPresenter();
 
     public abstract int bindLayout();
@@ -55,6 +68,7 @@ public abstract class BaseFragment<P extends BaseContract.Presenter> extends Sup
     public abstract void initData();
 
     protected View addFooterView;
+
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
@@ -66,10 +80,12 @@ public abstract class BaseFragment<P extends BaseContract.Presenter> extends Sup
 
         super.onAttach(context);
     }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -77,29 +93,15 @@ public abstract class BaseFragment<P extends BaseContract.Presenter> extends Sup
         View view = inflater.inflate(bindLayout(), container, false);
 
         if (PreferenceUtils.contains(BaseApplication.mContext, Constants.sessionId_key)) {
-            String sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext,Constants.sessionId_key, null);
-            if (sessionId!=null && !sessionId.equals("")){
-                Constants.sessionId=sessionId;
+            String sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, Constants.sessionId_key, null);
+            if (sessionId != null && !sessionId.equals("")) {
+                Constants.sessionId = sessionId;
                 List<UsersDB> usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", sessionId);
-                if (usersDBS!=null && usersDBS.size()>0){
-                    Constants.user_id=String.valueOf(usersDBS.get(0).getId());
+                if (usersDBS != null && usersDBS.size() > 0) {
+                    Constants.user_id = String.valueOf(usersDBS.get(0).getId());
                 }
-//                DataBaseWorkAsync.DBSelectByTogether_Where(UsersDB.class, new JDBCSelectMultiListener() {
-//                    @Override
-//                    public <T> void SelectMulti(List<T> t) {
-//
-//                        if (t != null && t.size()>0) {
-//                            UsersDB usersDB = (UsersDB) t.get(0);
-//                            int user_id = usersDB.getId();
-//                            Constants.user_id=String.valueOf(user_id);
-//                            KLog.d("设置userid",user_id);
-//                            // PreferenceUtils.setPrefString(BaseApplication.mContext,"DbUserId",String.valueOf(user_id));
-//
-//                        }
-//
-//                    }
-//                }, "sessionid=?", sessionId);
-        }
+
+            }
 
         }
         unbinder = ButterKnife.bind(this, view);
@@ -114,10 +116,12 @@ public abstract class BaseFragment<P extends BaseContract.Presenter> extends Sup
         return view;
     }
 
+
+
     @Override
     public void showLoading() {
         if (dialog == null) {
-            dialog=new Dialog(_mActivity, R.style.dialog_loading);
+            dialog = new Dialog(_mActivity, R.style.dialog_loading);
             dialog.setContentView(R.layout.dialog_loading_layout);
             dialog.setCanceledOnTouchOutside(false);
         }
@@ -127,6 +131,7 @@ public abstract class BaseFragment<P extends BaseContract.Presenter> extends Sup
         }
 
     }
+
     @Override
     public void dismissLoading() {
         if (dialog != null && dialog.isShowing()) {
@@ -142,6 +147,7 @@ public abstract class BaseFragment<P extends BaseContract.Presenter> extends Sup
     public void recieveData(Bundle bundle) {
 
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -149,7 +155,6 @@ public abstract class BaseFragment<P extends BaseContract.Presenter> extends Sup
         if (getPresenter() != null) {
             getPresenter().detachView();
         }
-
     }
 
     public void UpdateUI(View view) {//解决所有页面   touch所有edittext以外view，自动隐藏键盘  通过decorview可以获取所有子view，循环判断设置touch事件
@@ -170,6 +175,7 @@ public abstract class BaseFragment<P extends BaseContract.Presenter> extends Sup
             }
         }
     }
+
     //有刷新ptr功能的fragment页面调用此方法
     public void initPtrFrameLayout(final PtrFrameLayout mPtrFrameLayout) {
         if (null == mPtrFrameLayout) return;
@@ -225,6 +231,7 @@ public abstract class BaseFragment<P extends BaseContract.Presenter> extends Sup
             }
         });
     }
+
     //开始刷新的时候做什么操作，有刷新需求的fragment复写
     public void RefreshBegin() {
 
@@ -252,4 +259,6 @@ public abstract class BaseFragment<P extends BaseContract.Presenter> extends Sup
         }
         return false;
     }
+
+
 }

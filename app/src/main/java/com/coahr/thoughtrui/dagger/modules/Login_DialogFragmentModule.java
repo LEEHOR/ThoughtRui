@@ -1,7 +1,6 @@
 package com.coahr.thoughtrui.dagger.modules;
 
-import com.coahr.thoughtrui.mvp.view.MainActivity;
-import com.coahr.thoughtrui.mvp.view.mydata.LoginFragment;
+import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
 
 import dagger.Module;
 import dagger.Provides;
@@ -12,9 +11,9 @@ import dagger.Provides;
  * on 22:50
  */
 @Module
-public class LoginFragmentModule {
+public class Login_DialogFragmentModule {
     @Provides
     public  String provideName() {
-        return LoginFragment.class.getName();
+        return Login_DialogFragment.class.getName();
     }
 }

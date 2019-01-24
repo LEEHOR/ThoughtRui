@@ -150,7 +150,8 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
                 }
                 break;
             case R.id.attachment:
-                JumpToProjectAnnex();
+                ToastUtils.showLong("打不开哈哈哈");
+              //  JumpToProjectAnnex();
                 break;
         }
     }
@@ -351,4 +352,5 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
         }
         return isHaveLocationPermission;
     }
+
 }

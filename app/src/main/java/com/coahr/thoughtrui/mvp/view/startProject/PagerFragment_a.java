@@ -350,8 +350,8 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                             public void onFinish(int rowsAffected) {
                                 if (rowsAffected == 1) {
                                     EventBus.getDefault().postSticky(new isCompleteBean(true, number + 1, 2));
-                                 //  ProjectSuccessDialog projectSuccessDialog = ProjectSuccessDialog.newInstance(ht_projectId);
-                                  //  projectSuccessDialog.show(getChildFragmentManager(), TAG);
+                                  //  ProjectSuccessDialog projectSuccessDialog = ProjectSuccessDialog.newInstance(ht_projectId);
+                                 //   projectSuccessDialog.show(getChildFragmentManager(), TAG);
                                 }
                             }
                         });

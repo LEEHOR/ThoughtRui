@@ -29,6 +29,7 @@ import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.DensityUtils;
 import com.coahr.thoughtrui.Utils.FileIoUtils.SaveOrGetAnswers;
+import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
@@ -178,7 +179,10 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
             public void onRefresh() {
                 if (!isLoading) {
                     isLoading = true;
-                    p.getProjectList(Constants.sessionId);
+                    if (haslogin()) {
+                        p.getProjectList(Constants.sessionId);
+                    }
+
                 } else {
                     up_swipe.setRefreshing(false);
                 }
@@ -188,11 +192,13 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
 
     @Override
     public void initData() {
-
+        if (haslogin()) {
+            p.getProjectList(Constants.sessionId);
+        }
         //请求AK鉴权
         // p.getSTS(ApiContact.STSSERVER);
         //获取项目数组
-        p.getProjectList(Constants.sessionId);
+
         upLoadAdapter.setSelectChangeListener(new UpLoadAdapter.onSelectChangeListener() {
             @Override
             public void onChange() {

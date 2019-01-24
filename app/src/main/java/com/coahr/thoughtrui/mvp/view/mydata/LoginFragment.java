@@ -37,11 +37,10 @@ import butterknife.BindView;
  * Created by Leehor
  * on 2018/11/13
  * on 21:38
+ * 废弃
  */
-public class LoginFragment extends BaseFragment<LoginFragmentC.Presenter> implements LoginFragmentC.View {
+public class LoginFragment extends BaseFragment {
 
-    @Inject
-    LoginFragmentP p;
     @BindView(R.id.user_account)
     EditText user_account;
     @BindView(R.id.user_password)
@@ -69,7 +68,7 @@ public class LoginFragment extends BaseFragment<LoginFragmentC.Presenter> implem
 
     @Override
     public LoginFragmentC.Presenter getPresenter() {
-        return p;
+        return null;
     }
 
     @Override
@@ -93,56 +92,9 @@ public class LoginFragment extends BaseFragment<LoginFragmentC.Presenter> implem
                 Map<String, Object> map = new HashMap<>();
                 map.put("username", user_account.getText().toString());
                 map.put("password",user_password.getText().toString());
-                p.Login(map);
+                //p.Login(map);
             }
         });
-   /*     user_account.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if ((editable !=null && !editable.toString().equals("") && editable.toString().length()>=3) && !TextUtils.isEmpty(user_password.getText()) && !user_password.getText().toString().equals("") && user_password.getText().toString().length()>=6){
-                    loginBtn.setEnabled(true);
-                    loginBtn.setBackgroundResource(R.color.colorAccent);
-                } else {
-                    loginBtn.setEnabled(false);
-                    loginBtn.setBackgroundResource(R.drawable.bg_loginbtn);
-                    ToastUtils.showLong("请输入正确的账户");
-                }
-            }
-        });*/
-
-    /*    user_password.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if ((editable !=null && !editable.toString().equals("") && editable.toString().length()>=6) && !TextUtils.isEmpty(user_account.getText()) && !user_account.getText().toString().equals("") && user_account.getText().toString().length()>=3){
-                    loginBtn.setEnabled(true);
-                    loginBtn.setBackgroundResource(R.color.colorAccent);
-                } else {
-                    loginBtn.setEnabled(false);
-                    loginBtn.setBackgroundResource(R.drawable.bg_loginbtn);
-                    ToastUtils.showLong("请输入正确的密码");
-                }
-            }
-        });*/
     }
 
     @Override
@@ -153,7 +105,7 @@ public class LoginFragment extends BaseFragment<LoginFragmentC.Presenter> implem
         }
     }
 
-    @Override
+  /*  @Override
     public void onLoginSuccess(final LoginBean loginBean) {
         ToastUtils.showLong("登录成功");
         List<UsersDB> usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", loginBean.getData().getSessionId());
@@ -169,25 +121,25 @@ public class LoginFragment extends BaseFragment<LoginFragmentC.Presenter> implem
         Constants.user_name=loginBean.getData().getName();
         PreferenceUtils.setPrefString(_mActivity,Constants.sessionId_key,loginBean.getData().getSessionId());
         PreferenceUtils.setPrefString(_mActivity,Constants.user_key,loginBean.getData().getName());
+
         if (from == Constants.MainActivityCode){
             EventBus.getDefault().postSticky(new EvenBus_LoginSuccess(100));
         }
-        _mActivity.finish();
-
+       _mActivity.onBackPressed();
 
     }
+*/
+//    @Override
+//    public void onLoginFailure(String failure) {
+//        ToastUtils.showLong(failure);
+//    }
 
-    @Override
-    public void onLoginFailure(String failure) {
-        ToastUtils.showLong(failure);
-    }
-
-    @Override
+  /*  @Override
     public boolean onBackPressedSupport() {
         if (type == Constants.MainActivityCode){
             return true;
         } else {
             return super.onBackPressedSupport();
         }
-    }
+    }*/
 }

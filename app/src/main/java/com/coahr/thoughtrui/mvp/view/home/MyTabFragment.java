@@ -443,9 +443,15 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
     }
 
     private void getDate() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("sessionId", Constants.sessionId);
-        p.getHomeData(map);
+        if (haslogin()) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("sessionId", Constants.sessionId);
+            p.getHomeData(map);
+        } else {
+            isLoad = false;
+            myTab_swipe.setRefreshing(false);
+        }
+
     }
 
     private boolean isNetworkAvailable() {

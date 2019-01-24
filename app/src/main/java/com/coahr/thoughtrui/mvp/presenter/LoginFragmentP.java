@@ -1,11 +1,10 @@
 package com.coahr.thoughtrui.mvp.presenter;
 
-import com.baidu.location.BDLocation;
 import com.coahr.thoughtrui.mvp.Base.BasePresenter;
 import com.coahr.thoughtrui.mvp.constract.LoginFragmentC;
 import com.coahr.thoughtrui.mvp.model.Bean.LoginBean;
 import com.coahr.thoughtrui.mvp.model.LoginFragmentM;
-import com.coahr.thoughtrui.mvp.view.mydata.LoginFragment;
+import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
 
 import java.util.Map;
 
@@ -18,7 +17,7 @@ import javax.inject.Inject;
  */
 public class LoginFragmentP extends BasePresenter<LoginFragmentC.View,LoginFragmentC.Model> implements LoginFragmentC.Presenter{
     @Inject
-    public LoginFragmentP(LoginFragment mview, LoginFragmentM mModel) {
+    public LoginFragmentP(Login_DialogFragment mview, LoginFragmentM mModel) {
         super(mview, mModel);
     }
 

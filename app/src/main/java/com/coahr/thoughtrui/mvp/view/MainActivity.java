@@ -2,11 +2,15 @@ package com.coahr.thoughtrui.mvp.view;
 
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -29,7 +33,11 @@ import com.coahr.thoughtrui.mvp.view.home.MainFragment;
 import com.coahr.thoughtrui.mvp.view.mydata.MyFragment;
 import com.coahr.thoughtrui.mvp.view.reviewed.ReviewedFragment;
 import com.coahr.thoughtrui.mvp.view.upload.UploadFragment;
+import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
+import com.coahr.thoughtrui.widgets.BroadcastReceiver.AliyunHotReceiver;
+import com.coahr.thoughtrui.widgets.BroadcastReceiver.isRegister;
 import com.coahr.thoughtrui.widgets.MyBottomNavigation.MyBottomNavigation;
+import com.socks.library.KLog;
 import com.taobao.sophix.SophixManager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -40,6 +48,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import butterknife.BindView;
 import me.yokeyword.fragmentation.SupportFragment;
 
@@ -57,6 +67,8 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     private String sessionId;
     private int page = 0; //当前显示页面
     private boolean prefBoolean;
+    private AliyunHotReceiver aliyunHotReceiver;
+    private LocalBroadcastManager manager;
 
     @Override
     public MainActivityC.Presenter getPresenter() {
@@ -78,15 +90,31 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
             mFragments[3] = MyFragment.newInstance();
         }
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
+        manager = LocalBroadcastManager.getInstance(this);
+        if (!isRegister.isRegister(manager,"hotAliyun")) {
+            KLog.d("SophixStubApplication","注册广播1");
+            aliyunHotReceiver = new AliyunHotReceiver();
+            IntentFilter filter = new IntentFilter();
+            filter.addAction("hotAliyun");
+            manager.registerReceiver(aliyunHotReceiver,filter);
+            aliyunHotReceiver.setHotListener(new AliyunHotReceiver.hotListener() {
+                @Override
+                public void getPathDetail(String path_info, String path_version, String app_version) {
+                    KLog.d("SophixStubApplication","注册广播2");
+                    Dialog("雷诺"+app_version+"修复补丁。","补丁版本："+path_version+"\n"+"补丁说明："+path_info+"\n"+
+                            "点击【立即修复】重新打开应用");
+                }
+            });
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this);
+        if (aliyunHotReceiver != null) {
+            manager.unregisterReceiver(aliyunHotReceiver);
         }
+
     }
 
     @Override
@@ -103,75 +131,30 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
                 showFragment(position);
             }
         });
-   /*     *//**
-         * 阿里云热更新监听
-         *//*
-        BaseApplication.setListener(new BaseApplication.MsgDisplayListener() {
-            @Override
-            public void CODE_DOWNLOAD_SUCCESS(String appVersion,String Info, int HandlePatchVersion) {
-
-            }
-
-            @Override
-            public void CODE_LOAD_RELAUNCH(final String appVersion, final String Info, final int HandlePatchVersion) {
-                MainActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Dialog("卡速宝更新补丁","当前版本：" + appVersion + "\n" + "\t\t" + "补丁批号" + HandlePatchVersion + "\n" + "\t\t" + Info);
-                    }
-                });
-            }
-
-            @Override
-            public void CODE_LOAD_MFITEM(String appVersion,String Info, int HandlePatchVersion) {
-
-            }
-
-            @Override
-            public void Other(String appVersion,int code, String Info, int HandlePatchVersion) {
-
-            }
-        });*/
     }
 
     @Override
     public void initData() {
         loadMultipleRootFragment(R.id.Root_Fragment, 0, mFragments);
-        showFragment(0);
+        showHideFragment(mFragments[0], mFragments[bottomNavigationPreposition]);
+        myBottomNavigation.beanSelect(0);
+        bottomNavigationPreposition = 0;
+        if (!haslogin()) {
+            loginDialog();;
+        }
+
     }
 
     private void showFragment(int position) {
         page = position;
         if (!haslogin()) {
-            Intent intent = new Intent(MainActivity.this, ConstantsActivity.class);
-            intent.putExtra("from", Constants.MainActivityCode);
-            intent.putExtra("to", Constants.loginFragmentCode);
-            intent.putExtra("type", 1);
-            startActivity(intent);
+            loginDialog();
         } else {
             showHideFragment(mFragments[position], mFragments[bottomNavigationPreposition]);
             myBottomNavigation.beanSelect(position);
             bottomNavigationPreposition = position;
         }
 
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == 100 && requestCode == 100) {
-
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void Event(EvenBus_LoginSuccess loginSuccess) {
-        if (loginSuccess.getLoginType() == 100) {
-            //sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, "sessionId", null);
-         //   showFragment(0);
-            // p.startLocation();
-            //EventBus.getDefault().postSticky(new Event_Main(1, "登陆成功", page));
-        }
     }
 
     @Override
@@ -184,6 +167,8 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
             if (PreferenceUtils.contains(BaseApplication.mContext,Constants.AliYunHot_key)) {
                 prefBoolean = PreferenceUtils.getPrefBoolean(BaseApplication.mContext, Constants.AliYunHot_key, false);
                 PreferenceUtils.remove(BaseApplication.mContext,  Constants.AliYunHot_key);
+                PreferenceUtils.remove(BaseApplication.mContext,Constants.pathVersion_key);
+                PreferenceUtils.remove(BaseApplication.mContext,Constants.path_key);
             }
             finish();
             if (prefBoolean) {
@@ -223,29 +208,19 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     }
 
     /**
-     *
-     * @param title
-     * @param Content
+     * 登录Dialog
      */
-    private void Dialog(String title, String Content) {
-        new MaterialDialog.Builder(this)
-                .title(title)
-                .content(Content)
-                .negativeText("下次再说")
-                .positiveText("立即更新")
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
-                    }
-                })
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
-                        SophixManager.getInstance().killProcessSafely();
+    private void loginDialog(){
+    Login_DialogFragment login_dialogFragment=Login_DialogFragment.newInstance();
 
-                    }
-                }).build().show();
-    }
+        login_dialogFragment.setLoginListener(new Login_DialogFragment.loginListener() {
+            @Override
+            public void loginSuccess(AppCompatDialogFragment dialogFragment) {
+                dialogFragment.dismiss();
+                showFragment(0);
+               EventBus.getDefault().postSticky(new Event_Main(1, "登陆成功", page));
+            }
+        });
+        login_dialogFragment.show(getSupportFragmentManager(),TAG);
+}
 }

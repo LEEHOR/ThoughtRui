@@ -17,7 +17,7 @@ public class Constants {
     //Longitude
     public static double Longitude;
     //sessionId
-    public static String sessionId;
+    public static String sessionId="";
     //ht_projectId
     public static String ht_ProjectId;  //服务器端项目id
     //name_project

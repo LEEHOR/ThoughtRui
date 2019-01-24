@@ -1,5 +1,6 @@
 package com.coahr.thoughtrui.mvp.view;
 
+import android.content.IntentFilter;
 import android.os.Bundle;
 
 import com.coahr.thoughtrui.R;
@@ -14,8 +15,14 @@ import com.coahr.thoughtrui.mvp.view.mydata.LoginFragment;
 import com.coahr.thoughtrui.mvp.view.SubjectList.Fragment_Topics;
 import com.coahr.thoughtrui.mvp.view.projectAnnex.FragmentAnnexViewPager;
 import com.coahr.thoughtrui.mvp.view.reviewed.ReviewInfoList;
+import com.coahr.thoughtrui.widgets.BroadcastReceiver.AliyunHotReceiver;
+import com.coahr.thoughtrui.widgets.BroadcastReceiver.isRegister;
+import com.socks.library.KLog;
 
 import org.greenrobot.eventbus.EventBus;
+
+import androidx.annotation.Nullable;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 /**
  * Created by Leehor
@@ -24,6 +31,10 @@ import org.greenrobot.eventbus.EventBus;
  * 中间跳转页面
  */
 public class ConstantsActivity extends BaseSupportActivity {
+
+    private AliyunHotReceiver aliyunHotReceiver;
+    private LocalBroadcastManager manager;
+
     @Override
     public int binLayout() {
         return R.layout.activity_constants;
@@ -77,4 +88,30 @@ public class ConstantsActivity extends BaseSupportActivity {
         finish();
     }
 
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        manager = LocalBroadcastManager.getInstance(this);
+            KLog.d("SophixStubApplication","注册广播22");
+            aliyunHotReceiver = new AliyunHotReceiver();
+            IntentFilter filter = new IntentFilter();
+            filter.addAction("hotAliyun");
+            manager.registerReceiver(aliyunHotReceiver,filter);
+            aliyunHotReceiver.setHotListener(new AliyunHotReceiver.hotListener() {
+                @Override
+                public void getPathDetail(String path_info, String path_version, String app_version) {
+                    KLog.d("SophixStubApplication","注册广播23");
+                    Dialog("雷诺"+app_version+"修复补丁。","补丁版本："+path_version+"\n"+"补丁说明："+path_info);
+                }
+            });
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (aliyunHotReceiver != null) {
+            manager.unregisterReceiver(aliyunHotReceiver);
+        }
+    }
 }

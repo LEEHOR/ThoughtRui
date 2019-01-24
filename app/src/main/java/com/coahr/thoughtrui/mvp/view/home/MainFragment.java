@@ -129,11 +129,13 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
     public void initData() {
      //   getLocationPermission();
         //当前使用用户
-        usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", Constants.sessionId);
-        KLog.d("sessionId", Constants.sessionId, sessionId);
-        if (haslogin()) {
-            getDataList();
-        }
+            KLog.d("sessionId", Constants.sessionId, sessionId);
+            if (haslogin()) {
+                usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", Constants.sessionId);
+                getDataList();
+            }
+
+
     }
 
     @Override
@@ -250,10 +252,10 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
     public void Event(Event_Main messageEvent) {
         if (messageEvent.getIsLoad() == 1 && messageEvent.getPage() == 0) {
             KLog.d("加载",messageEvent.getIsLoad(),messageEvent.getPage());
-            sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, Constants.sessionId_key, null);
-            usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", sessionId);
+         //   sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, Constants.sessionId_key, null);
             if (haslogin()) {
-              //  getDataList();
+                usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", Constants.sessionId);
+                getDataList();
             }
         }
     }
@@ -271,7 +273,7 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
 
     private void getDataList() {
         Map<String, Object> map = new HashMap<>();
-        map.put("sessionId", sessionId);
+        map.put("sessionId", Constants.sessionId);
         p.getHomeData(map);
     }
 
@@ -336,9 +338,9 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
         super.onHiddenChanged(hidden);
         if (!hidden){
             KLog.d("加载");
-            sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, Constants.sessionId_key, null);
-            usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", sessionId);
+           // sessionId = PreferenceUtils.getPrefString(BaseApplication.mContext, Constants.sessionId_key, null);
             if (haslogin()) {
+                usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", Constants.sessionId);
                 getDataList();
             }
         }

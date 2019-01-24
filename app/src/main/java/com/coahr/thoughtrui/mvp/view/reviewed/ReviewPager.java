@@ -151,13 +151,15 @@ public class ReviewPager extends BaseChildFragment<ReviewPagerFragment_C.Present
      * @param search
      */
     private void getDataList(String search) {
-        Map map = new HashMap();
-        map.put("sessionId", Constants.sessionId);
-        map.put("status", String.valueOf(type == 0 ? -1 : type == 1 ? 1 : -1));
-        if (search != null) {
-            map.put("search", search);
+        if (haslogin()) {
+            Map map = new HashMap();
+            map.put("sessionId", Constants.sessionId);
+            map.put("status", String.valueOf(type == 0 ? -1 : type == 1 ? 1 : -1));
+            if (search != null) {
+                map.put("search", search);
+            }
+            p.getCensorList(map);
         }
-        p.getCensorList(map);
     }
 
     /**

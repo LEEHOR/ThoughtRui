@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
+
 import androidx.annotation.NonNull;
 
 import android.view.View;
@@ -27,6 +28,7 @@ import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
+import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
 import com.coahr.thoughtrui.widgets.CircularImageView;
 import com.socks.library.KLog;
 
@@ -35,6 +37,7 @@ import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.List;
 
+import androidx.appcompat.app.AppCompatDialogFragment;
 import butterknife.BindView;
 
 /**
@@ -126,7 +129,7 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
                 goOtherPage(ConstantsActivity.class, Constants.fragment_myFragment, Constants.fragment_ChangePass);
                 break;
             case R.id.iv_bzfk_back: //帮助与反馈
-               goOtherPage(ConstantsActivity.class, Constants.fragment_myFragment, Constants.fragment_feedback);
+                goOtherPage(ConstantsActivity.class, Constants.fragment_myFragment, Constants.fragment_feedback);
                 break;
             case R.id.tv_quit_account:  //退出登录
                 // quitAccount();
@@ -229,31 +232,33 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
      */
     public void featchProjectInfo(TextView star, TextView download, TextView upload, TextView complete) {
         int unLoad = 0, unStart = 0, unUpload = 0, unComplete = 0;
-        List<UsersDB> usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", Constants.sessionId);
-        if (usersDBS != null && usersDBS.size() > 0) {
-            List<ProjectsDB> projectsDBSList = usersDBS.get(0).getProjectsDBSList();
-            if (projectsDBSList != null && projectsDBSList.size() > 0) {
-                for (int i = 0; i < projectsDBSList.size(); i++) {
-                    if (projectsDBSList.get(i).getDownloadTime() == -1) {
-                        unLoad++;
-                    }
-                    if (projectsDBSList.get(i).getpUploadStatus() == 0) {
-                        unUpload++;
-                    }
-                    if (projectsDBSList.get(i).getIsComplete() == 0) {
-                        unComplete++;
-                    }
-                    if (projectsDBSList.get(i).getSubjectsDBList() == null) {
-                        unStart++;
+        if (haslogin()) {
+            List<UsersDB> usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", Constants.sessionId);
+            if (usersDBS != null && usersDBS.size() > 0) {
+                List<ProjectsDB> projectsDBSList = usersDBS.get(0).getProjectsDBSList();
+                if (projectsDBSList != null && projectsDBSList.size() > 0) {
+                    for (int i = 0; i < projectsDBSList.size(); i++) {
+                        if (projectsDBSList.get(i).getDownloadTime() == -1) {
+                            unLoad++;
+                        }
+                        if (projectsDBSList.get(i).getpUploadStatus() == 0) {
+                            unUpload++;
+                        }
+                        if (projectsDBSList.get(i).getIsComplete() == 0) {
+                            unComplete++;
+                        }
+                        if (projectsDBSList.get(i).getSubjectsDBList() == null) {
+                            unStart++;
+                        }
                     }
                 }
             }
-            download.setText(String.valueOf(unLoad));
-            upload.setText(String.valueOf(unUpload));
-            complete.setText(String.valueOf(unComplete));
-            star.setText(String.valueOf(unStart));
-            KLog.d("onResume", unLoad, unStart, unUpload, unComplete);
         }
+        download.setText(String.valueOf(unLoad));
+        upload.setText(String.valueOf(unUpload));
+        complete.setText(String.valueOf(unComplete));
+        star.setText(String.valueOf(unStart));
+        KLog.d("onResume", unLoad, unStart, unUpload, unComplete);
     }
 
     /**
@@ -273,7 +278,8 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
         tv_user_name.setText("");
         PreferenceUtils.remove(BaseApplication.mContext, Constants.user_key);
         PreferenceUtils.remove(BaseApplication.mContext, Constants.sessionId_key);
-        goOtherPage(ConstantsActivity.class, Constants.fragment_myFragment, Constants.loginFragmentCode);
+       // goOtherPage(ConstantsActivity.class, Constants.fragment_myFragment, Constants.loginFragmentCode);
+        loginDialog();
     }
 
     @Override
@@ -313,5 +319,22 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
                         dialog.dismiss();
                     }
                 }).build().show();
+    }
+
+    /**
+     * 登录Dialog
+     */
+    private void loginDialog(){
+        Login_DialogFragment login_dialogFragment=Login_DialogFragment.newInstance();
+
+        login_dialogFragment.setLoginListener(new Login_DialogFragment.loginListener() {
+            @Override
+            public void loginSuccess(AppCompatDialogFragment dialogFragment) {
+                dialogFragment.dismiss();
+                featchProjectInfo(tv_dxz, tv_dsc, tv_dks, tv_wwc);
+                //    EventBus.getDefault().postSticky(new Event_Main(1, "登陆成功", page));
+            }
+        });
+        login_dialogFragment.show(getFragmentManager(),TAG);
     }
 }
