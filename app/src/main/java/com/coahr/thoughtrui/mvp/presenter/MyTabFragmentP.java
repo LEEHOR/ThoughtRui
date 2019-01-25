@@ -62,32 +62,33 @@ public class MyTabFragmentP extends BasePresenter<MyTabFragmentC.View,MyTabFragm
     }
 
     @Override
-    public void getHomeDataFailure(String fail) {
+    public void getHomeDataFailure(String fail,int code) {
         if (getView() != null) {
-            getView().getHomeDataFailure(fail);
+            getView().getHomeDataFailure(fail,code);
         }
     }
 
     @Override
-    public void getHomeMore(Map map) {
+    public void getSaveDb(HomeDataList homeDataList) {
         if (mModle != null) {
-            mModle.getHomeMore(map);
+            mModle.getSaveDb(homeDataList);
         }
     }
 
     @Override
-    public void getHomeMoreSuccess(HomeDataList homeDataList) {
+    public void getSaveDbSuccess(List<String> dbList) {
         if (getView() != null) {
-            getView().getHomeMoreSuccess(homeDataList);
+            getView().getSaveDbSuccess(dbList);
         }
     }
 
     @Override
-    public void getHomeMoreFailure(String fail) {
+    public void getSaveDbFailure() {
         if (getView() != null) {
-            getView().getHomeMoreFailure(fail);
+            getView().getSaveDbFailure();
         }
     }
+
 
     @Override
     public void getTypeDate(int type) {

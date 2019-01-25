@@ -24,27 +24,4 @@ public class MyMainFragmentM extends BaseModel<MyMainFragmentC.Presenter> implem
         super();
     }
 
-    @Override
-    public void getHomeData(Map map) {
-        mRxManager.add(createFlowable(new SimpleFlowableOnSubscribe<HomeDataList>(getApiService().getHomeData(map)))
-                .subscribeWith(new SimpleDisposableSubscriber<HomeDataList>() {
-                    @Override
-                    public void _onNext(HomeDataList homeDataList) {
-                        if (getPresenter() != null) {
-                            if (homeDataList.getResult()== 1) {
-                                getPresenter().getHomeDataSuccess(homeDataList);
-                            } else {
-                                getPresenter().getHomeDataFailure(homeDataList.getMsg());
-                            }
-                        }
-                    }
-                }));
-
-    }
-
-    @Override
-    public void getHomeMore(Map map) {
-
-    }
-
 }

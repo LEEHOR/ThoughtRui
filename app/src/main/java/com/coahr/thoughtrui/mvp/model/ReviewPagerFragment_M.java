@@ -30,7 +30,7 @@ public class ReviewPagerFragment_M extends BaseModel<ReviewPagerFragment_C.Prese
                         if (censorBean.getResult()==1) {
                             getPresenter().getCensorListSuccess(censorBean);
                         }else {
-                            getPresenter().getCensorListFailure(censorBean.getMsg());
+                            getPresenter().getCensorListFailure(censorBean.getMsg(),censorBean.getResult());
                         }
                     }
                 }

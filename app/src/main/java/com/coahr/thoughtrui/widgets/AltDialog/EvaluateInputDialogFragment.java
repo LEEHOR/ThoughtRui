@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +34,7 @@ import butterknife.Unbinder;
 public class EvaluateInputDialogFragment extends AppCompatDialogFragment {
 
     @BindView(R.id.fl_evaluate_input)
-    FrameLayout flEvaluateInput;
+    LinearLayout flEvaluateInput;
     @BindView(R.id.et_input)
     AnFQNumEditText etInput;
     @BindView(R.id.tv_send)
@@ -121,6 +122,4 @@ public class EvaluateInputDialogFragment extends AppCompatDialogFragment {
     public interface InputCallback {
         void onInputSend(String input, AppCompatDialogFragment dialog);
     }
-
-
 }

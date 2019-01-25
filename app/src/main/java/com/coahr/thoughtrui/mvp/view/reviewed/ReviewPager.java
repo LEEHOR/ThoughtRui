@@ -3,6 +3,7 @@ package com.coahr.thoughtrui.mvp.view.reviewed;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +22,7 @@ import com.coahr.thoughtrui.mvp.presenter.ReviewPagerFragment_P;
 import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
 import com.coahr.thoughtrui.mvp.view.reviewed.adapter.pageAdapter;
+import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -132,9 +134,15 @@ public class ReviewPager extends BaseChildFragment<ReviewPagerFragment_C.Present
     }
 
     @Override
-    public void getCensorListFailure(String failure) {
+    public void getCensorListFailure(String failure,int code) {
         isLoading = false;
         pager_swipe.setRefreshing(false);
+        ToastUtils.showLong(failure);
+        if (code !=-1) {
+
+        } else {
+            loginDialog();
+        }
     }
 
     @Override
@@ -158,6 +166,7 @@ public class ReviewPager extends BaseChildFragment<ReviewPagerFragment_C.Present
             if (search != null) {
                 map.put("search", search);
             }
+            map.put("token",Constants.devicestoken);
             p.getCensorList(map);
         }
     }
@@ -182,4 +191,25 @@ public class ReviewPager extends BaseChildFragment<ReviewPagerFragment_C.Present
         intent.putExtra("sessionId",Constants.sessionId);
         startActivity(intent);
     }
+
+    /**
+     * 登录Dialog
+     */
+    private void loginDialog(){
+        Login_DialogFragment login_dialogFragment=Login_DialogFragment.newInstance(Constants.MyTabFragmentCode);
+
+        login_dialogFragment.setLoginListener(new Login_DialogFragment.loginListener() {
+            @Override
+            public void loginSuccess(AppCompatDialogFragment dialogFragment) {
+                dialogFragment.dismiss();
+                if (haslogin()) {
+                    getDataList(null);
+                } else {
+                    ToastUtils.showLong("请重新登录");
+                }
+            }
+        });
+        login_dialogFragment.show(getFragmentManager(),TAG);
+    }
+
 }

@@ -38,9 +38,9 @@ public class AttendanceFP_h extends BasePresenter<AttendanceFC_h.View,Attendance
     }
 
     @Override
-    public void getAttendanceHistoryFailure(String failure) {
+    public void getAttendanceHistoryFailure(String failure,int code) {
         if (getView() != null) {
-            getView().getAttendanceHistoryFailure(failure);
+            getView().getAttendanceHistoryFailure(failure,code);
         }
     }
 

@@ -29,7 +29,7 @@ public class FeedbackFragment_M extends BaseModel<Feedback_Fragment_C.Presenter>
                             if (feedBack.getResult()==1) {
                                 getPresenter().sendSuggestionSuccess(feedBack);
                             }else {
-                                getPresenter().sendSuggestionFailure(feedBack.getMsg());
+                                getPresenter().sendSuggestionFailure(feedBack.getMsg(),feedBack.getResult());
                             }
                         }
                     }

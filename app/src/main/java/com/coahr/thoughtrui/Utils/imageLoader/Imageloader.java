@@ -2,6 +2,7 @@ package com.coahr.thoughtrui.Utils.imageLoader;
 
 import android.animation.ObjectAnimator;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.net.Uri;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -35,7 +36,7 @@ public class Imageloader {
     public static void loadImage(String path, final ImageView targetImage) {
       //  setAnimator(targetImage);
         //R.drawable.image_loading_anim_progress
-        Glide.with(BaseApplication.mContext).load(path).crossFade().diskCacheStrategy(DiskCacheStrategy.RESULT).thumbnail(0.1f).placeholder(R.mipmap.loading).error(R.mipmap.loadimage_err).override(500,500).listener(new RequestListener<String, GlideDrawable>() {
+        Glide.with(BaseApplication.mContext).load(path).crossFade().diskCacheStrategy(DiskCacheStrategy.RESULT).thumbnail(0.1f).placeholder(R.mipmap.loading).error(R.mipmap.loadimage_err).listener(new RequestListener<String, GlideDrawable>() {
             @Override
             public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
                // anim.cancel();
@@ -61,7 +62,7 @@ public class Imageloader {
 
         //
        // setAnimator(targetImage);
-        Glide.with(BaseApplication.mContext).load(path).crossFade().diskCacheStrategy(DiskCacheStrategy.RESULT).thumbnail(0.1f).placeholder(R.mipmap.loading).error(R.mipmap.loadimage_err).override(500,500).listener(new RequestListener<Uri, GlideDrawable>() {
+        Glide.with(BaseApplication.mContext).load(path).crossFade().diskCacheStrategy(DiskCacheStrategy.RESULT).thumbnail(0.1f).placeholder(R.mipmap.loading).error(R.mipmap.loadimage_err).listener(new RequestListener<Uri, GlideDrawable>() {
             @Override
             public boolean onException(Exception e, Uri model, Target<GlideDrawable> target, boolean isFirstResource) {
                // anim.cancel();
@@ -83,7 +84,7 @@ public class Imageloader {
      * @param targetImage
      */
     public static void loadCircularImage(Uri path, final ImageView targetImage) {
-        Glide.with(BaseApplication.mContext).load(path).asBitmap().diskCacheStrategy(DiskCacheStrategy.RESULT).thumbnail(0.1f).placeholder(R.mipmap.loading).error(R.mipmap.loadimage_err).override(500,500).into(new BitmapImageViewTarget(targetImage){
+        Glide.with(BaseApplication.mContext).load(path).asBitmap().diskCacheStrategy(DiskCacheStrategy.RESULT).thumbnail(0.1f).placeholder(R.mipmap.loading).error(R.mipmap.loadimage_err).into(new BitmapImageViewTarget(targetImage){
             @Override
             protected void setResource(Bitmap resource) {
                 super.setResource(resource);
@@ -102,7 +103,7 @@ public class Imageloader {
      * @param targetImage
      */
     public static void loadCircularImage(String path, final ImageView targetImage) {
-        Glide.with(BaseApplication.mContext).load(path).asBitmap().diskCacheStrategy(DiskCacheStrategy.RESULT).thumbnail(0.1f).placeholder(R.mipmap.loading).error(R.mipmap.loadimage_err).override(500,500).into(new BitmapImageViewTarget(targetImage){
+        Glide.with(BaseApplication.mContext).load(path).asBitmap().diskCacheStrategy(DiskCacheStrategy.RESULT).thumbnail(0.1f).placeholder(R.mipmap.loading).error(R.mipmap.loadimage_err).into(new BitmapImageViewTarget(targetImage){
             @Override
             protected void setResource(Bitmap resource) {
                 super.setResource(resource);
@@ -118,7 +119,7 @@ public class Imageloader {
      * 根据图片的url路径获得Bitmap对象
      */
     public static Bitmap getBitMap(Uri path) {
-        Glide.with(BaseApplication.mContext).load(path).asBitmap().override(500, 500).diskCacheStrategy(DiskCacheStrategy.RESULT).placeholder(R.mipmap.loading).error(R.mipmap.loadimage_err).into(new SimpleTarget<Bitmap>() {
+        Glide.with(BaseApplication.mContext).load(path).asBitmap().diskCacheStrategy(DiskCacheStrategy.RESULT).placeholder(R.mipmap.loading).error(R.mipmap.loadimage_err).into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                 bitmap = resource;
@@ -133,8 +134,7 @@ public class Imageloader {
      * 根据图片的url路径获得Bitmap对象
      */
     public static Bitmap getBitMap(String path) {
-        //  final Bitmap[] bitmap = new Bitmap[1];
-        Glide.with(BaseApplication.mContext).load(path).asBitmap().override(500, 500).diskCacheStrategy(DiskCacheStrategy.RESULT).placeholder(R.mipmap.loading).error(R.mipmap.loadimage_err).into(new SimpleTarget<Bitmap>() {
+        Glide.with(BaseApplication.mContext).load(path).asBitmap().diskCacheStrategy(DiskCacheStrategy.RESULT).placeholder(R.mipmap.loading).error(R.mipmap.loadimage_err).into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                 //final Bitmap bitmap1=resource;
@@ -146,7 +146,7 @@ public class Imageloader {
     }
 
     public static Bitmap getBitMap(int res) {
-        Glide.with(BaseApplication.mContext).load(res).asBitmap().override(500,500).diskCacheStrategy(DiskCacheStrategy.RESULT).placeholder(R.mipmap.loading).error(R.mipmap.loadimage_err).into(new SimpleTarget<Bitmap>() {
+        Glide.with(BaseApplication.mContext).load(res).asBitmap().diskCacheStrategy(DiskCacheStrategy.RESULT).placeholder(R.mipmap.loading).error(R.mipmap.loadimage_err).into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                 //final Bitmap bitmap1=resource;
@@ -215,4 +215,18 @@ public class Imageloader {
         }).into(targetImage);
     }
 
+    public Bitmap setImgSize(Bitmap bm, int newWidth ,int newHeight){
+        // 获得图片的宽高.
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        // 计算缩放比例.
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // 取得想要缩放的matrix参数.
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight);
+        // 得到新的图片.
+        Bitmap newbm = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, true);
+        return newbm;
+    }
 }

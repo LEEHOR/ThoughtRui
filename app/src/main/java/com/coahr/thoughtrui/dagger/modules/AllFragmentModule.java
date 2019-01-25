@@ -21,6 +21,7 @@ import com.coahr.thoughtrui.mvp.view.reviewed.ReviewedFragment;
 import com.coahr.thoughtrui.mvp.view.startProject.PagerFragment_a;
 import com.coahr.thoughtrui.mvp.view.upload.UploadFragment;
 import com.coahr.thoughtrui.widgets.AltDialog.DialogFragmentAudioPlay;
+import com.coahr.thoughtrui.widgets.AltDialog.Fill_in_blankDialog;
 import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
 import com.coahr.thoughtrui.widgets.AltDialog.ProjectSuccessDialog;
 
@@ -53,6 +54,9 @@ public abstract class AllFragmentModule {
 
     @ContributesAndroidInjector()
     abstract Login_DialogFragment Login_DialogFragmenInjector();
+
+    @ContributesAndroidInjector()
+    abstract Fill_in_blankDialog Fill_in_blankDialogInjector();
 
     @ContributesAndroidInjector(modules = ProjectDetailFragment_Module.class)
     abstract ProjectDetailFragment ProjectDetailFragmentInjector();

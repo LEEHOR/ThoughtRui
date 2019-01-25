@@ -60,9 +60,9 @@ public class StartProjectActivity_P extends BasePresenter<StartProjectActivity_C
     }
 
     @Override
-    public void getMainDataFailure(String failure) {
+    public void getMainDataFailure(String failure,int code) {
         if (getView() != null) {
-            getView().getMainDataFailure(failure);
+            getView().getMainDataFailure(failure,code);
         }
     }
 

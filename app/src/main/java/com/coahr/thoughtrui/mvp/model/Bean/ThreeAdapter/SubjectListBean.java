@@ -87,11 +87,9 @@ public class SubjectListBean {
             }
 
             public static class ValueBeanX {
-
-
                 private String id;
                 private String name;
-                private List<?> quesList;
+                private List<QuesListX> quesList;
                 private List<ValueBean> value;
 
                 public String getId() {
@@ -110,11 +108,11 @@ public class SubjectListBean {
                     this.name = name;
                 }
 
-                public List<?> getQuesList() {
+                public List<QuesListX> getQuesList() {
                     return quesList;
                 }
 
-                public void setQuesList(List<?> quesList) {
+                public void setQuesList(List<QuesListX> quesList) {
                     this.quesList = quesList;
                 }
 
@@ -124,6 +122,52 @@ public class SubjectListBean {
 
                 public void setValue(List<ValueBean> value) {
                     this.value = value;
+                }
+
+                public static class QuesListX {
+                    /**
+                     * id : 4472672568fc4b959fd9c82c4f11fd2f
+                     * title : 展厅内每个展车旁均需放置一个技术参数牌，参数牌保持整洁、无破损，技术参数牌内容与展车车型吻合。
+                     * answer : 否
+                     * picture : 4_1.jpg;4_2.jpg
+                     */
+
+                    private String id;
+                    private String title;
+                    private String answer;
+                    private String picture;
+
+                    public String getId() {
+                        return id;
+                    }
+
+                    public void setId(String id) {
+                        this.id = id;
+                    }
+
+                    public String getTitle() {
+                        return title;
+                    }
+
+                    public void setTitle(String title) {
+                        this.title = title;
+                    }
+
+                    public String getAnswer() {
+                        return answer;
+                    }
+
+                    public void setAnswer(String answer) {
+                        this.answer = answer;
+                    }
+
+                    public String getPicture() {
+                        return picture;
+                    }
+
+                    public void setPicture(String picture) {
+                        this.picture = picture;
+                    }
                 }
 
                 public static class ValueBean {

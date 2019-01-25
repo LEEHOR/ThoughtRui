@@ -1,6 +1,7 @@
 package com.coahr.thoughtrui.mvp.view.startProject;
 
 import android.Manifest;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.media.AudioFormat;
 import android.media.MediaRecorder;
@@ -27,9 +28,12 @@ import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.DensityUtils;
@@ -52,6 +56,7 @@ import com.coahr.thoughtrui.mvp.view.startProject.adapter.PagerFragmentPhotoAdap
 import com.coahr.thoughtrui.mvp.view.startProject.adapter.PagerFragmentPhotoListener;
 import com.coahr.thoughtrui.widgets.AltDialog.DialogFragmentAudioPlay;
 import com.coahr.thoughtrui.widgets.AltDialog.EvaluateInputDialogFragment;
+import com.coahr.thoughtrui.widgets.AltDialog.Fill_in_blankDialog;
 import com.coahr.thoughtrui.widgets.AltDialog.ProjectSuccessDialog;
 import com.socks.library.KLog;
 import com.yanzhenjie.permission.Action;
@@ -108,7 +113,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     @BindView(R.id.tv_standard_score)
     TextView tv_standard_score;  //填空标准分
     @BindView(R.id.ed_score)
-    EditText ed_score;    //填写得分
+    TextView ed_score;    //填写得分
     @BindView(R.id.Fr_takePhoto)
     FrameLayout Fr_takePhoto;  //拍照
     @BindView(R.id.tv_recorderBtn)
@@ -263,15 +268,26 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 }
             }
         });
-
+        //输入分数
         ed_score.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ed_score.setFocusable(true);
-                ed_score.setFocusableInTouchMode(true);
+                Fill_in_blankDialog fill_in_blankDialog=Fill_in_blankDialog.newInstance();
+                fill_in_blankDialog.setOnClick(new Fill_in_blankDialog.InPutOnClick() {
+                    @Override
+                    public void setOnClick(String text) {
+                        ed_score.setText(text);
+                        p.saveAnswers(text, remark, ht_projectId, number, ht_id);
+                    }
+                    @Override
+                    public void setOnClickFailure() {
+                        ToastUtils.showLong("请输入正确的数值");
+                    }
+                });
+                fill_in_blankDialog.show(getFragmentManager(),TAG);
             }
         });
-        ed_score.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+    /*    ed_score.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 //发送键
@@ -282,8 +298,8 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 }
                 return true;
             }
-        });
-      /*  ed_score.addTextChangedListener(new TextWatcher() {
+        });*/
+    /*    ed_score.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -310,6 +326,9 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         rg_gr.setOnCheckedChangeListener(new RadioGroupListener());
         //图片监听
         adapter.setListener(new PagerAdapterListener());
+        //
+        ed_score.getPaint().setFlags(Paint. UNDERLINE_TEXT_FLAG );
+
     }
 
     @Override
@@ -317,66 +336,50 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         switch (v.getId()) {
             //上一题
             case R.id.tv_last:
-                if (number > 1) {
-                    if (isComplete()) {
-                        SubjectsDB subjectsDB = new SubjectsDB();
-                        subjectsDB.setIsComplete(1);
-                        UpdateOrDeleteExecutor updateOrDeleteExecutor = subjectsDB.updateAsync(subjectsDB_now.getId());
-                        updateOrDeleteExecutor.listen(new UpdateOrDeleteCallback() {
-                            @Override
-                            public void onFinish(int rowsAffected) {
-                                if (rowsAffected == 1) {
-                                    EventBus.getDefault().postSticky(new isCompleteBean(true, number - 1, 1));
-                                }
-                            }
-                        });
-
+                if (!isRecorder){  //判断是否在录音
+                    if (number > 1) {
+                        if (isComplete()) {
+                            SubjectsDB subjectsDB = new SubjectsDB();
+                            subjectsDB.setIsComplete(1);
+                            subjectsDB.updateAsync(subjectsDB_now.getId());
+                        }
+                        EventBus.getDefault().postSticky(new isCompleteBean(true, number - 1, 1));
                     } else {
-                        ToastUtils.showLong("当前题目未完成");
+                        ToastUtils.showLong("已经是第一题");
                     }
-                } else {
-                    ToastUtils.showLong("已经是第一题");
+                }  else {
+                    showDialog("","确定停止录音");
                 }
+
                 break;
             //下一题
             case R.id.tv_next:
                 if (number < countSize) {
-                    if (isComplete()) {
-                        SubjectsDB subjectsDB = new SubjectsDB();
-                        subjectsDB.setIsComplete(1);
-                        UpdateOrDeleteExecutor updateOrDeleteExecutor = subjectsDB.updateAsync(subjectsDB_now.getId());
-                        updateOrDeleteExecutor.listen(new UpdateOrDeleteCallback() {
-                            @Override
-                            public void onFinish(int rowsAffected) {
-                                if (rowsAffected == 1) {
-                                    EventBus.getDefault().postSticky(new isCompleteBean(true, number + 1, 2));
-                                  //  ProjectSuccessDialog projectSuccessDialog = ProjectSuccessDialog.newInstance(ht_projectId);
-                                 //   projectSuccessDialog.show(getChildFragmentManager(), TAG);
-                                }
-                            }
-                        });
+                    if (!isRecorder){
+                        if (isComplete()) {
+                            SubjectsDB subjectsDB = new SubjectsDB();
+                            subjectsDB.setIsComplete(1);
+                            subjectsDB.updateAsync(subjectsDB_now.getId());
+                        }
+                        EventBus.getDefault().postSticky(new isCompleteBean(true, number + 1, 2));
+                    } else {
+                        showDialog("","是否停止录音");
+                    }
 
-                    } else {
-                        ToastUtils.showLong("当前题目未完成");
-                    }
                 } else {
-                    if (isComplete()) {
-                        SubjectsDB subjectsDB = new SubjectsDB();
-                        subjectsDB.setIsComplete(1);
-                        UpdateOrDeleteExecutor updateOrDeleteExecutor = subjectsDB.updateAsync(subjectsDB_now.getId());
-                        updateOrDeleteExecutor.listen(new UpdateOrDeleteCallback() {
-                            @Override
-                            public void onFinish(int rowsAffected) {
-                                if (rowsAffected == 1) {
-                                    ProjectSuccessDialog projectSuccessDialog = ProjectSuccessDialog.newInstance(ht_projectId);
-                                    projectSuccessDialog.show(getChildFragmentManager(), TAG);
-                                }
-                            }
-                        });
-                    } else {
+                    if (!isRecorder){
+                        if (isComplete()) {
+                            SubjectsDB subjectsDB = new SubjectsDB();
+                            subjectsDB.setIsComplete(1);
+                            subjectsDB.updateAsync(subjectsDB_now.getId());
+                        }
                         ToastUtils.showLong("已经是最后一题");
-                        ToastUtils.showLong("当前题目未完成");
+                        ProjectSuccessDialog projectSuccessDialog = ProjectSuccessDialog.newInstance(ht_projectId);
+                        projectSuccessDialog.show(getChildFragmentManager(), TAG);
+                    } else {
+                        showDialog("","是否停止录音");
                     }
+
                 }
                 break;
             //拍照
@@ -411,6 +414,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     @Override
     public void getSubjectSuccess(SubjectsDB subjectsDB) {
         this.subjectsDB_now = subjectsDB;
+
         if (subjectsDB != null) {
             //题目
             project_detail_titlle.setText(subjectsDB.getTitle());
@@ -423,19 +427,15 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             }
 
             if (subjectsDB.getType()==1){  //填空题
+
                 re_score.setVisibility(View.VISIBLE);
                 rg_gr.setVisibility(View.GONE);
                 tv_standard_score.setText("标准分数："+subjectsDB.getOptions());
-
             }
+            tv_describe.setText("说明："+subjectsDB.getDescription());
             p.getAnswer(ht_projectId,_mActivity,number,ht_id);
             p.getImage(ht_projectId,_mActivity,number,ht_id);
             p.getAudio(ht_projectId,_mActivity,number,ht_id);
-         /*   //描述
-            String description = subjectsDB.getDescription();
-            if (description != null && !description.equals("")) {
-                tv_describe.setText(description);
-            }*/
         }
     }
 
@@ -847,9 +847,36 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             public void run() {
                 p.getAudio(ht_projectId, _mActivity, number, ht_id);
                 Fr_takeRecorder.setEnabled(true);
+                updateUi(1);
                 type = 1;
             }
         }, 1500);
     }
 
+    /**
+     * 弹窗
+     * @param title
+     * @param Content
+     */
+    private void showDialog(String title, String Content) {
+        new MaterialDialog.Builder(_mActivity)
+                .title(title)
+                .content(Content)
+                .negativeText("取消")
+                .positiveText("确认")
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                        dialog.dismiss();
+
+                    }
+                }).onPositive(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                dialog.dismiss();
+                        StopAudio();
+            }
+        }).build().show();
+    }
 }

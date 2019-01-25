@@ -67,7 +67,7 @@ public class StartProjectActivity_M extends BaseModel<StartProjectActivity_C.Pre
                     if (questionBean.getResult()==1) {
                         getPresenter().getMainDataSuccess(questionBean);
                     }else {
-                        getPresenter().getMainDataFailure(questionBean.getMsg());
+                        getPresenter().getMainDataFailure(questionBean.getMsg(),questionBean.getResult());
                     }
                 }
             }

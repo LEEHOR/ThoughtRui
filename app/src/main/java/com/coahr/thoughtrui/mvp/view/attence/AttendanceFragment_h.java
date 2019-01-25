@@ -16,6 +16,7 @@ import com.coahr.thoughtrui.mvp.constract.AttendanceFC_h;
 import com.coahr.thoughtrui.mvp.model.Bean.AttendanceHistory;
 import com.coahr.thoughtrui.mvp.model.Bean.BaiduApiBean;
 import com.coahr.thoughtrui.mvp.presenter.AttendanceFP_h;
+import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
 import com.coahr.thoughtrui.widgets.HttpUtils.BaiduApi;
 import com.coahr.thoughtrui.widgets.HttpUtils.HttpUtilListener;
 import com.google.gson.Gson;
@@ -30,6 +31,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDialogFragment;
 import butterknife.BindView;
 import okhttp3.Response;
 
@@ -200,8 +203,13 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
     }
 
     @Override
-    public void getAttendanceHistoryFailure(String failure) {
+    public void getAttendanceHistoryFailure(String failure,int code) {
         ToastUtils.showLong(failure);
+        if (code !=-1) {
+
+        } else {
+            loginDialog();
+        }
     }
 
     //打卡历史
@@ -209,6 +217,7 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
         Map<String, Object> map = new HashMap<>();
         map.put("projectId", projectId);
         map.put("sessionId", Constants.sessionId);
+        map.put("token",Constants.devicestoken);
         map.put("dateTime", TimeUtils.getStingYMD(dateTime));
         p.getAttendanceHistory(map);
     }
@@ -295,5 +304,30 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
                     }
                 })
                 .build();
+    }
+    /**
+     * 登录Dialog
+     */
+    private void loginDialog(){
+        Login_DialogFragment login_dialogFragment=Login_DialogFragment.newInstance(Constants.MyTabFragmentCode);
+
+        login_dialogFragment.setLoginListener(new Login_DialogFragment.loginListener() {
+            @Override
+            public void loginSuccess(AppCompatDialogFragment dialogFragment) {
+                dialogFragment.dismiss();
+                if (haslogin()) {
+                    getHistory(Constants.ht_ProjectId, System.currentTimeMillis());
+                } else {
+                    ToastUtils.showLong("请重新登录");
+                }
+            }
+        });
+        login_dialogFragment.show(getFragmentManager(),TAG);
+    }
+
+    @Override
+    public void showError(@Nullable Throwable e) {
+        super.showError(e);
+        ToastUtils.showLong(e.toString());
     }
 }

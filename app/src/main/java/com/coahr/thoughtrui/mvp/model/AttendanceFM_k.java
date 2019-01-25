@@ -61,7 +61,7 @@ public class AttendanceFM_k extends BaseModel<AttendanceFC_k.Presenter> implemen
           if (pushAttendanceCard.getResult()==1) {
             getPresenter().getPushSuccess(pushAttendanceCard);
           }else {
-            getPresenter().getPushFail(pushAttendanceCard.getMsg());
+            getPresenter().getPushFail(pushAttendanceCard.getMsg(),pushAttendanceCard.getResult());
           }
         }
       }
@@ -84,7 +84,7 @@ public class AttendanceFM_k extends BaseModel<AttendanceFC_k.Presenter> implemen
             if (attendance.getResult()==1) {
               getPresenter().getMainDataSuccess(attendance);
             }else {
-              getPresenter().getMainDataFailure(attendance.getMsg());
+              getPresenter().getMainDataFailure(attendance.getMsg(),attendance.getResult());
             }
           }
         }
@@ -100,7 +100,7 @@ public class AttendanceFM_k extends BaseModel<AttendanceFC_k.Presenter> implemen
             if (attendRemark.getResult()==1) {
               getPresenter().sendRemarkSuccess(attendRemark);
             }else {
-              getPresenter().sendRemarkFailure(attendRemark.getMsg());
+              getPresenter().sendRemarkFailure(attendRemark.getMsg(),attendRemark.getResult());
             }
           }
         }

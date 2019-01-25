@@ -30,7 +30,7 @@ public class FragmentTopicsM extends BaseModel<FragmentTopicsC.Presenter> implem
                     if (SubjectListBean.getResult()==1) {
                         getPresenter().getSubjectListSuccess(SubjectListBean);
                     }else {
-                        getPresenter().getSubjectListFailure(SubjectListBean.getMsg());
+                        getPresenter().getSubjectListFailure(SubjectListBean.getMsg(),SubjectListBean.getResult());
                     }
                 }
             }

@@ -3,10 +3,14 @@ package com.coahr.thoughtrui.mvp.view.reviewed;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import android.view.View;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
@@ -89,7 +93,7 @@ public class ReviewStartPager extends BaseFragment {
         myTittleBar.getLeftIcon().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _mActivity.onBackPressed();
+                showDialog("提示","确定退出当前访问？");
             }
         });
     }
@@ -171,5 +175,27 @@ public class ReviewStartPager extends BaseFragment {
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
+    }
+
+    private void showDialog(String title, String Content) {
+        new MaterialDialog.Builder(_mActivity)
+                .title(title)
+                .content(Content)
+                .negativeText("取消")
+                .positiveText("确认")
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                        dialog.dismiss();
+
+                    }
+                }).onPositive(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                dialog.dismiss();
+             _mActivity.onBackPressed();
+            }
+        }).build().show();
     }
 }

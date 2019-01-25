@@ -15,7 +15,7 @@ public interface FragmentTopicsC {
 
         void  getSubjectListSuccess(SubjectListBean subjectListBean);
 
-        void  getSubjectListFailure(String failure);
+        void  getSubjectListFailure(String failure,int code);
 
     }
 
@@ -25,7 +25,7 @@ public interface FragmentTopicsC {
 
         void  getSubjectListSuccess(SubjectListBean subjectListBean);
 
-        void  getSubjectListFailure(String failure);
+        void  getSubjectListFailure(String failure,int code);
     }
 
     interface Model extends BaseContract.Model {

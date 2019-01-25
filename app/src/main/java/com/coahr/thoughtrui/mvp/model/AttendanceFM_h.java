@@ -31,7 +31,7 @@ public class AttendanceFM_h extends BaseModel<AttendanceFC_h.Presenter> implemen
           if (attendanceHistory.getResult()==1) {
             getPresenter().getAttendanceHistorySuccess(attendanceHistory);
           }else {
-            getPresenter().getAttendanceHistoryFailure(attendanceHistory.getMsg());
+            getPresenter().getAttendanceHistoryFailure(attendanceHistory.getMsg(),attendanceHistory.getResult());
           }
         }
       }

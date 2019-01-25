@@ -111,7 +111,7 @@ public class ReviewInfoList extends BaseFragment<ReviewInfoList_C.Presenter> imp
                         for (int i = 0; i < list.size(); i++) {
                             targetList.add(list.get(i).getId());
                         }
-                       // ToastUtils.showLong("尚未完成，敬请期待");
+                        ToastUtils.showLong("尚未完成，敬请期待");
                     //    start(ReviewStartPager.newInstance(targetList, position, projectId));
                     }
                 }

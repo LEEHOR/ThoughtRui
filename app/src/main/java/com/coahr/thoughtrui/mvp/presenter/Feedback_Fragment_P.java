@@ -37,9 +37,9 @@ public class Feedback_Fragment_P extends BasePresenter<Feedback_Fragment_C.View,
     }
 
     @Override
-    public void sendSuggestionFailure(String failure) {
+    public void sendSuggestionFailure(String failure,int code) {
         if (getView() != null) {
-            getView().sendSuggestionFailure(failure);
+            getView().sendSuggestionFailure(failure,code);
         }
     }
 }

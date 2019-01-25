@@ -88,7 +88,7 @@ public class Constants {
     //跳转常数
     public  static final int MainActivityCode=1;
 
-    public  static final int MyTabFragmentCode=2;
+    public  static final int MyTabFragmentCode=2; //首页
 
     public  static final int ProjectDetailFragmentCode=3;
 

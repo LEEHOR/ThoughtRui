@@ -238,17 +238,19 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
                 List<ProjectsDB> projectsDBSList = usersDBS.get(0).getProjectsDBSList();
                 if (projectsDBSList != null && projectsDBSList.size() > 0) {
                     for (int i = 0; i < projectsDBSList.size(); i++) {
-                        if (projectsDBSList.get(i).getDownloadTime() == -1) {
-                            unLoad++;
-                        }
-                        if (projectsDBSList.get(i).getpUploadStatus() == 0) {
-                            unUpload++;
-                        }
-                        if (projectsDBSList.get(i).getIsComplete() == 0) {
-                            unComplete++;
-                        }
-                        if (projectsDBSList.get(i).getSubjectsDBList() == null) {
-                            unStart++;
+                        if (projectsDBSList.get(i).getIsDeletes()!=1){
+                            if (projectsDBSList.get(i).getDownloadTime() == -1) {
+                                unLoad++;
+                            }
+                            if (projectsDBSList.get(i).getpUploadStatus() == 0) {
+                                unUpload++;
+                            }
+                            if (projectsDBSList.get(i).getIsComplete() == 0) {
+                                unComplete++;
+                            }
+                            if (projectsDBSList.get(i).getSubjectsDBList() == null) {
+                                unStart++;
+                            }
                         }
                     }
                 }
@@ -286,7 +288,6 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
-            KLog.d("onResume", "我的页面");
             if (tv_dxz != null && tv_dsc != null && tv_dks != null && tv_wwc != null) {
                 featchProjectInfo(tv_dxz, tv_dsc, tv_dks, tv_wwc);
             }
@@ -325,13 +326,13 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
      * 登录Dialog
      */
     private void loginDialog(){
-        Login_DialogFragment login_dialogFragment=Login_DialogFragment.newInstance();
-
+        Login_DialogFragment login_dialogFragment=Login_DialogFragment.newInstance(Constants.fragment_myFragment);
         login_dialogFragment.setLoginListener(new Login_DialogFragment.loginListener() {
             @Override
             public void loginSuccess(AppCompatDialogFragment dialogFragment) {
                 dialogFragment.dismiss();
                 featchProjectInfo(tv_dxz, tv_dsc, tv_dks, tv_wwc);
+                tv_user_name.setText(Constants.user_name);
                 //    EventBus.getDefault().postSticky(new Event_Main(1, "登陆成功", page));
             }
         });

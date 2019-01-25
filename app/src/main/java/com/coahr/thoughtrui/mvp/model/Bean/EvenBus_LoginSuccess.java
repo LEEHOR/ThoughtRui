@@ -4,6 +4,7 @@ package com.coahr.thoughtrui.mvp.model.Bean;
  * Created by Leehor
  * on 2019/1/3
  * on 14:21
+ * 登录回调
  */
 public class EvenBus_LoginSuccess {
 

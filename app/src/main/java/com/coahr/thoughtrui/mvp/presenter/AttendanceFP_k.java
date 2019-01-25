@@ -49,9 +49,9 @@ public class AttendanceFP_k extends BasePresenter<AttendanceFC_k.View,Attendance
     }
 
     @Override
-    public void getMainDataFailure(String failure) {
+    public void getMainDataFailure(String failure,int code) {
         if (getView() != null) {
-            getView().getMainDataFailure(failure);
+            getView().getMainDataFailure(failure,code);
         }
     }
 
@@ -70,9 +70,9 @@ public class AttendanceFP_k extends BasePresenter<AttendanceFC_k.View,Attendance
     }
 
     @Override
-    public void sendRemarkFailure(String failure) {
+    public void sendRemarkFailure(String failure,int code) {
         if (getView() != null) {
-            getView().sendRemarkFailure(failure);
+            getView().sendRemarkFailure(failure,code);
         }
     }
 
@@ -105,9 +105,9 @@ public class AttendanceFP_k extends BasePresenter<AttendanceFC_k.View,Attendance
     }
 
     @Override
-    public void getPushFail(String failure) {
+    public void getPushFail(String failure,int code) {
         if (getView() != null) {
-            getView().getPushFail(failure);
+            getView().getPushFail(failure,code);
         }
     }
 }

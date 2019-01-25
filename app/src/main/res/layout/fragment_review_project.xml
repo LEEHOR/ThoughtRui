@@ -93,15 +93,15 @@
                     android:layout_centerVertical="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
-                <EditText
-                    android:imeOptions="actionSend"
-                    android:inputType="number"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
+                <TextView
                     android:textSize="@dimen/dp_14"
-                    android:textColor="#333333"
+                    android:textColor="#FD8317"
                     android:lines="1"
                     android:maxLength="3"
+                    android:paddingLeft="@dimen/dp_10"
+                    android:paddingRight="@dimen/dp_10"
+                    android:hint="点击输入"
+                    android:textColorHint="#999999"
                     android:id="@+id/ed_score"
                     android:layout_toLeftOf="@+id/tv_f"
                     android:layout_centerVertical="true"

@@ -20,11 +20,11 @@ public interface AttendanceFC_k {
 
         void getMainDataSuccess(Attendance attendance);
 
-        void getMainDataFailure(String failure);
+        void getMainDataFailure(String failure,int code);
 
         void sendRemarkSuccess(AttendRemark attendRemark);
 
-        void sendRemarkFailure(String failure);
+        void sendRemarkFailure(String failure,int code);
 
         void LocationContinuouslySuccess(BDLocation location, BaiduLocationHelper baiduLocationHelper);
 
@@ -32,7 +32,7 @@ public interface AttendanceFC_k {
 
         void getPushSuccess(PushAttendanceCard pushAttendanceCard);
 
-        void getPushFail(String failure );
+        void getPushFail(String failure,int code);
 
     }
 
@@ -44,13 +44,13 @@ public interface AttendanceFC_k {
 
         void getMainDataSuccess(Attendance attendance);
 
-        void getMainDataFailure(String failure);
+        void getMainDataFailure(String failure,int code);
 
         void sendRemark(Map<String,Object> map);
 
         void sendRemarkSuccess(AttendRemark attendRemark);
 
-        void sendRemarkFailure(String failure);
+        void sendRemarkFailure(String failure,int code);
 
         void LocationContinuouslySuccess(BDLocation location, BaiduLocationHelper baiduLocationHelper);
 
@@ -60,7 +60,7 @@ public interface AttendanceFC_k {
 
         void getPushSuccess(PushAttendanceCard pushAttendanceCard);
 
-        void getPushFail(String failure );
+        void getPushFail(String failure,int code);
 
     }
 

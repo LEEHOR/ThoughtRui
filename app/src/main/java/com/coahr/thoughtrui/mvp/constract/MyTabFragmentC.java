@@ -19,11 +19,7 @@ public interface MyTabFragmentC {
 
         void getHomeDataSuccess(HomeDataList homeDataList);
 
-        void getHomeDataFailure(String fail);
-
-        void getHomeMoreSuccess(HomeDataList homeDataList);
-
-        void getHomeMoreFailure(String fail);
+        void getHomeDataFailure(String fail, int code);
 
         void getTypeDateSuccess(List<ProjectsDB> projectsDB);
 
@@ -32,6 +28,10 @@ public interface MyTabFragmentC {
         void getUnDownLoadSuccess(UnDownLoad unDownLoad);
 
         void getUnDownLoadFailure(String failure);
+
+        void getSaveDbSuccess(List<String> dbList);
+
+        void getSaveDbFailure();
     }
 
     interface Presenter extends BaseContract.Presenter {
@@ -40,13 +40,13 @@ public interface MyTabFragmentC {
 
         void getHomeDataSuccess(HomeDataList homeDataList);
 
-        void getHomeDataFailure(String fail);
+        void getHomeDataFailure(String fail, int code);
 
-        void getHomeMore(Map map);
+        void getSaveDb(HomeDataList homeDataList);
 
-        void getHomeMoreSuccess(HomeDataList homeDataList);
+        void getSaveDbSuccess(List<String> dbList);
 
-        void getHomeMoreFailure(String fail);
+        void getSaveDbFailure();
 
         //获取离线数据
         void getTypeDate(int type);
@@ -67,9 +67,10 @@ public interface MyTabFragmentC {
     interface Model extends BaseContract.Model {
 
         void getUnDownLoadProject(Map<String, Object> map);
+
         void getHomeData(Map map);
 
-        void getHomeMore(Map map);
+        void getSaveDb(HomeDataList homeDataList);
 
         void getTypeDate(int type);
 

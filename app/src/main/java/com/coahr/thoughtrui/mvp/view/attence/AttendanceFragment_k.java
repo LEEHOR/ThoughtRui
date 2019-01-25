@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import android.view.View;
@@ -22,9 +23,11 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.BaiDuLocation.BaiduLocationHelper;
+import com.coahr.thoughtrui.Utils.NetWorkAvailable;
 import com.coahr.thoughtrui.Utils.TimeUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
+import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.constract.AttendanceFC_k;
 import com.coahr.thoughtrui.mvp.model.Bean.AttendRemark;
@@ -33,6 +36,7 @@ import com.coahr.thoughtrui.mvp.model.Bean.BaiduApiBean;
 import com.coahr.thoughtrui.mvp.model.Bean.PushAttendanceCard;
 import com.coahr.thoughtrui.mvp.presenter.AttendanceFP_k;
 import com.coahr.thoughtrui.widgets.AltDialog.EvaluateInputDialogFragment;
+import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
 import com.coahr.thoughtrui.widgets.HttpUtils.BaiduApi;
 import com.coahr.thoughtrui.widgets.HttpUtils.HttpUtilListener;
 import com.google.gson.Gson;
@@ -404,13 +408,6 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
     }
     @Override
     public void getMainDataSuccess(Attendance attendance) {
-   /*     //把数据发送到AttendRootFragment用于显示
-          EventBus.getDefault().postSticky(new Event_Attend(attendance.getData().getPname()
-                  ,attendance.getData().getStartTime()
-                  ,attendance.getData().getEndTime()
-                  ,attendance.getData().getCname()
-                  ,attendance.getData().getCode()
-                  ,attendance.getData().getAreaAddress()));*/
         closeStatus = attendance.getData().getCloseStatus();
         //获取门店的经纬度
         latitude = attendance.getData().getLatitude();
@@ -585,8 +582,13 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
     }
 
     @Override
-    public void getMainDataFailure(String failure) {
+    public void getMainDataFailure(String failure,int code) {
+        ToastUtils.showLong(failure);
+        if (code !=-1){
 
+        } else {
+            loginDialog();
+        }
     }
 
     @Override
@@ -596,9 +598,14 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
     }
 
     @Override
-    public void sendRemarkFailure(String failure) {
+    public void sendRemarkFailure(String failure,int code) {
         dialogs.dismiss();
         ToastUtils.showLong(failure);
+        if (code!=-1){
+
+        } else {
+            loginDialog();
+        }
     }
 
     /**
@@ -644,8 +651,13 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
     }
 
     @Override
-    public void getPushFail(String failure) {
+    public void getPushFail(String failure,int code) {
         ToastUtils.showLong(failure + "请重新打卡");
+        if (code !=-1){
+
+        } else {
+            loginDialog();
+        }
     }
 
     //网络请求考勤信息
@@ -653,6 +665,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         Map<String, Object> map = new HashMap<>();
         map.put("projectId", Constants.ht_ProjectId);
         map.put("sessionId", Constants.sessionId);
+        map.put("token",Constants.devicestoken);
         p.getMainData(map);
     }
 
@@ -672,6 +685,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         } else {
             map.put("endLocationStatus",isOnCircle?1:-1);
         }
+        map.put("token",Constants.devicestoken);
         p.getPushCard(map);
     }
 
@@ -684,6 +698,8 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         Map<String, Object> map = new HashMap();
         map.put("id", classId);
         map.put("remark", remark);
+        map.put("sessionid",Constants.sessionId);
+        map.put("token",Constants.devicestoken);
         p.sendRemark(map);
     }
 
@@ -793,5 +809,47 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                     }
                 })
                 .build();
+    }
+
+    private boolean isNetworkAvailable() {
+
+        boolean networkAvailable = NetWorkAvailable.isNetworkAvailable(BaseApplication.mContext);
+        return networkAvailable;
+    }
+
+    /**
+     * 登录Dialog
+     */
+    private void loginDialog(){
+        Login_DialogFragment login_dialogFragment=Login_DialogFragment.newInstance(Constants.MyTabFragmentCode);
+
+        login_dialogFragment.setLoginListener(new Login_DialogFragment.loginListener() {
+            @Override
+            public void loginSuccess(AppCompatDialogFragment dialogFragment) {
+                dialogFragment.dismiss();
+                if (haslogin()) {
+                    if (isNetworkAvailable()) {  //有网络
+                        mHandler.removeMessages(LOCATIONMESSAGE);
+                        mHandler.removeCallbacks(run_time);
+                        if (baiduLocationHelper != null) {
+                            baiduLocationHelper.stopLocation();
+                        }
+                        getData();
+                        //getDate();
+                    } else { //无网络
+                        ToastUtils.showLong("没有网络");
+                    }
+                } else {
+                    ToastUtils.showLong("请重新登录");
+                }
+            }
+        });
+        login_dialogFragment.show(getFragmentManager(),TAG);
+    }
+
+    @Override
+    public void showError(@Nullable Throwable e) {
+        super.showError(e);
+        ToastUtils.showLong(e.toString());
     }
 }

@@ -48,7 +48,7 @@ public class Fragment_Feedback extends BaseFragment<Feedback_Fragment_C.Presente
     }
 
     @Override
-    public void sendSuggestionFailure(String failure) {
+    public void sendSuggestionFailure(String failure,int code) {
 
     }
 }

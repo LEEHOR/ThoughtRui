@@ -36,9 +36,9 @@ public class FragmentTopicsP extends BasePresenter<FragmentTopicsC.View,Fragment
     }
 
     @Override
-    public void getSubjectListFailure(String failure) {
+    public void getSubjectListFailure(String failure,int code) {
         if (getView() != null) {
-            getView().getSubjectListFailure(failure);
+            getView().getSubjectListFailure(failure,code);
         }
     }
 }

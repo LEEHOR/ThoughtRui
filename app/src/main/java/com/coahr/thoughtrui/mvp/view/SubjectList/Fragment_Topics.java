@@ -1,10 +1,13 @@
 package com.coahr.thoughtrui.mvp.view.SubjectList;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.ListView;
 
 import com.coahr.thoughtrui.R;
+import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.FragmentTopicsC;
@@ -13,6 +16,7 @@ import com.coahr.thoughtrui.mvp.presenter.FragmentTopicsP;
 import com.coahr.thoughtrui.mvp.view.SubjectList.adapter.NodeTreeAdapter;
 import com.coahr.thoughtrui.mvp.view.SubjectList.node.BaseNode;
 import com.coahr.thoughtrui.mvp.view.SubjectList.node.NodeHelper;
+import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
 
 import java.util.ArrayList;
@@ -44,12 +48,6 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
     private NodeTreeAdapter mAdapter;
     private LinkedList<BaseNode> mLinkedList = new LinkedList<>();
     private List<BaseNode> baseNodeList;
-    // @BindView(R.id.subject_recycler)
-    // RecyclerView subject_recycler;
-    //   private LinearLayoutManager linearLayoutManager;
-    //  private List<SubjectListBean.DataBean.QuestionListBean> questionListBeanList=new ArrayList<>();
-    //  private ThreeItemAdapter adapter;
-
     public static Fragment_Topics newInstance() {
         Fragment_Topics fragmentTopics = new Fragment_Topics();
         return fragmentTopics;
@@ -75,8 +73,6 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
             }
         });
 
-        //   linearLayoutManager = new LinearLayoutManager(BaseApplication.mContext);
-        //  subject_recycler.setLayoutManager(linearLayoutManager);
         mAdapter = new NodeTreeAdapter(_mActivity, treeList, mLinkedList);
         treeList.setAdapter(mAdapter);
 
@@ -113,9 +109,9 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
                     //子节点1
                     if (questionListBean.getQuesList() != null && questionListBean.getQuesList().size() > 0) {
                         for (int j = 0; j < questionListBean.getQuesList().size(); j++) {
-                            Object o = questionListBean.getQuesList().get(j);
-                           /* ThreeNode rootChild_1 = new ThreeNode(o.getId(), questionListBean.getId(), quesListRoot.getTitle());
-                            baseNodeList.add(rootChild_1);*/
+//                            Object o = questionListBean.getQuesList().get(j);
+//                            ThreeNode rootChild_1 = new ThreeNode(o.getId(), questionListBean.getId(), quesListRoot.getTitle());
+//                            baseNodeList.add(rootChild_1);
                         }
                     } else { //子节点2
                         if (questionListBean.getValue()!= null && questionListBean.getValue().size() > 0) {
@@ -126,10 +122,10 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
                                 //孙子节点1
                                 if (valueBeanRoot.getQuesList() != null && valueBeanRoot.getQuesList().size() > 0) {
                                     for (int k = 0; k < valueBeanRoot.getQuesList().size(); k++) {
-                                        Object o = valueBeanRoot.getQuesList().get(k);
-                                      //  KLog.d("孙子节点1",quesListChild.getTitle());
-                                      //  ThreeNode root_grand_1 = new ThreeNode(quesListChild.getId(), valueBeanRoot.getId(), quesListChild.getTitle());
-                                      //  baseNodeList.add(root_grand_1);
+                                        SubjectListBean.DataBean.QuestionListBean.ValueBeanX.QuesListX quesListX = valueBeanRoot.getQuesList().get(k);
+                                        //  KLog.d("孙子节点1",quesListChild.getTitle());
+                                        ThreeNode root_grand_1 = new ThreeNode(quesListX.getId(), valueBeanRoot.getId(), quesListX.getTitle());
+                                        baseNodeList.add(root_grand_1);
                                     }
                                 } else {
                                     //孙子节点2
@@ -158,14 +154,11 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
 
             }
         }
-
         setAdapter(baseNodeList);
 
     }
 
     private void setAdapter(List<BaseNode> baseNodes) {
-        // adapter = new ThreeItemAdapter(_mActivity,questionListBeanList);
-        // subject_recycler.setAdapter(adapter);
         mLinkedList.clear();
         mLinkedList.addAll(NodeHelper.sortNodes(baseNodes));
         mAdapter.setLinkList(mLinkedList);
@@ -174,14 +167,52 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
         su_swipe.setRefreshing(false);
     }
     @Override
-    public void getSubjectListFailure(String failure) {
+    public void getSubjectListFailure(String failure,int code) {
+        ToastUtils.showLong(failure);
         isLoading=false;
         su_swipe.setRefreshing(false);
+
+        if (code !=-1){
+
+        } else {
+            loginDialog();
+        }
     }
 
     private void getHttp() {
         Map map = new HashMap();
         map.put("projectId", Constants.ht_ProjectId);
+        map.put("token",Constants.devicestoken);
+        map.put("sessionid",Constants.sessionId);
         p.getSubjectList(map);
+    }
+
+    @Override
+    public void showError(@Nullable Throwable e) {
+        super.showError(e);
+        ToastUtils.showLong(e.toString());
+        isLoading=false;
+        su_swipe.setRefreshing(false);
+    }
+
+    /**
+     * 登录Dialog
+     */
+    private void loginDialog(){
+        Login_DialogFragment login_dialogFragment=Login_DialogFragment.newInstance(Constants.fragment_myFragment);
+        login_dialogFragment.setLoginListener(new Login_DialogFragment.loginListener() {
+            @Override
+            public void loginSuccess(AppCompatDialogFragment dialogFragment) {
+                dialogFragment.dismiss();
+                if (haslogin()){
+                    getHttp();
+                } else {
+                    ToastUtils.showLong("请重新登录");
+                }
+
+                //    EventBus.getDefault().postSticky(new Event_Main(1, "登陆成功", page));
+            }
+        });
+        login_dialogFragment.show(getChildFragmentManager(),TAG);
     }
 }

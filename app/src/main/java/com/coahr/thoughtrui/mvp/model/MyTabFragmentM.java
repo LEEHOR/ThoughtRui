@@ -1,7 +1,10 @@
 package com.coahr.thoughtrui.mvp.model;
 
+import android.app.KeyguardManager;
+
 import com.baidu.location.BDLocation;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
+import com.coahr.thoughtrui.DBbean.UsersDB;
 import com.coahr.thoughtrui.Utils.BaiDuLocation.BaiduLocationHelper;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWorkAsync;
@@ -11,7 +14,11 @@ import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.MyTabFragmentC;
 import com.coahr.thoughtrui.mvp.model.Bean.HomeDataList;
 import com.coahr.thoughtrui.mvp.model.Bean.UnDownLoad;
+import com.socks.library.KLog;
 
+import org.litepal.crud.callback.UpdateOrDeleteCallback;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +30,13 @@ import javax.inject.Inject;
  * on 15:49
  */
 public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implements MyTabFragmentC.Model {
+
+    private int totalSize;
+    private List<String>  ht_List = new ArrayList<>();;
+    private int saveSize;
+    private List<UsersDB> usersDBS;
+    private int updateSize;
+
     @Inject
     public MyTabFragmentM() {
         super();
@@ -55,7 +69,7 @@ public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implemen
                             if (homeDataList.getResult()==1) {
                                 getPresenter().getHomeDataSuccess(homeDataList);
                             } else {
-                                getPresenter().getHomeDataFailure(homeDataList.getMsg());
+                                getPresenter().getHomeDataFailure(homeDataList.getMsg(),homeDataList.getResult());
                             }
                         }
                     }
@@ -63,8 +77,19 @@ public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implemen
     }
 
     @Override
-    public void getHomeMore(Map map) {
-
+    public void getSaveDb(HomeDataList homeDataList) {
+        List<HomeDataList.DataBean.AllListBean> allList = homeDataList.getData().getAllList();
+        if (allList != null && allList.size() > 0) {
+            usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", Constants.sessionId);
+            totalSize = allList.size();
+            updateSize=0;
+            saveSize=0;
+            ht_List.clear();
+            for (int i = 0; i < allList.size(); i++) {
+                ht_List.add(allList.get(i).getId());
+                SaveProject(allList.get(i).getId(), allList.get(i));
+            }
+        }
     }
 
     //离线数据
@@ -77,35 +102,15 @@ public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implemen
             } else {
                 getPresenter().getTypeDateFailure(0);
             }
-           /* DataBaseWorkAsync.DBSelectByTogether_Where(ProjectsDB.class, new JDBCSelectMultiListener() {
-              @Override
-              public <T> void SelectMulti(List<T> t) {
-                  if (t !=null && t.size()>0) {
-                      getPresenter().getTypeDateSuccess((List<ProjectsDB>) t);
-                  } else {
-                      getPresenter().getTypeDateFailure(0);
-                  }
-              }
-          }, "usersdb_id=? and completestatus=? and isdeletes =? and downloadtime !=? ", Constants.user_id, String.valueOf(1), String.valueOf(0), String.valueOf(0));*/
 
         } else if (type == 1){ //已完成
             List<ProjectsDB> projectsDBS_complete = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "usersdb_id=? and completestatus=? and isdeletes =?", Constants.user_id, String.valueOf(3), String.valueOf(0));
-          //  List<ProjectsDB> projectsDBS = projectsDBS1;
             if (projectsDBS_complete != null && projectsDBS_complete.size()>0) {
                 getPresenter().getTypeDateSuccess(projectsDBS_complete);
             } else {
                 getPresenter().getTypeDateFailure(0);
             }
-//            DataBaseWorkAsync.DBSelectByTogether_Where(ProjectsDB.class, new JDBCSelectMultiListener() {
-//                @Override
-//                public <T> void SelectMulti(List<T> t) {
-//                    if (t !=null && t.size()>0) {
-//                        getPresenter().getTypeDateSuccess((List<ProjectsDB>) t);
-//                    } else {
-//                        getPresenter().getTypeDateFailure(0);
-//                    }
-//                }
-//            }, "usersdb_id=? and completestatus=? and isdeletes =?",Constants.user_id, String.valueOf(3),String.valueOf(0));
+
         } else if (type == 2){  //未完成
             List<ProjectsDB> projectsDBS_unComplete = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "usersdb_id=? and completestatus=? and isdeletes =?",Constants.user_id, String.valueOf(2),String.valueOf(0));
             if (projectsDBS_unComplete != null && projectsDBS_unComplete.size()>0) {
@@ -114,16 +119,6 @@ public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implemen
                 getPresenter().getTypeDateFailure(0);
             }
 
-//            DataBaseWorkAsync.DBSelectByTogether_Where(ProjectsDB.class, new JDBCSelectMultiListener() {
-//                @Override
-//                public <T> void SelectMulti(List<T> t) {
-//                    if (t !=null && t.size()>0) {
-//                        getPresenter().getTypeDateSuccess((List<ProjectsDB>) t);
-//                    } else {
-//                        getPresenter().getTypeDateFailure(0);
-//                    }
-//                }
-//            }, "usersdb_id=? and completestatus=? and isdeletes =?",Constants.user_id, String.valueOf(2),String.valueOf(0));
         } else if(type == 3 ){ //全部
             List<ProjectsDB> projectsDBS_all = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, " usersdb_id=? and isdeletes=?",Constants.user_id,String.valueOf(0));
             if (projectsDBS_all != null && projectsDBS_all.size()>0) {
@@ -131,16 +126,6 @@ public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implemen
             } else {
                 getPresenter().getTypeDateFailure(0);
             }
-//            DataBaseWorkAsync.DBSelectByTogether_Where(ProjectsDB.class, new JDBCSelectMultiListener() {
-//                @Override
-//                public <T> void SelectMulti(List<T> t) {
-//                    if (t !=null && t.size()>0) {
-//                        getPresenter().getTypeDateSuccess((List<ProjectsDB>) t);
-//                    } else {
-//                        getPresenter().getTypeDateFailure(0);
-//                    }
-//                }
-//            }, " usersdb_id=? and isdeletes =?",Constants.user_id,String.valueOf(0));
         } else {
             List<ProjectsDB> projectsDBS_other = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "usersdb_id=? and completestatus=? and isdeletes =? and downloadtime !=? ", Constants.user_id, String.valueOf(1), String.valueOf(0), String.valueOf(0));
             if (projectsDBS_other != null && projectsDBS_other.size()>0) {
@@ -148,17 +133,62 @@ public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implemen
             } else {
                 getPresenter().getTypeDateFailure(0);
             }
-//            DataBaseWorkAsync.DBSelectByTogether_Where(ProjectsDB.class, new JDBCSelectMultiListener() {
-//                @Override
-//                public <T> void SelectMulti(List<T> t) {
-//                    if (t !=null && t.size()>0) {
-//                        getPresenter().getTypeDateSuccess((List<ProjectsDB>) t);
-//                    } else {
-//                        getPresenter().getTypeDateFailure(0);
-//                    }
-//                }
-//            }, "usersdb_id=? and completestatus=? and isdeletes =? and downloadtime !=? ", Constants.user_id, String.valueOf(1), String.valueOf(0), String.valueOf(0));
+
         }
     }
-
+    private void SaveProject(String Pid, HomeDataList.DataBean.AllListBean listBean) {
+        //查询数据库有没有当前项目
+        List<ProjectsDB> ProjectDBList = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", Pid);
+        if (ProjectDBList != null && !ProjectDBList.isEmpty() && ProjectDBList.size() > 0) {
+            ProjectsDB projectsDB=new ProjectsDB();
+            projectsDB.setDownloadTime(listBean.getDownloadTime());
+            projectsDB.setCompleteStatus(listBean.getCompleteStatus());
+            projectsDB.setProgress(listBean.getProgress());
+            if (usersDBS != null && usersDBS.size()>0) {
+                projectsDB.setUser(usersDBS.get(0));
+            }
+            int update = projectsDB.update(ProjectDBList.get(0).getId());
+            if (update>0){
+                updateSize++;
+            }
+        } else {
+            ProjectsDB projectsDB = new ProjectsDB();
+            KLog.d("缓存", listBean.getId());
+            projectsDB.setPid(listBean.getId());
+            projectsDB.setRecord(listBean.getRecord()); //录音方式
+            projectsDB.setInspect(listBean.getInspect()); //检验方式
+            projectsDB.setPname(listBean.getPname());  //项目名
+            projectsDB.setAddress(listBean.getAreaAddress());
+            projectsDB.setStartTime(listBean.getStartTime());
+            projectsDB.setcName(listBean.getCname());
+            projectsDB.setCode(listBean.getCode());
+            projectsDB.setDownloadTime(listBean.getDownloadTime());
+            projectsDB.setCompleteStatus(listBean.getCompleteStatus());
+            projectsDB.setProgress(listBean.getProgress());
+            projectsDB.setdName(listBean.getDname());
+            projectsDB.setLatitude(listBean.getLatitude());
+            projectsDB.setLocation(listBean.getLocation());
+            projectsDB.setLongitude(listBean.getLongitude());
+            projectsDB.setModifyTime(listBean.getModifyTime());
+            projectsDB.setNotice(listBean.getNotice());
+            projectsDB.setEndTime(listBean.getEndTime());
+            projectsDB.setManager(listBean.getManager());
+            projectsDB.setIsComplete(0);
+            projectsDB.setStage("1");
+            if (usersDBS != null && usersDBS.size() > 0) {
+                projectsDB.setUser(usersDBS.get(0));
+            }
+            boolean save = projectsDB.save();
+            if (save) {
+                saveSize++;
+            }
+        }
+        if (totalSize==(saveSize+updateSize)){
+            if (ht_List != null && ht_List.size()>0) {
+                getPresenter().getSaveDbSuccess(ht_List);
+            } else {
+                getPresenter().getSaveDbFailure();
+            }
+        }
+    }
 }

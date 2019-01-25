@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 
 import android.os.Handler;
 import android.os.Message;
+import android.view.TouchDelegate;
 import android.view.View;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -29,6 +30,7 @@ import com.coahr.thoughtrui.mvp.model.Bean.QuestionBean;
 import com.coahr.thoughtrui.mvp.model.Bean.isCompleteBean;
 import com.coahr.thoughtrui.mvp.presenter.StartProjectActivity_P;
 import com.coahr.thoughtrui.mvp.view.startProject.adapter.StartProjectAdapter;
+import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
 import com.coahr.thoughtrui.widgets.CustomScrollViewPager;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
 import com.socks.library.KLog;
@@ -45,6 +47,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import androidx.appcompat.app.AppCompatDialogFragment;
 import butterknife.BindView;
 
 /**
@@ -122,7 +125,13 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     @Override
     public void initData() {
         if (getNetWork()) {
-            p.getLocation(2);
+            if (haslogin()){
+                getData();
+               // p.getLocation(2);
+            } else {
+                ToastUtils.showLong("请登录后再试");
+            }
+
         } else {
             ToastUtils.showLong("请开启网络以定位");
             //p.getOfflineDate(Constants.DbProjectId, Constants.ht_ProjectId);
@@ -132,6 +141,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     @Override
     public void showError(@Nullable Throwable e) {
         super.showError(e);
+        ToastUtils.showLong(e.toString());
     }
 
     private boolean getNetWork() {
@@ -146,9 +156,10 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         latitude = location.getLatitude();
         longitude = location.getLongitude();
         if (!isFirstLocation) {
-            mHandler.post(run_location);
-            getData();
-        }
+              //  mHandler.post(run_location);
+                getData();
+            }
+
         isFirstLocation=true;
 
     }
@@ -220,9 +231,18 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     }
 
     @Override
-    public void getMainDataFailure(String failure) {
+    public void getMainDataFailure(String failure,int code) {
         ToastUtils.showLong(failure);
-        p.getOfflineDate(Constants.DbProjectId, Constants.ht_ProjectId);
+        if (code!=-1){
+            p.getOfflineDate(Constants.DbProjectId, Constants.ht_ProjectId);
+        } else {
+            if (baiduLocationHelper_s != null) {
+                baiduLocationHelper_s.stopLocation();
+            }
+         //   mHandler.removeCallbacks(run_location);
+            loginDialog();
+        }
+
     }
 
     @Override
@@ -243,6 +263,8 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     private void getData() {
         Map<String, Object> map = new HashMap<>();
         map.put("projectId", Constants.ht_ProjectId);
+        map.put("sessionid",Constants.sessionId);
+        map.put("token",Constants.devicestoken);
         p.getMainData(map);
     }
 
@@ -267,6 +289,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                 }).onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                dialog.dismiss();
                 if (baiduLocationHelper_s != null) {
                     baiduLocationHelper_s.stopLocation();
                 }
@@ -333,7 +356,32 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                 if (isLocationSuccess){
                     KLog.d("发送数据");
                 }
-            mHandler.postDelayed(run_location, 1000*3);
+         //   mHandler.postDelayed(run_location, 1000*3);
         }
     };
+
+    /**
+     * 登录Dialog
+     */
+    private void loginDialog(){
+        Login_DialogFragment login_dialogFragment=Login_DialogFragment.newInstance(Constants.MyTabFragmentCode);
+
+        login_dialogFragment.setLoginListener(new Login_DialogFragment.loginListener() {
+            @Override
+            public void loginSuccess(AppCompatDialogFragment dialogFragment) {
+                dialogFragment.dismiss();
+                if (haslogin()) {
+                    if (getNetWork()) {  //有网络
+                        isFirstLocation=false;
+                       p.getLocation(2);
+                    } else { //无网络
+                       ToastUtils.showLong("请连接网络后再试");
+                    }
+                } else {
+                    ToastUtils.showLong("请重新登录");
+                }
+            }
+        });
+        login_dialogFragment.show(getSupportFragmentManager(),TAG);
+    }
 }

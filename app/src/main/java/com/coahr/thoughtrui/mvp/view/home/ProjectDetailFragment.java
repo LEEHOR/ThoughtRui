@@ -150,8 +150,8 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
                 }
                 break;
             case R.id.attachment:
-                ToastUtils.showLong("打不开哈哈哈");
-              //  JumpToProjectAnnex();
+               // ToastUtils.showLong("打不开哈哈哈");
+                JumpToProjectAnnex();
                 break;
         }
     }

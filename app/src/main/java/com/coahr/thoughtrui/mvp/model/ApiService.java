@@ -37,7 +37,7 @@ public interface ApiService {
      * @return
      */
     @FormUrlEncoded
-    @POST("app/login.htm")
+    @POST(ApiContact.login)
     Call<LoginBean> getLogin(@FieldMap Map<String, Object> para);
 
     /**

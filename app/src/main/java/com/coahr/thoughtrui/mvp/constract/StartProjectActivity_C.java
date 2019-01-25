@@ -22,7 +22,7 @@ public interface StartProjectActivity_C {
 
         void getMainDataSuccess(QuestionBean questionBean);
 
-        void getMainDataFailure(String failure);
+        void getMainDataFailure(String failure,int code);
 
         void getOfflineSuccess(int size, String dbProjectId, String ht_projectId, List<String> ht_id);
 
@@ -42,7 +42,7 @@ public interface StartProjectActivity_C {
 
         void getMainDataSuccess(QuestionBean questionBean);
 
-        void getMainDataFailure(String failure);
+        void getMainDataFailure(String failure,int code);
 
         void getOfflineDate(String dbProjectId, String ht_projectId);
 

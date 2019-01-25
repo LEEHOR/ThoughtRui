@@ -37,9 +37,9 @@ public class ReviewPagerFragment_P extends BasePresenter<ReviewPagerFragment_C.V
     }
 
     @Override
-    public void getCensorListFailure(String failure) {
+    public void getCensorListFailure(String failure,int code) {
         if (getView() != null) {
-            getView().getCensorListFailure(failure);
+            getView().getCensorListFailure(failure,code);
         }
     }
 }

@@ -721,6 +721,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
                         //获取当前题目
                         showLoading();
                         getOSS();

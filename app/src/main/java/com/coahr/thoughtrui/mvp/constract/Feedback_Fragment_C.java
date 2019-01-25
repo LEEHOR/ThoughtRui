@@ -22,7 +22,7 @@ public interface Feedback_Fragment_C {
 
         void sendSuggestionSuccess(FeedBack feedBack);
 
-        void sendSuggestionFailure(String failure);
+        void sendSuggestionFailure(String failure,int code);
 
     }
 
@@ -32,7 +32,7 @@ public interface Feedback_Fragment_C {
 
         void sendSuggestionSuccess(FeedBack feedBack);
 
-        void sendSuggestionFailure(String failure);
+        void sendSuggestionFailure(String failure,int code);
     }
 
     interface Model extends BaseContract.Model {

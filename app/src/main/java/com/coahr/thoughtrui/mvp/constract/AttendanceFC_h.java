@@ -18,7 +18,7 @@ public interface AttendanceFC_h {
 
         void getAttendanceHistorySuccess(AttendanceHistory history);
 
-        void getAttendanceHistoryFailure(String failure);
+        void getAttendanceHistoryFailure(String failure,int code);
     }
 
     interface Presenter extends BaseContract.Presenter {
@@ -27,7 +27,7 @@ public interface AttendanceFC_h {
 
         void getAttendanceHistorySuccess(AttendanceHistory history);
 
-        void getAttendanceHistoryFailure(String failure);
+        void getAttendanceHistoryFailure(String failure,int code);
 
 
 

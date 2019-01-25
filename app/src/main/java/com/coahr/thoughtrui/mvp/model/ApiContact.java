@@ -6,7 +6,7 @@ package com.coahr.thoughtrui.mvp.model;
  * on 17:09
  */
 public class ApiContact {
-    //根路径
+    //
   //  public static String baseUrl="http://survey.three3.cn:8081/three_research/";
     // 访问的endpoint地址
     public static final String endpoint = "http://oss-cn-hangzhou.aliyuncs.com";
@@ -14,8 +14,10 @@ public class ApiContact {
     public static final String STSSERVER = "http://survey.three3.cn:8081/three_research/app/answer/oss/token.htm";
     //
     public static final String callbackAddress = "http://192.168.191.1:8080/three_research/app/answer/oss/callback.htm";
-    //测试路径
+    //根路径
     public static String baseUrl="http://leinuo.coahr.com:8085/research/";
+    //测试路径
+    //public static String baseUrl="http://192.168.137.1:8080/research/";
      //登陆接口
     public static final String login="app/login.htm";
     //首页请求接口

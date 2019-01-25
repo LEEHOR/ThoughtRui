@@ -2,6 +2,7 @@ package com.coahr.thoughtrui.mvp.view.startProject;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -139,7 +140,7 @@ public class PhotoAlbumDialogFragment extends AppCompatDialogFragment {
             for (int i = 0; i < size; i++) {
                 ImageView imageView = new ImageView(BaseApplication.mContext);
                 imageView.setLayoutParams(new ViewGroup.LayoutParams(ScreenUtils.getScreenWidth(BaseApplication.mContext), ScreenUtils.getScreenWidth(BaseApplication.mContext)));
-                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 Imageloader.loadImage(imgList.get(i), imageView);
                 imageViews.add(imageView);
             }
@@ -183,7 +184,6 @@ public class PhotoAlbumDialogFragment extends AppCompatDialogFragment {
             window.getDecorView().setPadding(0, 0, 0, 0);
             window.setBackgroundDrawableResource(android.R.color.transparent);
             window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-
             window.setWindowAnimations(R.style.Photo_See_Animation);
         }
         return dialog;

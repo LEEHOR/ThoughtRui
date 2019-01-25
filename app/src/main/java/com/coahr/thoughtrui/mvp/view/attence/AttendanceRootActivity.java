@@ -100,6 +100,12 @@ public class AttendanceRootActivity extends BaseSupportActivity {
                 showFragment(1);
             }
         });
+        myTitle.getLeftIcon().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override

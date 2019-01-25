@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -90,18 +91,19 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
             mFragments[3] = MyFragment.newInstance();
         }
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         manager = LocalBroadcastManager.getInstance(this);
-        if (!isRegister.isRegister(manager,"hotAliyun")) {
-            KLog.d("SophixStubApplication","注册广播1");
+        if (!isRegister.isRegister(manager, "hotAliyun")) {
+            KLog.d("SophixStubApplication", "注册广播1");
             aliyunHotReceiver = new AliyunHotReceiver();
             IntentFilter filter = new IntentFilter();
             filter.addAction("hotAliyun");
-            manager.registerReceiver(aliyunHotReceiver,filter);
+            manager.registerReceiver(aliyunHotReceiver, filter);
             aliyunHotReceiver.setHotListener(new AliyunHotReceiver.hotListener() {
                 @Override
                 public void getPathDetail(String path_info, String path_version, String app_version) {
-                    KLog.d("SophixStubApplication","注册广播2");
-                    Dialog("雷诺"+app_version+"修复补丁。","补丁版本："+path_version+"\n"+"补丁说明："+path_info+"\n"+
+                    KLog.d("SophixStubApplication", "注册广播2");
+                    Dialog("雷诺" + app_version + "修复补丁。", "补丁版本：" + path_version + "\n" + "补丁说明：" + path_info + "\n" +
                             "点击【立即修复】重新打开应用");
                 }
             });
@@ -114,7 +116,19 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
         if (aliyunHotReceiver != null) {
             manager.unregisterReceiver(aliyunHotReceiver);
         }
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
 
+    /**
+     * Evenbus
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void EvenBus(EvenBus_LoginSuccess evenBus_loginSuccess) {
+        if (evenBus_loginSuccess.getLoginType()==100){
+            showFragment(0);
+        }
     }
 
     @Override
@@ -140,7 +154,8 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
         myBottomNavigation.beanSelect(0);
         bottomNavigationPreposition = 0;
         if (!haslogin()) {
-            loginDialog();;
+            loginDialog();
+            ;
         }
 
     }
@@ -163,12 +178,12 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
             ToastUtils.showLong(getResources().getString(R.string.carsuper_exit));
             exitTime = System.currentTimeMillis();
         } else {
-           // PreferenceUtils.remove(BaseApplication.mContext, Constants.sessionId_key);
-            if (PreferenceUtils.contains(BaseApplication.mContext,Constants.AliYunHot_key)) {
+            // PreferenceUtils.remove(BaseApplication.mContext, Constants.sessionId_key);
+            if (PreferenceUtils.contains(BaseApplication.mContext, Constants.AliYunHot_key)) {
                 prefBoolean = PreferenceUtils.getPrefBoolean(BaseApplication.mContext, Constants.AliYunHot_key, false);
-                PreferenceUtils.remove(BaseApplication.mContext,  Constants.AliYunHot_key);
-                PreferenceUtils.remove(BaseApplication.mContext,Constants.pathVersion_key);
-                PreferenceUtils.remove(BaseApplication.mContext,Constants.path_key);
+                PreferenceUtils.remove(BaseApplication.mContext, Constants.AliYunHot_key);
+                PreferenceUtils.remove(BaseApplication.mContext, Constants.pathVersion_key);
+                PreferenceUtils.remove(BaseApplication.mContext, Constants.path_key);
             }
             finish();
             if (prefBoolean) {
@@ -200,7 +215,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
                 public void PermissionHave() {
                     SophixManager.getInstance().queryAndLoadNewPatch();
                 }
-            }, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.READ_PHONE_STATE);
+            }, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE);
 
         } else {
             SophixManager.getInstance().queryAndLoadNewPatch();
@@ -210,17 +225,16 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     /**
      * 登录Dialog
      */
-    private void loginDialog(){
-    Login_DialogFragment login_dialogFragment=Login_DialogFragment.newInstance();
+    private void loginDialog() {
+        Login_DialogFragment login_dialogFragment = Login_DialogFragment.newInstance(Constants.MainActivityCode);
 
         login_dialogFragment.setLoginListener(new Login_DialogFragment.loginListener() {
             @Override
             public void loginSuccess(AppCompatDialogFragment dialogFragment) {
                 dialogFragment.dismiss();
                 showFragment(0);
-               EventBus.getDefault().postSticky(new Event_Main(1, "登陆成功", page));
             }
         });
-        login_dialogFragment.show(getSupportFragmentManager(),TAG);
-}
+        login_dialogFragment.show(getSupportFragmentManager(), TAG);
+    }
 }

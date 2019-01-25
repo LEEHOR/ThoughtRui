@@ -16,7 +16,7 @@ public interface ReviewPagerFragment_C {
 
         void getCensorListSuccess(CensorBean censorBean);
 
-        void getCensorListFailure(String failure);
+        void getCensorListFailure(String failure,int code);
     }
 
     interface Presenter extends BaseContract.Presenter {
@@ -25,7 +25,7 @@ public interface ReviewPagerFragment_C {
 
         void getCensorListSuccess(CensorBean censorBean);
 
-        void getCensorListFailure(String failure);
+        void getCensorListFailure(String failure,int code);
 
     }
 

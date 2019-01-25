@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,6 +26,7 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.constract.MyTabFragmentC;
+import com.coahr.thoughtrui.mvp.model.Bean.Event_Main;
 import com.coahr.thoughtrui.mvp.model.Bean.HomeDataList;
 import com.coahr.thoughtrui.mvp.model.Bean.UnDownLoad;
 import com.coahr.thoughtrui.mvp.presenter.MyTabFragmentP;
@@ -32,8 +34,13 @@ import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
 import com.coahr.thoughtrui.mvp.view.home.adapter.MyTabFOffLineAdapter;
 import com.coahr.thoughtrui.mvp.view.home.adapter.MyTabFOnLineAdapter;
+import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
 import com.coahr.thoughtrui.widgets.SelectImageView;
 import com.coahr.thoughtrui.widgets.SelectTextView;
+import com.socks.library.KLog;
+
+import org.greenrobot.eventbus.EventBus;
+import org.litepal.crud.callback.UpdateOrDeleteCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -91,6 +98,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
     private SpacesItemDecoration spacesItemDecoration;
     private String DownLoadProject_Id;
     private List<HomeDataList.DataBean.AllListBean> allListBeanList = new ArrayList<>();
+    private List<String>db_list = new ArrayList<>();;
 
     @Override
     public MyTabFragmentC.Presenter getPresenter() {
@@ -179,7 +187,6 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
         }
         if (haslogin()) {
             if (isNetworkAvailable()) {  //有网络
-                //  p.startLocation(3);
                 getDate();
             } else { //无网络
                 p.getTypeDate(type);
@@ -191,7 +198,6 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
         tabFAdapter.setAdapter_online(new MyTabFOnLineAdapter.adapter_online() {
             @Override
             public void newListClick(HomeDataList.DataBean.AllListBean newListBean) {
-                // setDate_onLine_newList(newListBean);
                 JumpToProject(newListBean.getId());
             }
 
@@ -202,7 +208,6 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
 
             @Override
             public void completeClick(HomeDataList.DataBean.AllListBean completeListBean) {
-                // setDate_onLine_Complete(completeListBean);
                 JumpToProject(completeListBean.getId());
             }
 
@@ -213,7 +218,6 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
 
             @Override
             public void unCompleteClick(HomeDataList.DataBean.AllListBean unCompleteListBean) {
-                //  setDate_onLine_unComplete(unCompleteListBean);
                 JumpToProject(unCompleteListBean.getId());
             }
 
@@ -284,6 +288,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
     public void getHomeDataSuccess(HomeDataList homeDataList) {
         allListBeanList.clear();
         if (homeDataList != null) {
+
             if (homeDataList.getData().getAllList() != null && homeDataList.getData().getAllList().size() > 0) {
                 for (int i = 0; i < homeDataList.getData().getAllList().size(); i++) {
                     if (type == 0) {  //新项目
@@ -309,6 +314,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
                 }
             }
         }
+        p.getSaveDb(homeDataList);
         tabFAdapter.setType(type);
         tabFAdapter.setHomeDataList(allListBeanList, BaseApplication.mContext);
         change_online();
@@ -317,11 +323,15 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
     }
 
     @Override
-    public void getHomeDataFailure(String fail) {
+    public void getHomeDataFailure(String fail,int code) {
         ToastUtils.showLong(fail);
-        p.getTypeDate(type);
-        isLoad = false;
-        myTab_swipe.setRefreshing(false);
+        if (code !=-1){
+            isLoad = false;
+            myTab_swipe.setRefreshing(false);
+        } else {
+            loginDialog();
+        }
+
     }
 
     @Override
@@ -330,16 +340,6 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
         ToastUtils.showLong(e.toString());
         isLoad = false;
         myTab_swipe.setRefreshing(false);
-    }
-
-    @Override
-    public void getHomeMoreSuccess(HomeDataList homeDataList) {
-
-    }
-
-    @Override
-    public void getHomeMoreFailure(String fail) {
-
     }
 
     /**
@@ -384,6 +384,16 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
     @Override
     public void getUnDownLoadFailure(String failure) {
         ToastUtils.showLong(failure);
+    }
+
+    @Override
+    public void getSaveDbSuccess(List<String> dbList) {
+        getDifferenceSet(dbList);
+    }
+
+    @Override
+    public void getSaveDbFailure() {
+
     }
 
     @Override
@@ -446,6 +456,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
         if (haslogin()) {
             Map<String, Object> map = new HashMap<>();
             map.put("sessionId", Constants.sessionId);
+            map.put("token",Constants.devicestoken);
             p.getHomeData(map);
         } else {
             isLoad = false;
@@ -531,4 +542,67 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
         }
 
     }
+
+    /**
+     * 登录Dialog
+     */
+    private void loginDialog(){
+        Login_DialogFragment login_dialogFragment=Login_DialogFragment.newInstance(Constants.MyTabFragmentCode);
+
+        login_dialogFragment.setLoginListener(new Login_DialogFragment.loginListener() {
+            @Override
+            public void loginSuccess(AppCompatDialogFragment dialogFragment) {
+                dialogFragment.dismiss();
+                if (haslogin()) {
+                    if (isNetworkAvailable()) {  //有网络
+                        getDate();
+                    } else { //无网络
+                        p.getTypeDate(type);
+                    }
+                }
+            }
+        });
+        login_dialogFragment.show(getFragmentManager(),TAG);
+    }
+
+    /**
+     * 删除后台数据与数据库中不相同的项目
+     */
+    private void deleteByDb(final String pid) {
+        List<ProjectsDB> ProjectDBList = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", pid);
+        if (ProjectDBList != null && ProjectDBList.size() > 0) {
+            //删除
+            ProjectsDB projectsDB=new ProjectsDB();
+            projectsDB.setIsDeletes(1);
+            projectsDB.update(ProjectDBList.get(0).getId());
+        }
+
+    }
+
+    /**
+     * 获取差集
+     */
+    private void getDifferenceSet(List<String> ht_List) {
+        List<UsersDB> usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", Constants.sessionId);
+        if (usersDBS != null && usersDBS.size() > 0) {
+            List<ProjectsDB> projectsDBSList = usersDBS.get(0).getProjectsDBSList();
+            if (projectsDBSList != null && projectsDBSList.size() > 0) {
+                db_list.clear();
+                for (int i = 0; i < projectsDBSList.size(); i++) {
+                    db_list.add(projectsDBSList.get(i).getPid());
+                }
+            }
+        }
+        if (db_list != null && ht_List != null && ht_List.size()>0)  {
+            if (db_list.removeAll(ht_List)) {
+                if (db_list != null && db_list.size() > 0) {
+                    for (int i = 0; i < db_list.size(); i++) {
+                        //删除操作
+                        deleteByDb(db_list.get(i));
+                    }
+                }
+            }
+        }
+    }
+
 }

@@ -76,6 +76,9 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
         if (PreferenceUtils.contains(mContext, Constants.sessionId_key)) {
            Constants.sessionId= PreferenceUtils.getPrefString(mContext, Constants.sessionId_key, "");
         }
+        if (PreferenceUtils.contains(mContext,Constants.devicestoken_key)){
+            Constants.devicestoken=PreferenceUtils.getPrefString(mContext,Constants.devicestoken_key,"");
+        }
 
     }
 
