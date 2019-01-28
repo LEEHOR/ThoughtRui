@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,6 +22,8 @@ import com.coahr.thoughtrui.Utils.KeyBoardUtils;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.widgets.Keyboard.AnFQNumEditText;
 import com.coahr.thoughtrui.widgets.Keyboard.KeyboardChangeListener;
+import com.coahr.thoughtrui.widgets.Keyboard.SoftKeyboardStateHelper;
+import com.socks.library.KLog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,16 +39,17 @@ public class EvaluateInputDialogFragment extends AppCompatDialogFragment {
     @BindView(R.id.fl_evaluate_input)
     LinearLayout flEvaluateInput;
     @BindView(R.id.et_input)
-    AnFQNumEditText etInput;
+    EditText etInput;
+    @BindView(R.id.vie_view)
+    View vie_view;
     @BindView(R.id.tv_send)
     TextView tvSend;
-    @BindView(R.id.text_count)
-    TextView text_count;
     Unbinder unbinder;
 
     private InputCallback inputCallback;
+    private SoftKeyboardStateHelper softKeyboardStateHelper;
+    private View view;
 
-    private KeyboardChangeListener keyboardChangeListener;
 
     public static EvaluateInputDialogFragment newInstance() {
         return new EvaluateInputDialogFragment();
@@ -55,7 +59,7 @@ public class EvaluateInputDialogFragment extends AppCompatDialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragmentdialog_evaluate_input, container, false);
+        view = inflater.inflate(R.layout.fragmentdialog_evaluate_input, container, false);
         unbinder = ButterKnife.bind(this, view);
         KeyBoardUtils.UpdateUI(view.getRootView(), getActivity());
         init();
@@ -64,15 +68,26 @@ public class EvaluateInputDialogFragment extends AppCompatDialogFragment {
 
 
     private void init() {
-        KeyBoardUtils.showKeybord(etInput.getEtContent(), getActivity());
-        keyboardChangeListener = new KeyboardChangeListener(this.getDialog().getWindow());
-        keyboardChangeListener.setKeyBoardListener(new KeyboardChangeListener.KeyBoardListener() {
+        KeyBoardUtils.showKeybord(etInput, getActivity());
+        softKeyboardStateHelper = new SoftKeyboardStateHelper(view);
+        softKeyboardStateHelper.addSoftKeyboardStateListener(new SoftKeyboardStateHelper.SoftKeyboardStateListener() {
             @Override
-            public void onKeyboardChange(boolean isShow, int keyboardHeight) {
-              //  KLog.e("isshow:" + isShow + "keyboardheigth" + keyboardHeight);
-                if (!isShow) {
-                  //  dismiss();
-                }
+            public void onSoftKeyboardOpened(int keyboardHeightInPx) {
+                KLog.d("哈哈哈","打开");
+            }
+
+            @Override
+            public void onSoftKeyboardClosed() {
+                KLog.d("哈哈哈","关闭");
+                KeyBoardUtils.hideKeybord(etInput, getActivity());
+                dismiss();
+            }
+        });
+        vie_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                KeyBoardUtils.hideKeybord(etInput, getActivity());
+                dismiss();
             }
         });
     }
@@ -82,9 +97,10 @@ public class EvaluateInputDialogFragment extends AppCompatDialogFragment {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         Window window = dialog.getWindow();
         if (window != null) {
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
             window.getDecorView().setPadding(0, 0, 0, 0);
-            window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
             window.setBackgroundDrawableResource(android.R.color.transparent);
+            window.setLayout(lp.MATCH_PARENT, lp.MATCH_PARENT);
             window.setWindowAnimations(R.style.bottom_in_out_animation);
         }
         return dialog;
@@ -98,19 +114,15 @@ public class EvaluateInputDialogFragment extends AppCompatDialogFragment {
     }
 
 
-    @OnClick({R.id.tv_send, R.id.fl_evaluate_input})
+    @OnClick({R.id.tv_send})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_send:
-
                 if (etInput.getText() != null && !etInput.getText().equals("")) {
-                    inputCallback.onInputSend(etInput.getText(),this);
+                    inputCallback.onInputSend(etInput.getText().toString(),this);
                 } else {
                     Toast.makeText(BaseApplication.mContext, "请输入内容", Toast.LENGTH_LONG).show();
                 }
-                break;
-            case R.id.fl_evaluate_input:
-                dismiss();
                 break;
         }
     }

@@ -280,7 +280,6 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
         tv_user_name.setText("");
         PreferenceUtils.remove(BaseApplication.mContext, Constants.user_key);
         PreferenceUtils.remove(BaseApplication.mContext, Constants.sessionId_key);
-       // goOtherPage(ConstantsActivity.class, Constants.fragment_myFragment, Constants.loginFragmentCode);
         loginDialog();
     }
 
@@ -333,7 +332,6 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
                 dialogFragment.dismiss();
                 featchProjectInfo(tv_dxz, tv_dsc, tv_dks, tv_wwc);
                 tv_user_name.setText(Constants.user_name);
-                //    EventBus.getDefault().postSticky(new Event_Main(1, "登陆成功", page));
             }
         });
         login_dialogFragment.show(getFragmentManager(),TAG);

@@ -1,47 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fl_evaluate_input"
     android:orientation="vertical"
+    android:background="@color/background_translunt"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <View
+        android:background="@color/background_translunt"
+        android:id="@+id/vie_view"
         android:layout_width="match_parent"
         android:layout_weight="1"
         android:layout_height="0dp"/>
     <RelativeLayout
         android:background="@drawable/bg_fff_background"
         android:layout_width="match_parent"
-        android:layout_height="100dp">
-        <com.coahr.thoughtrui.widgets.Keyboard.AnFQNumEditText
+        android:layout_height="wrap_content">
+        <EditText
+            android:gravity="top"
             android:id="@+id/et_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_fff_background"
+            android:lines="5"
+            android:hint="请输入50字以内的评论"
+            android:padding="@dimen/dp_5"
+            android:textSize="@dimen/dp_14"
+            android:textColor="#333333"
             android:layout_toLeftOf="@+id/tv_send"
-            app:mostCount="50" />
-
-
+            android:background="@drawable/bg_fff_background" />
         <TextView
             android:id="@+id/tv_send"
-            android:layout_width="65dp"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:padding="@dimen/dp_10"
+            android:layout_height="wrap_content"
             android:background="@color/material_blue_500"
             android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/et_input"
+            android:layout_alignBottom="@+id/et_input"
             android:textSize="@dimen/dp_16"
             android:text="评论"
             android:gravity="center"
             android:textColor="@color/material_grey_1100" />
-        <TextView
-            android:visibility="gone"
-            android:id="@+id/text_count"
-            android:textColor="@color/material_grey_550"
-            android:layout_alignParentBottom="true"
-            android:layout_toLeftOf="@+id/tv_send"
-            android:textSize="@dimen/dp_10"
-            android:layout_marginRight="@dimen/dp_5"
-            android:layout_marginBottom="@dimen/dp_5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
     </RelativeLayout>
 </LinearLayout>

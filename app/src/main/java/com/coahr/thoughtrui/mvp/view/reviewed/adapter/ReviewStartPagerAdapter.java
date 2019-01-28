@@ -19,7 +19,7 @@ public class ReviewStartPagerAdapter extends FragmentPagerAdapter {
     private int size;
     private String ht_projectId;
     private String db_projectId;
-    public ReviewStartPagerAdapter(FragmentManager fm, List<String> list,int size,String db_ProjectId,String ht_ProjectId) {
+    public ReviewStartPagerAdapter(FragmentManager fm,String db_ProjectId,String ht_ProjectId, List<String> list,int size) {
         super(fm);
         this.stringList=list;
         this.size=size;

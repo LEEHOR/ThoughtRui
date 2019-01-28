@@ -90,6 +90,7 @@ public class ReviewStartPager extends BaseFragment {
     public void initView() {
 
         review_start_viewpager.setScrollable(false);
+        review_start_viewpager.setOffscreenPageLimit(1);
         myTittleBar.getLeftIcon().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,8 +105,6 @@ public class ReviewStartPager extends BaseFragment {
             ht_id_list = getArguments().getStringArrayList("ht_id_list");
             position = getArguments().getInt("position");
             ht_projectId= getArguments().getString("ht_projectId");
-
-
             setViewPager();
         }
     }
@@ -158,8 +157,9 @@ public class ReviewStartPager extends BaseFragment {
                 myTittleBar.getTvTittle().setText("第"+subjectsDBS.get(0).getNumber()+"题");
             }
             List<SubjectsDB> subjectsDBList = projectsDBS.get(0).getSubjectsDBList();
+            KLog.d("大小",ht_id_list.size(),"db",String.valueOf(projectsDBS.get(0).getId()),"ht",ht_projectId);
             if (subjectsDBList != null && subjectsDBList.size()>0) {
-                adapter = new ReviewStartPagerAdapter(getChildFragmentManager(), ht_id_list, ht_id_list.size(), String.valueOf(projectsDBS.get(0).getId()), ht_projectId);
+                adapter = new ReviewStartPagerAdapter(getChildFragmentManager(),String.valueOf(projectsDBS.get(0).getId()), ht_projectId,ht_id_list, ht_id_list.size());
                 review_start_viewpager.setAdapter(adapter);
                 review_start_viewpager.setCurrentItem(position);
             } else {

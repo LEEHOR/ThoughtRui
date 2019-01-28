@@ -182,6 +182,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                             SubjectsDB subjectsDB = new SubjectsDB();
                             subjectsDB.setType(questionList.get(i).getType());
                             subjectsDB.setOptions(questionList.get(i).getOptions());
+                            subjectsDB.setNumber(questionList.get(i).getNumber());
                             subjectsDB.update(subjectsDBS.get(0).getId());
                         }
                     } else {
@@ -197,7 +198,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                         subjectsDB.setIsComplete(0);
                         subjectsDB.setType(questionList.get(i).getType());
                         subjectsDB.setDh("0");
-                        subjectsDB.setNumber(i + 1);
+                        subjectsDB.setNumber(questionList.get(i).getNumber());
                         subjectsDB.setsUploadStatus(0);
                         if (questionList.get(i).getQuota1() != null) {
                             subjectsDB.setQuota1(questionList.get(i).getQuota1());

@@ -188,7 +188,7 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
 
     @Override
     public void initView() {
-        setupRecorder();
+
         if (getArguments() != null) {
             dbProjectId = getArguments().getString("DbProjectId");
             ht_projectId = getArguments().getString("ht_ProjectId");
@@ -200,6 +200,7 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
                 number = subjectsDBS.get(0).getNumber();
             }
         }
+        setupRecorder();
         adapter = new PagerFragmentPhotoAdapter();
         gridLayoutManager = new GridLayoutManager(BaseApplication.mContext, 5);
         img_recycler.setLayoutManager(gridLayoutManager);
@@ -552,6 +553,7 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
         if (!file.exists()) {
             file.mkdirs();
         }
+        KLog.d("路径",Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id);
         return new File(file, "录音" + number + ".wav");
     }
 
