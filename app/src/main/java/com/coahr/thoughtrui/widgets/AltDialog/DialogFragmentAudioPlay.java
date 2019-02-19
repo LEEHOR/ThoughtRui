@@ -300,7 +300,8 @@ public class DialogFragmentAudioPlay extends BaseDialogFragment implements View.
         if (type==3){  //继续播放
             play_button.setImageResource(R.mipmap.ic_pause);
             stop_button.setImageResource(R.mipmap.ic_stoping);
-            PlayType=AUDIO_STOP;
+           // PlayType=AUDIO_STOP;
+            PlayType=AUDIO_PAUSE;
             mHandler.sendEmptyMessage(UPDATE_AUDIO_TIME);
         }
         if (type==4){  //停止播放

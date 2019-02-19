@@ -215,7 +215,6 @@
                             android:textSize="@dimen/dp_14"
                             android:lines="1"
                             android:ellipsize="end"
-                            android:text="saasas"
                             android:textColor="@color/black"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />

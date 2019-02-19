@@ -27,7 +27,7 @@ android {
         multiDexEnabled true
         manifestPlaceholders = [qqappid: "1232323"]
         testInstrumentationRunner "android.support.ThreeNode.runner.AndroidJUnitRunner"
-       // ndk { abiFilters "armeabi", "arm64-v8a", "x86", "x86_64", "armeabi-v7a" }
+        ndk { abiFilters "armeabi", "arm64-v8a", "armeabi-v7a" }
     }
     
     buildTypes {

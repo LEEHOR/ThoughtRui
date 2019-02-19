@@ -76,7 +76,7 @@ public class Attendance {
         private String code;
         private int count;
         private String dealerId;
-        private int endTime;
+        private long endTime;
         private double latitude;
         private String location;
         private double longitude;
@@ -173,11 +173,11 @@ public class Attendance {
             this.dealerId = dealerId;
         }
 
-        public int getEndTime() {
+        public long getEndTime() {
             return endTime;
         }
 
-        public void setEndTime(int endTime) {
+        public void setEndTime(long endTime) {
             this.endTime = endTime;
         }
 

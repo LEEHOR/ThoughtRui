@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import com.coahr.thoughtrui.DBbean.AnswersDB;
 import com.coahr.thoughtrui.DBbean.ImagesDB;
+import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.mvp.Base.BasePresenter;
 import com.coahr.thoughtrui.mvp.constract.PagerFragment_aC;
@@ -11,6 +12,7 @@ import com.coahr.thoughtrui.mvp.model.PagerFragment_aM;
 import com.coahr.thoughtrui.mvp.view.startProject.PagerFragment_a;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -171,6 +173,48 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
     public void getAudioFailure(String failure) {
         if (getView() != null) {
             getView().getAudioFailure(failure);
+        }
+    }
+
+    @Override
+    public void UpLoadFileList(String projectsDB_id, SubjectsDB subjectsDB) {
+        if (mModle != null) {
+            mModle.UpLoadFileList(projectsDB_id,subjectsDB);
+        }
+    }
+
+    @Override
+    public void getUoLoadFileListSuccess(List<String> list, String projectsDB_id, SubjectsDB subjectsDB) {
+        if (getView() != null) {
+            getView().getUoLoadFileListSuccess(list,projectsDB_id,subjectsDB);
+        }
+    }
+
+    @Override
+    public void getUpLoadFileListFailure(String failure) {
+        if (getView() != null) {
+            getView().getUpLoadFileListFailure(failure);
+        }
+    }
+
+    @Override
+    public void CallBack(Map<String, Object> map, String projectsDB_id, SubjectsDB subjectsDB) {
+        if (mModle != null) {
+            mModle.CallBack(map,projectsDB_id,subjectsDB);
+        }
+    }
+
+    @Override
+    public void CallBackSuccess(String projectsDB_id, SubjectsDB subjectsDB) {
+        if (getView() != null) {
+            getView().CallBackSuccess(projectsDB_id,subjectsDB);
+        }
+    }
+
+    @Override
+    public void CallBackFailure(String projectsDB_id, SubjectsDB subjectsDB) {
+        if (getView() != null) {
+            getView().CallBackFailure(projectsDB_id, subjectsDB);
         }
     }
 }

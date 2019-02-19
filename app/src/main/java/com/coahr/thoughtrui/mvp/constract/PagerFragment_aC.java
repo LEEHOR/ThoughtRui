@@ -2,12 +2,15 @@ package com.coahr.thoughtrui.mvp.constract;
 
 import android.app.Activity;
 
+import com.alibaba.sdk.android.oss.OSS;
 import com.coahr.thoughtrui.DBbean.AnswersDB;
 import com.coahr.thoughtrui.DBbean.ImagesDB;
+import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
 
 import java.util.List;
+import java.util.Map;
 
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 
@@ -48,6 +51,13 @@ public interface PagerFragment_aC {
         void getAudioSuccess(List<String> audioList);
 
         void getAudioFailure(String failure);
+
+        void getUoLoadFileListSuccess(List<String> list, String projectsDB_id, SubjectsDB  subjectsDB);
+        void getUpLoadFileListFailure(String failure);
+
+
+        void CallBackSuccess(String projectsDB_id,SubjectsDB subjectsDB);
+        void CallBackFailure(String projectsDB_id,SubjectsDB subjectsDB);
 
     }
 
@@ -95,6 +105,16 @@ public interface PagerFragment_aC {
 
          void getAudioFailure(String failure);
 
+         //获取上传文件列表
+         void UpLoadFileList(String projectsDB_id, SubjectsDB  subjectsDB);
+         void getUoLoadFileListSuccess(List<String> list,String projectsDB_id, SubjectsDB  subjectsDB);
+         void getUpLoadFileListFailure(String failure);
+
+         //每题上传完成后的回调
+         void CallBack(Map<String,Object> map, String projectsDB_id, SubjectsDB subjectsDB);
+         void CallBackSuccess(String projectsDB_id,SubjectsDB subjectsDB);
+         void CallBackFailure(String projectsDB_id,SubjectsDB subjectsDB);
+
     }
 
      interface Model extends BaseContract.Model {
@@ -113,6 +133,11 @@ public interface PagerFragment_aC {
          void SaveImages(List<MediaBean> mediaBeanList,String ht_ProjectId,int number,String ht_id);
 
          void getAudio(String ht_ProjectId, Activity activity,int number,String ht_id);
+
+         void UpLoadFileList(String projectsDB_id, SubjectsDB  subjectsDB);
+
+
+         void CallBack(Map<String,Object> map, String projectsDB_id, SubjectsDB subjectsDB);
 
     }
 }

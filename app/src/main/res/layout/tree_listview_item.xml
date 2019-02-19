@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/three_re">
-
     <ImageView
         android:id="@+id/id_treenode_icon"
         android:layout_width="wrap_content"
@@ -27,11 +26,18 @@
         android:paddingTop="8dp">
 
         <ImageView
-            android:visibility="invisible"
+            android:visibility="gone"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:background="@drawable/login_checkbox_selector"
             android:scaleType="centerInside" />
+        <TextView
+            android:textColor="@color/material_blue_700"
+            android:layout_gravity="center"
+            android:textSize="@dimen/dp_12"
+            android:text="选择"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
 

@@ -1,6 +1,8 @@
 package com.coahr.thoughtrui.mvp.view.startProject;
 
 import android.Manifest;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.media.AudioFormat;
@@ -15,16 +17,20 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -34,6 +40,20 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.alibaba.sdk.android.oss.ClientConfiguration;
+import com.alibaba.sdk.android.oss.ClientException;
+import com.alibaba.sdk.android.oss.OSSClient;
+import com.alibaba.sdk.android.oss.ServiceException;
+import com.alibaba.sdk.android.oss.callback.OSSCompletedCallback;
+import com.alibaba.sdk.android.oss.callback.OSSProgressCallback;
+import com.alibaba.sdk.android.oss.common.OSSLog;
+import com.alibaba.sdk.android.oss.common.auth.OSSAuthCredentialsProvider;
+import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
+import com.alibaba.sdk.android.oss.internal.OSSAsyncTask;
+import com.alibaba.sdk.android.oss.model.OSSRequest;
+import com.alibaba.sdk.android.oss.model.PutObjectRequest;
+import com.alibaba.sdk.android.oss.model.PutObjectResult;
+import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.DensityUtils;
@@ -49,6 +69,7 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.constract.PagerFragment_aC;
+import com.coahr.thoughtrui.mvp.model.ApiContact;
 import com.coahr.thoughtrui.mvp.model.Bean.isCompleteBean;
 import com.coahr.thoughtrui.mvp.presenter.PagerFragment_aP;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
@@ -58,6 +79,7 @@ import com.coahr.thoughtrui.widgets.AltDialog.DialogFragmentAudioPlay;
 import com.coahr.thoughtrui.widgets.AltDialog.EvaluateInputDialogFragment;
 import com.coahr.thoughtrui.widgets.AltDialog.Fill_in_blankDialog;
 import com.coahr.thoughtrui.widgets.AltDialog.ProjectSuccessDialog;
+import com.coahr.thoughtrui.widgets.UIPlayer.uiDisPlayer;
 import com.socks.library.KLog;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
@@ -68,7 +90,10 @@ import org.litepal.crud.callback.UpdateOrDeleteCallback;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -134,6 +159,8 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     TextView tv_last; //上一页
     @BindView(R.id.tv_next)
     TextView tv_next;  //下一页
+    @BindView(R.id.fr_upload)
+    FrameLayout fr_upload; //上传
     //==========================================================
     //项目本地数据库Id
     private String dbProjectId;
@@ -176,6 +203,31 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     private String audioName;
     private SubjectsDB subjectsDB_now;
     private int subjectsDBType;
+    private OSSClient ossClient;
+    List<OSSAsyncTask> ossAsyncTaskList = new ArrayList<>();
+    //上传文件的数组
+    private List<String> fileList = new ArrayList<>();
+    //上传成功的个数
+    private int UpLoadSuccessCount = 0;
+    //上传失败的个数
+    private int UpLoadFailureCount = 0;
+    private final int GETSUBJECTLIST = 1;
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case GETSUBJECTLIST:
+                    p.UpLoadFileList(ht_projectId, subjectsDB_now);
+                    break;
+            }
+        }
+    };
+    private ProjectsDB projectsDB;
+    private View inflate;
+    private TextView tv_tittle;
+    private ProgressBar progressBar;
+    private com.coahr.thoughtrui.widgets.UIPlayer.uiDisPlayer uiDisPlayer;
 
     public static PagerFragment_a newInstance(int position, String DbProjectId, String ht_ProjectId, int countSize, String name_project, String ht_id) {
         PagerFragment_a pagerFragment_a = new PagerFragment_a();
@@ -208,6 +260,10 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
     @Override
     public void initView() {
+        inflate = LayoutInflater.from(_mActivity).inflate(R.layout.dialog_progress, null);
+        tv_tittle = inflate.findViewById(R.id.tv_progress_info);
+        progressBar = inflate.findViewById(R.id.progress_bar);
+
         if (getArguments() != null) {
             dbProjectId = getArguments().getString("DbProjectId");
             ht_projectId = getArguments().getString("ht_ProjectId");
@@ -216,10 +272,15 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectBy_Where(SubjectsDB.class, new String[]{"number"}, "ht_id=?", ht_id);
             if (subjectsDBS != null && subjectsDBS.size() > 0) {
                 number = subjectsDBS.get(0).getNumber();
+                KLog.d("题号", number, ht_id);
+            }
+            List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", ht_projectId);
+            if (projectsDBS != null && projectsDBS.size() > 0) {
+                projectsDB = projectsDBS.get(0);
             }
         }
         adapter = new PagerFragmentPhotoAdapter();
-        gridLayoutManager = new GridLayoutManager(BaseApplication.mContext, 5);
+        gridLayoutManager = new GridLayoutManager(BaseApplication.mContext, 3);
         img_recycler.setLayoutManager(gridLayoutManager);
         img_recycler.setAdapter(adapter);
         img_recycler.addItemDecoration(new SpacesItemDecoration(DensityUtils.dp2px(BaseApplication.mContext, 4), DensityUtils.dp2px(BaseApplication.mContext, 4), getResources().getColor(R.color.colorWhite)));
@@ -234,16 +295,17 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         Fr_takePhoto.setOnClickListener(this);
         tv_bianji.setOnClickListener(this);
         tv_play_recorder.setOnClickListener(this);
+        fr_upload.setOnClickListener(this);
         setupRecorder();
         //录音控制
         Fr_takeRecorder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isHaveRecorder) {  //有无录音
-                    ToastUtils.showLong("当前题目下有录音");
+                    showDialogAudio("当前题目下有录音","是否删除");
                 } else {
                     if (type == 1) { //开始录音
-                       startAudio();
+                        startAudio();
                     } else if (type == 2) { //暂停录音
 
                     } else if (type == 3) { //继续录音
@@ -272,19 +334,20 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         ed_score.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fill_in_blankDialog fill_in_blankDialog=Fill_in_blankDialog.newInstance();
+                Fill_in_blankDialog fill_in_blankDialog = Fill_in_blankDialog.newInstance();
                 fill_in_blankDialog.setOnClick(new Fill_in_blankDialog.InPutOnClick() {
                     @Override
                     public void setOnClick(String text) {
                         ed_score.setText(text);
                         p.saveAnswers(text, remark, ht_projectId, number, ht_id);
                     }
+
                     @Override
                     public void setOnClickFailure() {
                         ToastUtils.showLong("请输入正确的数值");
                     }
                 });
-                fill_in_blankDialog.show(getFragmentManager(),TAG);
+                fill_in_blankDialog.show(getFragmentManager(), TAG);
             }
         });
     /*    ed_score.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -327,7 +390,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         //图片监听
         adapter.setListener(new PagerAdapterListener());
         //
-        ed_score.getPaint().setFlags(Paint. UNDERLINE_TEXT_FLAG );
+        ed_score.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
 
     }
 
@@ -336,38 +399,39 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         switch (v.getId()) {
             //上一题
             case R.id.tv_last:
-                if (!isRecorder){  //判断是否在录音
+                if (!isRecorder) {  //判断是否在录音
+                    KLog.d("题号", number);
                     if (number > 1) {
                         if (isComplete()) {
                             SubjectsDB subjectsDB = new SubjectsDB();
                             subjectsDB.setIsComplete(1);
-                            subjectsDB.updateAsync(subjectsDB_now.getId());
+                            subjectsDB.update(subjectsDB_now.getId());
                         }
                         EventBus.getDefault().postSticky(new isCompleteBean(true, number - 1, 1));
                     } else {
                         ToastUtils.showLong("已经是第一题");
                     }
-                }  else {
-                    showDialog("","确定停止录音");
+                } else {
+                    showDialog("", "确定停止录音");
                 }
 
                 break;
             //下一题
             case R.id.tv_next:
                 if (number < countSize) {
-                    if (!isRecorder){
+                    if (!isRecorder) {
                         if (isComplete()) {
                             SubjectsDB subjectsDB = new SubjectsDB();
                             subjectsDB.setIsComplete(1);
-                            subjectsDB.updateAsync(subjectsDB_now.getId());
+                            subjectsDB.update(subjectsDB_now.getId());
                         }
                         EventBus.getDefault().postSticky(new isCompleteBean(true, number + 1, 2));
                     } else {
-                        showDialog("","是否停止录音");
+                        showDialog("", "是否停止录音");
                     }
 
                 } else {
-                    if (!isRecorder){
+                    if (!isRecorder) {
                         if (isComplete()) {
                             SubjectsDB subjectsDB = new SubjectsDB();
                             subjectsDB.setIsComplete(1);
@@ -377,7 +441,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                         ProjectSuccessDialog projectSuccessDialog = ProjectSuccessDialog.newInstance(ht_projectId);
                         projectSuccessDialog.show(getChildFragmentManager(), TAG);
                     } else {
-                        showDialog("","是否停止录音");
+                        showDialog("", "是否停止录音");
                     }
 
                 }
@@ -407,6 +471,10 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
                 break;
 
+            case R.id.fr_upload:
+                getOSS();
+                break;
+
         }
 
     }
@@ -420,22 +488,22 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             project_detail_titlle.setText(subjectsDB.getTitle());
             //String options = subjectsDB.getOptions();
             //判断是填空题还是选择题
-           this.subjectsDBType = subjectsDB.getType();
-            if (subjectsDB.getType()==0) {  //判断
+            this.subjectsDBType = subjectsDB.getType();
+            if (subjectsDB.getType() == 0) {  //判断
                 re_score.setVisibility(View.GONE);
                 rg_gr.setVisibility(View.VISIBLE);
             }
 
-            if (subjectsDB.getType()==1){  //填空题
+            if (subjectsDB.getType() == 1) {  //填空题
 
                 re_score.setVisibility(View.VISIBLE);
                 rg_gr.setVisibility(View.GONE);
-                tv_standard_score.setText("标准分数："+subjectsDB.getOptions());
+                tv_standard_score.setText("标准分数：" + subjectsDB.getOptions());
             }
-            tv_describe.setText("说明："+subjectsDB.getDescription());
-            p.getAnswer(ht_projectId,_mActivity,number,ht_id);
-            p.getImage(ht_projectId,_mActivity,number,ht_id);
-            p.getAudio(ht_projectId,_mActivity,number,ht_id);
+            tv_describe.setText("说明：" + subjectsDB.getDescription());
+            p.getAnswer(ht_projectId, _mActivity, number, ht_id);
+            p.getImage(ht_projectId, _mActivity, number, ht_id);
+            p.getAudio(ht_projectId, _mActivity, number, ht_id);
         }
     }
 
@@ -482,7 +550,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     @Override
     public void getAnswerSuccess(String Massage) {
         if (Massage != null) {
-            if (subjectsDBType==0) { //判断题
+            if (subjectsDBType == 0) { //判断题
                 String[] split = Massage.split("&");
                 if (split != null && split.length > 0) {
                     for (int i = 0; i < split.length; i++) {
@@ -498,7 +566,6 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                                 if (string.equals("否")) {
                                     rb_no.toggle();
                                 }
-                                KLog.d("选择" + string);
                             }
                         }
                         if (i == 1) {
@@ -513,7 +580,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 }
             }
 
-            if (subjectsDBType==1) {    //填空题
+            if (subjectsDBType == 1) {    //填空题
                 String[] split = Massage.split("&");
                 if (split != null && split.length > 0) {
                     for (int i = 0; i < split.length; i++) {
@@ -523,7 +590,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                             if (string != null && !string.equals("") && !string.equals("null")) {
                                 answers = string;
                                 isAnswer = true;
-                              ed_score.setText(string);
+                                ed_score.setText(string);
                                 KLog.d("选择" + string);
                             }
                         }
@@ -562,7 +629,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     public void saveAnswersSuccess() {
         ed_score.setFocusable(false);
         ed_score.setFocusableInTouchMode(false);
-        KeyBoardUtils.hideKeybord(ed_score,_mActivity);
+        KeyBoardUtils.hideKeybord(ed_score, _mActivity);
 
         p.getAnswer(ht_projectId, _mActivity, number, ht_id);
         ToastUtils.showLong("答案保存成功");
@@ -614,7 +681,251 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         }
         //mHandler.sendEmptyMessage(RecorderType_1);
     }
+    //==============================上传操作==================================//
 
+    /**
+     * 上传逻辑
+     *
+     * @param list
+     * @param projectsDB_id
+     * @param subjectsDB
+     */
+    @Override
+    public void getUoLoadFileListSuccess(List<String> list, String projectsDB_id, SubjectsDB subjectsDB) {
+        ossAsyncTaskList.clear();
+        int CountSize = 0;
+        if (list != null && list.size() > 0) {
+
+            for (int i = 0; i < list.size(); i++) {
+                if (!list.get(i).endsWith("txt")) {
+                    CountSize++;
+                }
+            }
+            /**
+             * 又要上传的题目
+             */
+            if (CountSize > 0) {
+                uiDisPlayer = new uiDisPlayer(progressBar, tv_tittle);
+                showProgressDialog();
+            }
+            for (int i = 0; i < list.size(); i++) {
+                if (!list.get(i).endsWith("txt")) {
+                    OSSAsyncTask ossAsyncTask = putFile(list.get(i), CountSize, projectsDB_id, list);
+                    if (ossAsyncTask != null) {
+                        ossAsyncTaskList.add(ossAsyncTask);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void getUpLoadFileListFailure(String failure) {
+        ToastUtils.showLong(failure);
+    }
+
+    @Override
+    public void CallBackSuccess(String projectsDB_id, SubjectsDB subjectsDB) {
+
+    }
+
+    @Override
+    public void CallBackFailure(String projectsDB_id, SubjectsDB subjectsDB) {
+
+    }
+
+    /**
+     * OSS对象实例
+     */
+    private void getOSS() {
+        /**
+         * 获取密钥
+         */
+        if (ossClient == null) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    OSSLog.enableLog();
+                    OSSCredentialProvider credentialProvider = new OSSAuthCredentialsProvider(ApiContact.STSSERVER);
+                    ClientConfiguration conf = new ClientConfiguration();
+                    conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
+                    conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
+                    conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
+                    conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
+                    ossClient = new OSSClient(_mActivity.getApplicationContext(), ApiContact.endpoint, credentialProvider, conf);
+                    mHandler.sendEmptyMessage(GETSUBJECTLIST);
+                }
+            }).start();
+        } else {
+            mHandler.sendEmptyMessage(GETSUBJECTLIST);
+        }
+
+    }
+
+    //=================================上传================================//
+    private OSSAsyncTask putFile(String localFile, final int count, final String projectDb_id, List<String> list) {
+        if (localFile.equals("")) {
+            Log.w("AsyncPutImage", "ObjectNull");
+            return null;
+        }
+
+        File file = new File(localFile);
+        if (!file.exists()) {
+            Log.w("AsyncPutImage", "FileNotExist");
+            Log.w("LocalFile", localFile);
+            return null;
+        }
+        String name = FileIOUtils.getE(localFile, "/");
+        String object = null;
+        KLog.d("上传文件", Constants.bucket, name, localFile);
+        if (localFile.endsWith("wav")) {
+            object = projectDb_id + "/audios/" + name;
+        } else {
+            object = projectDb_id + "/pictures/" + number + "/" + name;
+        }
+        uiDisPlayer.uploadInfo(projectsDB.getPname() + "\n" + "第" + number + "题" + "\n" + name);
+        PutObjectRequest put = new PutObjectRequest(Constants.bucket, object, localFile);
+        put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
+            @Override
+            public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
+                uiDisPlayer.updateProgress((int) currentSize);
+            }
+        });
+        put.setCRC64(OSSRequest.CRC64Config.YES);
+        OSSAsyncTask task = ossClient.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
+            @Override
+            public void onSuccess(PutObjectRequest request, PutObjectResult result) {
+                UpLoadSuccessCount++;
+                if (UpLoadSuccessCount == count) {
+                    //每题的回调
+                    if (getPresenter() != null) {
+                        UpLoadSuccessCount = 0;
+                        UpLoadFailureCount = 0;
+                        //回调给后台
+                        fileList.clear();
+                        String audioPath = null;
+                        String textMassage = null;
+                        KLog.d("阿里云上传成功" + projectDb_id + "/" + number);
+                        //当前题目下数据上传成功
+                        //执行回调
+                        for (int i = 0; i < list.size(); i++) {
+                            if (list.get(i).endsWith(".wav") || list.get(i).endsWith(".arm") || list.get(i).endsWith(".mp3")) {
+                                audioPath = list.get(i);
+                            } else if (list.get(i).endsWith(".txt")) {
+                                textMassage = SaveOrGetAnswers.readFromFile(list.get(i));
+                            } else {
+                                fileList.add(list.get(i));
+                            }
+                        }
+                        //回调
+                        callbackForServer(projectDb_id, audioPath, fileList, textMassage);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
+                String info = "";
+                // 请求异常
+                if (clientExcepion != null) {
+                    // 本地异常如网络异常等
+                    clientExcepion.printStackTrace();
+                    info = clientExcepion.toString();
+                }
+                if (serviceException != null) {
+                    // 服务异常
+                    Log.e("ErrorCode", serviceException.getErrorCode());
+                    Log.e("RequestId", serviceException.getRequestId());
+                    Log.e("HostId", serviceException.getHostId());
+                    Log.e("RawMessage", serviceException.getRawMessage());
+                    info = serviceException.toString();
+                }
+                OSSLog.logDebug(info);
+                ToastUtils.showLong(info);
+                KLog.d("上传错误", info);
+                UpLoadFailureCount++;
+                if (UpLoadSuccessCount + UpLoadFailureCount == count) {
+
+                }
+
+            }
+        });
+        if (task != null) {
+            return task;
+        }
+        return null;
+    }
+
+    //==============================回调===========================//
+    private void callbackForServer(final String projectDb_id, String recorderPath, List<String> picList, String text) {
+        final Map map = new HashMap();
+        map.put("projectId", projectDb_id);
+        map.put("answerId", ht_id);
+        map.put("number", number);
+        map.put("stage", projectsDB.getStage());
+       /* map.put("answer","是");
+        map.put("description", "哈哈哈");*/
+        if (text != null) {
+            String[] split = text.split("&");
+            if (split != null && split.length > 0) {
+                for (int i = 0; i < split.length; i++) {
+                    if (i == 0) {
+                        String s = split[0];
+                        String string = SaveOrGetAnswers.getString(s, ":");
+                        if (string != null && !string.equals("") && !string.equals("null")) {
+                            map.put("answer", s);
+                            KLog.d("anwser" + string);
+                        } else {
+                            map.put("anwser", "");
+                        }
+                    }
+                    if (i == 1) {
+                        String s1 = split[1];
+                        String string1 = SaveOrGetAnswers.getString(s1, ":");
+                        if (string1 != null && !string1.equals("") && !string1.equals("null")) {
+                            map.put("description", string1);
+                            KLog.d("description" + string1);
+                        } else {
+                            map.put("description", "");
+                        }
+                    }
+                }
+            }
+        }
+        map.put("audioCount", recorderPath != null ? 0 : 1);
+        KLog.d("录音名字", recorderPath);
+        map.put("audio", recorderPath != null ? FileIOUtils.getE(recorderPath, "/") : "");
+        map.put("pictureCount", picList.size());
+
+        StringBuffer stringBuffer = new StringBuffer();
+        for (int i = 0; i < picList.size(); i++) {
+            if (picList.size() == 1) {
+                // stringBuffer.append(subjectsDB.getNumber() + "_" + (i + 1) + "." + "jpg");
+                stringBuffer.append(FileIOUtils.getE(picList.get(i), "/"));
+            } else {
+                if (i == (picList.size() - 1)) {
+                    // stringBuffer.append(subjectsDB.getNumber() + "_" + (i + 1) + "." + "jpg");
+                    stringBuffer.append(FileIOUtils.getE(picList.get(i), "/"));
+                } else {
+                    stringBuffer.append(FileIOUtils.getE(picList.get(i), "/") + ";");
+                    // stringBuffer.append(subjectsDB.getNumber() + "_" + (i + 1) + "." + "jpg" + ";");
+                }
+            }
+        }
+        map.put("picture", stringBuffer.toString());
+        KLog.d("回调", picList.size(), text);
+       /* _mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+            
+            }
+        });*/
+        for (Object key : map.keySet()) {
+            String value = (String) map.get(key);
+            KLog.d("字段", (String) map.get(key), value);
+        }
+        //  p.CallBack(map, projectDb_id, subjectsDB_now);
+    }
 
     /**
      * 获取题目信息
@@ -660,7 +971,6 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         RxGalleryFinalApi.setImgSaveRxDir(new File(Constants.SAVE_DIR_TAKE_PHOTO));
         RxGalleryFinalApi.setImgSaveRxCropDir(new File(Constants.SAVE_DIR_ZIP_PHOTO));//裁剪会自动生成路径；也可以手动设置裁剪的路径；
     }
-
 
 
     /**
@@ -854,7 +1164,9 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     }
 
     /**
+     * 录音停止
      * 弹窗
+     *
      * @param title
      * @param Content
      */
@@ -875,8 +1187,73 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 dialog.dismiss();
-                        StopAudio();
+                StopAudio();
             }
         }).build().show();
     }
+
+    /**
+     * 录音删除
+     * 弹窗
+     *
+     * @param title
+     * @param Content
+     */
+    private void showDialogAudio(String title, String Content) {
+        new MaterialDialog.Builder(_mActivity)
+                .title(title)
+                .content(Content)
+                .negativeText("取消")
+                .positiveText("删除")
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                        dialog.dismiss();
+
+                    }
+                }).onPositive(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                deleteAudio(audioPath);
+                dialog.dismiss();
+            }
+        }).build().show();
+    }
+
+    /**
+     * 上传进度回调
+     */
+    private void showProgressDialog() {
+        new MaterialDialog.Builder(_mActivity)
+                .customView(inflate, false)
+                .cancelable(false)
+                .canceledOnTouchOutside(false)
+                .negativeText("取消")
+                .positiveText("确认")
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                        dialog.dismiss();
+                    }
+                }).build().show();
+    }
+
+    /**
+     * 删除录音
+     *
+     * @param audioPath
+     */
+    private void deleteAudio(String audioPath) {
+        FileIOUtils.deleteFile(audioPath);
+        getSubjectDetail();
+    }
 }
+

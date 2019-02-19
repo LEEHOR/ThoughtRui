@@ -6,6 +6,7 @@ import android.content.Context;
 import com.alibaba.sdk.android.oss.ClientConfiguration;
 import com.alibaba.sdk.android.oss.OSS;
 import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
+import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.mvp.Base.BasePresenter;
@@ -152,6 +153,13 @@ public class UploadP extends BasePresenter<UploadC.View,UploadC.Model> implement
     public void StartUpLoadFailure(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
         if (getView() != null) {
             getView().StartUpLoadFailure(projectsDB,subjectsDB);
+        }
+    }
+
+    @Override
+    public void StartUiProgressSuccess(PutObjectRequest request, int currentSize, int totalSize,String info) {
+        if (getView() != null) {
+            getView().StartUiProgressSuccess(request,currentSize,totalSize,info);
         }
     }
 

@@ -102,7 +102,7 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
         if (subjectsDBS != null && subjectsDBS.size() > 0) {
             getPresenter().getSubjectListSuccess(subjectsDBS, projectsDBList);
         } else {
-            getPresenter().getSubjectListFailure("当前项目下没有可传的题目");
+            getPresenter().getSubjectListFailure("当前项目下没有可以上传的题目");
         }
 
     }
@@ -110,7 +110,12 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
     @Override
     public void UpLoadFileList(ProjectsDB projectsDB, SubjectsDB subjectsDB, Activity activity) {
         List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + projectsDB.getPid() + "/" + subjectsDB.getNumber() + "_" + subjectsDB.getHt_id());
+
+
         if (fileList != null && fileList.size() > 0) {
+                for (int i = 0; i <fileList.size() ; i++) {
+                    KLog.d("上传文件",fileList.get(i));
+                }
             getPresenter().getUoLoadFileListSuccess(fileList, projectsDB, subjectsDB);
         } else {
             getPresenter().getUpLoadFileListFailure("当前题目下没有可以上传的数据");
@@ -186,6 +191,14 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
             object = projectsDB.getPid() + "/pictures/" + subjectsDB.getNumber() + "/" + name;
         }
         PutObjectRequest put = new PutObjectRequest(Constants.bucket, object, localFile);
+        put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
+            @Override
+            public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
+                if (getPresenter() != null) {
+                    getPresenter().StartUiProgressSuccess(request,(int)currentSize,(int)totalSize,projectsDB.getPname()+"\n第"+subjectsDB.getNumber()+"题\n"+name);
+                }
+            }
+        });
         put.setCRC64(OSSRequest.CRC64Config.YES);
     /*    if (ApiContact.callbackAddress != null) {
             // 传入对应的上传回调参数，这里默认使用OSS提供的公共测试回调服务器地址
@@ -252,6 +265,7 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
             }
         });
         if (task != null) {
+            task.waitUntilFinished();
             return task;
         }
         return null;

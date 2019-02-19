@@ -6,6 +6,7 @@ import android.content.Context;
 import com.alibaba.sdk.android.oss.ClientConfiguration;
 import com.alibaba.sdk.android.oss.OSS;
 import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
+import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.baidu.location.BDLocation;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
@@ -40,6 +41,8 @@ public interface UploadC  {
         void StartUpLoadSuccess(ProjectsDB projectsDB, SubjectsDB  subjectsDB,  List<String> list);
         void StartUpLoadFailure(ProjectsDB projectsDB, SubjectsDB  subjectsDB);
 
+        void StartUiProgressSuccess(PutObjectRequest request, int currentSize, int totalSize,String info);
+
         void CallBackSuccess(ProjectsDB projectsDB,SubjectsDB subjectsDB);
         void CallBackFailure(ProjectsDB projectsDB,SubjectsDB subjectsDB);
 
@@ -72,6 +75,9 @@ public interface UploadC  {
         void StartUpLoad(OSS oss,List<String> list,ProjectsDB projectsDB, SubjectsDB  subjectsDB);
         void StartUpLoadSuccess(ProjectsDB projectsDB, SubjectsDB  subjectsDB,  List<String> list);
         void StartUpLoadFailure(ProjectsDB projectsDB, SubjectsDB  subjectsDB);
+
+        //上传的Ui更新
+        void StartUiProgressSuccess(PutObjectRequest request, int currentSize, int totalSize,String info);
 
         //每题上传完成后的回调
         void CallBack(Map<String,Object> map,ProjectsDB projectsDB,SubjectsDB subjectsDB);

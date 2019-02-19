@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.provider.SyncStateContract;
 
+import com.alibaba.sdk.android.oss.OSS;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.Utils.FileIoUtils.SaveOrGetAnswers;
@@ -16,6 +17,7 @@ import com.coahr.thoughtrui.mvp.constract.PagerFragment_aC;
 import com.socks.library.KLog;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -34,10 +36,8 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
     }
     @Override
     public void getSubject(final String DbProjectId, final String ht_ProjectId, Activity activity,int number,String ht_id) {
-        KLog.d("刷新",DbProjectId,ht_ProjectId,ht_id);
         List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectByTogether_Where(SubjectsDB.class, "ht_id=?", ht_id);
         if (subjectsDBS != null && subjectsDBS.size() > 0) {
-            KLog.d("题目Id", subjectsDBS.get(0).getHt_id());
            // getImage(ht_ProjectId,activity,number,ht_id);
           //  getAnswer(ht_ProjectId,activity,number,ht_id);
           //  getAudio(ht_ProjectId,activity,number,ht_id);
@@ -54,6 +54,7 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
     public void getImage(final String ht_ProjectId, Activity activity, final int number, final String ht_id) {
         //获取当前题目下的图片
                 List<String> picturesList = FileIOUtils.getPictures(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number+"_"+ht_id);
+                KLog.d("图片",Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number+"_"+ht_id);
                 if (picturesList != null) {
                     getPresenter().getImageSuccess(picturesList);
                 } else {
@@ -125,5 +126,25 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
                 } else {
                     getPresenter().getAudioFailure("没有录音");
                 }
+    }
+
+    @Override
+    public void UpLoadFileList(String projectsDB_id, SubjectsDB subjectsDB) {
+        List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + projectsDB_id + "/" + subjectsDB.getNumber() + "_" + subjectsDB.getHt_id());
+
+
+        if (fileList != null && fileList.size() > 0) {
+            for (int i = 0; i <fileList.size() ; i++) {
+                KLog.d("上传文件",fileList.get(i));
+            }
+            getPresenter().getUoLoadFileListSuccess(fileList, projectsDB_id, subjectsDB);
+        } else {
+            getPresenter().getUpLoadFileListFailure("当前题目下没有可以上传的数据");
+        }
+    }
+
+    @Override
+    public void CallBack(Map<String, Object> map, String projectsDB_id, SubjectsDB subjectsDB) {
+
     }
 }

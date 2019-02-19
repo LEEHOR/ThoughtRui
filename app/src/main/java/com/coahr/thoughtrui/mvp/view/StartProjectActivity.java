@@ -324,7 +324,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
             if (isupOrDown == 1) {  //上翻页
                 KLog.d("上翻页" + isposition);
                 if (isposition > 0) {
-                    project_viewPage.setCurrentItem(project_viewPage.getCurrentItem() - 1, true);
+                    project_viewPage.setCurrentItem(project_viewPage.getCurrentItem() - 1);
                     p_mytitle.getTvTittle().setText("第" + (isposition) + "题");
                 }
 

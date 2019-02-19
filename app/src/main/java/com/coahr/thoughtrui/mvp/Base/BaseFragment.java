@@ -123,6 +123,7 @@ public abstract class BaseFragment<P extends BaseContract.Presenter> extends Sup
         if (dialog == null) {
             dialog = new Dialog(_mActivity, R.style.dialog_loading);
             dialog.setContentView(R.layout.dialog_loading_layout);
+            dialog.setCancelable(false);
             dialog.setCanceledOnTouchOutside(false);
         }
         // 设置它的ContentView

@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -129,6 +130,7 @@ public class NodeTreeAdapter extends BaseAdapter {
             holder.imageView = (ImageView) convertView.findViewById(R.id.id_treenode_icon);
             holder.label = (TextView) convertView.findViewById(R.id.id_treenode_label);
             holder.confirm = (LinearLayout) convertView.findViewById(R.id.id_confirm);
+            holder.relativeLayout=convertView.findViewById(R.id.three_re);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -143,11 +145,19 @@ public class NodeTreeAdapter extends BaseAdapter {
             holder.confirm.setVisibility(View.INVISIBLE);
             holder.imageView.setImageResource(baseNode.get_icon());
         }
+        /*holder.label.setTag(position);
+        holder.label.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (baseNode.get_icon() == -1) {
+                    Toast.makeText(context, "选中:" + v.getTag() + "/" + baseNode.get_id(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });*/
         holder.confirm.setTag(position);
         holder.confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Toast.makeText(context, "选中:" + v.getTag() + "/" + baseNode.get_id(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -159,6 +169,7 @@ public class NodeTreeAdapter extends BaseAdapter {
         public ImageView imageView;
         public TextView label;
         public LinearLayout confirm;
+        public RelativeLayout relativeLayout;
     }
 
     public interface onThreeClick {
