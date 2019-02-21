@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import androidx.multidex.MultiDexApplication;
 import androidx.fragment.app.Fragment;
 
+import com.alibaba.sdk.android.oss.common.OSSLog;
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 import com.coahr.thoughtrui.Utils.PreferenceUtils;
@@ -79,7 +80,7 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
         if (PreferenceUtils.contains(mContext,Constants.devicestoken_key)){
             Constants.devicestoken=PreferenceUtils.getPrefString(mContext,Constants.devicestoken_key,"");
         }
-
+        OSSLog.enableLog();
     }
 
     @Override

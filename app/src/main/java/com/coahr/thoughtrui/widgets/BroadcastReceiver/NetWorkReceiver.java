@@ -8,6 +8,8 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
+import com.socks.library.KLog;
+
 /**
  * @author Leehor
  * 版本：

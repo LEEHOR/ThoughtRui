@@ -267,22 +267,8 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
                     ToastUtils.showLong("请输入正确的数值");
                     }
                 });
-               // ed_score.setFocusable(true);
-                //ed_score.setFocusableInTouchMode(true);
             }
         });
-     /*   ed_score.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                //发送键
-                if(actionId == EditorInfo.IME_ACTION_SEND){
-                    if (v.getText() != null && !v.getText().equals("")) {
-                        p.saveAnswers(v.getText().toString(), remark, ht_projectId, number, ht_id);
-                    }
-                }
-                return true;
-            }
-        });*/
     }
 
     @Override
@@ -807,7 +793,7 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
     }
 
     /**
-     * 弹窗
+     * 录音停止弹窗
      * @param title
      * @param Content
      */

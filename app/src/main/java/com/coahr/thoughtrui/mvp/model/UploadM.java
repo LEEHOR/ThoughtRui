@@ -126,8 +126,8 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
     @Override
     public void StartUpLoad(OSS oss, List<String> list, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
         ossAsyncTaskList.clear();
-        int CountSize = 0;
         if (list != null && list.size() > 0) {
+            int CountSize = 0;
             for (int i = 0; i < list.size(); i++) {
                 if (!list.get(i).endsWith("txt")) {
                     CountSize++;
@@ -200,26 +200,6 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
             }
         });
         put.setCRC64(OSSRequest.CRC64Config.YES);
-    /*    if (ApiContact.callbackAddress != null) {
-            // 传入对应的上传回调参数，这里默认使用OSS提供的公共测试回调服务器地址
-            put.setCallbackParam(new HashMap<String, String>() {
-                {
-                    put("callbackUrl", ApiContact.callbackAddress);
-                    //callbackBody可以自定义传入的信息
-                    put("callbackBody", "filename=${object}");
-                }
-            });
-        }*/
-  /*      // 异步上传时可以设置进度回调
-        put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
-            @Override
-            public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
-                Log.d("PutObject", "currentSize: " + currentSize + " totalSize: " + totalSize);
-                int progress = (int) (100 * currentSize / totalSize);
-            }
-        });*/
-
-
         OSSAsyncTask task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
             @Override
             public void onSuccess(PutObjectRequest request, PutObjectResult result) {

@@ -1,16 +1,10 @@
 package com.coahr.thoughtrui.mvp.view.upload;
 
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,13 +20,10 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.alibaba.sdk.android.oss.ClientConfiguration;
-import com.alibaba.sdk.android.oss.ClientException;
 import com.alibaba.sdk.android.oss.OSS;
 import com.alibaba.sdk.android.oss.OSSClient;
-import com.alibaba.sdk.android.oss.common.OSSLog;
 import com.alibaba.sdk.android.oss.common.auth.OSSAuthCredentialsProvider;
 import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
-import com.alibaba.sdk.android.oss.common.auth.OSSFederationToken;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
@@ -48,7 +39,6 @@ import com.coahr.thoughtrui.mvp.model.ApiContact;
 import com.coahr.thoughtrui.mvp.presenter.UploadP;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
 import com.coahr.thoughtrui.mvp.view.upload.adapter.UpLoadAdapter;
-import com.coahr.thoughtrui.widgets.BroadcastReceiver.NetWorkReceiver;
 import com.socks.library.KLog;
 
 import java.util.ArrayList;
@@ -86,8 +76,6 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     CheckBox ck_bottom; //底部选择
     @BindView(R.id.tv_Batch_UpLoad)
     TextView tv_Batch_UpLoad; //批量上传
-    private NetWorkReceiver netWorkReceiver;
-    private boolean isRegistered;
     //所有的项目列表
     private List<ProjectsDB> allProjectList;
     //所有项目个数
@@ -116,10 +104,6 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     private View inflate;
     private TextView tv_tittle;
     private ProgressBar progressBar;
-    //网络状态
-    private int NetType;
-    //是否连接
-    private boolean isNetConnect;
     private OSS ossClient;
     private final int GETSUBJECTLIST = 1;
     private final int UPDATE_PROGRESS=2;
@@ -161,13 +145,12 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     public void initView() {
 
         //注册网络状态监听广播
-        netWorkReceiver = new NetWorkReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
-        filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
-        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        _mActivity.registerReceiver(netWorkReceiver, filter);
-        isRegistered = true;
+       // netWorkReceiver = new NetWorkReceiver();
+       // IntentFilter filter = new IntentFilter();
+       // filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+       // filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+       // filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        //_mActivity.registerReceiver(netWorkReceiver, filter);
         tv_Batch_Management.setOnClickListener(this);
         tv_all_upload.setOnClickListener(this);
         tv_Batch_UpLoad.setOnClickListener(this);
@@ -182,7 +165,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                 up_recycler.removeItemDecorationAt(i);
             }
         }
-        netWorkReceiver.setNetStatusListener(new NetWorkReceiver.INetStatusListener() {
+       /* netWorkReceiver.setNetStatusListener(new NetWorkReceiver.INetStatusListener() {
             @Override
             public void getNetState(String netWorkType, boolean isConnect, NetworkInfo.DetailedState detailedState) {
                 isNetConnect = isConnect;
@@ -195,7 +178,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                     }
                 }
             }
-        });
+        });*/
         up_swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -237,12 +220,15 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
             public void OnClickItem(ProjectsDB projectsDB) {
                 projectsDB_click = projectsDB;
                 type = 3;
-                if (NetType == 2) {
-                    Dialog("提示", "当前为移动数据是否继续上传", type);
+                if (Constants.isNetWorkConnect) {
+                    if (Constants.NetWorkType!=null && Constants.NetWorkType.equals("WIFI")){
+                        NetWorkDialog("提示", "是否上传", 1);
+                    } else if (Constants.NetWorkType!=null && Constants.NetWorkType.equals("MOBILE")){
+                        NetWorkDialog("提示", "当前为移动网络是否继续上传", 2);
+                    }
                 } else {
-                    getOSS();
+                    NetWorkDialog("提示", "当前网络不可用无法上传", 3);
                 }
-              //  ToastUtils.showLong("暂未完成，敬请期待");
             }
         });
     }
@@ -255,9 +241,6 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (isRegistered) {
-            _mActivity.unregisterReceiver(netWorkReceiver);
-        }
     }
 
     @Override
@@ -273,14 +256,14 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
 
     @Override
     public void getOSSSuccess(OSS oss) {
-    /*    myoss = oss;
-        //获取第一各项目的题目
-        if (type == 1) {  //全部
-            p.getSubjectList(allProjectList.get(up_project_position));
-        }
-        if (type == 2) {    //批量
-            p.getSubjectList(ck_listProjectDb.get(up_project_position));
-        }*/
+      //  myoss = oss;
+//        //获取第一各项目的题目
+//        if (type == 1) {  //全部
+//            p.getSubjectList(allProjectList.get(up_project_position));
+//        }
+//        if (type == 2) {    //批量
+//            p.getSubjectList(ck_listProjectDb.get(up_project_position));
+//        }
     }
 
     @Override
@@ -373,9 +356,8 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
         } else if (currentSize < 0) {
             currentSize = 0;
         }
-        Message mes = mHandler.obtainMessage(UPDATE_PROGRESS, currentSize);
+        Message mes = mHandler.obtainMessage(UPDATE_PROGRESS, info);
         mes.arg1 = currentSize;
-        mes.obj=info;
         mes.sendToTarget();
     }
 
@@ -394,7 +376,6 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
 
     @Override
     public void onClick(View v) {
-        if (isNetConnect) {
             switch (v.getId()) {
                 case R.id.tv_Batch_Management:
                     if (tv_Batch_Management.getTag() == null || tv_Batch_Management.getTag().equals("1")) {
@@ -413,21 +394,28 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                     break;
                 case R.id.tv_all_upload:
                     type = 1;
-                    if (NetType == 2) {
-                        Dialog("提示", "当前为移动信号是否继续上传", type);
+                    if (Constants.isNetWorkConnect) {
+                        if (Constants.NetWorkType!=null && Constants.NetWorkType.equals("WIFI")){
+                            NetWorkDialog("提示", "是否上传", 1);
+                        } else if (Constants.NetWorkType!=null && Constants.NetWorkType.equals("MOBILE")){
+                            NetWorkDialog("提示", "当前为移动网络是否继续上传", 2);
+                        }
+
                     } else {
-                        // p.getSTS(ApiContact.STSSERVER);
-                        getOSS();
+                        NetWorkDialog("提示", "当前网络不可用无法上传", 3);
                     }
 
                     break;
                 case R.id.tv_Batch_UpLoad:
                     type = 2;
-                    if (NetType == 2) {
-                        Dialog("提示", "当前为移动信号是否继续上传", type);
+                    if (Constants.isNetWorkConnect) {
+                        if (Constants.NetWorkType!=null && Constants.NetWorkType.equals("WIFI")){
+                            NetWorkDialog("提示", "是否上传", 1);
+                        } else if (Constants.NetWorkType!=null && Constants.NetWorkType.equals("MOBILE")){
+                            NetWorkDialog("提示", "当前为移动网络是否继续上传", 2);
+                        }
                     } else {
-                        //p.getSTS(ApiContact.STSSERVER);
-                        getOSS();
+                        NetWorkDialog("提示", "当前网络不可用无法上传", 3);
                     }
                     break;
                 case R.id.ck_bottom:
@@ -438,19 +426,23 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                     }
                     break;
             }
-        } else {
-            Dialog("提示", "当前网络不可用", 3);
-        }
+
     }
 
+    /**
+     * 回调
+     * @param projectsDB
+     * @param subjectsDB
+     * @param recorderPath
+     * @param picList
+     * @param text
+     */
     private void callbackForServer(final ProjectsDB projectsDB, final SubjectsDB subjectsDB, String recorderPath, List<String> picList, String text) {
         final Map map = new HashMap();
         map.put("projectId", projectsDB.getPid());
         map.put("answerId", subjectsDB.getHt_id());
         map.put("number", subjectsDB.getNumber());
         map.put("stage", projectsDB.getStage());
-       /* map.put("answer","是");
-        map.put("description", "哈哈哈");*/
         if (text != null) {
             String[] split = text.split("&");
             if (split != null && split.length > 0) {
@@ -479,22 +471,18 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
             }
         }
         map.put("audioCount", recorderPath != null ? 0 : 1);
-        KLog.d("录音名字", recorderPath);
         map.put("audio", recorderPath != null ? getName(recorderPath, "/") : "");
         map.put("pictureCount", picList.size());
 
         StringBuffer stringBuffer = new StringBuffer();
         for (int i = 0; i < picList.size(); i++) {
             if (picList.size() == 1) {
-                // stringBuffer.append(subjectsDB.getNumber() + "_" + (i + 1) + "." + "jpg");
                 stringBuffer.append(getName(picList.get(i), "/"));
             } else {
                 if (i == (picList.size() - 1)) {
-                    // stringBuffer.append(subjectsDB.getNumber() + "_" + (i + 1) + "." + "jpg");
                     stringBuffer.append(getName(picList.get(i), "/"));
                 } else {
                     stringBuffer.append(getName(picList.get(i), "/") + ";");
-                    // stringBuffer.append(subjectsDB.getNumber() + "_" + (i + 1) + "." + "jpg" + ";");
                 }
             }
         }
@@ -630,7 +618,13 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
         }
     }
 
-    private void Dialog(String title, String Content, final int type) {
+    /**
+     * 网络类型提示
+     * @param title
+     * @param Content
+     * @param types
+     */
+    private void NetWorkDialog(String title, String Content, final int types) {
         new MaterialDialog.Builder(_mActivity)
                 .title(title)
                 .content(Content)
@@ -645,12 +639,9 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                      /*  if (type == 1 || type == 2) {
+                        if (types == 1 || types == 2) {
                             getOSS();
-                        } else {
-
-                        }*/
-                        getOSS();
+                        }
                         dialog.dismiss();
                     }
                 }).build().show();
@@ -667,14 +658,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    OSSLog.enableLog();
                     OSSCredentialProvider credentialProvider = new OSSAuthCredentialsProvider(ApiContact.STSSERVER);
-                    try {
-                        OSSFederationToken federationToken = credentialProvider.getFederationToken();
-                     KLog.d("Sts",federationToken.toString());
-                    } catch (ClientException e) {
-                        e.printStackTrace();
-                    }
                     ClientConfiguration conf = new ClientConfiguration();
                     conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
                     conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
@@ -739,33 +723,6 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
         if (!hidden) {
             p.getProjectList(Constants.sessionId);
         }
-    }
-
-    /**
-     * 点击提示
-     *
-     * @param projectsDB
-     */
-    private void showDialog(final ProjectsDB projectsDB) {
-        new MaterialDialog.Builder(_mActivity)
-                .title("提示")
-                .content("是否上传")
-                .negativeText("取消")
-                .positiveText("确定")
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
-                    }
-                })
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
-                        //获取当前题目
-                        getOSS();
-                    }
-                }).build().show();
     }
 
     /**

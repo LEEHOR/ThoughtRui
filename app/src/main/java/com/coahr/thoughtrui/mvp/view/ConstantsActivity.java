@@ -32,8 +32,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
  */
 public class ConstantsActivity extends BaseSupportActivity {
 
-    private AliyunHotReceiver aliyunHotReceiver;
-    private LocalBroadcastManager manager;
 
     @Override
     public int binLayout() {
@@ -91,27 +89,10 @@ public class ConstantsActivity extends BaseSupportActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        manager = LocalBroadcastManager.getInstance(this);
-            KLog.d("SophixStubApplication","注册广播22");
-            aliyunHotReceiver = new AliyunHotReceiver();
-            IntentFilter filter = new IntentFilter();
-            filter.addAction("hotAliyun");
-            manager.registerReceiver(aliyunHotReceiver,filter);
-            aliyunHotReceiver.setHotListener(new AliyunHotReceiver.hotListener() {
-                @Override
-                public void getPathDetail(String path_info, String path_version, String app_version) {
-                    KLog.d("SophixStubApplication","注册广播23");
-                    Dialog("雷诺"+app_version+"修复补丁。","补丁版本："+path_version+"\n"+"补丁说明："+path_info);
-                }
-            });
-
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (aliyunHotReceiver != null) {
-            manager.unregisterReceiver(aliyunHotReceiver);
-        }
     }
 }

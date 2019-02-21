@@ -154,7 +154,7 @@ public class ReviewPager extends BaseChildFragment<ReviewPagerFragment_C.Present
     }
 
     /**
-     * 联网
+     * 是否登录
      *
      * @param search
      */

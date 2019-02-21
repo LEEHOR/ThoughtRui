@@ -134,4 +134,12 @@ public class Constants {
     public static String pathVersion_key="aliyun_path_version";
     //app版本
     public static String app_version_key="app_version";
+
+
+    //网络类型判断
+    //是否连接
+    public static boolean isNetWorkConnect;
+    //网络类型
+    public static String NetWorkType;
+
 }

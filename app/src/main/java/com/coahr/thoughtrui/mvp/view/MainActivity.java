@@ -5,6 +5,9 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -36,6 +39,7 @@ import com.coahr.thoughtrui.mvp.view.reviewed.ReviewedFragment;
 import com.coahr.thoughtrui.mvp.view.upload.UploadFragment;
 import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
 import com.coahr.thoughtrui.widgets.BroadcastReceiver.AliyunHotReceiver;
+import com.coahr.thoughtrui.widgets.BroadcastReceiver.NetWorkReceiver;
 import com.coahr.thoughtrui.widgets.BroadcastReceiver.isRegister;
 import com.coahr.thoughtrui.widgets.MyBottomNavigation.MyBottomNavigation;
 import com.socks.library.KLog;
@@ -116,6 +120,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
         if (aliyunHotReceiver != null) {
             manager.unregisterReceiver(aliyunHotReceiver);
         }
+
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
@@ -155,7 +160,6 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
         bottomNavigationPreposition = 0;
         if (!haslogin()) {
             loginDialog();
-            ;
         }
 
     }

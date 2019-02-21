@@ -1,7 +1,10 @@
 package com.coahr.thoughtrui.mvp.presenter;
 
 import android.app.Activity;
+import android.content.Context;
 
+import com.alibaba.sdk.android.oss.OSSClient;
+import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
 import com.coahr.thoughtrui.DBbean.AnswersDB;
 import com.coahr.thoughtrui.DBbean.ImagesDB;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
@@ -184,9 +187,9 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
     }
 
     @Override
-    public void getUoLoadFileListSuccess(List<String> list, String projectsDB_id, SubjectsDB subjectsDB) {
+    public void getUpLoadFileListSuccess(List<String> list, String projectsDB_id, SubjectsDB subjectsDB) {
         if (getView() != null) {
-            getView().getUoLoadFileListSuccess(list,projectsDB_id,subjectsDB);
+            getView().getUpLoadFileListSuccess(list,projectsDB_id,subjectsDB);
         }
     }
 
@@ -198,23 +201,44 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
     }
 
     @Override
-    public void CallBack(Map<String, Object> map, String projectsDB_id, SubjectsDB subjectsDB) {
+    public void startUpload(OSSClient ossClient, List<String> list, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
         if (mModle != null) {
-            mModle.CallBack(map,projectsDB_id,subjectsDB);
+            mModle.startUpload(ossClient,list,projectsDB,subjectsDB);
         }
     }
 
     @Override
-    public void CallBackSuccess(String projectsDB_id, SubjectsDB subjectsDB) {
+    public void startUploadCallBack(List<String> list, int uploadSuccessSize, int uploadFailSize, int totalSize,ProjectsDB projectsDB,SubjectsDB subjectsDB) {
         if (getView() != null) {
-            getView().CallBackSuccess(projectsDB_id,subjectsDB);
+            getView().startUploadCallBack(list, uploadSuccessSize, uploadFailSize, totalSize,projectsDB,subjectsDB);
         }
     }
 
     @Override
-    public void CallBackFailure(String projectsDB_id, SubjectsDB subjectsDB) {
+    public void showProgress(int currentSize, int totalSize, String info) {
         if (getView() != null) {
-            getView().CallBackFailure(projectsDB_id, subjectsDB);
+            getView().showProgress(currentSize, totalSize, info);
+        }
+    }
+
+    @Override
+    public void CallBack(Map<String, Object> map,ProjectsDB projectsDB, SubjectsDB subjectsDB) {
+        if (mModle != null) {
+            mModle.CallBack(map,projectsDB,subjectsDB);
+        }
+    }
+
+    @Override
+    public void CallBackSuccess(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
+        if (getView() != null) {
+            getView().CallBackSuccess(projectsDB,subjectsDB);
+        }
+    }
+
+    @Override
+    public void CallBackFailure(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
+        if (getView() != null) {
+            getView().CallBackFailure(projectsDB, subjectsDB);
         }
     }
 }
