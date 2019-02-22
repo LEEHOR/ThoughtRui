@@ -15,12 +15,16 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -29,6 +33,10 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.alibaba.sdk.android.oss.ClientConfiguration;
+import com.alibaba.sdk.android.oss.OSSClient;
+import com.alibaba.sdk.android.oss.common.auth.OSSAuthCredentialsProvider;
+import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.DensityUtils;
@@ -43,6 +51,7 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.constract.ReViewStart_C;
+import com.coahr.thoughtrui.mvp.model.ApiContact;
 import com.coahr.thoughtrui.mvp.model.Bean.isCompleteBean;
 import com.coahr.thoughtrui.mvp.presenter.ReViewStart_P;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
@@ -59,9 +68,13 @@ import org.greenrobot.eventbus.EventBus;
 import org.litepal.crud.async.UpdateOrDeleteExecutor;
 import org.litepal.crud.callback.UpdateOrDeleteCallback;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -126,6 +139,8 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
     TextView tv_last; //上一页
     @BindView(R.id.tv_next)
     TextView tv_next;  //下一页
+    @BindView(R.id.fr_upload)
+    FrameLayout fr_upload; //上传
     private String dbProjectId;
     private String ht_projectId;
     private int countSize;
@@ -136,7 +151,7 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
     private Drawable imgs[] = {BaseApplication.mContext.getResources().getDrawable(R.mipmap.ico_recorder, null)
             , BaseApplication.mContext.getResources().getDrawable(R.mipmap.recordering, null)
             , BaseApplication.mContext.getResources().getDrawable(R.mipmap.recorder_play_w, null)};
-    private SpacesItemDecoration spacesItemDecoration;
+   // private SpacesItemDecoration spacesItemDecoration;
     private PagerFragmentPhotoAdapter adapter;
     private GridLayoutManager gridLayoutManager;
     private String answers;
@@ -157,6 +172,39 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
     private SubjectsDB subjectsDB_now;
     private int subjectsDBType;
     private int position;
+    private OSSClient ossClient;
+
+    //上传文件的数组
+    private List<String> fileList_Call = new ArrayList<>();
+    private View inflate;
+    private TextView tv_tittle;
+    private ProgressBar progressBar;
+    private final int GETUPLOADLIST=1;
+    private final int UIPROGRESS=2;
+    private Handler mHandler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case GETUPLOADLIST:
+                    p.UpLoadFileList(ht_projectId,subjectsDB_now);
+                    break;
+                case UIPROGRESS:
+                    //  progressBar.setMax(msg.arg2);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        progressBar.setProgress(msg.arg1,true);
+                    } else {
+                        progressBar.setProgress(msg.arg1);
+                    }
+                    //   progressBar.setProgress(msg.arg1);
+                    tv_tittle.setText(msg.obj.toString());
+                    break;
+            }
+        }
+    };
+    private ProjectsDB projectsDB;
+    private String uPAudioPath;
+    private String textMassage;
 
     public static ReViewStart newInstance(int position, String DbProjectId, String ht_ProjectId, int countSize, String ht_id) {
         ReViewStart reViewStart = new ReViewStart();
@@ -173,7 +221,7 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        spacesItemDecoration = new SpacesItemDecoration(DensityUtils.dp2px(BaseApplication.mContext, 2), DensityUtils.dp2px(BaseApplication.mContext, 2), getResources().getColor(R.color.colorPrimaryDark));
+       // spacesItemDecoration = new SpacesItemDecoration(DensityUtils.dp2px(BaseApplication.mContext, 2), DensityUtils.dp2px(BaseApplication.mContext, 2), getResources().getColor(R.color.colorPrimaryDark));
     }
 
     @Override
@@ -188,7 +236,9 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
 
     @Override
     public void initView() {
-
+        inflate = LayoutInflater.from(_mActivity).inflate(R.layout.dialog_progress, null);
+        tv_tittle = inflate.findViewById(R.id.tv_progress_info);
+        progressBar = inflate.findViewById(R.id.progress_bar);
         if (getArguments() != null) {
             dbProjectId = getArguments().getString("DbProjectId");
             ht_projectId = getArguments().getString("ht_ProjectId");
@@ -198,6 +248,10 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
             List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectBy_Where(SubjectsDB.class, new String[]{"number"}, "ht_id=?", ht_id);
             if (subjectsDBS != null && subjectsDBS.size() > 0) {
                 number = subjectsDBS.get(0).getNumber();
+            }
+            List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", ht_projectId);
+            if (projectsDBS != null && projectsDBS.size() > 0) {
+                projectsDB = projectsDBS.get(0);
             }
         }
         setupRecorder();
@@ -217,6 +271,7 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
         Fr_takePhoto.setOnClickListener(this);
         tv_bianji.setOnClickListener(this);
         tv_play_recorder.setOnClickListener(this);
+        fr_upload.setOnClickListener(this);
         //输入备注
         dialogFragment.setOnInputCallback(new EvaluateInputDialogFragment.InputCallback() {
             @Override
@@ -482,6 +537,155 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
             tv_recorder_name.setTextColor(getResources().getColor(R.color.material_grey_200));
         }
     }
+
+    @Override
+    public void getUpLoadFileListSuccess(List<String> list, String projectsDB_id, SubjectsDB subjectsDB) {
+        showProgressDialog();
+        p.startUpload(ossClient,list, projectsDB,subjectsDB);
+    }
+
+    @Override
+    public void getUpLoadFileListFailure(String failure) {
+        fr_upload.setEnabled(true);
+        ToastUtils.showLong(failure);
+    }
+
+    @Override
+    public void startUploadCallBack(List<String> list, int uploadSuccessSize, int uploadFailSize, int totalSize, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
+        KLog.a("上传",totalSize,uploadFailSize,uploadSuccessSize);
+        //上传成功
+        if (totalSize==(uploadSuccessSize+uploadFailSize)) {
+            if (totalSize == uploadSuccessSize) {
+                fileList_Call.clear();
+                KLog.d("阿里云上传成功" + projectsDB.getPname() + "/" + subjectsDB.getNumber());
+                //当前题目下数据上传成功
+                //执行回调
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.get(i).endsWith(".wav") || list.get(i).endsWith(".arm") || list.get(i).endsWith(".mp3")) {
+                        uPAudioPath = list.get(i);
+                    } else if (list.get(i).endsWith(".txt")) {
+                        textMassage = SaveOrGetAnswers.readFromFile(list.get(i));
+                    } else {
+                        fileList_Call.add(list.get(i));
+                    }
+                }
+                callbackForServer(projectsDB, subjectsDB, uPAudioPath, fileList_Call, textMassage);
+            } else {
+                fr_upload.setEnabled(true);
+            }
+        }
+    }
+
+    @Override
+    public void showProgress(int currentSize, int totalSize, String info) {
+        if (currentSize > 100) {
+            currentSize = 100;
+        } else if (currentSize < 0) {
+            currentSize = 0;
+        }
+        Message mes = mHandler.obtainMessage(UIPROGRESS, info);
+        mes.arg1 = currentSize;
+        mes.arg2=totalSize;
+        mes.sendToTarget();
+    }
+
+    @Override
+    public void CallBackSuccess(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
+        p.UpDataDb(projectsDB, subjectsDB);
+        KLog.d("回调成功");
+    }
+
+    @Override
+    public void CallBackFailure(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
+        KLog.d("回调失败");
+        fr_upload.setEnabled(true);
+    }
+
+    @Override
+    public void UpDataDbSuccess() {
+        fr_upload.setEnabled(true);
+    }
+
+    @Override
+    public void UpDataDbFailure(String fail) {
+        ToastUtils.showLong(fail);
+        fr_upload.setEnabled(true);
+    }
+
+    /**
+     * 回调
+     * @param projectsDB
+     * @param subjectsDB
+     * @param recorderPath
+     * @param picList
+     * @param text
+     */
+    private void callbackForServer(final ProjectsDB projectsDB, final SubjectsDB subjectsDB, String recorderPath, List<String> picList, String text) {
+        final Map map = new HashMap();
+        map.put("projectId", projectsDB.getPid());
+        map.put("answerId", subjectsDB.getHt_id());
+        map.put("number", subjectsDB.getNumber());
+        map.put("stage", projectsDB.getStage());
+        if (text != null) {
+            String[] split = text.split("&");
+            if (split != null && split.length > 0) {
+                for (int i = 0; i < split.length; i++) {
+                    if (i == 0) {
+                        String s = split[0];
+                        String string = SaveOrGetAnswers.getString(s, ":");
+                        if (string != null && !string.equals("") && !string.equals("null")) {
+                            map.put("answer", s);
+                            KLog.d("anwser" + string);
+                        } else {
+                            map.put("anwser", "");
+                        }
+                    }
+                    if (i == 1) {
+                        String s1 = split[1];
+                        String string1 = SaveOrGetAnswers.getString(s1, ":");
+                        if (string1 != null && !string1.equals("") && !string1.equals("null")) {
+                            map.put("description", string1);
+                            KLog.d("description" + string1);
+                        } else {
+                            map.put("description", "");
+                        }
+                    }
+                }
+            }
+        }
+        map.put("audioCount", recorderPath != null ? 0 : 1);
+        map.put("audio", recorderPath != null ? FileIOUtils.getE(recorderPath, "/") : "");
+        map.put("pictureCount", picList.size());
+
+        StringBuffer stringBuffer = new StringBuffer();
+        for (int i = 0; i < picList.size(); i++) {
+            if (picList.size() == 1) {
+                stringBuffer.append(FileIOUtils.getE(picList.get(i), "/"));
+            } else {
+                if (i == (picList.size() - 1)) {
+                    stringBuffer.append(FileIOUtils.getE(picList.get(i), "/"));
+                } else {
+                    stringBuffer.append(FileIOUtils.getE(picList.get(i), "/") + ";");
+                }
+            }
+        }
+        map.put("picture", stringBuffer.toString());
+        KLog.d("回调", picList.size(), text);
+
+       /* _mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });*/
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                p.CallBack(map, projectsDB, subjectsDB);
+            }
+        });
+
+    }
 //=========================================录音=====================================================
 
     /**
@@ -622,6 +826,19 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
                     ToastUtils.showLong("正在录音");
                 }
                 break;
+            case  R.id.fr_upload:
+                fr_upload.setEnabled(false);
+                if (Constants.isNetWorkConnect) {
+                    if (Constants.NetWorkType!=null && Constants.NetWorkType.equals("WIFI")){
+                        NetWorkDialog("提示", "是否上传", 1);
+                    } else if (Constants.NetWorkType!=null && Constants.NetWorkType.equals("MOBILE")){
+                        NetWorkDialog("提示", "当前为移动网络是否继续上传", 2);
+                    }
+                } else {
+                    NetWorkDialog("提示", "当前网络不可用无法上传", 3);
+                }
+                break;
+
         }
     }
 
@@ -817,5 +1034,89 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
                 stopAudio();
             }
         }).build().show();
+    }
+
+    /**
+     * OSS对象实例
+     */
+    private void getSTS_OSS() {
+        /**
+         * 获取密钥
+         */
+        if (ossClient == null) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    OSSAuthCredentialsProvider ossAuthCredentialsProvider = new OSSAuthCredentialsProvider(ApiContact.STSSERVER);
+                    ClientConfiguration conf = new ClientConfiguration();
+                    conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
+                    conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
+                    conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
+                    conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
+                    ossClient = new OSSClient(BaseApplication.mContext, ApiContact.endpoint, ossAuthCredentialsProvider, conf);
+                    mHandler.sendEmptyMessage(GETUPLOADLIST);
+                }
+            }).start();
+        } else {
+            mHandler.sendEmptyMessage(GETUPLOADLIST);
+        }
+    }
+
+    /**
+     * 网络类型提示
+     *
+     * @param title
+     * @param Content
+     * @param type
+     */
+    private void NetWorkDialog(String title, String Content, final int type) {
+        new MaterialDialog.Builder(_mActivity)
+                .title(title)
+                .content(Content)
+                .negativeText("取消")
+                .positiveText("确认")
+                .cancelable(false)
+                .canceledOnTouchOutside(false)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        fr_upload.setEnabled(true);
+                        dialog.dismiss();
+                    }
+                })
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        //获取阿里云上传实例
+                        if (type == 1 || type == 2) {
+                            getSTS_OSS();
+                        }
+                        dialog.dismiss();
+                    }
+                }).build().show();
+    }
+
+    /**
+     * 上传进度回调
+     */
+    private void showProgressDialog() {
+        new MaterialDialog.Builder(_mActivity)
+                .customView(inflate, false)
+                .cancelable(false)
+                .canceledOnTouchOutside(false)
+                .negativeText("取消")
+                .positiveText("确认")
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                }).build().show();
     }
 }

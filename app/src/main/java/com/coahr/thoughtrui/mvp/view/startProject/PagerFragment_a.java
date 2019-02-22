@@ -224,12 +224,13 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                     p.UpLoadFileList(projectsDB.getPid(),subjectsDB_now);
                     break;
                 case UIPROGRESS:
-                    progressBar.setMax(msg.arg2);
+                  //  progressBar.setMax(msg.arg2);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         progressBar.setProgress(msg.arg1,true);
                     } else {
                         progressBar.setProgress(msg.arg1);
                     }
+                 //   progressBar.setProgress(msg.arg1);
                     tv_tittle.setText(msg.obj.toString());
                     break;
             }
@@ -457,6 +458,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 break;
 
             case R.id.fr_upload:
+                fr_upload.setEnabled(false);
                 if (Constants.isNetWorkConnect) {
                     if (Constants.NetWorkType!=null && Constants.NetWorkType.equals("WIFI")){
                         NetWorkDialog("提示", "是否上传", 1);
@@ -623,7 +625,6 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         ed_score.setFocusable(false);
         ed_score.setFocusableInTouchMode(false);
         KeyBoardUtils.hideKeybord(ed_score, _mActivity);
-
         p.getAnswer(ht_projectId, _mActivity, number, ht_id);
         ToastUtils.showLong("答案保存成功");
     }
@@ -684,6 +685,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
     @Override
     public void getUpLoadFileListFailure(String failure) {
+        fr_upload.setEnabled(true);
         ToastUtils.showLong(failure);
     }
 
@@ -691,29 +693,25 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     public void startUploadCallBack(List<String> list, int uploadSuccessSize, int uploadFailSize, int totalSize,ProjectsDB projectsDB,SubjectsDB subjectsDB) {
         KLog.a("上传",totalSize,uploadFailSize,uploadSuccessSize);
         //上传成功
-        if (totalSize==uploadSuccessSize){
-
-            fileList_Call.clear();
-            KLog.d("阿里云上传成功" + projectsDB.getPname() + "/" + subjectsDB.getNumber());
-            //当前题目下数据上传成功
-            //执行回调
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).endsWith(".wav") || list.get(i).endsWith(".arm") || list.get(i).endsWith(".mp3")) {
-                    uPAudioPath = list.get(i);
-                } else if (list.get(i).endsWith(".txt")) {
-                    textMassage = SaveOrGetAnswers.readFromFile(list.get(i));
-                } else {
-                    fileList_Call.add(list.get(i));
+        if (totalSize==(uploadSuccessSize+uploadFailSize)) {
+            if (totalSize == uploadSuccessSize) {
+                fileList_Call.clear();
+                KLog.d("阿里云上传成功" + projectsDB.getPname() + "/" + subjectsDB.getNumber());
+                //当前题目下数据上传成功
+                //执行回调
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.get(i).endsWith(".wav") || list.get(i).endsWith(".arm") || list.get(i).endsWith(".mp3")) {
+                        uPAudioPath = list.get(i);
+                    } else if (list.get(i).endsWith(".txt")) {
+                        textMassage = SaveOrGetAnswers.readFromFile(list.get(i));
+                    } else {
+                        fileList_Call.add(list.get(i));
+                    }
                 }
+                callbackForServer(projectsDB, subjectsDB, uPAudioPath, fileList_Call, textMassage);
+            } else {
+                fr_upload.setEnabled(true);
             }
-
-            mHandler.post(new Runnable() {
-              @Override
-              public void run() {
-                  callbackForServer(projectsDB, subjectsDB, uPAudioPath, fileList_Call, textMassage);
-              }
-          });
-
         }
     }
 
@@ -732,12 +730,25 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
     @Override
     public void CallBackSuccess(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
+        p.UpDataDb(projectsDB, subjectsDB);
         KLog.d("回调成功");
     }
 
     @Override
     public void CallBackFailure(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
         KLog.d("回调失败");
+        fr_upload.setEnabled(true);
+    }
+
+    @Override
+    public void UpDataDbSuccess() {
+        fr_upload.setEnabled(true);
+    }
+
+    @Override
+    public void UpDataDbFailure(String fail) {
+        ToastUtils.showLong(fail);
+        fr_upload.setEnabled(true);
     }
 
     /**
@@ -1074,7 +1085,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 }
             }
         }
-        map.put("audioCount", recorderPath != null ? 0 : 1);
+        map.put("audioCount", recorderPath != null ? 1 : 0);
         map.put("audio", recorderPath != null ? FileIOUtils.getE(recorderPath, "/") : "");
         map.put("pictureCount", picList.size());
 
@@ -1099,7 +1110,13 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
             }
         });*/
-        p.CallBack(map, projectsDB, subjectsDB);
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                p.CallBack(map, projectsDB, subjectsDB);
+            }
+        });
+
     }
 
 
@@ -1141,9 +1158,12 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 .content(Content)
                 .negativeText("取消")
                 .positiveText("确认")
+                .cancelable(false)
+                .canceledOnTouchOutside(false)
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        fr_upload.setEnabled(true);
                         dialog.dismiss();
                     }
                 })

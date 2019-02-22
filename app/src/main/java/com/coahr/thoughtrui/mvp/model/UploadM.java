@@ -50,6 +50,8 @@ import javax.inject.Inject;
  */
 public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Model {
     private PutObjectRequest put;
+    private int update;
+    private int update1;
 
     @Inject
     public UploadM() {
@@ -61,26 +63,6 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
     private int UpLoadSuccessCount = 0;
     //上传失败的个数
     private int UpLoadFailureCount = 0;
-
-    @Override
-    public void getSTS(String utl) {
-        OSSAuthCredentialsProvider ossAuthCredentialsProvider = new OSSAuthCredentialsProvider(utl);
-        if (ossAuthCredentialsProvider != null) {
-            getPresenter().getSTSSuccess(ossAuthCredentialsProvider);
-        } else {
-            getPresenter().getSTSFailure("Ak鉴权失败");
-        }
-    }
-
-    @Override
-    public void getOSS(Context context, String endpoint, OSSCredentialProvider credentialProvider, ClientConfiguration conf) {
-        OSS ossClient = new OSSClient(context, endpoint, credentialProvider, conf);
-        if (ossClient != null) {
-            getPresenter().getOSSSuccess(ossClient);
-        } else {
-            getPresenter().getOSSFailure("获取阿里云上传实例初始化失败");
-        }
-    }
 
     @Override
     public void getProjectList(String sessionId) {
@@ -96,11 +78,12 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
         }
     }
 
+
     @Override
-    public void getSubjectList(ProjectsDB projectsDBList) {
-        List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectByTogether_Where(SubjectsDB.class, "projectsdb_id=? and iscomplete=? and suploadstatus=?", String.valueOf(projectsDBList.getId()), String.valueOf(1), String.valueOf(0));
+    public void getSubjectList(List<ProjectsDB> projectsDBS, int position) {
+        List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectByTogether_Where(SubjectsDB.class, "projectsdb_id=? and iscomplete=? and suploadstatus=?", String.valueOf(projectsDBS.get(position).getId()), String.valueOf(1), String.valueOf(0));
         if (subjectsDBS != null && subjectsDBS.size() > 0) {
-            getPresenter().getSubjectListSuccess(subjectsDBS, projectsDBList);
+            getPresenter().getSubjectListSuccess(subjectsDBS, projectsDBS,position);
         } else {
             getPresenter().getSubjectListFailure("当前项目下没有可以上传的题目");
         }
@@ -108,60 +91,106 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
     }
 
     @Override
-    public void UpLoadFileList(ProjectsDB projectsDB, SubjectsDB subjectsDB, Activity activity) {
-        List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + projectsDB.getPid() + "/" + subjectsDB.getNumber() + "_" + subjectsDB.getHt_id());
-
-
+    public void UpLoadFileList(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
+        List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + projectsDBS.get(project_position).getPid() + "/" + subjectsDBList.get(subject_position).getNumber() + "_" + subjectsDBList.get(subject_position).getHt_id());
         if (fileList != null && fileList.size() > 0) {
-                for (int i = 0; i <fileList.size() ; i++) {
-                    KLog.d("上传文件",fileList.get(i));
-                }
-            getPresenter().getUoLoadFileListSuccess(fileList, projectsDB, subjectsDB);
+            for (int i = 0; i <fileList.size() ; i++) {
+                KLog.d("上传文件准备",fileList.get(i));
+            }
+            getPresenter().getUpLoadFileListSuccess(fileList, subjectsDBList, projectsDBS,project_position,subject_position);
         } else {
             getPresenter().getUpLoadFileListFailure("当前题目下没有可以上传的数据");
         }
-
     }
 
     @Override
-    public void StartUpLoad(OSS oss, List<String> list, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
-        ossAsyncTaskList.clear();
-        if (list != null && list.size() > 0) {
-            int CountSize = 0;
-            for (int i = 0; i < list.size(); i++) {
-                if (!list.get(i).endsWith("txt")) {
-                    CountSize++;
-                }
+    public void startUpLoad(OSSClient ossClient,List<String> list, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
+        int CountSize = 0;
+        for (int i = 0; i < list.size(); i++) {
+            if (!list.get(i).endsWith("txt")) {
+                CountSize++;
             }
+        }
 
+        if (CountSize>0){
+            ossAsyncTaskList.clear();
+            UpLoadSuccessCount=0;
+            UpLoadFailureCount=0;
             for (int i = 0; i < list.size(); i++) {
                 if (!list.get(i).endsWith("txt")) {
-                    OSSAsyncTask ossAsyncTask = asyncPutImage(oss,
-                            list.get(i), CountSize, projectsDB, subjectsDB, list);
+                    OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
+                            list.get(i), CountSize, subjectsDBList, projectsDBS,project_position,subject_position,list);
                     if (ossAsyncTask != null) {
                         ossAsyncTaskList.add(ossAsyncTask);
                     }
                 }
             }
         }
+
     }
 
     @Override
-    public void CallBack(Map<String, Object> map, final ProjectsDB projectsDB, final SubjectsDB subjectsDB) {
-        mRxManager.add(createFlowable(new SimpleFlowableOnSubscribe<UpLoadCallBack>(getApiService().upLoadCallBack(map)))
+    public void CallBackServer(Map<String, Object> map, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
+   /*     mRxManager.add(createFlowable(new SimpleFlowableOnSubscribe<UpLoadCallBack>(getApiService().upLoadCallBack(map)))
                 .subscribeWith(new SimpleDisposableSubscriber<UpLoadCallBack>() {
                     @Override
                     public void _onNext(UpLoadCallBack upLoadCallBack) {
                         if (getPresenter() != null) {
                             if (upLoadCallBack.getResult() == 1) {
-                                getPresenter().CallBackSuccess(projectsDB, subjectsDB);
+                                getPresenter().CallBackServerSuccess(subjectsDBList,projectsDBS,project_position,subject_position);
                             } else {
-                                getPresenter().CallBackFailure(projectsDB, subjectsDB);
+                                getPresenter().CallBackServerFailure(subjectsDBList,projectsDBS,project_position,subject_position);
                             }
                         }
                     }
-                }));
+                }));*/
+
+        getPresenter().CallBackServerSuccess(subjectsDBList,projectsDBS,project_position,subject_position);
     }
+
+    @Override
+    public void UpDataDb(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position,boolean success) {
+/*
+      //更新题目状态
+        if (success) {
+            SubjectsDB subjectsDB1 = new SubjectsDB();
+            subjectsDB1.setsUploadStatus(1);
+            update = subjectsDB1.update(subjectsDBList.get(subject_position).getId());
+        }
+
+        //更新项目状态
+        if (subject_position==subjectsDBList.size()-1){
+            List<SubjectsDB> subjects_up = projectsDBS.get(project_position).getSubjectsDBList();
+            if (subjects_up != null && subjects_up.size() > 0) {
+                int up_subject = 0;
+                for (int i = 0; i < subjects_up.size(); i++) {
+                    if (subjects_up.get(i).getsUploadStatus() == 1) {
+                        up_subject++;
+                    }
+                }
+                //题目是否都传完了
+                if (up_subject == subjects_up.size()) {
+                    ProjectsDB projectsDB1 = new ProjectsDB();
+                    projectsDB1.setIsComplete(1);
+                    projectsDB1.setpUploadStatus(1);
+                    update1 = projectsDB1.update(projectsDBS.get(project_position).getId());
+                }
+            }
+        }*/
+
+        //回调
+        if (update==0 || update1==0){
+            if (getPresenter() != null) {
+                getPresenter().UpDataDbSuccess(subjectsDBList, projectsDBS, project_position, subject_position);
+            }
+        } else {
+            if (getPresenter() != null) {
+                getPresenter().UpDataDbFailure(subjectsDBList, projectsDBS, project_position, subject_position);
+            }
+        }
+
+    }
+
 
     /**
      * 上传
@@ -170,7 +199,7 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
      * @param localFile 文件
      * @param count     总大小
      */
-    public OSSAsyncTask asyncPutImage(OSS oss, String localFile, final int count, final ProjectsDB projectsDB, final SubjectsDB subjectsDB, final List<String> list) {
+    public OSSAsyncTask asyncPutImage(OSSClient oss, String localFile, final int count,  List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position, final List<String> list) {
         if (localFile.equals("")) {
             Log.w("AsyncPutImage", "ObjectNull");
             return null;
@@ -184,18 +213,17 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
         }
         String name = getName(localFile, "/");
         String object = null;
-        KLog.d("上传文件", Constants.bucket, name, localFile);
         if (localFile.endsWith("wav")) {
-            object = projectsDB.getPid() + "/audios/" + name;
+            object = projectsDBS.get(project_position).getPid() + "/audios/" + name;
         } else {
-            object = projectsDB.getPid() + "/pictures/" + subjectsDB.getNumber() + "/" + name;
+            object = projectsDBS.get(project_position).getPid() + "/pictures/" + subjectsDBList.get(subject_position).getNumber() + "/" + name;
         }
         PutObjectRequest put = new PutObjectRequest(Constants.bucket, object, localFile);
         put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
             @Override
             public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
                 if (getPresenter() != null) {
-                    getPresenter().StartUiProgressSuccess(request,(int)currentSize,(int)totalSize,projectsDB.getPname()+"\n第"+subjectsDB.getNumber()+"题\n"+name);
+                    getPresenter().StartUiProgressSuccess(request,(int)currentSize,(int)totalSize,projectsDBS.get(project_position).getPname()+"\n第"+subjectsDBList.get(subject_position).getNumber()+"题\n"+name);
                 }
             }
         });
@@ -204,13 +232,9 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
             @Override
             public void onSuccess(PutObjectRequest request, PutObjectResult result) {
                 UpLoadSuccessCount++;
-                if (UpLoadSuccessCount == count) {
-                    //每题的回调
-                    if (getPresenter() != null) {
-                        UpLoadSuccessCount = 0;
-                        UpLoadFailureCount = 0;
-                        getPresenter().StartUpLoadSuccess(projectsDB, subjectsDB, list);
-                    }
+                if (getPresenter() != null) {
+                    getPresenter().UploadCallBack(list,subjectsDBList,projectsDBS,project_position,subject_position,
+                            UpLoadSuccessCount,UpLoadFailureCount,count);
                 }
             }
 
@@ -231,15 +255,11 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
                     Log.e("RawMessage", serviceException.getRawMessage());
                     info = serviceException.toString();
                 }
-                OSSLog.logDebug(info);
-                ToastUtils.showLong(info);
+               KLog.d("上传日志",info);
                 UpLoadFailureCount++;
-                if (UpLoadSuccessCount + UpLoadFailureCount == count) {
-                    if (getPresenter() != null) {
-                        UpLoadSuccessCount = 0;
-                        UpLoadFailureCount = 0;
-                        getPresenter().StartUpLoadFailure(projectsDB, subjectsDB);
-                    }
+                if (getPresenter() != null) {
+                    getPresenter().UploadCallBack(list,subjectsDBList,projectsDBS,project_position,subject_position,
+                            UpLoadSuccessCount,UpLoadFailureCount,count);
                 }
 
             }

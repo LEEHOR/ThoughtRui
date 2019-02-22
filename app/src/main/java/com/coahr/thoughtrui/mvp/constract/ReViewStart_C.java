@@ -2,10 +2,13 @@ package com.coahr.thoughtrui.mvp.constract;
 
 import android.app.Activity;
 
+import com.alibaba.sdk.android.oss.OSSClient;
+import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
 
 import java.util.List;
+import java.util.Map;
 
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 
@@ -46,6 +49,19 @@ public interface ReViewStart_C {
         void getAudioSuccess(List<String> audioList);
 
         void getAudioFailure(String failure);
+
+        void getUpLoadFileListSuccess(List<String> list,String projectsDB_id, SubjectsDB  subjectsDB);
+        void getUpLoadFileListFailure(String failure);
+
+        void startUploadCallBack(List<String> list,int uploadSuccessSize,int uploadFailSize,int totalSize,ProjectsDB projectsDB,SubjectsDB subjectsDB);
+
+        void showProgress(int currentSize, int totalSize,String info);
+
+        void CallBackSuccess(ProjectsDB projectsDB,SubjectsDB subjectsDB);
+        void CallBackFailure(ProjectsDB projectsDB,SubjectsDB subjectsDB);
+
+        void UpDataDbSuccess();
+        void UpDataDbFailure(String fail);
 
     }
 
@@ -93,6 +109,27 @@ public interface ReViewStart_C {
 
          void getAudioFailure(String failure);
 
+
+         //获取上传文件列表
+         void UpLoadFileList(String projectsDB_id, SubjectsDB  subjectsDB);
+         void getUpLoadFileListSuccess(List<String> list,String projectsDB_id, SubjectsDB  subjectsDB);
+         void getUpLoadFileListFailure(String failure);
+
+         //开始上传
+         void startUpload(OSSClient ossClient, List<String> list, ProjectsDB projectsDB, SubjectsDB subjectsDB);
+         void startUploadCallBack(List<String> list,int uploadSuccessSize,int uploadFailSize,int totalSize,ProjectsDB projectsDB,SubjectsDB subjectsDB);
+         void showProgress(int currentSize, int totalSize,String info);
+
+         //每题上传完成后的回调
+         void CallBack(Map<String,Object> map, ProjectsDB projectsDB, SubjectsDB subjectsDB);
+         void CallBackSuccess(ProjectsDB projectsDB,SubjectsDB subjectsDB);
+         void CallBackFailure(ProjectsDB projectsDB,SubjectsDB subjectsDB);
+
+         //更新数据库
+         void UpDataDb(ProjectsDB projectsDB,SubjectsDB subjectsDB);
+         void UpDataDbSuccess();
+         void UpDataDbFailure(String fail);
+
     }
 
      interface Model extends BaseContract.Model {
@@ -111,6 +148,14 @@ public interface ReViewStart_C {
          void SaveImages(List<MediaBean> mediaBeanList, String ht_ProjectId, int number, String ht_id);
 
          void getAudio(String ht_ProjectId, Activity activity, int number, String ht_id);
+
+         void UpLoadFileList(String projectsDB_id, SubjectsDB  subjectsDB);
+
+         void startUpload(OSSClient ossClient, List<String> list, ProjectsDB projectsDB, SubjectsDB subjectsDB);
+
+         void CallBack(Map<String,Object> map, ProjectsDB projectsDB, SubjectsDB subjectsDB);
+
+         void UpDataDb(ProjectsDB projectsDB,SubjectsDB subjectsDB);
 
     }
 }

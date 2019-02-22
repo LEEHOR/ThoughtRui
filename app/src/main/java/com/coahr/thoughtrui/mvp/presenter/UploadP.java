@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.alibaba.sdk.android.oss.ClientConfiguration;
 import com.alibaba.sdk.android.oss.OSS;
+import com.alibaba.sdk.android.oss.OSSClient;
 import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
@@ -31,48 +32,6 @@ public class UploadP extends BasePresenter<UploadC.View,UploadC.Model> implement
     }
 
     @Override
-    public void getSTS(String utl) {
-        if (mModle != null) {
-            mModle.getSTS(utl);
-        }
-    }
-
-    @Override
-    public void getSTSSuccess(OSSCredentialProvider ossCredentialProvider) {
-        if (getView() != null) {
-            getView().getSTSSuccess(ossCredentialProvider);
-        }
-    }
-
-    @Override
-    public void getSTSFailure(String failure) {
-        if (getView() != null) {
-            getView().getSTSFailure(failure);
-        }
-    }
-
-    @Override
-    public void getOSS(Context context, String endpoint, OSSCredentialProvider credentialProvider, ClientConfiguration conf) {
-        if (mModle != null) {
-            mModle.getOSS(context, endpoint, credentialProvider, conf);
-        }
-    }
-
-    @Override
-    public void getOSSSuccess(OSS oss) {
-        if (getView() != null) {
-            getView().getOSSSuccess(oss);
-        }
-    }
-
-    @Override
-    public void getOSSFailure(String failure) {
-        if (getView() != null) {
-            getView().getOSSFailure(failure);
-        }
-    }
-
-    @Override
     public void getProjectList(String sessionId) {
         if (mModle != null) {
             mModle.getProjectList(sessionId);
@@ -94,16 +53,16 @@ public class UploadP extends BasePresenter<UploadC.View,UploadC.Model> implement
     }
 
     @Override
-    public void getSubjectList(ProjectsDB projectsDBList) {
+    public void getSubjectList(List<ProjectsDB> projectsDBS, int position) {
         if (mModle != null) {
-            mModle.getSubjectList(projectsDBList);
+            mModle.getSubjectList(projectsDBS, position);
         }
     }
 
     @Override
-    public void getSubjectListSuccess(List<SubjectsDB> subjectsDBList, ProjectsDB projectsdb) {
+    public void getSubjectListSuccess(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position) {
         if (getView() != null) {
-            getView().getSubjectListSuccess(subjectsDBList,projectsdb);
+            getView().getSubjectListSuccess(subjectsDBList,projectsDBS,project_position);
         }
     }
 
@@ -115,18 +74,19 @@ public class UploadP extends BasePresenter<UploadC.View,UploadC.Model> implement
     }
 
     @Override
-    public void UpLoadFileList(ProjectsDB projectsDB, SubjectsDB subjectsDB, Activity activity) {
+    public void UpLoadFileList(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
         if (mModle != null) {
-            mModle.UpLoadFileList(projectsDB, subjectsDB, activity);
+            mModle.UpLoadFileList(subjectsDBList, projectsDBS, project_position, subject_position);
         }
     }
 
     @Override
-    public void getUoLoadFileListSuccess(List<String> list, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
+    public void getUpLoadFileListSuccess(List<String> list, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
         if (getView() != null) {
-            getView().getUoLoadFileListSuccess(list,projectsDB,subjectsDB);
+            getView().getUpLoadFileListSuccess(list, subjectsDBList, projectsDBS, project_position, subject_position);
         }
     }
+
 
     @Override
     public void getUpLoadFileListFailure(String failure) {
@@ -136,51 +96,66 @@ public class UploadP extends BasePresenter<UploadC.View,UploadC.Model> implement
     }
 
     @Override
-    public void StartUpLoad(OSS oss,List<String> list,ProjectsDB projectsDB, SubjectsDB  subjectsDB) {
+    public void StartUiProgressSuccess(PutObjectRequest request, int currentSize, int totalSize, String info) {
+        if (getView() != null) {
+            getView().StartUiProgressSuccess(request, currentSize, totalSize, info);
+        }
+    }
+
+    @Override
+    public void startUpLoad(OSSClient ossClient,List<String> list, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
         if (mModle != null) {
-            mModle.StartUpLoad(oss,list,projectsDB,subjectsDB);
+            mModle.startUpLoad(ossClient,list, subjectsDBList, projectsDBS, project_position, subject_position);
         }
     }
 
     @Override
-    public void StartUpLoadSuccess(ProjectsDB projectsDB, SubjectsDB subjectsDB,List<String> list) {
+    public void UploadCallBack(List<String> list, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position, int uploadSuccessSize, int uploadFailSize, int totalSize) {
         if (getView() != null) {
-            getView().StartUpLoadSuccess(projectsDB,subjectsDB,list);
+            getView().UploadCallBack(list, subjectsDBList, projectsDBS, project_position, subject_position, uploadSuccessSize, uploadFailSize, totalSize);
         }
     }
 
     @Override
-    public void StartUpLoadFailure(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
-        if (getView() != null) {
-            getView().StartUpLoadFailure(projectsDB,subjectsDB);
-        }
-    }
-
-    @Override
-    public void StartUiProgressSuccess(PutObjectRequest request, int currentSize, int totalSize,String info) {
-        if (getView() != null) {
-            getView().StartUiProgressSuccess(request,currentSize,totalSize,info);
-        }
-    }
-
-    @Override
-    public void CallBack(Map<String, Object> map, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
+    public void CallBackServer(Map<String, Object> map, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
         if (mModle != null) {
-            mModle.CallBack(map,projectsDB,subjectsDB);
+            mModle.CallBackServer(map, subjectsDBList, projectsDBS, project_position, subject_position);
         }
     }
 
     @Override
-    public void CallBackSuccess(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
+    public void CallBackServerSuccess(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
         if (getView() != null) {
-            getView().CallBackSuccess(projectsDB,subjectsDB);
+            getView().CallBackServerSuccess(subjectsDBList, projectsDBS, project_position, subject_position);
         }
     }
 
     @Override
-    public void CallBackFailure(ProjectsDB projectsDB,SubjectsDB subjectsDB) {
+    public void CallBackServerFailure(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
         if (getView() != null) {
-            getView().CallBackFailure(projectsDB, subjectsDB);
+            getView().CallBackServerFailure(subjectsDBList, projectsDBS, project_position, subject_position);
         }
     }
+
+    @Override
+    public void UpDataDb(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position,boolean success) {
+        if (mModle != null) {
+            mModle.UpDataDb(subjectsDBList, projectsDBS, project_position, subject_position,success);
+        }
+    }
+
+    @Override
+    public void UpDataDbSuccess(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
+        if (getView() != null) {
+            getView().UpDataDbSuccess(subjectsDBList, projectsDBS, project_position, subject_position);
+        }
+    }
+
+    @Override
+    public void UpDataDbFailure(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
+        if (getView() != null) {
+            getView().UpDataDbFailure(subjectsDBList, projectsDBS, project_position, subject_position);
+        }
+    }
+
 }

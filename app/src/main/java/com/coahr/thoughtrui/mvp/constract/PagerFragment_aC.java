@@ -55,12 +55,14 @@ public interface PagerFragment_aC {
         void getUpLoadFileListFailure(String failure);
 
         void startUploadCallBack(List<String> list,int uploadSuccessSize,int uploadFailSize,int totalSize,ProjectsDB projectsDB,SubjectsDB subjectsDB);
+
         void showProgress(int currentSize, int totalSize,String info);
+
         void CallBackSuccess(ProjectsDB projectsDB,SubjectsDB subjectsDB);
         void CallBackFailure(ProjectsDB projectsDB,SubjectsDB subjectsDB);
 
-
-
+        void UpDataDbSuccess();
+        void UpDataDbFailure(String fail);
 
     }
 
@@ -108,6 +110,11 @@ public interface PagerFragment_aC {
          void CallBackSuccess(ProjectsDB projectsDB,SubjectsDB subjectsDB);
          void CallBackFailure(ProjectsDB projectsDB,SubjectsDB subjectsDB);
 
+         //更新数据库
+         void UpDataDb(ProjectsDB projectsDB,SubjectsDB subjectsDB);
+         void UpDataDbSuccess();
+         void UpDataDbFailure(String fail);
+
 
 
     }
@@ -135,5 +142,6 @@ public interface PagerFragment_aC {
 
          void CallBack(Map<String,Object> map, ProjectsDB projectsDB, SubjectsDB subjectsDB);
 
+         void UpDataDb(ProjectsDB projectsDB,SubjectsDB subjectsDB);
     }
 }

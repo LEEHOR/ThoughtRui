@@ -241,4 +241,25 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
             getView().CallBackFailure(projectsDB, subjectsDB);
         }
     }
+
+    @Override
+    public void UpDataDb(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
+        if (mModle != null) {
+            mModle.UpDataDb(projectsDB,subjectsDB);
+        }
+    }
+
+    @Override
+    public void UpDataDbSuccess() {
+        if (getView() != null) {
+            getView().UpDataDbSuccess();
+        }
+    }
+
+    @Override
+    public void UpDataDbFailure(String fail) {
+        if (getView() != null) {
+            getView().UpDataDbFailure(fail);
+        }
+    }
 }

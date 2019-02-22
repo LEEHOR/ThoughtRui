@@ -51,6 +51,8 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
 
     private ClientConfiguration conf;
     private OSSClient ossClient;
+    private int update1;
+    private int update;
 
     @Inject
     public PagerFragment_aM() {
@@ -191,6 +193,39 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
                         }
                     }
                 }));
+    }
+
+    @Override
+    public void UpDataDb(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
+        SubjectsDB subjectsDB1 = new SubjectsDB();
+        subjectsDB1.setsUploadStatus(1);
+        update = subjectsDB1.update(subjectsDB.getId());
+        List<SubjectsDB> subjectsDBList = projectsDB.getSubjectsDBList();
+        if (subjectsDBList != null && subjectsDBList.size()>0) {
+            int up_subjectSize=0;
+            for (int i = 0; i < subjectsDBList.size(); i++) {
+                if (subjectsDBList.get(i).getsUploadStatus()==1){
+                    up_subjectSize++;
+                }
+            }
+            if (up_subjectSize==subjectsDBList.size()){
+                ProjectsDB projectsDB1=new ProjectsDB();
+                projectsDB1.setIsComplete(1);
+                projectsDB1.setpUploadStatus(1);
+                update1 = projectsDB1.update(projectsDB.getId());
+            }
+        }
+
+        if (update==1 || update1==1){
+            if (getPresenter() != null) {
+                getPresenter().UpDataDbSuccess();
+            }
+        } else {
+            if (getPresenter() != null) {
+                getPresenter().UpDataDbFailure("修改数据库失败");
+            }
+        }
+
     }
 
     /**
