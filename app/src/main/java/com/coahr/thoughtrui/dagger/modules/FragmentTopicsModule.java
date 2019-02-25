@@ -1,6 +1,6 @@
 package com.coahr.thoughtrui.dagger.modules;
 
-import com.coahr.thoughtrui.mvp.view.SubjectList.Fragment_Topics;
+import com.coahr.thoughtrui.mvp.view.subjectList.Fragment_Topics;
 
 import dagger.Module;
 import dagger.Provides;

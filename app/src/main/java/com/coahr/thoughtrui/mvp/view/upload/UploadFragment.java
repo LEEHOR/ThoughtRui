@@ -20,7 +20,6 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.alibaba.sdk.android.oss.ClientConfiguration;
-import com.alibaba.sdk.android.oss.OSS;
 import com.alibaba.sdk.android.oss.OSSClient;
 import com.alibaba.sdk.android.oss.common.auth.OSSAuthCredentialsProvider;
 import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
@@ -299,7 +298,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                 //回调到回台服务器
                 callbackForServer(projectsDBS, subjectsDBList, up_picList, textMassage, uPAudioPath, project_position, subject_position);
             } else {         //上传失败
-
+                p.UpDataDb(subjectsDBList, projectsDBS, project_position, subject_position, false);
             }
         }
     }
@@ -323,6 +322,8 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
             if (project_position<projectsDBS.size()-1){
                 KLog.d("上传3","切换下一个项目");
                 p.getSubjectList(projectsDBS, project_position+=1);
+            } else {
+                ToastUtils.showLong("上传完成");
             }
         } else {   //项目下还有题目没传，开始下一题
             KLog.d("上传2","切换下一个题目");

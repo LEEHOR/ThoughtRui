@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar
+    android:id="@+id/template_title"
+    android:layout_width="match_parent"
+    app:tittle="请选择项目模板"
+    android:layout_height="wrap_content">
+
+</com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/template_recycle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </androidx.recyclerview.widget.RecyclerView>
+</LinearLayout>

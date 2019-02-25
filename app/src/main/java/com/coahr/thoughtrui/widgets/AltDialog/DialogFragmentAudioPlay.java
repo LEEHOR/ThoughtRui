@@ -19,13 +19,12 @@ import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.TimeUtils;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.Base.BaseDialogFragment;
-import com.coahr.thoughtrui.mvp.view.MusicPlay.MusicPlayListener;
-import com.coahr.thoughtrui.mvp.view.MusicPlay.MusicService;
+import com.coahr.thoughtrui.mvp.view.musicPlay.MusicPlayListener;
+import com.coahr.thoughtrui.mvp.view.musicPlay.MusicService;
 
 import java.io.IOException;
 
 import butterknife.BindView;
-import dagger.Module;
 
 import static android.content.Context.BIND_AUTO_CREATE;
 

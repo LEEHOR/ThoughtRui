@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.coahr.thoughtrui.R;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 /**
  * Created by Leehor
  * on 2018/11/12
@@ -32,6 +34,10 @@ public class MyTittleBar extends RelativeLayout {
         array.recycle();
         view = LayoutInflater.from(getContext()).inflate(R.layout.layout_my_tittlebar, this, true);
         getTvTittle().setText(arrayString);
+    }
+
+    public View getRoot(){
+        return (RelativeLayout)view.findViewById(R.id.root_title);
     }
 
     /**

@@ -131,7 +131,7 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
 
     @Override
     public void CallBackServer(Map<String, Object> map, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
-   /*     mRxManager.add(createFlowable(new SimpleFlowableOnSubscribe<UpLoadCallBack>(getApiService().upLoadCallBack(map)))
+        mRxManager.add(createFlowable(new SimpleFlowableOnSubscribe<UpLoadCallBack>(getApiService().upLoadCallBack(map)))
                 .subscribeWith(new SimpleDisposableSubscriber<UpLoadCallBack>() {
                     @Override
                     public void _onNext(UpLoadCallBack upLoadCallBack) {
@@ -143,14 +143,13 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
                             }
                         }
                     }
-                }));*/
+                }));
 
-        getPresenter().CallBackServerSuccess(subjectsDBList,projectsDBS,project_position,subject_position);
+        //getPresenter().CallBackServerSuccess(subjectsDBList,projectsDBS,project_position,subject_position);
     }
 
     @Override
     public void UpDataDb(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position,boolean success) {
-/*
       //更新题目状态
         if (success) {
             SubjectsDB subjectsDB1 = new SubjectsDB();
@@ -176,7 +175,7 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
                     update1 = projectsDB1.update(projectsDBS.get(project_position).getId());
                 }
             }
-        }*/
+        }
 
         //回调
         if (update==0 || update1==0){

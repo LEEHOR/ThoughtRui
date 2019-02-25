@@ -205,27 +205,27 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemViewType(int position) {
-        if (type == 0) { //新项目
+     /*   if (type == 0) { //新项目
             if (allListBean.get(position).getCompleteStatus() == 1 && allListBean.get(position).getDownloadTime() != -1) {
                 return newProject;
             } else if (allListBean.get(position).getCompleteStatus() == 1 && allListBean.get(position).getDownloadTime() == -1) {
                 return undownload;
             }
-        }
+        }*/
 
-        if (type == 1) {  //已完成
+        if (type == 0) {  //已完成
             if (allListBean.get(position).getCompleteStatus() == 3) {
                 return complete;
             }
         }
 
-        if (type == 2) {  //未完成
+        if (type == 1) {  //未完成
             if (allListBean.get(position).getCompleteStatus() == 2) {
                 return uncomplete;
             }
         }
 
-        if (type == 3) {  //全部
+        if (type == 2) {  //全部
             if (allListBean.get(position).getCompleteStatus() == 1 && allListBean.get(position).getDownloadTime() != -1) {//新项目
                 return newProject;
             }

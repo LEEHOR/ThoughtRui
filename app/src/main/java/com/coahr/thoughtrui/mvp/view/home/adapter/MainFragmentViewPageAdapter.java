@@ -13,7 +13,8 @@ import com.coahr.thoughtrui.mvp.view.home.MyTabFragment;
  * on 17:41
  */
 public class MainFragmentViewPageAdapter extends FragmentPagerAdapter {
-    private String[] title = {"新项目", "已完成","未完成","全部"};
+    //private String[] title = {"新项目", "已完成","未完成","全部"};
+    private String[] title = { "已完成","未完成","全部"};
     public MainFragmentViewPageAdapter(FragmentManager fm) {
         super(fm);
     }

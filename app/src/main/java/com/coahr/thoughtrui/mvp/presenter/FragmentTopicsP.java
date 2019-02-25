@@ -4,7 +4,7 @@ import com.coahr.thoughtrui.mvp.Base.BasePresenter;
 import com.coahr.thoughtrui.mvp.constract.FragmentTopicsC;
 import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
 import com.coahr.thoughtrui.mvp.model.FragmentTopicsM;
-import com.coahr.thoughtrui.mvp.view.SubjectList.Fragment_Topics;
+import com.coahr.thoughtrui.mvp.view.subjectList.Fragment_Topics;
 
 import java.util.Map;
 

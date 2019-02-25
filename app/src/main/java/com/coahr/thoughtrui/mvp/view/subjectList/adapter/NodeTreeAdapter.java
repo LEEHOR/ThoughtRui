@@ -1,4 +1,4 @@
-package com.coahr.thoughtrui.mvp.view.SubjectList.adapter;
+package com.coahr.thoughtrui.mvp.view.subjectList.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 
 import com.coahr.thoughtrui.R;
-import com.coahr.thoughtrui.mvp.view.SubjectList.node.BaseNode;
+import com.coahr.thoughtrui.mvp.view.subjectList.node.BaseNode;
 
 import java.util.LinkedList;
 import java.util.List;

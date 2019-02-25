@@ -1,4 +1,4 @@
-package com.coahr.thoughtrui.mvp.view.MusicPlay;
+package com.coahr.thoughtrui.mvp.view.musicPlay;
 
 /**
  * @author Leehor

@@ -1,6 +1,6 @@
-package com.coahr.thoughtrui.mvp.view.SubjectList;
+package com.coahr.thoughtrui.mvp.view.subjectList;
 
-import com.coahr.thoughtrui.mvp.view.SubjectList.node.BaseNode;
+import com.coahr.thoughtrui.mvp.view.subjectList.node.BaseNode;
 
 /**
  * Created by Leehor

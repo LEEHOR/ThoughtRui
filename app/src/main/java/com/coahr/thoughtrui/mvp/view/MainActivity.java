@@ -34,6 +34,7 @@ import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_LoginSuccess;
 import com.coahr.thoughtrui.mvp.model.Bean.Event_Main;
 import com.coahr.thoughtrui.mvp.presenter.MainActivityP;
 import com.coahr.thoughtrui.mvp.view.home.MainFragment;
+import com.coahr.thoughtrui.mvp.view.home.MainInfoFragment;
 import com.coahr.thoughtrui.mvp.view.mydata.MyFragment;
 import com.coahr.thoughtrui.mvp.view.reviewed.ReviewedFragment;
 import com.coahr.thoughtrui.mvp.view.upload.UploadFragment;
@@ -84,12 +85,12 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     public void onCreate(@Nullable Bundle savedInstanceState) {
 
         if (savedInstanceState != null) {
-            mFragments[0] = findFragment(MainFragment.class);
+            mFragments[0] = findFragment(MainInfoFragment.class);
             mFragments[1] = findFragment(UploadFragment.class);
             mFragments[2] = findFragment(ReviewedFragment.class);
             mFragments[3] = findFragment(MyFragment.class);
         } else {
-            mFragments[0] = MainFragment.newInstance();
+            mFragments[0] = MainInfoFragment.newInstance();
             mFragments[1] = UploadFragment.newInstance();
             mFragments[2] = ReviewedFragment.newInstance();
             mFragments[3] = MyFragment.newInstance();

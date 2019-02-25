@@ -1,4 +1,4 @@
-package com.coahr.thoughtrui.mvp.view.MusicPlay;
+package com.coahr.thoughtrui.mvp.view.musicPlay;
 
 import android.app.Service;
 import android.content.Context;
@@ -10,8 +10,6 @@ import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-
-import com.coahr.thoughtrui.mvp.view.recorder.RecorderService;
 
 public class MusicService extends Service {
     public MediaPlayer mediaPlayer;

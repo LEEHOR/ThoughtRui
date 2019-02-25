@@ -1,4 +1,4 @@
-package com.coahr.thoughtrui.mvp.view.SubjectList;
+package com.coahr.thoughtrui.mvp.view.subjectList;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
@@ -13,9 +13,9 @@ import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.FragmentTopicsC;
 import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
 import com.coahr.thoughtrui.mvp.presenter.FragmentTopicsP;
-import com.coahr.thoughtrui.mvp.view.SubjectList.adapter.NodeTreeAdapter;
-import com.coahr.thoughtrui.mvp.view.SubjectList.node.BaseNode;
-import com.coahr.thoughtrui.mvp.view.SubjectList.node.NodeHelper;
+import com.coahr.thoughtrui.mvp.view.subjectList.adapter.NodeTreeAdapter;
+import com.coahr.thoughtrui.mvp.view.subjectList.node.BaseNode;
+import com.coahr.thoughtrui.mvp.view.subjectList.node.NodeHelper;
 import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
 

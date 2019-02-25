@@ -291,23 +291,26 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
 
             if (homeDataList.getData().getAllList() != null && homeDataList.getData().getAllList().size() > 0) {
                 for (int i = 0; i < homeDataList.getData().getAllList().size(); i++) {
-                    if (type == 0) {  //新项目
+                  /*  if (type == 0) {  //新项目
                         if (homeDataList.getData().getAllList().get(i).getCompleteStatus() == 1) {
                             allListBeanList.add(homeDataList.getData().getAllList().get(i));
                         }
-                    }
-                    if (type == 1) {  //已完成
+                    }*/
+
+                    if (type == 0) {  //已完成
                         if (homeDataList.getData().getAllList().get(i).getCompleteStatus() == 3) {
                             allListBeanList.add(homeDataList.getData().getAllList().get(i));
                         }
                     }
-                    if (type == 2) {  //未完成
+
+                    if (type == 1) {  //未完成
                         if (homeDataList.getData().getAllList().get(i).getCompleteStatus() == 2) {
                             allListBeanList.add(homeDataList.getData().getAllList().get(i));
                         }
                     }
 
-                    if (type == 3) {  //全部
+
+                    if (type == 2) {  //全部
                         allListBeanList.add(homeDataList.getData().getAllList().get(i));
                     }
 

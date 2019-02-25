@@ -1,4 +1,4 @@
-package com.coahr.thoughtrui.mvp.view.SubjectList.node;
+package com.coahr.thoughtrui.mvp.view.subjectList.node;
 
 
 import com.coahr.thoughtrui.R;

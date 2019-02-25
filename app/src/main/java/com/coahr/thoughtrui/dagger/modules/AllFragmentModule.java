@@ -4,12 +4,14 @@ import com.coahr.thoughtrui.dagger.components.BaseFragmentComponents;
 import com.coahr.thoughtrui.mvp.view.attence.AttendanceFragment_h;
 import com.coahr.thoughtrui.mvp.view.attence.AttendanceFragment_k;
 import com.coahr.thoughtrui.mvp.view.home.MainFragment;
+import com.coahr.thoughtrui.mvp.view.home.MainInfoFragment;
 import com.coahr.thoughtrui.mvp.view.home.MyTabFragment;
 import com.coahr.thoughtrui.mvp.view.home.ProjectDetailFragment;
+import com.coahr.thoughtrui.mvp.view.home.ProjectTemplate;
 import com.coahr.thoughtrui.mvp.view.mydata.ChangePasswordFragment;
 import com.coahr.thoughtrui.mvp.view.mydata.Fragment_Feedback;
 import com.coahr.thoughtrui.mvp.view.mydata.LoginFragment;
-import com.coahr.thoughtrui.mvp.view.SubjectList.Fragment_Topics;
+import com.coahr.thoughtrui.mvp.view.subjectList.Fragment_Topics;
 import com.coahr.thoughtrui.mvp.view.mydata.MyFragment;
 import com.coahr.thoughtrui.mvp.view.projectAnnex.FragmentAnnex;
 import com.coahr.thoughtrui.mvp.view.projectAnnex.FragmentAnnexViewPager;
@@ -48,6 +50,9 @@ public abstract class AllFragmentModule {
 
     @ContributesAndroidInjector(modules = MyFragment_Module.class)
     abstract MyFragment MyFragmentInjector();
+
+    @ContributesAndroidInjector(modules = MainInfoFragment_Module.class)
+    abstract MainInfoFragment mainInfoFragment();
 
     @ContributesAndroidInjector()
     abstract LoginFragment LoginFragmentInjector();
@@ -105,4 +110,7 @@ public abstract class AllFragmentModule {
 
     @ContributesAndroidInjector()
     abstract Fragment_Feedback Fragment_FeedbackInjector();
+
+    @ContributesAndroidInjector()
+    abstract ProjectTemplate projectTemplate();
 }

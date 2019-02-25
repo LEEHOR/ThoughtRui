@@ -110,6 +110,12 @@ public class Constants {
 
     public static final int fragment_feedback=12; //帮助与反馈
 
+    public static final int fragment_mainInfo=13;
+
+    public static final int fragment_main=14;
+
+    public static final int fragment_template=15; //项目模板
+
 
 
 
