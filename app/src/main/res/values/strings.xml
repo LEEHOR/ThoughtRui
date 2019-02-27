@@ -38,4 +38,8 @@
     <string name="remark">点击编辑</string>
     <string name="Notification_name">通知</string>
     <string name="Notification_description">消息推送</string>
+
+    <!--经销商选择-->
+    <string name="Province">省&#8197;&#8197;&#8197;&#8197;&#8197;
+        &#8197;&#8197;&#8197;&#8197;&#8197;市</string>
 </resources>

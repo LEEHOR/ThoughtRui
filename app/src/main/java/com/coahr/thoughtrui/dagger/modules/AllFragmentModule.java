@@ -3,6 +3,7 @@ package com.coahr.thoughtrui.dagger.modules;
 import com.coahr.thoughtrui.dagger.components.BaseFragmentComponents;
 import com.coahr.thoughtrui.mvp.view.attence.AttendanceFragment_h;
 import com.coahr.thoughtrui.mvp.view.attence.AttendanceFragment_k;
+import com.coahr.thoughtrui.mvp.view.home.DealerFragment;
 import com.coahr.thoughtrui.mvp.view.home.MainFragment;
 import com.coahr.thoughtrui.mvp.view.home.MainInfoFragment;
 import com.coahr.thoughtrui.mvp.view.home.MyTabFragment;
@@ -113,4 +114,7 @@ public abstract class AllFragmentModule {
 
     @ContributesAndroidInjector()
     abstract ProjectTemplate projectTemplate();
+
+    @ContributesAndroidInjector()
+    abstract DealerFragment dealerFragment();
 }

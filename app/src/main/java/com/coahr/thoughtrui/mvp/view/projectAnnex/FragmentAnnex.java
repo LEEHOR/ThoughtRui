@@ -69,7 +69,6 @@ public class FragmentAnnex extends BaseChildFragment<FragmentAnnex_C.Presenter> 
                     if (listList != null) {
 
                     }
-
                     break;
             }
         }

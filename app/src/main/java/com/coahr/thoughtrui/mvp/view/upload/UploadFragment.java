@@ -38,6 +38,7 @@ import com.coahr.thoughtrui.mvp.model.ApiContact;
 import com.coahr.thoughtrui.mvp.presenter.UploadP;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
 import com.coahr.thoughtrui.mvp.view.upload.adapter.UpLoadAdapter;
+import com.gyf.barlibrary.ImmersionBar;
 import com.socks.library.KLog;
 
 import java.util.ArrayList;
@@ -141,6 +142,10 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
 
     @Override
     public void initView() {
+  /*      ImmersionBar.with(this)
+                .statusBarColor(R.color.colorPrimary)
+                .statusBarDarkFont(true,0.2f)
+                .init();*/
         tv_Batch_Management.setOnClickListener(this);
         tv_all_upload.setOnClickListener(this);
         tv_Batch_UpLoad.setOnClickListener(this);
@@ -216,6 +221,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     @Override
     public void onDestroy() {
         super.onDestroy();
+       // ImmersionBar.with(this).destroy();
     }
 
     @Override
@@ -519,6 +525,8 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
             ossClient = null;
         }
     }
+
+
 
     @Override
     public void onHiddenChanged(boolean hidden) {

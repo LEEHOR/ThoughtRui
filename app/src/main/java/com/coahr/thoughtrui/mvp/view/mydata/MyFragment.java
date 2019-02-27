@@ -9,7 +9,10 @@ import android.os.StatFs;
 import androidx.annotation.NonNull;
 
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +25,7 @@ import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.Permission.OnRequestPermissionListener;
 import com.coahr.thoughtrui.Utils.Permission.RequestPermissionUtils;
 import com.coahr.thoughtrui.Utils.PreferenceUtils;
+import com.coahr.thoughtrui.Utils.ScreenUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
@@ -30,6 +34,7 @@ import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
 import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
 import com.coahr.thoughtrui.widgets.CircularImageView;
+import com.gyf.barlibrary.ImmersionBar;
 import com.socks.library.KLog;
 
 import java.io.File;
@@ -59,22 +64,31 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
     TextView tv_dks; //带开始‘
     @BindView(R.id.tv_wwc)
     TextView tv_wwc;//未完成
-    @BindView(R.id.iv_xx_back)
-    ImageView iv_xx_back;  //消息中心箭头
+    @BindView(R.id.re_mytop)
+    RelativeLayout re_mytop;
+
+    @BindView(R.id.re_message_center)
+    RelativeLayout re_message_center;  //消息中心
     @BindView(R.id.tv_xx_count)
     TextView tv_xx_count; //消息中心个数
-    @BindView(R.id.iv_sjsc_back)
-    ImageView iv_sjsc_back; //数据上传
+
+    @BindView(R.id.re_upload_options)
+    RelativeLayout re_upload_options; //数据上传设置
+
     @BindView(R.id.tv_cckj)
     TextView tv_cckj; //数据存储
-    @BindView(R.id.iv_qchc_back)
-    ImageView iv_qchc_back; //清楚缓存
+
+    @BindView(R.id.re_clear_cache)
+    RelativeLayout re_clear_cache; //清除缓存
     @BindView(R.id.tv_qchc)
-    TextView tv_qchc; //清楚缓存
-    @BindView(R.id.iv_xgmm_back)
-    ImageView iv_xgmm_back; //修改密码
-    @BindView(R.id.iv_bzfk_back)
-    ImageView iv_bzfk_back; //帮助与反馈
+    TextView tv_qchc; //缓存大小
+
+    @BindView(R.id.re_change_pass)
+    RelativeLayout re_change_pass; //修改密码
+
+    @BindView(R.id.re_feed_back)
+    RelativeLayout re_feed_back; //帮助与反馈
+
     @BindView(R.id.tv_quit_account)
     TextView tv_quit_account; //退出登录
 
@@ -94,11 +108,12 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
 
     @Override
     public void initView() {
-        iv_xx_back.setOnClickListener(this);
-        iv_sjsc_back.setOnClickListener(this);
-        iv_qchc_back.setOnClickListener(this);
-        iv_xgmm_back.setOnClickListener(this);
-        iv_bzfk_back.setOnClickListener(this);
+        ScreenUtils.setMargins(re_mytop, 20, ScreenUtils.getStatusBarHeight(BaseApplication.mContext), 20, 0);
+        re_message_center.setOnClickListener(this);
+        re_upload_options.setOnClickListener(this);
+        re_clear_cache.setOnClickListener(this);
+        re_change_pass.setOnClickListener(this);
+        re_feed_back.setOnClickListener(this);
         tv_quit_account.setOnClickListener(this);
         getAudioPermission();
     }
@@ -116,19 +131,19 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.iv_xx_back: //消息中心
+            case R.id.re_message_center: //消息中心
                 ToastUtils.showLong("暂未完成，敬请期待");
                 break;
-            case R.id.iv_sjsc_back: //数据上传设置
+            case R.id.re_upload_options: //数据上传设置
                 ToastUtils.showLong("暂未完成，敬请期待");
                 break;
-            case R.id.iv_qchc_back: //清除缓存
+            case R.id.re_clear_cache: //清除缓存
                 ToastUtils.showLong("暂未完成，敬请期待");
                 break;
-            case R.id.iv_xgmm_back: //修改密码
+            case R.id.re_change_pass: //修改密码
                 goOtherPage(ConstantsActivity.class, Constants.fragment_myFragment, Constants.fragment_ChangePass);
                 break;
-            case R.id.iv_bzfk_back: //帮助与反馈
+            case R.id.re_feed_back: //帮助与反馈
                 goOtherPage(ConstantsActivity.class, Constants.fragment_myFragment, Constants.fragment_feedback);
                 break;
             case R.id.tv_quit_account:  //退出登录
@@ -184,7 +199,6 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
         NumberFormat nf = NumberFormat.getNumberInstance();
         // 保留两位小数
         nf.setMaximumFractionDigits(2);
-
         // 如果不需要四舍五入，可以使用RoundingMode.DOWN
         nf.setRoundingMode(RoundingMode.UP);
 
@@ -238,7 +252,7 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
                 List<ProjectsDB> projectsDBSList = usersDBS.get(0).getProjectsDBSList();
                 if (projectsDBSList != null && projectsDBSList.size() > 0) {
                     for (int i = 0; i < projectsDBSList.size(); i++) {
-                        if (projectsDBSList.get(i).getIsDeletes()!=1){
+                        if (projectsDBSList.get(i).getIsDeletes() != 1) {
                             if (projectsDBSList.get(i).getDownloadTime() == -1) {
                                 unLoad++;
                             }
@@ -324,8 +338,8 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
     /**
      * 登录Dialog
      */
-    private void loginDialog(){
-        Login_DialogFragment login_dialogFragment=Login_DialogFragment.newInstance(Constants.fragment_myFragment);
+    private void loginDialog() {
+        Login_DialogFragment login_dialogFragment = Login_DialogFragment.newInstance(Constants.fragment_myFragment);
         login_dialogFragment.setLoginListener(new Login_DialogFragment.loginListener() {
             @Override
             public void loginSuccess(AppCompatDialogFragment dialogFragment) {
@@ -334,6 +348,11 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
                 tv_user_name.setText(Constants.user_name);
             }
         });
-        login_dialogFragment.show(getFragmentManager(),TAG);
+        login_dialogFragment.show(getFragmentManager(), TAG);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 }

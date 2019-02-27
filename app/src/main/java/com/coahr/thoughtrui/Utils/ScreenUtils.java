@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 
 //获得屏幕相关的辅助类
@@ -125,4 +126,19 @@ public class ScreenUtils {
         return statusBarHeight;
     }
 
+    /**
+     * 动态设置margins
+     * @param v
+     * @param l
+     * @param t
+     * @param r
+     * @param b
+     */
+    public static void setMargins (View v, int l, int t, int r, int b) {
+        if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+            p.setMargins(l, t, r, b);
+            v.requestLayout();
+        }
+    }
 }

@@ -8,6 +8,7 @@ import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.ProjectTemplate_c;
 import com.coahr.thoughtrui.mvp.presenter.ProjectTemplate_P;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
+import com.gyf.barlibrary.ImmersionBar;
 
 import javax.inject.Inject;
 
@@ -40,6 +41,11 @@ public class ProjectTemplate extends BaseFragment<ProjectTemplate_c.Presenter> i
 
     @Override
     public void initView() {
+        //手机顶部状态栏颜色适配
+        ImmersionBar.with(this)
+                .statusBarColor(R.color.material_blue_350)
+                .statusBarDarkFont(false)
+                .init();
         template_title.getRoot().setBackgroundColor(Color.rgb(58,128,255));
         template_title.getTvTittle().setTextColor(Color.rgb(255,255,255));
         template_title.getLeftIcon().setOnClickListener(new View.OnClickListener() {
@@ -63,5 +69,11 @@ public class ProjectTemplate extends BaseFragment<ProjectTemplate_c.Presenter> i
     @Override
     public void getProjectTemplateFailure(String fail) {
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ImmersionBar.with(this).destroy();
     }
 }

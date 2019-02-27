@@ -3,11 +3,9 @@ package com.coahr.thoughtrui.mvp.Base;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import android.view.LayoutInflater;
@@ -17,8 +15,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.coahr.thoughtrui.DBbean.UsersDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.DensityUtils;
@@ -29,13 +25,9 @@ import com.coahr.thoughtrui.Utils.ScreenUtils;
 import com.coahr.thoughtrui.Utils.imageLoader.Imageloader;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.widgets.BroadcastReceiver.AliyunHotReceiver;
-import com.coahr.thoughtrui.widgets.BroadcastReceiver.isRegister;
-import com.socks.library.KLog;
-import com.taobao.sophix.SophixManager;
 
 import java.util.List;
 
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import dagger.android.support.AndroidSupportInjection;

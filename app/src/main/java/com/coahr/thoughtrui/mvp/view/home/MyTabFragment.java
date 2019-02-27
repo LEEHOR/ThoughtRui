@@ -2,6 +2,7 @@ package com.coahr.thoughtrui.mvp.view.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
@@ -98,7 +99,8 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
     private SpacesItemDecoration spacesItemDecoration;
     private String DownLoadProject_Id;
     private List<HomeDataList.DataBean.AllListBean> allListBeanList = new ArrayList<>();
-    private List<String>db_list = new ArrayList<>();;
+    private List<String> db_list = new ArrayList<>();
+    ;
 
     @Override
     public MyTabFragmentC.Presenter getPresenter() {
@@ -326,9 +328,9 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
     }
 
     @Override
-    public void getHomeDataFailure(String fail,int code) {
+    public void getHomeDataFailure(String fail, int code) {
         ToastUtils.showLong(fail);
-        if (code !=-1){
+        if (code != -1) {
             isLoad = false;
             myTab_swipe.setRefreshing(false);
         } else {
@@ -459,7 +461,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
         if (haslogin()) {
             Map<String, Object> map = new HashMap<>();
             map.put("sessionId", Constants.sessionId);
-            map.put("token",Constants.devicestoken);
+            map.put("token", Constants.devicestoken);
             p.getHomeData(map);
         } else {
             isLoad = false;
@@ -549,8 +551,8 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
     /**
      * 登录Dialog
      */
-    private void loginDialog(){
-        Login_DialogFragment login_dialogFragment=Login_DialogFragment.newInstance(Constants.MyTabFragmentCode);
+    private void loginDialog() {
+        Login_DialogFragment login_dialogFragment = Login_DialogFragment.newInstance(Constants.MyTabFragmentCode);
 
         login_dialogFragment.setLoginListener(new Login_DialogFragment.loginListener() {
             @Override
@@ -565,7 +567,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
                 }
             }
         });
-        login_dialogFragment.show(getFragmentManager(),TAG);
+        login_dialogFragment.show(getFragmentManager(), TAG);
     }
 
     /**
@@ -575,7 +577,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
         List<ProjectsDB> ProjectDBList = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", pid);
         if (ProjectDBList != null && ProjectDBList.size() > 0) {
             //删除
-            ProjectsDB projectsDB=new ProjectsDB();
+            ProjectsDB projectsDB = new ProjectsDB();
             projectsDB.setIsDeletes(1);
             projectsDB.update(ProjectDBList.get(0).getId());
         }
@@ -596,7 +598,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
                 }
             }
         }
-        if (db_list != null && ht_List != null && ht_List.size()>0)  {
+        if (db_list != null && ht_List != null && ht_List.size() > 0) {
             if (db_list.removeAll(ht_List)) {
                 if (db_list != null && db_list.size() > 0) {
                     for (int i = 0; i < db_list.size(); i++) {

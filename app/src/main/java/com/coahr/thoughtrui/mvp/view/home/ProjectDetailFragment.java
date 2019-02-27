@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -121,7 +120,7 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
             }
         });
 
-        naviBar.getRightText().setVisibility(View.VISIBLE);
+        naviBar.getRightText().setVisibility(View.GONE);
         naviBar.getRightText().setText("浏览");
         naviBar.getRightText().setOnClickListener(new View.OnClickListener() {
             @Override

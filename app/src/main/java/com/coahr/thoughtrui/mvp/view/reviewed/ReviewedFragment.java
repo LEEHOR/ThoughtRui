@@ -18,6 +18,7 @@ import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.ReviewPagerFragment_C;
 import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_censor;
 import com.coahr.thoughtrui.mvp.view.reviewed.adapter.censor_viewPager_Adapter;
+import com.gyf.barlibrary.ImmersionBar;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -55,6 +56,11 @@ public class ReviewedFragment extends BaseFragment {
 
     @Override
     public void initView() {
+      /*  //手机顶部状态栏颜色适配
+        ImmersionBar.with(this)
+               .transparentBar()
+                .statusBarDarkFont(false)
+                .init();*/
         ed_search.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -98,4 +104,9 @@ public class ReviewedFragment extends BaseFragment {
         censor_viewpager.setCurrentItem(0);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //ImmersionBar.with(this).destroy();
+    }
 }

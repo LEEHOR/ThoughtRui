@@ -8,6 +8,7 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
+import com.gyf.barlibrary.ImmersionBar;
 
 import androidx.cardview.widget.CardView;
 import butterknife.BindView;
@@ -75,5 +76,10 @@ public class MainInfoFragment extends BaseChildFragment {
         intent.putExtra("from", Constants.fragment_mainInfo);
         intent.putExtra("to", Constants.fragment_template);
         startActivity(intent);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 }

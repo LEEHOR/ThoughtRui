@@ -23,7 +23,7 @@
     <color name="material_blue_700">#455ede</color>
     <color name="material_blue_800">#3b50ce</color>
     <color name="material_blue_900">#2a36b1</color>
-
+    <color name="material_blue_350">#3A80FF</color>
 
     <!---->
     <color name="app_background_color">#efeff4</color>
