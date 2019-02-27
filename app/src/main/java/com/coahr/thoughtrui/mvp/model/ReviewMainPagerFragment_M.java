@@ -1,7 +1,7 @@
 package com.coahr.thoughtrui.mvp.model;
 
 import com.coahr.thoughtrui.mvp.Base.BaseModel;
-import com.coahr.thoughtrui.mvp.constract.ReviewPagerFragment_C;
+import com.coahr.thoughtrui.mvp.constract.ReviewMainPagerFragment_C;
 import com.coahr.thoughtrui.mvp.model.Bean.CensorBean;
 
 import java.util.Map;
@@ -14,9 +14,9 @@ import javax.inject.Inject;
  * 创建日期：2019/1/7
  * 描述：
  */
-public class ReviewPagerFragment_M extends BaseModel<ReviewPagerFragment_C.Presenter> implements ReviewPagerFragment_C.Model {
+public class ReviewMainPagerFragment_M extends BaseModel<ReviewMainPagerFragment_C.Presenter> implements ReviewMainPagerFragment_C.Model {
     @Inject
-    public ReviewPagerFragment_M() {
+    public ReviewMainPagerFragment_M() {
         super();
     }
 

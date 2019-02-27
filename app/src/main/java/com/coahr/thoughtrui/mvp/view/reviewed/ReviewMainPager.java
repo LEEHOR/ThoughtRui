@@ -15,10 +15,10 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
-import com.coahr.thoughtrui.mvp.constract.ReviewPagerFragment_C;
+import com.coahr.thoughtrui.mvp.constract.ReviewMainPagerFragment_C;
 import com.coahr.thoughtrui.mvp.model.Bean.CensorBean;
 import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_censor;
-import com.coahr.thoughtrui.mvp.presenter.ReviewPagerFragment_P;
+import com.coahr.thoughtrui.mvp.presenter.ReviewMainPagerFragment_P;
 import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
 import com.coahr.thoughtrui.mvp.view.reviewed.adapter.pageAdapter;
@@ -39,11 +39,11 @@ import butterknife.BindView;
  * @author Leehor
  * 版本：
  * 创建日期：2019/1/7
- * 描述：已通过或未通过页面
+ * 描述：审核首页已通过或未通过页面
  */
-public class ReviewPager extends BaseChildFragment<ReviewPagerFragment_C.Presenter> implements ReviewPagerFragment_C.View {
+public class ReviewMainPager extends BaseChildFragment<ReviewMainPagerFragment_C.Presenter> implements ReviewMainPagerFragment_C.View {
     @Inject
-    ReviewPagerFragment_P p;
+    ReviewMainPagerFragment_P p;
     @BindView(R.id.pager_recycler)
     RecyclerView pager_recycler;
     @BindView(R.id.pager_swipe)
@@ -58,12 +58,12 @@ public class ReviewPager extends BaseChildFragment<ReviewPagerFragment_C.Present
         return p;
     }
 
-    public static ReviewPager newInstance(int type) {
-        ReviewPager reviewPager = new ReviewPager();
+    public static ReviewMainPager newInstance(int type) {
+        ReviewMainPager reviewMainPager = new ReviewMainPager();
         Bundle bundle = new Bundle();
         bundle.putInt("type", type);
-        reviewPager.setArguments(bundle);
-        return reviewPager;
+        reviewMainPager.setArguments(bundle);
+        return reviewMainPager;
     }
 
     @Override
@@ -115,7 +115,7 @@ public class ReviewPager extends BaseChildFragment<ReviewPagerFragment_C.Present
             @Override
             public void OnClick(CensorBean.DataBean.ListBean bean, int position) {
                 startOtherActivity(ConstantsActivity.class,Constants.fragment_review_pager,Constants.fragment_review_list,bean.getId());
-                //start(ReviewInfoList.newInstance(bean.getId(), Constants.sessionId, type));
+                //start(ReviewSubjectList.newInstance(bean.getId(), Constants.sessionId, type));
             }
         });
     }

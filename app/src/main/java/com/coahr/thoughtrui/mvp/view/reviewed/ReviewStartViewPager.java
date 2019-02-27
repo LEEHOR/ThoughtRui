@@ -38,9 +38,9 @@ import butterknife.BindView;
  * @author Leehor
  * 版本：
  * 创建日期：2019/1/7
- * 描述：修改答案ViewPager
+ * 描述：审核答题的ViewPager
  */
-public class ReviewStartPager extends BaseFragment {
+public class ReviewStartViewPager extends BaseFragment {
     @BindView(R.id.review_start_viewpager)
     CustomScrollViewPager review_start_viewpager;
     @BindView(R.id.review_tittle)
@@ -50,14 +50,14 @@ public class ReviewStartPager extends BaseFragment {
     private static final int MSG_1 = 1;
     private ArrayList<String> ht_id_list;
     private int position;
-    public static ReviewStartPager newInstance(ArrayList<String> ht_id_List,int position,String ht_projectId) {
-        ReviewStartPager reviewStartPager = new ReviewStartPager();
+    public static ReviewStartViewPager newInstance(ArrayList<String> ht_id_List, int position, String ht_projectId) {
+        ReviewStartViewPager reviewStartViewPager = new ReviewStartViewPager();
         Bundle bundle=new Bundle();
         bundle.putStringArrayList("ht_id_list",ht_id_List);
         bundle.putInt("position",position);
         bundle.putString("ht_projectId",ht_projectId);
-        reviewStartPager.setArguments(bundle);
-        return reviewStartPager;
+        reviewStartViewPager.setArguments(bundle);
+        return reviewStartViewPager;
     }
 
     @Override

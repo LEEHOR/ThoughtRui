@@ -11,7 +11,7 @@ import java.util.Map;
  * on 2018/11/12
  * on 17:07
  */
-public interface ReviewPagerFragment_C {
+public interface ReviewMainPagerFragment_C {
     interface View extends BaseContract.View {
 
         void getCensorListSuccess(CensorBean censorBean);

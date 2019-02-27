@@ -17,7 +17,7 @@ import cn.finalteam.rxgalleryfinal.bean.MediaBean;
  * on 2018/11/15
  * on 22:58
  */
-public interface ReViewStart_C {
+public interface ReViewStartAnswering_C {
 
     interface View extends BaseContract.View {
 

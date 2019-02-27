@@ -1,7 +1,6 @@
 package com.coahr.thoughtrui.dagger.modules;
 
 import com.coahr.thoughtrui.mvp.view.mydata.MyFragment;
-import com.coahr.thoughtrui.mvp.view.reviewed.ReViewStart;
 
 import dagger.Module;
 import dagger.Provides;

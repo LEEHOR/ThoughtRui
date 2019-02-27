@@ -3,6 +3,7 @@ package com.coahr.thoughtrui.mvp.view.subjectList;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import android.view.View;
 import android.widget.ListView;
 
@@ -48,6 +49,7 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
     private NodeTreeAdapter mAdapter;
     private LinkedList<BaseNode> mLinkedList = new LinkedList<>();
     private List<BaseNode> baseNodeList;
+
     public static Fragment_Topics newInstance() {
         Fragment_Topics fragmentTopics = new Fragment_Topics();
         return fragmentTopics;
@@ -85,9 +87,9 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
             @Override
             public void onRefresh() {
                 if (!isLoading) {
-                    isLoading=true;
+                    isLoading = true;
                     getHttp();
-                }else {
+                } else {
                     su_swipe.setRefreshing(false);
                 }
             }
@@ -104,7 +106,7 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
                 for (int i = 0; i < questionLists.size(); i++) {
                     SubjectListBean.DataBean.QuestionListBean questionListBean = questionLists.get(i);
                     //根节点
-                    ThreeNode root = new ThreeNode(questionListBean.getId(),"", questionListBean.getName());
+                    ThreeNode root = new ThreeNode(questionListBean.getId(), "", questionListBean.getName());
                     baseNodeList.add(root);
                     //子节点1
                     if (questionListBean.getQuesList() != null && questionListBean.getQuesList().size() > 0) {
@@ -114,7 +116,7 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
 //                            baseNodeList.add(rootChild_1);
                         }
                     } else { //子节点2
-                        if (questionListBean.getValue()!= null && questionListBean.getValue().size() > 0) {
+                        if (questionListBean.getValue() != null && questionListBean.getValue().size() > 0) {
                             for (int j = 0; j < questionListBean.getValue().size(); j++) {
                                 SubjectListBean.DataBean.QuestionListBean.ValueBeanX valueBeanRoot = questionListBean.getValue().get(j);
                                 ThreeNode rootChild_2 = new ThreeNode(valueBeanRoot.getId(), questionListBean.getId(), valueBeanRoot.getName());
@@ -163,16 +165,17 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
         mLinkedList.addAll(NodeHelper.sortNodes(baseNodes));
         mAdapter.setLinkList(mLinkedList);
         mAdapter.notifyDataSetChanged();
-        isLoading=false;
+        isLoading = false;
         su_swipe.setRefreshing(false);
     }
+
     @Override
-    public void getSubjectListFailure(String failure,int code) {
+    public void getSubjectListFailure(String failure, int code) {
         ToastUtils.showLong(failure);
-        isLoading=false;
+        isLoading = false;
         su_swipe.setRefreshing(false);
 
-        if (code !=-1){
+        if (code != -1) {
 
         } else {
             loginDialog();
@@ -182,8 +185,8 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
     private void getHttp() {
         Map map = new HashMap();
         map.put("projectId", Constants.ht_ProjectId);
-        map.put("token",Constants.devicestoken);
-        map.put("sessionid",Constants.sessionId);
+        map.put("token", Constants.devicestoken);
+        map.put("sessionid", Constants.sessionId);
         p.getSubjectList(map);
     }
 
@@ -191,20 +194,20 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
     public void showError(@Nullable Throwable e) {
         super.showError(e);
         ToastUtils.showLong(e.toString());
-        isLoading=false;
+        isLoading = false;
         su_swipe.setRefreshing(false);
     }
 
     /**
      * 登录Dialog
      */
-    private void loginDialog(){
-        Login_DialogFragment login_dialogFragment=Login_DialogFragment.newInstance(Constants.fragment_myFragment);
+    private void loginDialog() {
+        Login_DialogFragment login_dialogFragment = Login_DialogFragment.newInstance(Constants.fragment_myFragment);
         login_dialogFragment.setLoginListener(new Login_DialogFragment.loginListener() {
             @Override
             public void loginSuccess(AppCompatDialogFragment dialogFragment) {
                 dialogFragment.dismiss();
-                if (haslogin()){
+                if (haslogin()) {
                     getHttp();
                 } else {
                     ToastUtils.showLong("请重新登录");
@@ -213,6 +216,6 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
                 //    EventBus.getDefault().postSticky(new Event_Main(1, "登陆成功", page));
             }
         });
-        login_dialogFragment.show(getChildFragmentManager(),TAG);
+        login_dialogFragment.show(getChildFragmentManager(), TAG);
     }
 }

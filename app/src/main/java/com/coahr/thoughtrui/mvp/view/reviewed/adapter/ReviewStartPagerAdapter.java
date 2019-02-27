@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.coahr.thoughtrui.mvp.view.reviewed.ReViewStart;
+import com.coahr.thoughtrui.mvp.view.reviewed.ReViewStartAnswering;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class ReviewStartPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int i) {
-        return ReViewStart.newInstance(i,db_projectId,ht_projectId,size,stringList.get(i));
+        return ReViewStartAnswering.newInstance(i,db_projectId,ht_projectId,size,stringList.get(i));
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.coahr.thoughtrui.dagger.modules;
 
-import com.coahr.thoughtrui.mvp.view.reviewed.ReViewStart;
-import com.coahr.thoughtrui.mvp.view.reviewed.ReviewStartPager;
+import com.coahr.thoughtrui.mvp.view.reviewed.ReViewStartAnswering;
 
 import dagger.Module;
 import dagger.Provides;
@@ -13,9 +12,9 @@ import dagger.Provides;
  * 描述：
  */
 @Module
-public class ReViewStart_Module {
+public class ReViewStartAnswering_Module {
     @Provides
     public  String provideName() {
-        return ReViewStart.class.getName();
+        return ReViewStartAnswering.class.getName();
     }
 }

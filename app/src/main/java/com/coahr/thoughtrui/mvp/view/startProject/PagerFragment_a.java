@@ -214,23 +214,23 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     private int subjectsDBType;
     private OSSClient ossClient;
     private final int GETUPLOADLIST = 1;
-    private final int UIPROGRESS=2;
+    private final int UIPROGRESS = 2;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
                 case GETUPLOADLIST:
-                    p.UpLoadFileList(projectsDB.getPid(),subjectsDB_now);
+                    p.UpLoadFileList(projectsDB.getPid(), subjectsDB_now);
                     break;
                 case UIPROGRESS:
-                  //  progressBar.setMax(msg.arg2);
+                    //  progressBar.setMax(msg.arg2);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        progressBar.setProgress(msg.arg1,true);
+                        progressBar.setProgress(msg.arg1, true);
                     } else {
                         progressBar.setProgress(msg.arg1);
                     }
-                 //   progressBar.setProgress(msg.arg1);
+                    //   progressBar.setProgress(msg.arg1);
                     tv_tittle.setText(msg.obj.toString());
                     break;
             }
@@ -460,9 +460,9 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             case R.id.fr_upload:
                 fr_upload.setEnabled(false);
                 if (Constants.isNetWorkConnect) {
-                    if (Constants.NetWorkType!=null && Constants.NetWorkType.equals("WIFI")){
+                    if (Constants.NetWorkType != null && Constants.NetWorkType.equals("WIFI")) {
                         NetWorkDialog("提示", "是否上传", 1);
-                    } else if (Constants.NetWorkType!=null && Constants.NetWorkType.equals("MOBILE")){
+                    } else if (Constants.NetWorkType != null && Constants.NetWorkType.equals("MOBILE")) {
                         NetWorkDialog("提示", "当前为移动网络是否继续上传", 2);
                     }
                 } else {
@@ -670,17 +670,19 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     }
 
     //==============================上传操作==================================//
+
     /**
      * 上传逻辑
+     *
      * @param list
      * @param projectsDB_id
      * @param subjectsDB
      */
     @Override
     public void getUpLoadFileListSuccess(List<String> list, String projectsDB_id, SubjectsDB subjectsDB) {
-            ToastUtils.showLong("获取题目列表成功");
+        ToastUtils.showLong("获取题目列表成功");
         showProgressDialog();
-        p.startUpload(ossClient,list,projectsDB,subjectsDB);
+        p.startUpload(ossClient, list, projectsDB, subjectsDB);
     }
 
     @Override
@@ -690,10 +692,10 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     }
 
     @Override
-    public void startUploadCallBack(List<String> list, int uploadSuccessSize, int uploadFailSize, int totalSize,ProjectsDB projectsDB,SubjectsDB subjectsDB) {
-        KLog.a("上传",totalSize,uploadFailSize,uploadSuccessSize);
+    public void startUploadCallBack(List<String> list, int uploadSuccessSize, int uploadFailSize, int totalSize, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
+        KLog.a("上传", totalSize, uploadFailSize, uploadSuccessSize);
         //上传成功
-        if (totalSize==(uploadSuccessSize+uploadFailSize)) {
+        if (totalSize == (uploadSuccessSize + uploadFailSize)) {
             if (totalSize == uploadSuccessSize) {
                 fileList_Call.clear();
                 KLog.d("阿里云上传成功" + projectsDB.getPname() + "/" + subjectsDB.getNumber());
@@ -724,7 +726,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         }
         Message mes = mHandler.obtainMessage(UIPROGRESS, info);
         mes.arg1 = currentSize;
-        mes.arg2=totalSize;
+        mes.arg2 = totalSize;
         mes.sendToTarget();
     }
 
@@ -1044,8 +1046,10 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             }
         }).build().show();
     }
+
     /**
      * 回调
+     *
      * @param projectsDB
      * @param subjectsDB
      * @param recorderPath

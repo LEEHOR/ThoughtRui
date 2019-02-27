@@ -1,7 +1,6 @@
 package com.coahr.thoughtrui.dagger.modules;
 
 import com.coahr.thoughtrui.mvp.view.mydata.Fragment_Feedback;
-import com.coahr.thoughtrui.mvp.view.reviewed.ReviewInfoList;
 
 import dagger.Module;
 import dagger.Provides;

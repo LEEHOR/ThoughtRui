@@ -12,14 +12,14 @@ import com.coahr.thoughtrui.mvp.view.home.ProjectTemplate;
 import com.coahr.thoughtrui.mvp.view.mydata.ChangePasswordFragment;
 import com.coahr.thoughtrui.mvp.view.mydata.Fragment_Feedback;
 import com.coahr.thoughtrui.mvp.view.mydata.LoginFragment;
+import com.coahr.thoughtrui.mvp.view.reviewed.ReViewStartAnswering;
+import com.coahr.thoughtrui.mvp.view.reviewed.ReviewMainPager;
+import com.coahr.thoughtrui.mvp.view.reviewed.ReviewSubjectList;
 import com.coahr.thoughtrui.mvp.view.subjectList.Fragment_Topics;
 import com.coahr.thoughtrui.mvp.view.mydata.MyFragment;
 import com.coahr.thoughtrui.mvp.view.projectAnnex.FragmentAnnex;
 import com.coahr.thoughtrui.mvp.view.projectAnnex.FragmentAnnexViewPager;
-import com.coahr.thoughtrui.mvp.view.reviewed.ReViewStart;
-import com.coahr.thoughtrui.mvp.view.reviewed.ReviewInfoList;
-import com.coahr.thoughtrui.mvp.view.reviewed.ReviewPager;
-import com.coahr.thoughtrui.mvp.view.reviewed.ReviewStartPager;
+import com.coahr.thoughtrui.mvp.view.reviewed.ReviewStartViewPager;
 import com.coahr.thoughtrui.mvp.view.reviewed.ReviewedFragment;
 import com.coahr.thoughtrui.mvp.view.startProject.PagerFragment_a;
 import com.coahr.thoughtrui.mvp.view.upload.UploadFragment;
@@ -86,16 +86,16 @@ public abstract class AllFragmentModule {
     abstract ReviewedFragment ReviewFragmentInjector();
 
     @ContributesAndroidInjector()
-    abstract ReviewPager ReviewPagerInjector();
+    abstract ReviewMainPager ReviewPagerInjector();
 
     @ContributesAndroidInjector()
-    abstract ReviewInfoList ReviewInfoListInjector();
+    abstract ReviewSubjectList ReviewInfoListInjector();
 
     @ContributesAndroidInjector()
-    abstract ReviewStartPager ReviewStartProjectInjector();
+    abstract ReviewStartViewPager ReviewStartProjectInjector();
 
     @ContributesAndroidInjector()
-    abstract ReViewStart ReViewStartInjector();
+    abstract ReViewStartAnswering ReViewStartInjector();
 
     @ContributesAndroidInjector()
     abstract ChangePasswordFragment ChangePasswordFragmentInjector();

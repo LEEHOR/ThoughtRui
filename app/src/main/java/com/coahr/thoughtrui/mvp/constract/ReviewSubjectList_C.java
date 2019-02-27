@@ -11,7 +11,7 @@ import java.util.Map;
  * on 2018/11/12
  * on 17:07
  */
-public interface ReviewInfoList_C {
+public interface ReviewSubjectList_C {
     interface View extends BaseContract.View {
 
         void  getCensorInfoListSuccess(CensorInfoList censorInfoList);

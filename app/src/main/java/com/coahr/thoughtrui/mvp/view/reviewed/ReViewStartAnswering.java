@@ -1,6 +1,5 @@
 package com.coahr.thoughtrui.mvp.view.reviewed;
 
-import android.Manifest;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.media.AudioFormat;
@@ -18,11 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
@@ -44,16 +40,14 @@ import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.Utils.FileIoUtils.SaveOrGetAnswers;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.KeyBoardUtils;
-import com.coahr.thoughtrui.Utils.Permission.OnRequestPermissionListener;
-import com.coahr.thoughtrui.Utils.Permission.RequestPermissionUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
-import com.coahr.thoughtrui.mvp.constract.ReViewStart_C;
+import com.coahr.thoughtrui.mvp.constract.ReViewStartAnswering_C;
 import com.coahr.thoughtrui.mvp.model.ApiContact;
 import com.coahr.thoughtrui.mvp.model.Bean.isCompleteBean;
-import com.coahr.thoughtrui.mvp.presenter.ReViewStart_P;
+import com.coahr.thoughtrui.mvp.presenter.ReViewStartAnswering_P;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
 import com.coahr.thoughtrui.mvp.view.startProject.PhotoAlbumDialogFragment;
 import com.coahr.thoughtrui.mvp.view.startProject.adapter.PagerFragmentPhotoAdapter;
@@ -65,10 +59,7 @@ import com.coahr.thoughtrui.widgets.AltDialog.ProjectSuccessDialog;
 import com.socks.library.KLog;
 
 import org.greenrobot.eventbus.EventBus;
-import org.litepal.crud.async.UpdateOrDeleteExecutor;
-import org.litepal.crud.callback.UpdateOrDeleteCallback;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -97,11 +88,11 @@ import omrecorder.WriteAction;
  * @author Leehor
  * 版本：
  * 创建日期：2019/1/10
- * 描述：
+ * 描述：审核开始答题
  */
-public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> implements ReViewStart_C.View, View.OnClickListener {
+public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering_C.Presenter> implements ReViewStartAnswering_C.View, View.OnClickListener {
     @Inject
-    ReViewStart_P p;
+    ReViewStartAnswering_P p;
     @BindView(R.id.project_detail_titlle)
     TextView project_detail_titlle;  //题目
     @BindView(R.id.tv_describe)
@@ -206,16 +197,16 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
     private String uPAudioPath;
     private String textMassage;
 
-    public static ReViewStart newInstance(int position, String DbProjectId, String ht_ProjectId, int countSize, String ht_id) {
-        ReViewStart reViewStart = new ReViewStart();
+    public static ReViewStartAnswering newInstance(int position, String DbProjectId, String ht_ProjectId, int countSize, String ht_id) {
+        ReViewStartAnswering reViewStartAnswering = new ReViewStartAnswering();
         Bundle bundle = new Bundle();
         bundle.putInt("position", position);
         bundle.putString("DbProjectId", DbProjectId);
         bundle.putString("ht_ProjectId", ht_ProjectId);
         bundle.putInt("countSize", countSize);
         bundle.putString("ht_id", ht_id);
-        reViewStart.setArguments(bundle);
-        return reViewStart;
+        reViewStartAnswering.setArguments(bundle);
+        return reViewStartAnswering;
     }
 
     @Override
@@ -225,7 +216,7 @@ public class ReViewStart extends BaseChildFragment<ReViewStart_C.Presenter> impl
     }
 
     @Override
-    public ReViewStart_C.Presenter getPresenter() {
+    public ReViewStartAnswering_C.Presenter getPresenter() {
         return p;
     }
 

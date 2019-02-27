@@ -1,7 +1,6 @@
 package com.coahr.thoughtrui.dagger.modules;
 
-import com.coahr.thoughtrui.mvp.view.reviewed.ReviewPager;
-import com.coahr.thoughtrui.mvp.view.reviewed.ReviewedFragment;
+import com.coahr.thoughtrui.mvp.view.reviewed.ReviewMainPager;
 
 import dagger.Module;
 import dagger.Provides;
@@ -12,9 +11,9 @@ import dagger.Provides;
  * on 17:15
  */
 @Module
-public class ReviewPager_Module {
+public class ReviewMainPager_Module {
     @Provides
     public  String provideName() {
-        return ReviewPager.class.getName();
+        return ReviewMainPager.class.getName();
     }
 }

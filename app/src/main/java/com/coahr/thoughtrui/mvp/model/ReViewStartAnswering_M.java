@@ -20,7 +20,7 @@ import com.coahr.thoughtrui.Utils.FileIoUtils.SaveOrGetAnswers;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseModel;
-import com.coahr.thoughtrui.mvp.constract.ReViewStart_C;
+import com.coahr.thoughtrui.mvp.constract.ReViewStartAnswering_C;
 import com.coahr.thoughtrui.mvp.model.Bean.UpLoadCallBack;
 import com.socks.library.KLog;
 
@@ -38,7 +38,7 @@ import cn.finalteam.rxgalleryfinal.bean.MediaBean;
  * 创建日期：2019/1/10
  * 描述：
  */
-public class ReViewStart_M extends BaseModel<ReViewStart_C.Presenter> implements ReViewStart_C.Model {
+public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Presenter> implements ReViewStartAnswering_C.Model {
 
     private int uploadFailure;
     private int uploadSuccess;
@@ -46,7 +46,7 @@ public class ReViewStart_M extends BaseModel<ReViewStart_C.Presenter> implements
     private int update1;
 
     @Inject
-    public ReViewStart_M() {
+    public ReViewStartAnswering_M() {
         super();
     }
 

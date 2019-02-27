@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.coahr.thoughtrui.mvp.view.reviewed.ReviewPager;
+import com.coahr.thoughtrui.mvp.view.reviewed.ReviewMainPager;
 
 /**
  * @author Leehor
@@ -23,7 +23,7 @@ public class censor_viewPager_Adapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int i) {
-        return ReviewPager.newInstance(i);
+        return ReviewMainPager.newInstance(i);
     }
 
     @Override

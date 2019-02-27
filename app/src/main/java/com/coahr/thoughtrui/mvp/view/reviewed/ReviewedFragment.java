@@ -15,17 +15,16 @@ import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.KeyBoardUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
-import com.coahr.thoughtrui.mvp.constract.ReviewPagerFragment_C;
+import com.coahr.thoughtrui.mvp.constract.ReviewMainPagerFragment_C;
 import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_censor;
 import com.coahr.thoughtrui.mvp.view.reviewed.adapter.censor_viewPager_Adapter;
-import com.gyf.barlibrary.ImmersionBar;
 
 import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 
 /**
- * 审核首页
+ * 审核的首页
  */
 public class ReviewedFragment extends BaseFragment {
     @BindView(R.id.re_search)
@@ -41,7 +40,7 @@ public class ReviewedFragment extends BaseFragment {
     private censor_viewPager_Adapter adapter;
 
     @Override
-    public ReviewPagerFragment_C.Presenter getPresenter() {
+    public ReviewMainPagerFragment_C.Presenter getPresenter() {
         return null;
     }
 

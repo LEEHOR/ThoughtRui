@@ -18,11 +18,12 @@ import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.Permission.OnRequestPermissionListener;
 import com.coahr.thoughtrui.Utils.Permission.RequestPermissionUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
+import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
-import com.coahr.thoughtrui.mvp.constract.ReviewInfoList_C;
+import com.coahr.thoughtrui.mvp.constract.ReviewSubjectList_C;
 import com.coahr.thoughtrui.mvp.model.Bean.CensorInfoList;
-import com.coahr.thoughtrui.mvp.presenter.ReviewInfoList_P;
+import com.coahr.thoughtrui.mvp.presenter.ReviewSubjectList_P;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
 import com.coahr.thoughtrui.mvp.view.reviewed.adapter.ReviewInfoListAdapter;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
@@ -37,13 +38,11 @@ import butterknife.BindView;
  * @author Leehor
  * 版本：
  * 创建日期：2019/1/7
- * 描述：审核详情页
+ * 描述：审核题目列表页
  */
-public class ReviewInfoList extends BaseFragment<ReviewInfoList_C.Presenter> implements ReviewInfoList_C.View {
-
-
+public class ReviewSubjectList extends BaseFragment<ReviewSubjectList_C.Presenter> implements ReviewSubjectList_C.View {
     @Inject
-    ReviewInfoList_P p;
+    ReviewSubjectList_P p;
     @BindView(R.id.pager_recycler)
     RecyclerView pager_recycler;
     @BindView(R.id.review_title)
@@ -60,8 +59,8 @@ public class ReviewInfoList extends BaseFragment<ReviewInfoList_C.Presenter> imp
     private ArrayList<String> targetList = new ArrayList<>();
     private boolean isHavePermission = false;
 
-    public static ReviewInfoList newInstance(String projectId, String sessionId, int statues) {
-        ReviewInfoList infoList = new ReviewInfoList();
+    public static ReviewSubjectList newInstance(String projectId, String sessionId, int statues) {
+        ReviewSubjectList infoList = new ReviewSubjectList();
         Bundle bundle = new Bundle();
         bundle.putString("projectId", projectId);
         bundle.putString("sessionId", sessionId);
@@ -71,7 +70,7 @@ public class ReviewInfoList extends BaseFragment<ReviewInfoList_C.Presenter> imp
     }
 
     @Override
-    public ReviewInfoList_C.Presenter getPresenter() {
+    public ReviewSubjectList_C.Presenter getPresenter() {
         return p;
     }
 
@@ -112,7 +111,7 @@ public class ReviewInfoList extends BaseFragment<ReviewInfoList_C.Presenter> imp
                             targetList.add(list.get(i).getId());
                         }
                        // ToastUtils.showLong("尚未完成，敬请期待");
-                        start(ReviewStartPager.newInstance(targetList, position, projectId));
+                        start(ReviewStartViewPager.newInstance(targetList, position, projectId));
                     }
                 }
 
@@ -179,6 +178,7 @@ public class ReviewInfoList extends BaseFragment<ReviewInfoList_C.Presenter> imp
 
     private void getInfoList() {
         Map map = new HashMap();
+        map.put("sessionId", Constants.sessionId);
         map.put("projectId", projectId);
         map.put("status", statues == 0 ? String.valueOf(-1) : statues == 1 ? String.valueOf(1) : String.valueOf(-1));
         p.getCensorInfoList(map);

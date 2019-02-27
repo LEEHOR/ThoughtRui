@@ -162,7 +162,7 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
     public void startUpload(OSSClient ossClient, List<String> list, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
 
         if (list != null && list.size() > 0) {
-            int CountSize=0;
+            int CountSize = 0;
             for (int i = 0; i < list.size(); i++) {
                 if (!list.get(i).endsWith("txt")) {
                     CountSize++;
@@ -201,22 +201,22 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
         subjectsDB1.setsUploadStatus(1);
         update = subjectsDB1.update(subjectsDB.getId());
         List<SubjectsDB> subjectsDBList = projectsDB.getSubjectsDBList();
-        if (subjectsDBList != null && subjectsDBList.size()>0) {
-            int up_subjectSize=0;
+        if (subjectsDBList != null && subjectsDBList.size() > 0) {
+            int up_subjectSize = 0;
             for (int i = 0; i < subjectsDBList.size(); i++) {
-                if (subjectsDBList.get(i).getsUploadStatus()==1){
+                if (subjectsDBList.get(i).getsUploadStatus() == 1) {
                     up_subjectSize++;
                 }
             }
-            if (up_subjectSize==subjectsDBList.size()){
-                ProjectsDB projectsDB1=new ProjectsDB();
+            if (up_subjectSize == subjectsDBList.size()) {
+                ProjectsDB projectsDB1 = new ProjectsDB();
                 projectsDB1.setIsComplete(1);
                 projectsDB1.setpUploadStatus(1);
                 update1 = projectsDB1.update(projectsDB.getId());
             }
         }
 
-        if (update==1 || update1==1){
+        if (update == 1 || update1 == 1) {
             if (getPresenter() != null) {
                 getPresenter().UpDataDbSuccess();
             }
@@ -255,7 +255,7 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
             @Override
             public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
                 if (getPresenter() != null) {
-                    getPresenter().showProgress((int) currentSize,(int)totalSize,projectsDB.getPname()+"\n第"+subjectsDB.getNumber()+"题\n"+name);
+                    getPresenter().showProgress((int) currentSize, (int) totalSize, projectsDB.getPname() + "\n第" + subjectsDB.getNumber() + "题\n" + name);
                 }
             }
         });

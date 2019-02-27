@@ -14,7 +14,7 @@ import com.coahr.thoughtrui.mvp.view.mydata.Fragment_Feedback;
 import com.coahr.thoughtrui.mvp.view.mydata.LoginFragment;
 import com.coahr.thoughtrui.mvp.view.subjectList.Fragment_Topics;
 import com.coahr.thoughtrui.mvp.view.projectAnnex.FragmentAnnexViewPager;
-import com.coahr.thoughtrui.mvp.view.reviewed.ReviewInfoList;
+import com.coahr.thoughtrui.mvp.view.reviewed.ReviewSubjectList;
 
 import androidx.annotation.Nullable;
 
@@ -54,7 +54,7 @@ public class ConstantsActivity extends BaseSupportActivity {
                 loadRootFragment(R.id.Constants_Fragment, FragmentAnnexViewPager.newInstance());
                 break;
             case Constants.fragment_review_list:  //审核列表
-                loadRootFragment(R.id.Constants_Fragment, ReviewInfoList.newInstance(getIntent().getStringExtra("projectId"), getIntent().getStringExtra("sessionId"), getIntent().getIntExtra("type", 0)));
+                loadRootFragment(R.id.Constants_Fragment, ReviewSubjectList.newInstance(getIntent().getStringExtra("projectId"), getIntent().getStringExtra("sessionId"), getIntent().getIntExtra("type", 0)));
                 break;
             case Constants.fragment_feedback://帮助与反馈
                 loadRootFragment(R.id.Constants_Fragment, Fragment_Feedback.newInstance());

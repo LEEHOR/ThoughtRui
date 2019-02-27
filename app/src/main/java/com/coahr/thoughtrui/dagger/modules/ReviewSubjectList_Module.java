@@ -1,7 +1,6 @@
 package com.coahr.thoughtrui.dagger.modules;
 
-import com.coahr.thoughtrui.mvp.view.reviewed.ReviewInfoList;
-import com.coahr.thoughtrui.mvp.view.reviewed.ReviewPager;
+import com.coahr.thoughtrui.mvp.view.reviewed.ReviewSubjectList;
 
 import dagger.Module;
 import dagger.Provides;
@@ -13,9 +12,9 @@ import dagger.Provides;
  * 描述：
  */
 @Module
-public class ReviewInfoList_Module {
+public class ReviewSubjectList_Module {
     @Provides
     public  String provideName() {
-        return ReviewInfoList.class.getName();
+        return ReviewSubjectList.class.getName();
     }
 }

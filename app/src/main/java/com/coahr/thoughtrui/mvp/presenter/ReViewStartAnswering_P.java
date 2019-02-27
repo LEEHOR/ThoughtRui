@@ -6,9 +6,9 @@ import com.alibaba.sdk.android.oss.OSSClient;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.mvp.Base.BasePresenter;
-import com.coahr.thoughtrui.mvp.constract.ReViewStart_C;
-import com.coahr.thoughtrui.mvp.model.ReViewStart_M;
-import com.coahr.thoughtrui.mvp.view.reviewed.ReViewStart;
+import com.coahr.thoughtrui.mvp.constract.ReViewStartAnswering_C;
+import com.coahr.thoughtrui.mvp.model.ReViewStartAnswering_M;
+import com.coahr.thoughtrui.mvp.view.reviewed.ReViewStartAnswering;
 
 import java.util.List;
 import java.util.Map;
@@ -23,9 +23,9 @@ import cn.finalteam.rxgalleryfinal.bean.MediaBean;
  * 创建日期：2019/1/10
  * 描述：
  */
-public class ReViewStart_P extends BasePresenter<ReViewStart_C.View, ReViewStart_C.Model> implements ReViewStart_C.Presenter {
+public class ReViewStartAnswering_P extends BasePresenter<ReViewStartAnswering_C.View, ReViewStartAnswering_C.Model> implements ReViewStartAnswering_C.Presenter {
     @Inject
-    public ReViewStart_P(ReViewStart mview, ReViewStart_M mModel) {
+    public ReViewStartAnswering_P(ReViewStartAnswering mview, ReViewStartAnswering_M mModel) {
         super(mview, mModel);
     }
 
