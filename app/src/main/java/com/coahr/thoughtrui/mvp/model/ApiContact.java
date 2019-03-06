@@ -46,5 +46,11 @@ public class ApiContact {
     public static final String uploadDate="app/answer/callback.htm";
     //意见反馈
     public static final String FeedBack="app/opinion/add.htm";
+    //经销商列表
+    public static final String dealer_list ="app/dealer/list.htm";
+    //模板列表
+    public static final String template="app/template/list.htm";
+    //项目详情页
+    public static final String project_detail="app/template/genProject.htm";
 
 }

@@ -50,6 +50,8 @@ public class LoginBean {
         private String name;
         private String sessionId;
 
+        private int type;
+
         public String getName() {
             return name;
         }
@@ -64,6 +66,14 @@ public class LoginBean {
 
         public void setSessionId(String sessionId) {
             this.sessionId = sessionId;
+        }
+
+        public int getType() {
+            return type;
+        }
+
+        public void setType(int type) {
+            this.type = type;
         }
     }
 }

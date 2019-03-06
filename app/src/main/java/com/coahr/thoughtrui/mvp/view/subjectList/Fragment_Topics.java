@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.app.usage.UsageEvents;
 import android.view.View;
 import android.widget.ListView;
 
@@ -12,6 +13,7 @@ import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.FragmentTopicsC;
+import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_SubjectList_id;
 import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
 import com.coahr.thoughtrui.mvp.presenter.FragmentTopicsP;
 import com.coahr.thoughtrui.mvp.view.subjectList.adapter.NodeTreeAdapter;
@@ -19,6 +21,9 @@ import com.coahr.thoughtrui.mvp.view.subjectList.node.BaseNode;
 import com.coahr.thoughtrui.mvp.view.subjectList.node.NodeHelper;
 import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
+import com.socks.library.KLog;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,7 +82,13 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
 
         mAdapter = new NodeTreeAdapter(_mActivity, treeList, mLinkedList);
         treeList.setAdapter(mAdapter);
-
+            mAdapter.setOnThreeClick(new NodeTreeAdapter.onThreeClick() {
+                @Override
+                public void threeHt_idOnClick(String ht_id) {
+                    EventBus.getDefault().postSticky(new EvenBus_SubjectList_id(ht_id));
+                    _mActivity.onBackPressed();
+                }
+            });
     }
 
     @Override
@@ -185,6 +196,7 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
     private void getHttp() {
         Map map = new HashMap();
         map.put("projectId", Constants.ht_ProjectId);
+        KLog.d("项目Id",Constants.ht_ProjectId);
         map.put("token", Constants.devicestoken);
         map.put("sessionid", Constants.sessionId);
         p.getSubjectList(map);

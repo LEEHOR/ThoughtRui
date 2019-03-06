@@ -37,11 +37,22 @@
         android:roundIcon="@mipmap/ic_desktop"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".mvp.view.MainActivity">
+        <activity android:name=".mvp.view.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <!--必有项-->
+                <action android:name="android.intent.action.VIEW"/>
+                <!--表示该页面可以被隐式调用，必须加上该项-->
+                <category android:name="android.intent.category.DEFAULT"/>
+                <!--BROWSABLE指定该Activity能被浏览器安全调用-->
+                <category android:name="android.intent.category.APP_BROWSER"/>
+                <!--协议部分-->
+                <!--声明自定义scheme，类似于http, https-->
+                <data android:scheme="myapp" android:host="carsuper"/>
             </intent-filter>
         </activity>
         <!-- 中间跳转 -->

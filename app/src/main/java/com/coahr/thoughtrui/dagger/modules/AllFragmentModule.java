@@ -1,6 +1,8 @@
 package com.coahr.thoughtrui.dagger.modules;
 
 import com.coahr.thoughtrui.dagger.components.BaseFragmentComponents;
+import com.coahr.thoughtrui.mvp.view.UMPush.Fragment_Umeng;
+import com.coahr.thoughtrui.mvp.view.WebView.Fragment_WebView;
 import com.coahr.thoughtrui.mvp.view.attence.AttendanceFragment_h;
 import com.coahr.thoughtrui.mvp.view.attence.AttendanceFragment_k;
 import com.coahr.thoughtrui.mvp.view.home.DealerFragment;
@@ -117,4 +119,10 @@ public abstract class AllFragmentModule {
 
     @ContributesAndroidInjector()
     abstract DealerFragment dealerFragment();
+
+    @ContributesAndroidInjector()
+    abstract Fragment_Umeng fragment_umeng();
+
+    @ContributesAndroidInjector()
+    abstract Fragment_WebView fragment_webView();
 }

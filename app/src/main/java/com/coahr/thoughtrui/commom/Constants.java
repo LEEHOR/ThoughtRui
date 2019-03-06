@@ -28,6 +28,8 @@ public class Constants {
     public static String DbProjectId;
     //当前用户名
     public static String user_name;
+    //用户类型
+    public static int user_type;
 
     //网络访问超时时间
     public static int timeout=15;
@@ -116,6 +118,10 @@ public class Constants {
 
     public static final int fragment_template=15; //项目模板
 
+    public static final int fragment_webview=16; //网页
+
+    public static final int fragment_Dealer=17; //经销商信息
+
 
 
 
@@ -125,6 +131,8 @@ public class Constants {
     public static  String sessionId_key="sessionId";
     //user_key
     public static  String user_key="user";
+    //用户类型
+    public static String user_type_key="user_type";
     //token_key
     public static  String token_key="token";
     //uid

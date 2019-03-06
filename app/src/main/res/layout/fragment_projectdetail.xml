@@ -227,7 +227,7 @@
                                 <TextView
                                     android:textSize="@dimen/dp_14"
                                     android:textColor="@color/colorWhite"
-                                    android:text="经销商等级:"
+                                    android:text="授权级别:"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content" />
                                 <TextView
@@ -277,7 +277,7 @@
                                 <TextView
                                     android:textSize="@dimen/dp_14"
                                     android:textColor="@color/colorWhite"
-                                    android:text="访问周期:"
+                                    android:text="上传时间节点:"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content" />
                                 <TextView

@@ -9,11 +9,15 @@
     android:layout_width="match_parent"
     app:tittle="请选择项目模板"
     android:layout_height="wrap_content">
-
 </com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar>
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/template_swipe"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/template_recycle"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </androidx.recyclerview.widget.RecyclerView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>

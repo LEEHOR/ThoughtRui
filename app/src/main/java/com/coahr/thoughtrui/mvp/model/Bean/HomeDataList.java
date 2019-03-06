@@ -124,6 +124,24 @@ public class HomeDataList {
             private String progress;
             private int record;
             private long startTime;
+            private String sale_code;
+            private String service_code;
+
+            public String getSale_code() {
+                return sale_code;
+            }
+
+            public void setSale_code(String sale_code) {
+                this.sale_code = sale_code;
+            }
+
+            public String getService_code() {
+                return service_code;
+            }
+
+            public void setService_code(String service_code) {
+                this.service_code = service_code;
+            }
 
             public String getCname() {
                 return Cname;
@@ -330,6 +348,24 @@ public class HomeDataList {
             private String progress;
             private int record;
             private long startTime;
+            private String sale_code;
+            private String service_code;
+
+            public String getSale_code() {
+                return sale_code;
+            }
+
+            public void setSale_code(String sale_code) {
+                this.sale_code = sale_code;
+            }
+
+            public String getService_code() {
+                return service_code;
+            }
+
+            public void setService_code(String service_code) {
+                this.service_code = service_code;
+            }
 
             public String getCname() {
                 return Cname;
@@ -536,6 +572,24 @@ public class HomeDataList {
             private String progress;
             private int record;
             private long startTime;
+            private String sale_code;
+            private String service_code;
+
+            public String getSale_code() {
+                return sale_code;
+            }
+
+            public void setSale_code(String sale_code) {
+                this.sale_code = sale_code;
+            }
+
+            public String getService_code() {
+                return service_code;
+            }
+
+            public void setService_code(String service_code) {
+                this.service_code = service_code;
+            }
 
             public String getCname() {
                 return Cname;
@@ -741,6 +795,24 @@ public class HomeDataList {
             private String progress;
             private int record;
             private long startTime;
+            private String sale_code;
+            private String service_code;
+
+            public String getSale_code() {
+                return sale_code;
+            }
+
+            public void setSale_code(String sale_code) {
+                this.sale_code = sale_code;
+            }
+
+            public String getService_code() {
+                return service_code;
+            }
+
+            public void setService_code(String service_code) {
+                this.service_code = service_code;
+            }
 
             public String getCname() {
                 return Cname;

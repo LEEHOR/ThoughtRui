@@ -525,8 +525,11 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
         if (haslogin()) {
             Intent intent = new Intent(getActivity(), ConstantsActivity.class);
             intent.putExtra("from", Constants.MyTabFragmentCode);
-            intent.putExtra("to", Constants.ProjectDetailFragmentCode);
+            intent.putExtra("templateId","");
+            intent.putExtra("dealerId","");
+            intent.putExtra("type",2);
             intent.putExtra("projectId", projectId);
+            intent.putExtra("to", Constants.ProjectDetailFragmentCode);
             startActivity(intent);
         } else {
             ToastUtils.showLong("请登录后再操作");

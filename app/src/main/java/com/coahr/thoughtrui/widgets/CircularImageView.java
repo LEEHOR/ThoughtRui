@@ -18,7 +18,7 @@ import com.coahr.thoughtrui.R;
  * @author Leehor
  * 版本：
  * 创建日期：2019/1/11
- * 描述：
+ * 描述：圆形图片
  */
 public class CircularImageView extends AppCompatImageView {
     private int borderWidth;

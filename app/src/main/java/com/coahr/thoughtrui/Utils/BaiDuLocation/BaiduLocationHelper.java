@@ -43,7 +43,7 @@ public class BaiduLocationHelper {
         option.setProdName("ThoughtRui"); // 设置产品线名称。
         option.setScanSpan(UPDATE_TIME); // 设置定时定位的时间间隔。单位毫秒
         option.setIsNeedAddress(true);
-        option.disableCache(true);
+        option.disableLocCache=true;
         option.setIsNeedAddress(true);
         locationClient.setLocOption(option);
         // 注册位置监听器

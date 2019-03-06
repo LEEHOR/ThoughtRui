@@ -6,11 +6,14 @@ import com.coahr.thoughtrui.mvp.model.Bean.AttendanceHistory;
 import com.coahr.thoughtrui.mvp.model.Bean.CensorBean;
 import com.coahr.thoughtrui.mvp.model.Bean.CensorInfoList;
 import com.coahr.thoughtrui.mvp.model.Bean.ChangePassWord;
+import com.coahr.thoughtrui.mvp.model.Bean.Dealer_List;
 import com.coahr.thoughtrui.mvp.model.Bean.FeedBack;
 import com.coahr.thoughtrui.mvp.model.Bean.HomeDataList;
 import com.coahr.thoughtrui.mvp.model.Bean.LoginBean;
+import com.coahr.thoughtrui.mvp.model.Bean.ProjectDetail;
 import com.coahr.thoughtrui.mvp.model.Bean.PushAttendanceCard;
 import com.coahr.thoughtrui.mvp.model.Bean.QuestionBean;
+import com.coahr.thoughtrui.mvp.model.Bean.Template_list;
 import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
 import com.coahr.thoughtrui.mvp.model.Bean.UnDownLoad;
 import com.coahr.thoughtrui.mvp.model.Bean.UpLoadCallBack;
@@ -156,4 +159,26 @@ public interface ApiService {
     @FormUrlEncoded
     @POST(ApiContact.FeedBack)
     Call<FeedBack>feedback (@FieldMap Map<String,Object> para);
+
+    /**
+     * 经销商模板列表
+     */
+    @FormUrlEncoded
+    @POST(ApiContact.template)
+    Call<Template_list>template (@FieldMap Map<String,Object> para);
+
+    /**
+     * 经销商列表
+     *
+     */
+    @FormUrlEncoded
+    @POST(ApiContact.dealer_list)
+    Call<Dealer_List>dealer (@FieldMap Map<String,Object> para);
+
+    /**
+     * 项目详情页
+     */
+    @FormUrlEncoded
+    @POST(ApiContact.project_detail)
+    Call<ProjectDetail>project_detail (@FieldMap Map<String,Object> para);
 }

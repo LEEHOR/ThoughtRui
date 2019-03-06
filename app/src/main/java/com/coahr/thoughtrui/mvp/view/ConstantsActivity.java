@@ -6,6 +6,8 @@ import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseSupportActivity;
+import com.coahr.thoughtrui.mvp.view.WebView.Fragment_WebView;
+import com.coahr.thoughtrui.mvp.view.home.DealerFragment;
 import com.coahr.thoughtrui.mvp.view.home.MainFragment;
 import com.coahr.thoughtrui.mvp.view.home.ProjectDetailFragment;
 import com.coahr.thoughtrui.mvp.view.home.ProjectTemplate;
@@ -39,7 +41,11 @@ public class ConstantsActivity extends BaseSupportActivity {
                 loadRootFragment(R.id.Constants_Fragment, LoginFragment.newInstance(getIntent().getIntExtra("type", 0), getIntent().getIntExtra("from", -1)));
                 break;
             case Constants.ProjectDetailFragmentCode://项目详情页
-                loadRootFragment(R.id.Constants_Fragment, ProjectDetailFragment.newInstance(getIntent().getStringExtra("projectId")));
+                loadRootFragment(R.id.Constants_Fragment, ProjectDetailFragment.newInstance(
+                          getIntent().getStringExtra("projectId")
+                        , getIntent().getStringExtra("templateId")
+                        , getIntent().getStringExtra("dealerId")
+                        , getIntent().getIntExtra("type", 0)));
                 break;
 //            case Constants.startProjectFragment: //开始访问页
 //                loadRootFragment(R.id.Constants_Fragment, StartProjectFragment.newInstance());
@@ -64,6 +70,12 @@ public class ConstantsActivity extends BaseSupportActivity {
                 break;
             case Constants.fragment_template: //项目模板
                 loadRootFragment(R.id.Constants_Fragment, ProjectTemplate.newInstance());
+                break;
+            case Constants.fragment_Dealer: //经销商列表
+                loadRootFragment(R.id.Constants_Fragment, DealerFragment.Instance(getIntent().getStringExtra("Template_id")));
+                break;
+            case Constants.fragment_webview: //网页
+                loadRootFragment(R.id.Constants_Fragment, Fragment_WebView.Instance(getIntent().getStringExtra("url")));
                 break;
 
         }
@@ -90,10 +102,5 @@ public class ConstantsActivity extends BaseSupportActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 }

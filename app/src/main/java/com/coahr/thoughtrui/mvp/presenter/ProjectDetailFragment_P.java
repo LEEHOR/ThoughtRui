@@ -5,12 +5,14 @@ import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.mvp.Base.BasePresenter;
 import com.coahr.thoughtrui.mvp.constract.ProjectDetailFragment_C;
 import com.coahr.thoughtrui.mvp.constract.ProjectSuccessDialog_C;
+import com.coahr.thoughtrui.mvp.model.Bean.ProjectDetail;
 import com.coahr.thoughtrui.mvp.model.ProjectDetailFragment_M;
 import com.coahr.thoughtrui.mvp.model.ProjectSuccessDialog_M;
 import com.coahr.thoughtrui.mvp.view.home.ProjectDetailFragment;
 import com.coahr.thoughtrui.widgets.AltDialog.ProjectSuccessDialog;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -65,6 +67,27 @@ public class ProjectDetailFragment_P extends BasePresenter<ProjectDetailFragment
     public void getDateSizeFailure(String failure) {
         if (getView() != null) {
             getView().getDateSizeFailure(failure);
+        }
+    }
+
+    @Override
+    public void getProjectDetail(Map<String, Object> map) {
+        if (mModle != null) {
+            mModle.getProjectDetail(map);
+        }
+    }
+
+    @Override
+    public void getProjectDetailSuccess(ProjectDetail projectDetail) {
+        if (getView() != null) {
+            getView().getProjectDetailSuccess(projectDetail);
+        }
+    }
+
+    @Override
+    public void getProjectDetailFailure(String fail) {
+        if (getView() != null) {
+            getView().getProjectDetailFailure(fail);
         }
     }
 }

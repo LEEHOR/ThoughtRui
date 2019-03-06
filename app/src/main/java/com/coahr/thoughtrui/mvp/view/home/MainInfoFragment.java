@@ -59,7 +59,7 @@ public class MainInfoFragment extends BaseChildFragment {
     }
 
     /**
-     * 跳转到项目附件
+     * 跳转到历史项目
      */
     private void JumpToProjectList(){
         Intent intent=new Intent(_mActivity, ConstantsActivity.class);
@@ -74,6 +74,7 @@ public class MainInfoFragment extends BaseChildFragment {
     private void JumpToProjectTemplate(){
         Intent intent=new Intent(_mActivity, ConstantsActivity.class);
         intent.putExtra("from", Constants.fragment_mainInfo);
+       // intent.putExtra("url","http://www.baidu.com");
         intent.putExtra("to", Constants.fragment_template);
         startActivity(intent);
     }

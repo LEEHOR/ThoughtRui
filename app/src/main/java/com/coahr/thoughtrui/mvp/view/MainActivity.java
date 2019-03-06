@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -83,7 +84,6 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-
         if (savedInstanceState != null) {
             mFragments[0] = findFragment(MainInfoFragment.class);
             mFragments[1] = findFragment(UploadFragment.class);
@@ -112,6 +112,19 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
                             "点击【立即修复】重新打开应用");
                 }
             });
+        }
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            String scheme = intent.getScheme();
+
+            Uri uri = intent.getData();
+            if (uri != null) {
+                String host = uri.getHost();
+                String path = uri.getPath();
+                KLog.d("第三方调用","scheme:"+scheme,"host:"+host,"path:"+path);
+            }
+
         }
     }
 

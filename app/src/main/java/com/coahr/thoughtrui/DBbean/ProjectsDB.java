@@ -50,6 +50,9 @@ public class ProjectsDB extends DataSupport {
     private long downloadTime;
     private int isDeletes;
     private String manager;
+    private String sale_code;
+    private String service_code;
+    private long uploadTime;
     //所属User
     private UsersDB user;
     //包含多个题目
@@ -61,7 +64,7 @@ public class ProjectsDB extends DataSupport {
     public ProjectsDB() {
     }
 
-    public ProjectsDB(int id, String pid, String progress, int inspect, int record, String pname, long startTime, long endTime, String grade, String address, String location, String cName, String dName, String code, int completeStatus, String distance, double latitude, double longitude, long modifyTime, int pUploadStatus, int isComplete, String stage, String notice, long downloadTime, int isDeletes, String manager, UsersDB user, List<SubjectsDB> subjectsDBList) {
+    public ProjectsDB(int id, String pid, String progress, int inspect, int record, String pname, long startTime, long endTime, String grade, String address, String location, String cName, String dName, String code, int completeStatus, String distance, double latitude, double longitude, long modifyTime, int pUploadStatus, int isComplete, String stage, String notice, long downloadTime, int isDeletes, String manager, String sale_code, String service_code, long uploadTime, UsersDB user, List<SubjectsDB> subjectsDBList) {
         this.id = id;
         Pid = pid;
         this.progress = progress;
@@ -88,6 +91,9 @@ public class ProjectsDB extends DataSupport {
         this.downloadTime = downloadTime;
         this.isDeletes = isDeletes;
         this.manager = manager;
+        this.sale_code = sale_code;
+        this.service_code = service_code;
+        this.uploadTime = uploadTime;
         this.user = user;
         this.subjectsDBList = subjectsDBList;
     }
@@ -310,5 +316,29 @@ public class ProjectsDB extends DataSupport {
 
     public void setSubjectsDBList(List<SubjectsDB> subjectsDBList) {
         this.subjectsDBList = subjectsDBList;
+    }
+
+    public String getSale_code() {
+        return sale_code;
+    }
+
+    public void setSale_code(String sale_code) {
+        this.sale_code = sale_code;
+    }
+
+    public String getService_code() {
+        return service_code;
+    }
+
+    public void setService_code(String service_code) {
+        this.service_code = service_code;
+    }
+
+    public long getUploadTime() {
+        return uploadTime;
+    }
+
+    public void setUploadTime(long uploadTime) {
+        this.uploadTime = uploadTime;
     }
 }

@@ -19,19 +19,30 @@ public class UsersDB extends DataSupport {
      * id UserDB 主键
      * userName 用户名
      * sessionId 用户sessionId
+     * type  用户类型（1：销售类 2：服务类）
      */
     private int id;
     private String userName;
     private String sessionId;
+    private int type;
     private List<ProjectsDB> projectsDBSList=new ArrayList<>();
     public UsersDB() {
     }
 
-    public UsersDB(int id, String userName, String sessionId, List<ProjectsDB> projectsDBSList) {
+    public UsersDB(int id, String userName, String sessionId, int type, List<ProjectsDB> projectsDBSList) {
         this.id = id;
         this.userName = userName;
         this.sessionId = sessionId;
+        this.type = type;
         this.projectsDBSList = projectsDBSList;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public int getId() {

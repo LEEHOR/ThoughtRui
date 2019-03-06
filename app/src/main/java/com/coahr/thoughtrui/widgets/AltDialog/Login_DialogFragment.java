@@ -146,12 +146,15 @@ public class Login_DialogFragment extends BaseDialogFragment<LoginFragmentC.Pres
             UsersDB usersDB = new UsersDB();
             usersDB.setUserName(loginBean.getData().getName());
             usersDB.setSessionId(loginBean.getData().getSessionId());
+            usersDB.setType(loginBean.getData().getType());
             usersDB.save();
         }
         Constants.sessionId = loginBean.getData().getSessionId();
         Constants.user_name = loginBean.getData().getName();
+        Constants.user_type=loginBean.getData().getType();
         PreferenceUtils.setPrefString(BaseApplication.mContext, Constants.sessionId_key, loginBean.getData().getSessionId());
         PreferenceUtils.setPrefString(BaseApplication.mContext, Constants.user_key, loginBean.getData().getName());
+        PreferenceUtils.setPrefInt(BaseApplication.mContext,Constants.user_type_key,loginBean.getData().getType());
        /* if (pager_number== Constants.MyTabFragmentCode) {
 
         } else if (pager_number==Constants.MainActivityCode){

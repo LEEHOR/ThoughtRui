@@ -159,6 +159,9 @@ public class NodeTreeAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "选中:" + v.getTag() + "/" + baseNode.get_id(), Toast.LENGTH_SHORT).show();
+                if (onThreeClick != null) {
+                    onThreeClick.threeHt_idOnClick((String) baseNode.get_id());
+                }
             }
         });
         convertView.setPadding(baseNode.get_level() * retract, 5, 5, 5);
@@ -174,5 +177,9 @@ public class NodeTreeAdapter extends BaseAdapter {
 
     public interface onThreeClick {
         void threeHt_idOnClick(String ht_id);
+    }
+
+    public void setOnThreeClick(NodeTreeAdapter.onThreeClick onThreeClick) {
+        this.onThreeClick = onThreeClick;
     }
 }

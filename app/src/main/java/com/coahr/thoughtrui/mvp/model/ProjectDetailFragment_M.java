@@ -8,9 +8,11 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.ProjectDetailFragment_C;
 import com.coahr.thoughtrui.mvp.constract.ProjectSuccessDialog_C;
+import com.coahr.thoughtrui.mvp.model.Bean.ProjectDetail;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -67,5 +69,22 @@ public class ProjectDetailFragment_M extends BaseModel<ProjectDetailFragment_C.P
         } else {
             getPresenter().getDateSizeFailure("暂无附件");
         }
+    }
+
+    @Override
+    public void getProjectDetail(Map<String, Object> map) {
+        mRxManager.add(createFlowable(new SimpleFlowableOnSubscribe<ProjectDetail>(getApiService().project_detail(map)))
+                .subscribeWith(new SimpleDisposableSubscriber<ProjectDetail>() {
+                    @Override
+                    public void _onNext(ProjectDetail projectDetail) {
+                        if (getPresenter() != null) {
+                            if (projectDetail.getStatus()==1) {
+                                getPresenter().getProjectDetailSuccess(projectDetail);
+                            } else {
+                                getPresenter().getProjectDetailFailure(projectDetail.getStatus()+"");
+                            }
+                        }
+                    }
+                }));
     }
 }

@@ -4,7 +4,10 @@ import android.Manifest;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
+
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -14,6 +17,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
+import com.coahr.thoughtrui.DBbean.UsersDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.NetWorkAvailable;
@@ -25,13 +29,17 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.ProjectDetailFragment_C;
+import com.coahr.thoughtrui.mvp.model.Bean.ProjectDetail;
 import com.coahr.thoughtrui.mvp.presenter.ProjectDetailFragment_P;
 import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
 import com.coahr.thoughtrui.mvp.view.StartProjectActivity;
 import com.coahr.thoughtrui.mvp.view.attence.AttendanceRootActivity;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
+import com.socks.library.KLog;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -42,9 +50,9 @@ import butterknife.BindView;
  * on 2018/11/15
  * on 8:56
  */
-public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.Presenter> implements ProjectDetailFragment_C.View, View.OnClickListener {
+public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.Presenter> implements ProjectDetailFragment_C.View, View.OnClickListener {
 
-  @Inject
+    @Inject
     ProjectDetailFragment_P p;
     @BindView(R.id.kaoqing)
     RelativeLayout kaoqing;
@@ -85,16 +93,23 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
     @BindView(R.id.tv_project_describe)
     TextView tv_project_describe;  //项目描述
     private String projectId;
-    private boolean isHaveAudioPermission=false;
-    private boolean isHaveLocationPermission=false;
+    private boolean isHaveAudioPermission = false;
+    private boolean isHaveLocationPermission = false;
+    private String templateId;
+    private String dealerId;
+    private int type;
 
-    public static ProjectDetailFragment newInstance(String projectId) {
-        ProjectDetailFragment projectDetailFragment=new ProjectDetailFragment();
-        Bundle bundle=new Bundle();
-        bundle.putString("projectId",projectId);
+    public static ProjectDetailFragment newInstance(String projectId, String templateId, String dealerId, int type) {
+        ProjectDetailFragment projectDetailFragment = new ProjectDetailFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("projectId", projectId);
+        bundle.putString("templateId", templateId);
+        bundle.putString("dealerId", dealerId);
+        bundle.putInt("type", type);
         projectDetailFragment.setArguments(bundle);
-        return  projectDetailFragment;
+        return projectDetailFragment;
     }
+
     @Override
     public ProjectDetailFragment_C.Presenter getPresenter() {
         return p;
@@ -109,6 +124,10 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
     public void initView() {
         if (getArguments() != null) {
             projectId = getArguments().getString("projectId");
+            templateId = getArguments().getString("templateId");
+            dealerId = getArguments().getString("dealerId");
+            type = getArguments().getInt("type");
+            KLog.d("项目Id", projectId);
         }
         kaoqing.setOnClickListener(this);
         fangwen.setOnClickListener(this);
@@ -132,12 +151,17 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
 
     @Override
     public void initData() {
-        getSubjectList(projectId);
+        if (type == 1) {  //经销商页面
+            getProDetail();
+        }
+        if (type == 2) {  //项目列表页
+            getSubjectList(projectId);
+        }
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.kaoqing:
                 if (getLocationPermission()) {
                     JumpToAttendance();
@@ -149,7 +173,7 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
                 }
                 break;
             case R.id.attachment:
-               // ToastUtils.showLong("打不开哈哈哈");
+                // ToastUtils.showLong("打不开哈哈哈");
                 JumpToProjectAnnex();
                 break;
         }
@@ -161,7 +185,18 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
 
     }
 
-    private void showDialog(){
+    /**
+     * 联网得到项目详情
+     */
+    private void getProDetail() {
+        Map map = new HashMap();
+        map.put("userId", Constants.sessionId);
+        map.put("templateId", templateId);
+        map.put("dealerId", dealerId);
+        p.getProjectDetail(map);
+    }
+
+    private void showDialog() {
         new MaterialDialog.Builder(_mActivity)
                 .title("提示")
                 .content("您是否打卡")
@@ -185,23 +220,24 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
     /**
      * 跳转到考勤页面
      */
-    private void JumpToAttendance(){
+    private void JumpToAttendance() {
         if (NetWorkAvailable.isNetworkAvailable(BaseApplication.mContext)) {
-            Intent intent=new Intent(_mActivity,AttendanceRootActivity.class);
+            Intent intent = new Intent(_mActivity, AttendanceRootActivity.class);
             startActivity(intent);
         } else {
             ToastUtils.showLong("没有网络，无法打卡");
         }
 
     }
+
     /**
      * 跳转到开始访问页面
      */
-    private void JumpToStartProject(){
+    private void JumpToStartProject() {
         if (NetWorkAvailable.isNetworkAvailable(BaseApplication.mContext)) {
             Intent intent = new Intent(_mActivity, StartProjectActivity.class);
             startActivity(intent);
-        }else {
+        } else {
             ToastUtils.showLong("没有网络，无法访问");
         }
     }
@@ -209,8 +245,8 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
     /**
      * 跳转到项目附件
      */
-    private void JumpToProjectAnnex(){
-        Intent intent=new Intent(_mActivity,ConstantsActivity.class);
+    private void JumpToProjectAnnex() {
+        Intent intent = new Intent(_mActivity, ConstantsActivity.class);
         intent.putExtra("from", Constants.MainActivityCode);
         intent.putExtra("to", Constants.fragment_AnnexViewPager);
         startActivity(intent);
@@ -218,8 +254,8 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
 
     @Override
     public void getSubjectListSuccess(List<SubjectsDB> subjectsDBList, ProjectsDB projectsDB, int totalSize) {
-        tv_fstatus.setText(subjectsDBList.size()==totalSize?"已完成":"未完成"+"("+subjectsDBList.size()+"/"+totalSize+")");
-        p.getDateSize(subjectsDBList,projectsDB);
+        tv_fstatus.setText(subjectsDBList.size() == totalSize ? "已完成" : "未完成" + "(" + subjectsDBList.size() + "/" + totalSize + ")");
+        p.getDateSize(subjectsDBList, projectsDB);
     }
 
     @Override
@@ -229,7 +265,7 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
 
     @Override
     public void getDateSizeSuccess(int subject, int files) {
-        tv_upload_status.setText("数据"+subject+"条，"+"数据"+files+"个未上传");
+        tv_upload_status.setText("数据" + subject + "条，" + "数据" + files + "个未上传");
     }
 
     @Override
@@ -237,47 +273,129 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
         ToastUtils.showLong(failure);
     }
 
+    @Override
+    public void getProjectDetailSuccess(ProjectDetail projectDetail) {
+        if (projectDetail.getData() != null) {
+            int id=0;
+            List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", projectDetail.getData().getId());
+            if (projectsDBS != null && projectsDBS.size() > 0) {
+                 id = projectsDBS.get(0).getId();
+                ProjectsDB projectsDB = new ProjectsDB();
+                projectsDB.setDownloadTime(projectDetail.getData().getUploadTime());
+                projectsDB.setProgress(projectDetail.getData().getProgress());
+                int update = projectsDB.update(projectsDBS.get(0).getId());
+            } else {
+                List<UsersDB> usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", Constants.sessionId);
+                ProjectsDB projectsDB = new ProjectsDB();
+                projectsDB.setcName(projectDetail.getData().getCname());
+                projectsDB.setProgress(projectDetail.getData().getProgress());
+                projectsDB.setManager(projectDetail.getData().getManager());
+                projectsDB.setLocation(projectDetail.getData().getLocation());
+                projectsDB.setPid(projectDetail.getData().getId());
+                projectsDB.setSale_code(projectDetail.getData().getSale_code());
+                projectsDB.setAddress(projectDetail.getData().getAreaAddress());
+                projectsDB.setGrade(projectDetail.getData().getGrade());
+                projectsDB.setPname(projectDetail.getData().getPname());
+                projectsDB.setdName(projectDetail.getData().getDname());
+                projectsDB.setLongitude(projectDetail.getData().getLongitude());
+                projectsDB.setLatitude(projectDetail.getData().getLatitude());
+                projectsDB.setModifyTime(0);
+                projectsDB.setUploadTime(projectDetail.getData().getUploadTime());
+                projectsDB.setService_code(projectDetail.getData().getService_code());
+                projectsDB.setNotice(projectDetail.getData().getNotice());
+                if (usersDBS != null && usersDBS.size() > 0) {
+                    projectsDB.setUser(usersDBS.get(0));
+                }
+                projectsDB.save();
+
+            }
+
+            tv_cName.setText(projectDetail.getData().getCname());
+            tv_cCode.setText(Constants.user_type==1 ? projectDetail.getData().getSale_code() : Constants.user_type==2
+                    ? projectDetail.getData().getService_code() : projectDetail.getData().getSale_code());
+            tv_cLevel.setText(projectDetail.getData().getGrade());
+            tv_cAddress.setText(projectDetail.getData().getAreaAddress() + projectDetail.getData().getLocation());
+             tv_time_cycle.setText(TimeUtils.getStingYMDHM(projectDetail.getData().getUploadTime()));
+            tv_Kclass.setText(projectDetail.getData().getCname());
+            project_detail_name.setText(projectDetail.getData().getPname());
+            String progress = projectDetail.getData().getProgress();
+            String[] split_p = progress.split("/");
+            if (split_p.length > 0) {
+                project_detail_progress.setMax(Integer.parseInt(split_p[1]));
+                project_detail_progress.setProgress(Integer.parseInt(split_p[0]));
+            }
+            project_detail_time.setText("发布于");
+           /* tv_type.setText(projectsDB.getInspect() == 1 ? "飞检"
+                    : projectsDB.getInspect() == 2 ? "神秘顾客"
+                    : projectsDB.getInspect() == 3 ? "新店验收"
+                    : "飞检");*/
+            tv_project_manager.setText(projectDetail.getData().getManager());
+            tv_project_user.setText(Constants.user_name);
+            tv_project_describe.setText(projectDetail.getData().getNotice());
+            Constants.DbProjectId = String.valueOf(id);
+            Constants.ht_ProjectId = projectDetail.getData().getId();
+            Constants.name_Project = projectDetail.getData().getPname();
+            String s = projectDetail.getData().getCname();
+            if (s.equals("自由班次")) {
+                Constants.zao_ka = s;
+                Constants.wan_ka = s;
+            } else {
+                String[] split = s.split("-");
+                if (split.length > 1) {
+                    Constants.zao_ka = split[0];
+                    Constants.wan_ka = split[1];
+                }
+            }
+        }
+    }
+
+    @Override
+    public void getProjectDetailFailure(String fail) {
+
+    }
+
     /**
      * 获取题目列表
+     *
      * @param projectId
      */
-    private void getSubjectList(String projectId){
+    private void getSubjectList(String projectId) {
         List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", projectId);
-        if (projectsDBS != null && projectsDBS.size()>0) {
+        if (projectsDBS != null && projectsDBS.size() > 0) {
             ProjectsDB projectsDB = projectsDBS.get(0);
             tv_cName.setText(projectsDB.getcName());
             tv_cCode.setText(projectsDB.getCode());
             tv_cLevel.setText(projectsDB.getGrade());
-            tv_cAddress.setText(projectsDB.getAddress()+projectsDB.getLocation());
-            tv_time_cycle.setText(TimeUtils.getStingYMD(projectsDB.getStartTime())+"/"+TimeUtils.getStringDate_end(projectsDB.getEndTime()));
+            tv_cAddress.setText(projectsDB.getAddress() + projectsDB.getLocation());
+            tv_time_cycle.setText(TimeUtils.getStingYMDHM(projectsDB.getUploadTime()));
             tv_Kclass.setText(projectsDB.getcName());
             project_detail_name.setText(projectsDB.getPname());
             String progress = projectsDB.getProgress();
             String[] split_p = progress.split("/");
-            if (split_p.length>0) {
+            if (split_p.length > 0) {
                 project_detail_progress.setMax(Integer.parseInt(split_p[1]));
                 project_detail_progress.setProgress(Integer.parseInt(split_p[0]));
             }
-            project_detail_time.setText("发布于"+TimeUtils.getStingYMD(projectsDB.getModifyTime()));
-            tv_type.setText(projectsDB.getInspect()==1?"飞检"
-                    :projectsDB.getInspect()==2?"神秘顾客"
-                    :projectsDB.getInspect()==3?"新店验收"
-                    :"飞检");
+            project_detail_time.setText("发布于" + TimeUtils.getStingYMD(projectsDB.getModifyTime()));
+           /* tv_type.setText(projectsDB.getInspect() == 1 ? "飞检"
+                    : projectsDB.getInspect() == 2 ? "神秘顾客"
+                    : projectsDB.getInspect() == 3 ? "新店验收"
+                    : "飞检");*/
             tv_project_manager.setText(projectsDB.getManager());
             tv_project_user.setText(Constants.user_name);
             tv_project_describe.setText(projectsDB.getNotice());
-            Constants.DbProjectId= String.valueOf(projectsDB.getId());
-            Constants.ht_ProjectId=projectsDB.getPid();
-            Constants.name_Project=projectsDB.getPname();
-            String s =projectsDB.getcName();
+            Constants.DbProjectId = String.valueOf(projectsDB.getId());
+            Constants.ht_ProjectId = projectsDB.getPid();
+            Constants.name_Project = projectsDB.getPname();
+            String s = projectsDB.getcName();
             if (s.equals("自由班次")) {
-                Constants.zao_ka=s;
-                Constants.wan_ka=s;
+                Constants.zao_ka = s;
+                Constants.wan_ka = s;
             } else {
                 String[] split = s.split("-");
                 if (split.length > 1) {
-                    Constants.zao_ka=split[0];
-                    Constants.wan_ka=split[1];
+                    Constants.zao_ka = split[0];
+                    Constants.wan_ka = split[1];
                 }
             }
             p.getSubjectList(projectsDB);
@@ -298,7 +416,7 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
 
                         @Override
                         public void PermissionFail(List<String> permissions) {
-                            ToastUtils.showLong("获取"+permissions.get(0)+"失败");
+                            ToastUtils.showLong("获取" + permissions.get(0) + "失败");
                             isHaveAudioPermission = false;
                         }
 
@@ -335,7 +453,7 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
 
                         @Override
                         public void PermissionFail(List<String> permissions) {
-                            ToastUtils.showLong("获取"+permissions.get(0)+"失败");
+                            ToastUtils.showLong("获取" + permissions.get(0) + "失败");
                             isHaveLocationPermission = false;
                         }
 
@@ -354,4 +472,7 @@ public class  ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C
         return isHaveLocationPermission;
     }
 
+    private void setDate_show() {
+
+    }
 }

@@ -26,6 +26,7 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseActivity;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.constract.StartProjectActivity_C;
+import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_SubjectList_id;
 import com.coahr.thoughtrui.mvp.model.Bean.QuestionBean;
 import com.coahr.thoughtrui.mvp.model.Bean.isCompleteBean;
 import com.coahr.thoughtrui.mvp.presenter.StartProjectActivity_P;
@@ -40,6 +41,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -64,6 +66,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     @BindView(R.id.p_mytitle)
     MyTittleBar p_mytitle;
     private StartProjectAdapter startProjectAdapter;
+    private List<String> htId_List=new ArrayList<>();
     private int subject_size; //题目个数
         //定位是否成功
     private boolean isLocationSuccess;
@@ -106,8 +109,6 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         p_mytitle.getRightText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //  ProjectSuccessDialog projectSuccessDialog=ProjectSuccessDialog.newInstance(Constants.ht_ProjectId);
-                // projectSuccessDialog.show(getSupportFragmentManager(),TAG);
                 Intent intent = new Intent(StartProjectActivity.this, ConstantsActivity.class);
                 intent.putExtra("to", Constants.fragment_topics);
                 startActivity(intent);
@@ -250,7 +251,11 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     public void getOfflineSuccess(int size, String dbProjectId, String ht_projectId, List<String> ht_list) {
 
         this.subject_size = size;
+        htId_List.clear();
+        this.htId_List=ht_list;
+        KLog.d("项目Id2",ht_projectId,dbProjectId);
         startProjectAdapter = new StartProjectAdapter(getSupportFragmentManager(), size, dbProjectId, ht_projectId, Constants.name_Project, ht_list);
+
         project_viewPage.setAdapter(startProjectAdapter);
         project_viewPage.setCurrentItem(0);
 
@@ -315,7 +320,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
      * @param isCompleteBean
      */
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void Event(isCompleteBean isCompleteBean) {
+    public void Event_pageChange(isCompleteBean isCompleteBean) {
         int isposition = isCompleteBean.getPosition();
         int isupOrDown = isCompleteBean.getUpOrDown();
         boolean complete = isCompleteBean.isComplete();
@@ -340,6 +345,24 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         }
     }
 
+    /**
+     * 跳转
+     * @param subjectList_id
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void Event_SubjectList_jump(EvenBus_SubjectList_id subjectList_id) {
+        if (subjectList_id != null) {
+            if (htId_List != null) {
+                for (int i = 0; i <htId_List.size() ; i++) {
+                    if (htId_List.get(i).equals(subjectList_id.getSub_id())){
+                        p_mytitle.getTvTittle().setText("第" + (i+1) + "题");
+                        project_viewPage.setCurrentItem(i);
+                        return;
+                    }
+                }
+            }
+        }
+    }
 
     @Override
     public void onClick(View view) {

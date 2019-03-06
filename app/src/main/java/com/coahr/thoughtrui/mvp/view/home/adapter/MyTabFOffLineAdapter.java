@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.TimeUtils;
+import com.coahr.thoughtrui.commom.Constants;
 
 import java.util.List;
 
@@ -67,10 +68,10 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (viewHolder!=null&&viewHolder.itemView!=null) {
         if (viewHolder instanceof newListHaveBeenCancelViewHolder){
             ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_schedule.setText(projectsDBList.get(i).getProgress());
-            ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_explain.setText(projectsDBList.get(i).getInspect()==1?"飞检"
-                    :projectsDBList.get(i).getInspect()==2?"神秘顾客"
-                     :projectsDBList.get(i).getInspect()==3?"新店验收":"飞检");
-            ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_times.setText("["+TimeUtils.getStringDate_start(projectsDBList.get(i).getStartTime())+","+TimeUtils.getStringDate_end(projectsDBList.get(i).getEndTime())+"]");
+            ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_explain.setText(Constants.user_type == 1 ? "["+projectsDBList.get(i).getSale_code()+"]"
+                    : Constants.user_type == 2 ? "["+projectsDBList.get(i).getSale_code()+"]"
+                    : "["+projectsDBList.get(i).getSale_code()+"]");
+            ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_times.setText(projectsDBList.get(i).getPname());
             ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_code.setText(projectsDBList.get(i).getCode());
             ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_name.setText(projectsDBList.get(i).getPname());
             ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_company.setText(projectsDBList.get(i).getdName());
@@ -96,10 +97,10 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
             if (viewHolder instanceof completeListHaveBeenCancelViewHolder){
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_schedule.setText(projectsDBList.get(i).getProgress());
-                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_explain.setText(projectsDBList.get(i).getInspect()==1?"飞检"
-                        :projectsDBList.get(i).getInspect()==2?"神秘顾客"
-                        :projectsDBList.get(i).getInspect()==3?"新店验收":"飞检");
-                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_times.setText("["+TimeUtils.getStringDate_start(projectsDBList.get(i).getStartTime())+","+TimeUtils.getStringDate_end(projectsDBList.get(i).getEndTime())+"]");
+                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_explain.setText(Constants.user_type == 1 ? "["+projectsDBList.get(i).getSale_code()+"]"
+                        : Constants.user_type == 2 ? "["+projectsDBList.get(i).getSale_code()+"]"
+                        : "["+projectsDBList.get(i).getSale_code()+"]");
+                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_times.setText(projectsDBList.get(i).getPname());
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_code.setText(projectsDBList.get(i).getCode());
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_name.setText(projectsDBList.get(i).getPname());
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_company.setText(projectsDBList.get(i).getdName());
@@ -126,11 +127,10 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             if (viewHolder instanceof unCompleteListHaveBeenCancelViewHolder){
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_schedule.setText(projectsDBList.get(i).getProgress());
-                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_explain.setText(projectsDBList.get(i).getInspect()==1?"飞检"
-                        :projectsDBList.get(i).getInspect()==2?"神秘顾客"
-                        :projectsDBList.get(i).getInspect()==3?"新店验收":"飞检");
-                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_times.setText("["+TimeUtils.getStringDate_start(projectsDBList.get(i).getStartTime())+","
-                                                                                                                 +TimeUtils.getStringDate_end(projectsDBList.get(i).getEndTime())+"]");
+                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_explain.setText(Constants.user_type == 1 ? "["+projectsDBList.get(i).getSale_code()+"]"
+                        : Constants.user_type == 2 ? "["+projectsDBList.get(i).getSale_code()+"]"
+                        : "["+projectsDBList.get(i).getSale_code()+"]");
+                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_times.setText(projectsDBList.get(i).getPname());
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_code.setText(projectsDBList.get(i).getCode());
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_name.setText(projectsDBList.get(i).getPname());
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_company.setText(projectsDBList.get(i).getdName());
@@ -157,11 +157,10 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             if (viewHolder instanceof unDownLoadListHaveBeenCancelViewHolder) {
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_schedule.setText(projectsDBList.get(i).getProgress());
-                ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_explain.setText(projectsDBList.get(i).getInspect() == 1 ? "飞检"
-                        : projectsDBList.get(i).getInspect() == 2 ? "神秘顾客"
-                        : projectsDBList.get(i).getInspect() == 3 ? "新店验收" : "飞检");
-                ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_times.setText("[" + TimeUtils.getStringDate_start(projectsDBList.get(i).getStartTime()) + ","
-                        + TimeUtils.getStringDate_end(projectsDBList.get(i).getEndTime()) + "]");
+                ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_explain.setText(Constants.user_type == 1 ? "["+projectsDBList.get(i).getSale_code()+"]"
+                        : Constants.user_type == 2 ? "["+projectsDBList.get(i).getSale_code()+"]"
+                        : "["+projectsDBList.get(i).getSale_code()+"]");
+                ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_times.setText(projectsDBList.get(i).getPname());
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_code.setText(projectsDBList.get(i).getCode());
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_name.setText(projectsDBList.get(i).getPname());
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_company.setText(projectsDBList.get(i).getdName());

@@ -187,4 +187,7 @@ dependencies {
     //阿里云对象存储
     implementation 'com.aliyun.dpa:oss-android-sdk:+'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0-beta01'
+
+    //仿ios
+    implementation 'com.contrarywind:Android-PickerView:4.1.6'
 }
