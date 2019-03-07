@@ -71,7 +71,7 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         : Constants.user_type == 2 ? "["+allListBean.get(i).getSale_code()+"]"
                         : "["+allListBean.get(i).getSale_code()+"]");
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_times.setText(allListBean.get(i).getPname());
-                ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_code.setText(allListBean.get(i).getCode());
+               // ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_code.setText(allListBean.get(i).getCode());
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_name.setText(allListBean.get(i).getPname());
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_company.setText(allListBean.get(i).getDname());
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_address.setText(allListBean.get(i).getAreaAddress());
@@ -100,7 +100,7 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         : Constants.user_type == 2 ? "["+allListBean.get(i).getSale_code()+"]"
                         : "["+allListBean.get(i).getSale_code()+"]");
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_times.setText(allListBean.get(i).getPname());
-                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_code.setText(allListBean.get(i).getCode());
+               // ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_code.setText(allListBean.get(i).getCode());
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_name.setText(allListBean.get(i).getPname());
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_company.setText(allListBean.get(i).getDname());
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_address.setText(allListBean.get(i).getAreaAddress());
@@ -130,7 +130,7 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         : Constants.user_type == 2 ? "["+allListBean.get(i).getSale_code()+"]"
                         : "["+allListBean.get(i).getSale_code()+"]");
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_times.setText(allListBean.get(i).getPname());
-                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_code.setText(allListBean.get(i).getCode());
+               // ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_code.setText(allListBean.get(i).getCode());
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_name.setText(allListBean.get(i).getPname());
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_company.setText(allListBean.get(i).getDname());
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_address.setText(allListBean.get(i).getAreaAddress());
@@ -160,7 +160,7 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         : Constants.user_type == 2 ? "["+allListBean.get(i).getSale_code()+"]"
                         : "["+allListBean.get(i).getSale_code()+"]");
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_times.setText(allListBean.get(i).getPname());
-                ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_code.setText(allListBean.get(i).getCode());
+               // ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_code.setText(allListBean.get(i).getCode());
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_name.setText(allListBean.get(i).getPname());
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_company.setText(allListBean.get(i).getDname());
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_address.setText(allListBean.get(i).getAreaAddress());
@@ -214,26 +214,26 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
         if (type == 1) {  //未完成
-            if (allListBean.get(position).getCompleteStatus() == 2) {
+            if (allListBean.get(position).getCompleteStatus() == 2 || allListBean.get(position).getCompleteStatus() == 1) {
                 return uncomplete;
             }
         }
 
         if (type == 2) {  //全部
-            if (allListBean.get(position).getCompleteStatus() == 1 && allListBean.get(position).getDownloadTime() != -1) {//新项目
+           /* if (allListBean.get(position).getCompleteStatus() == 1 && allListBean.get(position).getDownloadTime() != -1) {//新项目
                 return newProject;
-            }
+            }*/
             if (allListBean.get(position).getCompleteStatus() == 2) {  //未完成
                 return uncomplete;
             }
             if (allListBean.get(position).getCompleteStatus() == 3) {  //完成
                 return complete;
             }
-            if (allListBean.get(position).getCompleteStatus() == 1 && allListBean.get(position).getDownloadTime() == -1) { //未下载
+           /* if (allListBean.get(position).getCompleteStatus() == 1 && allListBean.get(position).getDownloadTime() == -1) { //未下载
                 return undownload;
-            }
+            }*/
         }
-        return unKnow;
+        return uncomplete;
     }
 
     public class newListHaveBeenCancelViewHolder extends RecyclerView.ViewHolder {

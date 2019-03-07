@@ -3,12 +3,15 @@ package com.coahr.thoughtrui.mvp.model.Bean;
 import java.util.List;
 
 /**
- * 审核列表
+ * @author Leehor
+ * 版本：
+ * 创建日期：2019/3/7
+ * 描述：搜索
  */
-public class CensorBean {
+public class SearchBeans {
 
     /**
-     * data : {"list":[{"Dname":"东风本田东合店","Pname":"斯锐调查系统132456","areaAddress":"湖北省武汉市蔡甸区","code":"123","endTime":1,"id":"43c4065cc2494634b71bc870ebbd1766","inspect":1,"location":"东合中心B座","modifyTime":1527216075903,"number":1,"progress":"0/100","record":3,"startTime":1527216074020}]}
+     * data : {"searchList":[{"Dname":"东风本田东合店","Pname":"斯锐调查系统132456","areaAddress":"湖北省武汉市蔡甸区","code":"123","endTime":1,"id":"43c4065cc2494634b71bc870ebbd1766","inspect":1,"location":"东合中心B座","modifyTime":1526029757614,"record":3,"startTime":1526029757500},{"Dname":"上汽别克沌口店","Pname":"dasdadd","areaAddress":"湖北省武汉市蔡甸区","code":"1234","endTime":1,"id":"5b3e4b1ca80b4e6e930fc6782dee3060","inspect":1,"location":"后官湖湿地公园","modifyTime":1525946794431,"record":1,"startTime":1523721600000}]}
      * msg : 请求成功！
      * result : 1
      */
@@ -42,17 +45,17 @@ public class CensorBean {
     }
 
     public static class DataBean {
-        private List<ListBean> list;
+        private List<SearchListBean> searchList;
 
-        public List<ListBean> getList() {
-            return list;
+        public List<SearchListBean> getSearchList() {
+            return searchList;
         }
 
-        public void setList(List<ListBean> list) {
-            this.list = list;
+        public void setSearchList(List<SearchListBean> searchList) {
+            this.searchList = searchList;
         }
 
-        public static class ListBean {
+        public static class SearchListBean {
             /**
              * Dname : 东风本田东合店
              * Pname : 斯锐调查系统132456
@@ -62,11 +65,9 @@ public class CensorBean {
              * id : 43c4065cc2494634b71bc870ebbd1766
              * inspect : 1
              * location : 东合中心B座
-             * modifyTime : 1527216075903
-             * number : 1
-             * progress : 0/100
+             * modifyTime : 1526029757614
              * record : 3
-             * startTime : 1527216074020
+             * startTime : 1526029757500
              */
 
             private String Dname;
@@ -78,12 +79,26 @@ public class CensorBean {
             private int inspect;
             private String location;
             private long modifyTime;
-            private int number;
-            private String progress;
             private int record;
             private long startTime;
             private String sale_code;
             private String service_code;
+
+            public String getSale_code() {
+                return sale_code;
+            }
+
+            public void setSale_code(String sale_code) {
+                this.sale_code = sale_code;
+            }
+
+            public String getService_code() {
+                return service_code;
+            }
+
+            public void setService_code(String service_code) {
+                this.service_code = service_code;
+            }
 
             public String getDname() {
                 return Dname;
@@ -157,22 +172,6 @@ public class CensorBean {
                 this.modifyTime = modifyTime;
             }
 
-            public int getNumber() {
-                return number;
-            }
-
-            public void setNumber(int number) {
-                this.number = number;
-            }
-
-            public String getProgress() {
-                return progress;
-            }
-
-            public void setProgress(String progress) {
-                this.progress = progress;
-            }
-
             public int getRecord() {
                 return record;
             }
@@ -187,22 +186,6 @@ public class CensorBean {
 
             public void setStartTime(long startTime) {
                 this.startTime = startTime;
-            }
-
-            public String getSale_code() {
-                return sale_code;
-            }
-
-            public void setSale_code(String sale_code) {
-                this.sale_code = sale_code;
-            }
-
-            public String getService_code() {
-                return service_code;
-            }
-
-            public void setService_code(String service_code) {
-                this.service_code = service_code;
             }
         }
     }

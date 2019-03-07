@@ -21,7 +21,8 @@
         android:layout_marginRight="@dimen/dp_40"
         style="@style/Searchbar_hint_left"
         android:layout_width="match_parent"
-        android:focusable="false"
+        android:focusable="true"
+        android:cursorVisible="false"
         android:focusableInTouchMode="false"
         android:layout_height="35dp" />
     <ImageView

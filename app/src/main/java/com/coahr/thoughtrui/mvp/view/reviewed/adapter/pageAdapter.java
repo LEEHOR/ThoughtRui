@@ -6,6 +6,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.TimeUtils;
+import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.model.Bean.CensorBean;
 
 
@@ -25,12 +26,12 @@ public class pageAdapter extends BaseQuickAdapter<CensorBean.DataBean.ListBean,B
     protected void convert(final BaseViewHolder helper, final CensorBean.DataBean.ListBean item) {
         if (item != null) {
             helper.setText(R.id.tv_schedule,item.getProgress())
-                    .setText(R.id.tv_explain,item.getInspect()==1?"飞检"
-                            :item.getInspect()==2?"神秘顾客"
-                            :item.getInspect()==3?"新店验收":"飞检")
-                    .setText(R.id.tv_project_times,TimeUtils.getStringDate_start(item.getStartTime())+"/"+TimeUtils.getStringDate_end(item.getEndTime()))
+                    .setText(R.id.tv_explain,Constants.user_type == 1 ? "["+item.getSale_code()+"]"
+                            : Constants.user_type == 2 ? "["+item.getSale_code()+"]"
+                            : "["+item.getSale_code()+"]")
+                    .setText(R.id.tv_project_times,item.getPname())
                     .setText(R.id.tv_project_code,item.getCode())
-                    .setText(R.id.tv_project_name,item.getPname())
+                    //.setText(R.id.tv_project_name,item.getPname())
                     .setText(R.id.tv_project_company,item.getDname())
                     .setText(R.id.tv_project_address,item.getAreaAddress())
                     .setText(R.id.tv_update_time,TimeUtils.getStingYMDHM(item.getModifyTime()))

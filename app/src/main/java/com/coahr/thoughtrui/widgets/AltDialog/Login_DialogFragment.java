@@ -141,7 +141,8 @@ public class Login_DialogFragment extends BaseDialogFragment<LoginFragmentC.Pres
         ToastUtils.showLong("登录成功");
         List<UsersDB> usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", loginBean.getData().getSessionId());
         if (usersDBS != null && usersDBS.size() > 0) {
-
+            usersDBS.get(0).setType(loginBean.getData().getType());
+            usersDBS.get(0).update(usersDBS.get(0).getId());
         } else {
             UsersDB usersDB = new UsersDB();
             usersDB.setUserName(loginBean.getData().getName());

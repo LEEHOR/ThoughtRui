@@ -23,6 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <RelativeLayout
+        android:visibility="gone"
         android:background="@color/colorWhite"
         android:paddingLeft="@dimen/edge_margin"
         android:paddingRight="@dimen/edge_margin"
@@ -57,6 +58,7 @@
             android:background="@color/material_grey_200"/>
     </RelativeLayout>
     <RelativeLayout
+        android:visibility="gone"
         android:background="@color/colorWhite"
         android:paddingLeft="@dimen/edge_margin"
         android:paddingRight="@dimen/edge_margin"
@@ -92,6 +94,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:visibility="gone"
         android:background="@color/colorWhite"
         android:paddingLeft="@dimen/edge_margin"
         android:paddingRight="@dimen/edge_margin"
@@ -125,8 +128,60 @@
             android:layout_height="1dp"
             android:background="@color/material_grey_200"/>
     </RelativeLayout>
+        <RadioGroup
+            android:id="@+id/rg_group"
+            android:background="@color/colorWhite"
+            android:padding="@dimen/dp_10"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RadioButton
+                android:id="@+id/rb_1"
+                android:textSize="@dimen/dp_14"
+                android:text="功能异常：功能故障或不可用"
+                android:textColor="#333333"
+                android:padding="@dimen/dp_10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <View
+                android:layout_alignLeft="@+id/tv_3"
+                android:layout_below="@+id/ck_btn_3"
+                android:layout_marginTop="@dimen/edge_margin"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/material_grey_200"/>
+            <RadioButton
+                android:id="@+id/rb_2"
+                android:textSize="@dimen/dp_14"
+                android:text="产品建议：用的不爽，我有建议"
+                android:textColor="#333333"
+                android:padding="@dimen/dp_10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <View
+                android:layout_alignLeft="@+id/tv_3"
+                android:layout_below="@+id/ck_btn_3"
+                android:layout_marginTop="@dimen/edge_margin"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/material_grey_200"/>
+            <RadioButton
+                android:id="@+id/rb_3"
+                android:textSize="@dimen/dp_14"
+                android:text="其他问题"
+                android:textColor="#333333"
+                android:padding="@dimen/dp_10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <View
+                android:layout_alignLeft="@+id/tv_3"
+                android:layout_below="@+id/ck_btn_3"
+                android:layout_marginTop="@dimen/edge_margin"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/material_grey_200"/>
+        </RadioGroup>
     <TextView
-
         android:padding="@dimen/edge_margin"
         android:textSize="@dimen/dp_14"
         android:textColor="#999999"

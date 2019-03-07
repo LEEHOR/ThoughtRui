@@ -27,8 +27,6 @@ public class ProjectsDB extends DataSupport {
     private int id;
     private String Pid;
     private String progress;
-    private int inspect;
-    private int record;
     private String Pname;
     private long startTime;
     private long endTime;
@@ -39,7 +37,6 @@ public class ProjectsDB extends DataSupport {
     private String dName;
     private String code;
     private int completeStatus;
-    private String distance;
     private double latitude;
     private double longitude;
     private long  modifyTime;
@@ -64,12 +61,10 @@ public class ProjectsDB extends DataSupport {
     public ProjectsDB() {
     }
 
-    public ProjectsDB(int id, String pid, String progress, int inspect, int record, String pname, long startTime, long endTime, String grade, String address, String location, String cName, String dName, String code, int completeStatus, String distance, double latitude, double longitude, long modifyTime, int pUploadStatus, int isComplete, String stage, String notice, long downloadTime, int isDeletes, String manager, String sale_code, String service_code, long uploadTime, UsersDB user, List<SubjectsDB> subjectsDBList) {
+    public ProjectsDB(int id, String pid, String progress, String pname, long startTime, long endTime, String grade, String address, String location, String cName, String dName, String code, int completeStatus, double latitude, double longitude, long modifyTime, int pUploadStatus, int isComplete, String stage, String notice, long downloadTime, int isDeletes, String manager, String sale_code, String service_code, long uploadTime, UsersDB user, List<SubjectsDB> subjectsDBList) {
         this.id = id;
         Pid = pid;
         this.progress = progress;
-        this.inspect = inspect;
-        this.record = record;
         Pname = pname;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -80,7 +75,6 @@ public class ProjectsDB extends DataSupport {
         this.dName = dName;
         this.code = code;
         this.completeStatus = completeStatus;
-        this.distance = distance;
         this.latitude = latitude;
         this.longitude = longitude;
         this.modifyTime = modifyTime;
@@ -116,22 +110,6 @@ public class ProjectsDB extends DataSupport {
 
     public void setProgress(String progress) {
         this.progress = progress;
-    }
-
-    public int getInspect() {
-        return inspect;
-    }
-
-    public void setInspect(int inspect) {
-        this.inspect = inspect;
-    }
-
-    public int getRecord() {
-        return record;
-    }
-
-    public void setRecord(int record) {
-        this.record = record;
     }
 
     public String getPname() {
@@ -212,14 +190,6 @@ public class ProjectsDB extends DataSupport {
 
     public void setCompleteStatus(int completeStatus) {
         this.completeStatus = completeStatus;
-    }
-
-    public String getDistance() {
-        return distance;
-    }
-
-    public void setDistance(String distance) {
-        this.distance = distance;
     }
 
     public double getLatitude() {

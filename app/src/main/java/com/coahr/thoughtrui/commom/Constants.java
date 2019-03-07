@@ -122,7 +122,7 @@ public class Constants {
 
     public static final int fragment_Dealer=17; //经销商信息
 
-
+    public static final int fragment_search=18; //搜索页
 
 
     /**

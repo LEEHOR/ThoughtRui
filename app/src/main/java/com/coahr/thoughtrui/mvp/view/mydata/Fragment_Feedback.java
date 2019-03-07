@@ -7,16 +7,23 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.ToastUtils;
+import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.Feedback_Fragment_C;
 import com.coahr.thoughtrui.mvp.model.Bean.FeedBack;
 import com.coahr.thoughtrui.mvp.presenter.Feedback_Fragment_P;
+import com.socks.library.KLog;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -32,21 +39,21 @@ import butterknife.OnClick;
 public class Fragment_Feedback extends BaseFragment<Feedback_Fragment_C.Presenter> implements Feedback_Fragment_C.View, View.OnClickListener {
     @Inject
     Feedback_Fragment_P p;
-    @BindView(R.id.ck_btn_1)
-    CheckBox ck_btn_1;
-    @BindView(R.id.ck_btn_2)
-    CheckBox ck_btn_2;
-    @BindView(R.id.ck_btn_3)
-    CheckBox ck_btn_3;
+    @BindView(R.id.rg_group)
+    RadioGroup radioGroup;
+    @BindView(R.id.rb_1)
+    RadioButton rb_1;
+    @BindView(R.id.rb_2)
+    RadioButton rb_2;
+    @BindView(R.id.rb_3)
+    RadioButton rb_3;
     @BindView(R.id.ed_input)
     EditText ed_input;
     @BindView(R.id.tv_countSize)
     TextView tv_countSize;
     @BindView(R.id.tv_submit)
     TextView tv_submit;
-    @BindView(R.id.root_re)
-    RelativeLayout root_re;
-
+    private String type;
     @Override
     public Feedback_Fragment_C.Presenter getPresenter() {
         return p;
@@ -63,37 +70,31 @@ public class Fragment_Feedback extends BaseFragment<Feedback_Fragment_C.Presente
 
     @Override
     public void initView() {
-        root_re.setOnClickListener(this);
+
         tv_submit.setOnClickListener(this);
-        ck_btn_3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ed_input.setCursorVisible(false);
-                ed_input.setFocusable(false);
-                ed_input.setFocusableInTouchMode(false);
-            }
-        });
-        ck_btn_2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ed_input.setCursorVisible(false);
-                ed_input.setFocusable(false);
-                ed_input.setFocusableInTouchMode(false);
-            }
-        });
-        ck_btn_1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ed_input.setCursorVisible(false);
-                ed_input.setFocusable(false);
-                ed_input.setFocusableInTouchMode(false);
-            }
-        });
+
 
     }
 
     @Override
     public void initData() {
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                ed_input.setCursorVisible(false);
+                ed_input.setFocusable(false);
+                ed_input.setFocusableInTouchMode(false);
+                if (i==R.id.rb_1){
+                    type="1";
+                }
+                if (i==R.id.rb_2){
+                    type="2";
+                }
+                if (i==R.id.rb_3){
+                    type="3";
+                }
+            }
+        });
         ed_input.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -127,12 +128,14 @@ public class Fragment_Feedback extends BaseFragment<Feedback_Fragment_C.Presente
 
     @Override
     public void sendSuggestionSuccess(FeedBack feedBack) {
-
+        ToastUtils.showLong(feedBack.getMsg());
+        tv_submit.setBackgroundResource(R.drawable.bg_gray_white_frame_background);
     }
 
     @Override
     public void sendSuggestionFailure(String failure, int code) {
-
+        ToastUtils.showLong(failure);
+        tv_submit.setEnabled(true);
     }
 
     @Override
@@ -142,16 +145,17 @@ public class Fragment_Feedback extends BaseFragment<Feedback_Fragment_C.Presente
                 ed_input.setCursorVisible(false);
                 ed_input.setFocusable(false);
                 ed_input.setFocusableInTouchMode(false);
-                if (ck_btn_1.isChecked() || ck_btn_2.isChecked() || ck_btn_3.isChecked()) {
-
+                if (rb_1.isChecked() || rb_2.isChecked() || rb_3.isChecked()) {
                 } else {
                     ToastUtils.showLong("反馈的问题点为必选");
                     return;
                 }
                 if (ed_input.getText().toString().equals("") && (ed_input.getText().toString().length() < 10 || ed_input.getText().toString().length() > 300)) {
                     ToastUtils.showLong("长度限制10-300字");
+                    return;
                 }
-
+                getOptions(type,ed_input.getText().toString().trim());
+                tv_submit.setEnabled(false);
                 break;
             case R.id.root_re:
                 ed_input.setCursorVisible(false);
@@ -159,5 +163,13 @@ public class Fragment_Feedback extends BaseFragment<Feedback_Fragment_C.Presente
                 ed_input.setFocusableInTouchMode(false);
                 break;
         }
+    }
+
+    private void getOptions(String type,String content){
+        Map map=new HashMap();
+        map.put("sessionId", Constants.sessionId);
+        map.put("type",type);
+        map.put("content",content);
+        p.sendSuggestion(map);
     }
 }

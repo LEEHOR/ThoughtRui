@@ -14,6 +14,7 @@ import com.coahr.thoughtrui.mvp.view.home.ProjectTemplate;
 import com.coahr.thoughtrui.mvp.view.mydata.ChangePasswordFragment;
 import com.coahr.thoughtrui.mvp.view.mydata.Fragment_Feedback;
 import com.coahr.thoughtrui.mvp.view.mydata.LoginFragment;
+import com.coahr.thoughtrui.mvp.view.search.SearchFragment;
 import com.coahr.thoughtrui.mvp.view.subjectList.Fragment_Topics;
 import com.coahr.thoughtrui.mvp.view.projectAnnex.FragmentAnnexViewPager;
 import com.coahr.thoughtrui.mvp.view.reviewed.ReviewSubjectList;
@@ -77,7 +78,9 @@ public class ConstantsActivity extends BaseSupportActivity {
             case Constants.fragment_webview: //网页
                 loadRootFragment(R.id.Constants_Fragment, Fragment_WebView.Instance(getIntent().getStringExtra("url")));
                 break;
-
+            case Constants.fragment_search: //搜索页
+                loadRootFragment(R.id.Constants_Fragment, SearchFragment.instance(getIntent().getIntExtra("type",0)));
+                break;
         }
     }
 

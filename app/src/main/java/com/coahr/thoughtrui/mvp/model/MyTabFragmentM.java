@@ -112,7 +112,7 @@ public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implemen
             }
 
         } else if (type == 2){  //未完成
-            List<ProjectsDB> projectsDBS_unComplete = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "usersdb_id=? and completestatus=? and isdeletes =?",Constants.user_id, String.valueOf(2),String.valueOf(0));
+            List<ProjectsDB> projectsDBS_unComplete = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "usersdb_id=? and completestatus!=? and isdeletes =?",Constants.user_id, String.valueOf(3),String.valueOf(0));
             if (projectsDBS_unComplete != null && projectsDBS_unComplete.size()>0) {
                 getPresenter().getTypeDateSuccess(projectsDBS_unComplete);
             } else {
@@ -141,9 +141,11 @@ public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implemen
         List<ProjectsDB> ProjectDBList = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", Pid);
         if (ProjectDBList != null && !ProjectDBList.isEmpty() && ProjectDBList.size() > 0) {
             ProjectsDB projectsDB=new ProjectsDB();
-            projectsDB.setDownloadTime(listBean.getDownloadTime());
+           // projectsDB.setDownloadTime(listBean.getDownloadTime());
             projectsDB.setCompleteStatus(listBean.getCompleteStatus());
             projectsDB.setProgress(listBean.getProgress());
+            projectsDB.setSale_code(listBean.getSale_code());
+            projectsDB.setService_code(listBean.getService_code());
             if (usersDBS != null && usersDBS.size()>0) {
                 projectsDB.setUser(usersDBS.get(0));
             }
@@ -155,14 +157,14 @@ public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implemen
             ProjectsDB projectsDB = new ProjectsDB();
             KLog.d("缓存", listBean.getId());
             projectsDB.setPid(listBean.getId());
-            projectsDB.setRecord(listBean.getRecord()); //录音方式
-            projectsDB.setInspect(listBean.getInspect()); //检验方式
+           // projectsDB.setRecord(listBean.getRecord()); //录音方式
+          //  projectsDB.setInspect(listBean.getInspect()); //检验方式
             projectsDB.setPname(listBean.getPname());  //项目名
             projectsDB.setAddress(listBean.getAreaAddress());
             projectsDB.setStartTime(listBean.getStartTime());
             projectsDB.setcName(listBean.getCname());
-            projectsDB.setCode(listBean.getCode());
-            projectsDB.setDownloadTime(listBean.getDownloadTime());
+           // projectsDB.setCode(listBean.getCode());
+           // projectsDB.setDownloadTime(listBean.getDownloadTime());
             projectsDB.setCompleteStatus(listBean.getCompleteStatus());
             projectsDB.setProgress(listBean.getProgress());
             projectsDB.setdName(listBean.getDname());
@@ -171,8 +173,8 @@ public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implemen
             projectsDB.setLongitude(listBean.getLongitude());
             projectsDB.setModifyTime(listBean.getModifyTime());
             projectsDB.setNotice(listBean.getNotice());
-            projectsDB.setEndTime(listBean.getEndTime());
-            projectsDB.setManager(listBean.getManager());
+          //  projectsDB.setEndTime(listBean.getEndTime());
+           // projectsDB.setManager(listBean.getManager());
             projectsDB.setService_code(listBean.getService_code());
             projectsDB.setSale_code(listBean.getSale_code());
             projectsDB.setIsComplete(0);

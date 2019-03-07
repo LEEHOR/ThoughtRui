@@ -56,7 +56,8 @@
             </intent-filter>
         </activity>
         <!-- 中间跳转 -->
-        <activity android:name=".mvp.view.ConstantsActivity" />
+        <activity android:name=".mvp.view.ConstantsActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <!-- 考勤 -->
         <activity android:name=".mvp.view.attence.AttendanceRootActivity" />
         <!-- 拍照页面 -->
@@ -71,7 +72,8 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme_Light.Default" />
         <!-- 答题 -->
-        <activity android:name=".mvp.view.StartProjectActivity" />
+        <activity android:name=".mvp.view.StartProjectActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <!-- 百度定位AK鉴权 -->
         <!-- meta-data需要写在application中 -->
         <meta-data

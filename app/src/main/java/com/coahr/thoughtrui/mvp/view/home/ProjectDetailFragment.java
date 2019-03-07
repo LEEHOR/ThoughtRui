@@ -157,6 +157,9 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
         if (type == 2) {  //项目列表页
             getSubjectList(projectId);
         }
+        if (type == 3) {    //搜索页
+            getSubjectList(projectId);
+        }
     }
 
     @Override
@@ -276,14 +279,16 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
     @Override
     public void getProjectDetailSuccess(ProjectDetail projectDetail) {
         if (projectDetail.getData() != null) {
-            int id=0;
+            int id = 0;
             List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", projectDetail.getData().getId());
             if (projectsDBS != null && projectsDBS.size() > 0) {
-                 id = projectsDBS.get(0).getId();
+                id = projectsDBS.get(0).getId();
                 ProjectsDB projectsDB = new ProjectsDB();
                 projectsDB.setDownloadTime(projectDetail.getData().getUploadTime());
                 projectsDB.setProgress(projectDetail.getData().getProgress());
                 int update = projectsDB.update(projectsDBS.get(0).getId());
+                //获取数据
+                p.getSubjectList(projectsDBS.get(0));
             } else {
                 List<UsersDB> usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", Constants.sessionId);
                 ProjectsDB projectsDB = new ProjectsDB();
@@ -307,15 +312,16 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
                     projectsDB.setUser(usersDBS.get(0));
                 }
                 projectsDB.save();
-
+                tv_upload_status.setText("数据" + 0 + "条，" + "数据" + 0 + "个未上传");
+                tv_fstatus.setText("暂无数据");
             }
 
             tv_cName.setText(projectDetail.getData().getCname());
-            tv_cCode.setText(Constants.user_type==1 ? projectDetail.getData().getSale_code() : Constants.user_type==2
+            tv_cCode.setText(Constants.user_type == 1 ? projectDetail.getData().getSale_code() : Constants.user_type == 2
                     ? projectDetail.getData().getService_code() : projectDetail.getData().getSale_code());
             tv_cLevel.setText(projectDetail.getData().getGrade());
             tv_cAddress.setText(projectDetail.getData().getAreaAddress() + projectDetail.getData().getLocation());
-             tv_time_cycle.setText(TimeUtils.getStingYMDHM(projectDetail.getData().getUploadTime()));
+            tv_time_cycle.setText(TimeUtils.getStingYMDHM(projectDetail.getData().getUploadTime()));
             tv_Kclass.setText(projectDetail.getData().getCname());
             project_detail_name.setText(projectDetail.getData().getPname());
             String progress = projectDetail.getData().getProgress();

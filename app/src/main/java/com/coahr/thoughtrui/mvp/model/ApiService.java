@@ -13,6 +13,7 @@ import com.coahr.thoughtrui.mvp.model.Bean.LoginBean;
 import com.coahr.thoughtrui.mvp.model.Bean.ProjectDetail;
 import com.coahr.thoughtrui.mvp.model.Bean.PushAttendanceCard;
 import com.coahr.thoughtrui.mvp.model.Bean.QuestionBean;
+import com.coahr.thoughtrui.mvp.model.Bean.SearchBeans;
 import com.coahr.thoughtrui.mvp.model.Bean.Template_list;
 import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
 import com.coahr.thoughtrui.mvp.model.Bean.UnDownLoad;
@@ -181,4 +182,11 @@ public interface ApiService {
     @FormUrlEncoded
     @POST(ApiContact.project_detail)
     Call<ProjectDetail>project_detail (@FieldMap Map<String,Object> para);
+
+    /**
+     * 搜索请求
+     */
+    @FormUrlEncoded
+    @POST(ApiContact.search)
+    Call<SearchBeans>search (@FieldMap Map<String,Object> para);
 }

@@ -91,6 +91,7 @@ public abstract class BaseFragment<P extends BaseContract.Presenter> extends Sup
                 List<UsersDB> usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", sessionId);
                 if (usersDBS != null && usersDBS.size() > 0) {
                     Constants.user_id = String.valueOf(usersDBS.get(0).getId());
+                    Constants.user_type = usersDBS.get(0).getType();
                 }
 
             }

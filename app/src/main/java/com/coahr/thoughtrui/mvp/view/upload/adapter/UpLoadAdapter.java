@@ -10,6 +10,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.TimeUtils;
+import com.coahr.thoughtrui.commom.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +38,9 @@ public class UpLoadAdapter extends BaseQuickAdapter<ProjectsDB,BaseViewHolder> {
     protected void convert(BaseViewHolder helper, final ProjectsDB item) {
         if (item != null) {
             helper.setText(R.id.up_tv_schedule,item.getProgress())
-                    .setText(R.id.f_type,item.getInspect()==1?"飞检"
-                            :item.getInspect()==2?"神秘顾客"
-                            :item.getInspect()==3?"新店验收":"飞检")
-                    .setText(R.id.up_tv_time,"["+TimeUtils.getStringDate_start(item.getStartTime())+","+TimeUtils.getStringDate_end(item.getEndTime())+"]")
+                    .setText(R.id.f_type, Constants.user_type==1?"["+item.getSale_code()+"]"
+                            :Constants.user_type==2?"["+item.getService_code()+"]" :"["+item.getSale_code()+"]")
+                    .setText(R.id.up_tv_time,item.getPname())
                     .setText(R.id.up_tv_project_code,item.getCode())
                     .setText(R.id.up_tv_project_name,item.getPname())
                     .setText(R.id.up_tv_project_company,item.getcName())

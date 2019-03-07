@@ -1,11 +1,13 @@
 package com.coahr.thoughtrui.mvp.view.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
 import androidx.annotation.Nullable;
 
+import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.viewpager.widget.ViewPager;
@@ -86,7 +88,7 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
         tv_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                JumpToProject();
             }
         });
 
@@ -104,5 +106,21 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+    /**
+     * 跳转到搜索页
+
+     */
+    private void JumpToProject() {
+        if (haslogin()) {
+            Intent intent = new Intent(getActivity(), ConstantsActivity.class);
+            intent.putExtra("from", Constants.MyTabFragmentCode);
+            intent.putExtra("type", 1);
+            intent.putExtra("to", Constants.fragment_search);
+            startActivity(intent);
+        } else {
+            ToastUtils.showLong("请登录后再操作");
+        }
     }
 }

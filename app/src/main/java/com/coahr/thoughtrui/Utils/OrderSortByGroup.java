@@ -15,41 +15,6 @@ import java.util.TreeSet;
  * 2018/4/11
  */
 public class OrderSortByGroup {
-    public static void ListSortByDestance(List<ProjectsDB> list, final boolean b){
-        if (list!=null&&!list.isEmpty()){
-            Collections.sort(list, new Comparator<ProjectsDB>() {
-                @Override
-                public int compare(ProjectsDB o1, ProjectsDB o2) {
-                    int dt1 = Integer.parseInt(o1.getDistance());
-                    int dt2 = Integer.parseInt(o2.getDistance());
-                    if (b){
-                        if (dt1 > dt2) {
-                            return 1;
-                        } else if (dt1 < dt2) {
-                            return -1;
-                        } else {
-                            return 0;
-                        }
-                    }else {
-                        if (dt1 > dt2) {
-                            return -1;
-                        } else if (dt1 < dt2) {
-                            return 1;
-                        } else {
-                            return 0;
-                        }
-                    }
-
-                    }
-            });
-            for (int i = 0; i < list.size(); i++) {
-                Log.e("rr","距离排序"+list.get(i).getStartTime()+"距离为："+list.get(i).getDistance());
-            }
-        }else {
-            Log.e("rr","距离排序为空");
-        }
-
-    }
     public static List<ProjectsDB> ListSortByStartTime(List<ProjectsDB> list, final boolean b){
         if (list!=null&&!list.isEmpty()){
             Collections.sort(list, new Comparator<ProjectsDB>() {
