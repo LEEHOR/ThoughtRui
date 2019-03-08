@@ -110,7 +110,6 @@ public abstract class BaseFragment<P extends BaseContract.Presenter> extends Sup
     }
 
 
-
     @Override
     public void showLoading() {
         if (dialog == null) {
@@ -243,11 +242,17 @@ public abstract class BaseFragment<P extends BaseContract.Presenter> extends Sup
         _mActivity.startActivity(intent);
     }
 
+    /**
+     * 判断是否登录
+     *
+     * @return
+     */
     public boolean haslogin() {
         if (PreferenceUtils.contains(BaseApplication.mContext, Constants.sessionId_key)) {
             if (Constants.sessionId.equals("")) {
                 Constants.sessionId = PreferenceUtils.getPrefString(_mActivity, Constants.sessionId_key, "");
                 Constants.user_name = PreferenceUtils.getPrefString(_mActivity, Constants.user_key, "");
+                Constants.user_type = PreferenceUtils.getPrefInt(_mActivity, Constants.user_type_key, 1);
             }
             return true;
         }

@@ -99,7 +99,6 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
         EventBus.getDefault().register(this);
         manager = LocalBroadcastManager.getInstance(this);
         if (!isRegister.isRegister(manager, "hotAliyun")) {
-            KLog.d("SophixStubApplication", "注册广播1");
             aliyunHotReceiver = new AliyunHotReceiver();
             IntentFilter filter = new IntentFilter();
             filter.addAction("hotAliyun");
@@ -107,7 +106,6 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
             aliyunHotReceiver.setHotListener(new AliyunHotReceiver.hotListener() {
                 @Override
                 public void getPathDetail(String path_info, String path_version, String app_version) {
-                    KLog.d("SophixStubApplication", "注册广播2");
                     Dialog("雷诺" + app_version + "修复补丁。", "补丁版本：" + path_version + "\n" + "补丁说明：" + path_info + "\n" +
                             "点击【立即修复】重新打开应用");
                 }

@@ -60,7 +60,7 @@ public class FragmentAnnex extends BaseChildFragment<FragmentAnnex_C.Presenter> 
         return annex;
     }
     private final static int setList=1;
-    private Handler mHandler=new Handler(){
+    private Handler mHandler= new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);

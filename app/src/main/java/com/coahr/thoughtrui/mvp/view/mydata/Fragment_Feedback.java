@@ -54,6 +54,7 @@ public class Fragment_Feedback extends BaseFragment<Feedback_Fragment_C.Presente
     @BindView(R.id.tv_submit)
     TextView tv_submit;
     private String type;
+
     @Override
     public Feedback_Fragment_C.Presenter getPresenter() {
         return p;
@@ -84,14 +85,14 @@ public class Fragment_Feedback extends BaseFragment<Feedback_Fragment_C.Presente
                 ed_input.setCursorVisible(false);
                 ed_input.setFocusable(false);
                 ed_input.setFocusableInTouchMode(false);
-                if (i==R.id.rb_1){
-                    type="1";
+                if (i == R.id.rb_1) {
+                    type = "1";
                 }
-                if (i==R.id.rb_2){
-                    type="2";
+                if (i == R.id.rb_2) {
+                    type = "2";
                 }
-                if (i==R.id.rb_3){
-                    type="3";
+                if (i == R.id.rb_3) {
+                    type = "3";
                 }
             }
         });
@@ -146,15 +147,18 @@ public class Fragment_Feedback extends BaseFragment<Feedback_Fragment_C.Presente
                 ed_input.setFocusable(false);
                 ed_input.setFocusableInTouchMode(false);
                 if (rb_1.isChecked() || rb_2.isChecked() || rb_3.isChecked()) {
+
                 } else {
                     ToastUtils.showLong("反馈的问题点为必选");
                     return;
                 }
+
                 if (ed_input.getText().toString().equals("") && (ed_input.getText().toString().length() < 10 || ed_input.getText().toString().length() > 300)) {
                     ToastUtils.showLong("长度限制10-300字");
                     return;
                 }
-                getOptions(type,ed_input.getText().toString().trim());
+
+                getOptions(type, ed_input.getText().toString().trim());
                 tv_submit.setEnabled(false);
                 break;
             case R.id.root_re:
@@ -165,11 +169,11 @@ public class Fragment_Feedback extends BaseFragment<Feedback_Fragment_C.Presente
         }
     }
 
-    private void getOptions(String type,String content){
-        Map map=new HashMap();
+    private void getOptions(String type, String content) {
+        Map map = new HashMap();
         map.put("sessionId", Constants.sessionId);
-        map.put("type",type);
-        map.put("content",content);
+        map.put("type", type);
+        map.put("content", content);
         p.sendSuggestion(map);
     }
 }

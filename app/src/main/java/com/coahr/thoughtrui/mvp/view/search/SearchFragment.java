@@ -1,9 +1,7 @@
 package com.coahr.thoughtrui.mvp.view.search;
 
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;

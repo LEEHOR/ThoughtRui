@@ -130,6 +130,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
             @Override
             public void onRefresh() {
                 if (!isLoad) {
+
                     if (isNetworkAvailable()) {
                         isLoad = true;
                         getDate();
@@ -137,6 +138,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
                         isLoad = true;
                         p.getTypeDate(type);
                     }
+
                 } else {
                     myTab_swipe.setRefreshing(false);
                 }
@@ -187,6 +189,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
         } else {
             tab_off_recyclerView.removeItemDecoration(spacesItemDecoration);
         }
+
         if (haslogin()) {
             if (isNetworkAvailable()) {  //有网络
                 getDate();
@@ -194,7 +197,6 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
                 p.getTypeDate(type);
             }
         }
-
 
         //有网络adapter监听
         tabFAdapter.setAdapter_online(new MyTabFOnLineAdapter.adapter_online() {
@@ -525,9 +527,9 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
         if (haslogin()) {
             Intent intent = new Intent(getActivity(), ConstantsActivity.class);
             intent.putExtra("from", Constants.MyTabFragmentCode);
-            intent.putExtra("templateId","");
-            intent.putExtra("dealerId","");
-            intent.putExtra("type",2);
+            intent.putExtra("templateId", "");
+            intent.putExtra("dealerId", "");
+            intent.putExtra("type", 2);
             intent.putExtra("projectId", projectId);
             intent.putExtra("to", Constants.ProjectDetailFragmentCode);
             startActivity(intent);
@@ -592,6 +594,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
      */
     private void getDifferenceSet(List<String> ht_List) {
         List<UsersDB> usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", Constants.sessionId);
+
         if (usersDBS != null && usersDBS.size() > 0) {
             List<ProjectsDB> projectsDBSList = usersDBS.get(0).getProjectsDBSList();
             if (projectsDBSList != null && projectsDBSList.size() > 0) {
@@ -601,6 +604,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
                 }
             }
         }
+
         if (db_list != null && ht_List != null && ht_List.size() > 0) {
             if (db_list.removeAll(ht_List)) {
                 if (db_list != null && db_list.size() > 0) {

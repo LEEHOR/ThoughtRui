@@ -8,9 +8,6 @@ import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.TimeUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.model.Bean.SearchBeans;
-
-import java.util.List;
-
 /**
  * @author Leehor
  * 版本：

@@ -8,8 +8,10 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
+import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
 import com.gyf.barlibrary.ImmersionBar;
 
+import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.cardview.widget.CardView;
 import butterknife.BindView;
 
@@ -51,11 +53,12 @@ public class MainInfoFragment extends BaseChildFragment {
                 JumpToProjectList();
             }
         });
+
+
     }
 
     @Override
     public void initData() {
-
     }
 
     /**
@@ -83,4 +86,5 @@ public class MainInfoFragment extends BaseChildFragment {
     public void onDestroy() {
         super.onDestroy();
     }
+
 }
