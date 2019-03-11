@@ -142,7 +142,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
     private Drawable imgs[] = {BaseApplication.mContext.getResources().getDrawable(R.mipmap.ico_recorder, null)
             , BaseApplication.mContext.getResources().getDrawable(R.mipmap.recordering, null)
             , BaseApplication.mContext.getResources().getDrawable(R.mipmap.recorder_play_w, null)};
-   // private SpacesItemDecoration spacesItemDecoration;
+    // private SpacesItemDecoration spacesItemDecoration;
     private PagerFragmentPhotoAdapter adapter;
     private GridLayoutManager gridLayoutManager;
     private String answers;
@@ -170,20 +170,20 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
     private View inflate;
     private TextView tv_tittle;
     private ProgressBar progressBar;
-    private final int GETUPLOADLIST=1;
-    private final int UIPROGRESS=2;
-    private Handler mHandler=new Handler(){
+    private final int GETUPLOADLIST = 1;
+    private final int UIPROGRESS = 2;
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case GETUPLOADLIST:
-                    p.UpLoadFileList(ht_projectId,subjectsDB_now);
+                    p.UpLoadFileList(ht_projectId, subjectsDB_now);
                     break;
                 case UIPROGRESS:
                     //  progressBar.setMax(msg.arg2);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        progressBar.setProgress(msg.arg1,true);
+                        progressBar.setProgress(msg.arg1, true);
                     } else {
                         progressBar.setProgress(msg.arg1);
                     }
@@ -213,7 +213,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // spacesItemDecoration = new SpacesItemDecoration(DensityUtils.dp2px(BaseApplication.mContext, 2), DensityUtils.dp2px(BaseApplication.mContext, 2), getResources().getColor(R.color.colorPrimaryDark));
+        // spacesItemDecoration = new SpacesItemDecoration(DensityUtils.dp2px(BaseApplication.mContext, 2), DensityUtils.dp2px(BaseApplication.mContext, 2), getResources().getColor(R.color.colorPrimaryDark));
     }
 
     @Override
@@ -246,7 +246,6 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
                 projectsDB = projectsDBS.get(0);
             }
         }
-        setupRecorder();
         adapter = new PagerFragmentPhotoAdapter();
         gridLayoutManager = new GridLayoutManager(BaseApplication.mContext, 5);
         img_recycler.setLayoutManager(gridLayoutManager);
@@ -257,7 +256,6 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
                 img_recycler.removeItemDecorationAt(i);
             }
         }
-        tv_Unfold.setOnClickListener(this);
         tv_last.setOnClickListener(this);
         tv_next.setOnClickListener(this);
         Fr_takePhoto.setOnClickListener(this);
@@ -284,6 +282,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
 
                 } else {
                     if (type == 1) { //开始录音
+                        setupRecorder();
                         startAudio();
                     } else if (type == 2) { //暂停录音
 
@@ -298,30 +297,53 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
             }
 
         });
+        //输入分数
         ed_score.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fill_in_blankDialog dialog=new Fill_in_blankDialog();
+                Fill_in_blankDialog dialog = new Fill_in_blankDialog();
                 dialog.setOnClick(new Fill_in_blankDialog.InPutOnClick() {
                     @Override
                     public void setOnClick(String text) {
-                        if (text != null && standard_score !=null) {
-                            if (Integer.parseInt(text)<=Integer.parseInt(standard_score) && Integer.parseInt(text)>=0){
+                        if (text != null && standard_score != null) {
+                            if (Integer.parseInt(text) <= Integer.parseInt(standard_score) && Integer.parseInt(text) >= 0) {
                                 ed_score.setText(text);
                                 p.saveAnswers(text, remark, ht_projectId, number, ht_id);
                             } else {
                                 ToastUtils.showLong("请输入正确的分数");
                             }
                         }
-                       // ed_score.setText(text);
-                       // p.saveAnswers(text, remark, ht_projectId, number, ht_id);
+                        // ed_score.setText(text);
+                        // p.saveAnswers(text, remark, ht_projectId, number, ht_id);
                     }
 
                     @Override
                     public void setOnClickFailure() {
-                    ToastUtils.showLong("请输入正确的数值");
+                        ToastUtils.showLong("请输入正确的数值");
                     }
                 });
+            }
+        });
+
+        //图片的展开和关闭
+        tv_Unfold.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (tv_Unfold.getTag()==null || tv_Unfold.getTag().equals("1")){ //展开
+                    img_recycler.setVisibility(View.VISIBLE);
+                    tv_Unfold.setText("关闭");
+                    tv_Unfold.setTag("2");
+                }  else if (tv_Unfold.getTag().equals("2")){  //关闭
+                    img_recycler.setVisibility(View.GONE);
+                    tv_Unfold.setText("展开");
+                    tv_Unfold.setTag("1");
+                } else if (tv_Unfold.getTag().equals("3")){
+                    tv_Unfold.setText("关闭");
+                    tv_Unfold.setTag("2");
+                    isDeletePic=false;
+                    p.getImage(ht_projectId, _mActivity, number, ht_id);
+                }
+
             }
         });
     }
@@ -334,7 +356,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
         //图片监听
         adapter.setListener(new PagerAdapterListener());
         //
-        ed_score.getPaint().setFlags(Paint. UNDERLINE_TEXT_FLAG );
+        ed_score.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
     }
 
     @Override
@@ -344,22 +366,22 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
         if (subjectsDB != null) {
             //题目
             project_detail_titlle.setText(subjectsDB.getTitle());
-            if (subjectsDB.getType()==0) {  //判断
+            if (subjectsDB.getType() == 0) {  //判断
                 re_score.setVisibility(View.GONE);
                 rg_gr.setVisibility(View.VISIBLE);
             }
 
-            if (subjectsDB.getType()==1){  //填空题
+            if (subjectsDB.getType() == 1) {  //填空题
                 re_score.setVisibility(View.VISIBLE);
                 rg_gr.setVisibility(View.GONE);
-                standard_score =subjectsDB.getOptions();
-                tv_standard_score.setText("标准分数："+subjectsDB.getOptions());
+                standard_score = subjectsDB.getOptions();
+                tv_standard_score.setText("标准分数：" + subjectsDB.getOptions());
 
             }
-            tv_describe.setText("说明："+subjectsDB.getDescription());
-            p.getAnswer(ht_projectId,_mActivity,number,ht_id);
-            p.getImage(ht_projectId,_mActivity,number,ht_id);
-            p.getAudio(ht_projectId,_mActivity,number,ht_id);
+            tv_describe.setText("说明：" + subjectsDB.getDescription());
+            p.getAnswer(ht_projectId, _mActivity, number, ht_id);
+            p.getImage(ht_projectId, _mActivity, number, ht_id);
+            p.getAudio(ht_projectId, _mActivity, number, ht_id);
         }
     }
 
@@ -382,6 +404,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
                 adapter.setNewData(imagePathList);
                 adapter.setImageList(imagePathList);
             }
+            UpdateDB();
         } else {
             isDeletePic = false;
             adapter.setIsDel(false);
@@ -400,7 +423,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
     @Override
     public void getAnswerSuccess(String Massage) {
         if (Massage != null) {
-            if (subjectsDBType==0) { //判断题
+            if (subjectsDBType == 0) { //判断题
                 String[] split = Massage.split("&");
                 if (split != null && split.length > 0) {
                     for (int i = 0; i < split.length; i++) {
@@ -431,7 +454,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
                 }
             }
 
-            if (subjectsDBType==1) {    //填空题
+            if (subjectsDBType == 1) {    //填空题
                 String[] split = Massage.split("&");
                 if (split != null && split.length > 0) {
                     for (int i = 0; i < split.length; i++) {
@@ -486,8 +509,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
     public void saveAnswersSuccess() {
         ed_score.setFocusable(false);
         ed_score.setFocusableInTouchMode(false);
-        KeyBoardUtils.hideKeybord(ed_score,_mActivity);
-
+        KeyBoardUtils.hideKeybord(ed_score, _mActivity);
         p.getAnswer(ht_projectId, _mActivity, number, ht_id);
         ToastUtils.showLong("答案保存成功");
     }
@@ -524,6 +546,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
                 updateUi(4); //播放录音
                 tv_recorder_name.setText(audioName);
                 tv_recorder_name.setTextColor(getResources().getColor(R.color.origin_3));
+                UpdateDB();
             }
         }
     }
@@ -542,7 +565,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
     @Override
     public void getUpLoadFileListSuccess(List<String> list, String projectsDB_id, SubjectsDB subjectsDB) {
         showProgressDialog();
-        p.startUpload(ossClient,list, projectsDB,subjectsDB);
+        p.startUpload(ossClient, list, projectsDB, subjectsDB);
     }
 
     @Override
@@ -553,9 +576,9 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
 
     @Override
     public void startUploadCallBack(List<String> list, int uploadSuccessSize, int uploadFailSize, int totalSize, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
-        KLog.a("上传",totalSize,uploadFailSize,uploadSuccessSize);
+        KLog.a("上传", totalSize, uploadFailSize, uploadSuccessSize);
         //上传成功
-        if (totalSize==(uploadSuccessSize+uploadFailSize)) {
+        if (totalSize == (uploadSuccessSize + uploadFailSize)) {
             if (totalSize == uploadSuccessSize) {
                 fileList_Call.clear();
                 KLog.d("阿里云上传成功" + projectsDB.getPname() + "/" + subjectsDB.getNumber());
@@ -586,7 +609,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
         }
         Message mes = mHandler.obtainMessage(UIPROGRESS, info);
         mes.arg1 = currentSize;
-        mes.arg2=totalSize;
+        mes.arg2 = totalSize;
         mes.sendToTarget();
     }
 
@@ -615,6 +638,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
 
     /**
      * 回调
+     *
      * @param projectsDB
      * @param subjectsDB
      * @param recorderPath
@@ -744,7 +768,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
         if (!file.exists()) {
             file.mkdirs();
         }
-        KLog.d("路径",Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id);
+        KLog.d("路径", Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id);
         return new File(file, "录音" + number + ".wav");
     }
 
@@ -754,8 +778,8 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
         switch (v.getId()) {
             //上一题
             case R.id.tv_last:
-                if (position >0) {
-                    if (!isRecorder){
+                if (position > 0) {
+                    if (!isRecorder) {
                         if (isComplete()) {
                             SubjectsDB subjectsDB = new SubjectsDB();
                             subjectsDB.setIsComplete(1);
@@ -765,7 +789,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
                         }
                         EventBus.getDefault().postSticky(new isCompleteBean(true, number - 1, 1));
                     } else {
-                        showDialog("","是否关闭录音");
+                        showDialog("", "是否关闭录音");
                     }
 
 
@@ -775,8 +799,8 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
                 break;
             //下一题
             case R.id.tv_next:
-                if (position <countSize-1) {
-                    if (!isRecorder){
+                if (position < countSize - 1) {
+                    if (!isRecorder) {
                         if (isComplete()) {
                             SubjectsDB subjectsDB = new SubjectsDB();
                             subjectsDB.setIsComplete(1);
@@ -785,12 +809,12 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
                         }
                         EventBus.getDefault().postSticky(new isCompleteBean(true, number + 1, 2));
                     } else {
-                        showDialog("","是否关闭录音");
+                        showDialog("", "是否关闭录音");
                     }
 
                 } else {
-                    if (!isRecorder){
-                        if (isComplete()){
+                    if (!isRecorder) {
+                        if (isComplete()) {
                             SubjectsDB subjectsDB = new SubjectsDB();
                             subjectsDB.setIsComplete(1);
                             subjectsDB.updateAsync(subjectsDB_now.getId());
@@ -799,7 +823,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
                         ProjectSuccessDialog projectSuccessDialog = ProjectSuccessDialog.newInstance(ht_projectId);
                         projectSuccessDialog.show(getChildFragmentManager(), TAG);
                     } else {
-                        showDialog("","已经是最后一题");
+                        showDialog("", "已经是最后一题");
                     }
 
                 }
@@ -827,12 +851,12 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
                     ToastUtils.showLong("正在录音");
                 }
                 break;
-            case  R.id.fr_upload:
+            case R.id.fr_upload:
                 fr_upload.setEnabled(false);
                 if (Constants.isNetWorkConnect) {
-                    if (Constants.NetWorkType!=null && Constants.NetWorkType.equals("WIFI")){
+                    if (Constants.NetWorkType != null && Constants.NetWorkType.equals("WIFI")) {
                         NetWorkDialog("提示", "是否上传", 1);
-                    } else if (Constants.NetWorkType!=null && Constants.NetWorkType.equals("MOBILE")){
+                    } else if (Constants.NetWorkType != null && Constants.NetWorkType.equals("MOBILE")) {
                         NetWorkDialog("提示", "当前为移动网络是否继续上传", 2);
                     }
                 } else {
@@ -936,6 +960,8 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
             adapter.setIsDel(true);
             adapter.setImageList(imageList);
             adapter.notifyDataSetChanged();
+            tv_Unfold.setText("取消");
+            tv_Unfold.setTag("3");
         }
 
         @Override
@@ -977,7 +1003,6 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
         Fr_takeRecorder.setEnabled(false);
         isRecorder = true;
         recorder.startRecording();
-
         Fr_takeRecorder.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -1003,15 +1028,16 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
             @Override
             public void run() {
                 p.getAudio(ht_projectId, _mActivity, number, ht_id);
-                Fr_takeRecorder.setEnabled(true);
                 updateUi(1);
                 type = 1;
+                Fr_takeRecorder.setEnabled(true);
             }
         }, 1500);
     }
 
     /**
      * 录音停止弹窗
+     *
      * @param title
      * @param Content
      */
@@ -1119,5 +1145,14 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
                         dialog.dismiss();
                     }
                 }).build().show();
+    }
+
+    /**
+     * 修改数据库状态为完成
+     */
+    private void UpdateDB() {
+        SubjectsDB subjectsDB = new SubjectsDB();
+        subjectsDB.setIsComplete(1);
+        subjectsDB.update(subjectsDB_now.getId());
     }
 }

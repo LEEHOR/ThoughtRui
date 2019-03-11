@@ -184,6 +184,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                             subjectsDB.setType(questionList.get(i).getType());
                             subjectsDB.setOptions(questionList.get(i).getOptions());
                             subjectsDB.setNumber(questionList.get(i).getNumber());
+                            subjectsDB.setCensor(questionList.get(i).getCensor());
                             subjectsDB.update(subjectsDBS.get(0).getId());
                         }
                     } else {
@@ -354,6 +355,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         if (subjectList_id != null) {
             List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectByTogether_Where(SubjectsDB.class, "ht_id=?", subjectList_id.getSub_id());
             if (subjectsDBS != null && subjectsDBS.size()>0) {
+                KLog.d("跳转",subjectList_id.getSub_id(),subjectsDBS.get(0).getNumber());
                 p_mytitle.getTvTittle().setText("第" + (subjectsDBS.get(0).getNumber()) + "题");
                         project_viewPage.setCurrentItem(subjectsDBS.get(0).getNumber()-1);
             }

@@ -307,14 +307,13 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 img_recycler.removeItemDecorationAt(i);
             }
         }
-        tv_Unfold.setOnClickListener(this);
         tv_last.setOnClickListener(this);
         tv_next.setOnClickListener(this);
         Fr_takePhoto.setOnClickListener(this);
         tv_bianji.setOnClickListener(this);
         tv_play_recorder.setOnClickListener(this);
         fr_upload.setOnClickListener(this);
-        setupRecorder();
+
         //录音控制
         Fr_takeRecorder.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -323,6 +322,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                     showDeleteAudioDialog("当前题目下有录音", "是否删除");
                 } else {
                     if (type == 1) { //开始录音
+                        setupRecorder();
                         startAudio();
                     } else if (type == 2) { //暂停录音
 
@@ -373,6 +373,28 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                     }
                 });
                 fill_in_blankDialog.show(getFragmentManager(), TAG);
+            }
+        });
+
+        //图片的展开和关闭
+        tv_Unfold.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (tv_Unfold.getTag()==null || tv_Unfold.getTag().equals("1")){ //展开
+                    img_recycler.setVisibility(View.VISIBLE);
+                    tv_Unfold.setText("关闭");
+                    tv_Unfold.setTag("2");
+                }  else if (tv_Unfold.getTag().equals("2")){  //关闭
+                    img_recycler.setVisibility(View.GONE);
+                    tv_Unfold.setText("展开");
+                    tv_Unfold.setTag("1");
+                } else if (tv_Unfold.getTag().equals("3")){
+                    tv_Unfold.setText("关闭");
+                    tv_Unfold.setTag("2");
+                    isDeletePic=false;
+                    p.getImage(ht_projectId, _mActivity, number, ht_id);
+                }
+
             }
         });
     }
@@ -536,11 +558,14 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 adapter.setNewData(imagePathList);
                 adapter.setImageList(imagePathList);
             }
+            //更新数据库
+            UpdateDB();
         } else {
             isDeletePic = false;
             adapter.setIsDel(false);
             adapter.setNewData(imagePathList);
             adapter.setImageList(imagePathList);
+
         }
     }
 
@@ -664,6 +689,8 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             updateUi(1); //开始录音
             tv_recorder_name.setText(audioName);
             tv_recorder_name.setTextColor(getResources().getColor(R.color.origin_3));
+            //更新数据库完成状态
+            UpdateDB();
         }
     }
 
@@ -827,6 +854,8 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             adapter.setIsDel(true);
             adapter.setImageList(imageList);
             adapter.notifyDataSetChanged();
+            tv_Unfold.setText("取消");
+            tv_Unfold.setTag("3");
         }
 
         @Override
@@ -962,11 +991,12 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
      */
     private void startAudio() {
         isRecorder = true;
-        recorder.startRecording();
         Fr_takeRecorder.setEnabled(false);
+        recorder.startRecording();
         Fr_takeRecorder.postDelayed(new Runnable() {
             @Override
             public void run() {
+
                 updateUi(2);
                 type = 4;
                 Fr_takeRecorder.setEnabled(true);
@@ -986,14 +1016,14 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         Fr_takeRecorder.postDelayed(new Runnable() {
             @Override
             public void run() {
+
                 p.getAudio(ht_projectId, _mActivity, number, ht_id);
-                Fr_takeRecorder.setEnabled(true);
                 updateUi(1);
                 type = 1;
+                Fr_takeRecorder.setEnabled(true);
             }
         }, 1500);
     }
@@ -1068,6 +1098,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     private void callbackForServer(final ProjectsDB projectsDB, final SubjectsDB subjectsDB, String recorderPath, List<String> picList, String text) {
         final Map map = new HashMap();
         map.put("projectId", projectsDB.getPid());
+        map.put("censor",subjectsDB.getCensor());
         map.put("answerId", subjectsDB.getHt_id());
         map.put("number", subjectsDB.getNumber());
         map.put("stage", projectsDB.getStage());
@@ -1221,5 +1252,13 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         }
     }
 
+    /**
+     * 修改数据库状态为完成
+     */
+    private void UpdateDB(){
+        SubjectsDB subjectsDB = new SubjectsDB();
+        subjectsDB.setIsComplete(1);
+        subjectsDB.update(subjectsDB_now.getId());
+    }
 }
 

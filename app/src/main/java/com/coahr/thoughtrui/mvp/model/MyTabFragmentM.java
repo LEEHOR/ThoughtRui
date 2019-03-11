@@ -143,6 +143,7 @@ public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implemen
             ProjectsDB projectsDB=new ProjectsDB();
            // projectsDB.setDownloadTime(listBean.getDownloadTime());
             projectsDB.setCompleteStatus(listBean.getCompleteStatus());
+            projectsDB.setCname(listBean.getCname());
             projectsDB.setProgress(listBean.getProgress());
             projectsDB.setSale_code(listBean.getSale_code());
             projectsDB.setService_code(listBean.getService_code());

@@ -60,6 +60,8 @@ public class DealerFragment extends BaseFragment<ProjectDealer_c.Presenter> impl
     TextView tv_submit;
     @BindView(R.id.dealer_Tittle)
     MyTittleBar dealer_Tittle;
+    //经销商id
+    private String Dealer_id;
     /*
     省市区三级列表联动数据结构
      */
@@ -185,7 +187,7 @@ public class DealerFragment extends BaseFragment<ProjectDealer_c.Presenter> impl
                     ToastUtils.showLong("请选择经销商");
                     return;
                 }
-                start(ProjectDetailFragment.newInstance(null, template_id, tv_project_id.getText().toString().trim(), 1));
+                start(ProjectDetailFragment.newInstance(null, template_id, Dealer_id, 1));
                 break;
         }
     }
@@ -239,10 +241,11 @@ public class DealerFragment extends BaseFragment<ProjectDealer_c.Presenter> impl
                 //返回的分别是三个级别的选中位置
                 tv_select_project.setText(list.get(options1).getName());
                 tv_project_id.setText(list.get(options1).getSale_code());
+                Dealer_id=list.get(options1).getId();
             }
         })
 
-                .setTitleText("车辆选择")
+                .setTitleText("经销商列表")
                 .setDividerColor(Color.BLACK)
                 .setTextColorCenter(Color.BLACK) //设置选中项文字颜色
                 .setContentTextSize(20)

@@ -151,9 +151,10 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
     @Override
     public void UpDataDb(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position,boolean success) {
       //更新题目状态
-        if (success) {
+        if (success) {  //是否上传和回调到后台成功
             SubjectsDB subjectsDB1 = new SubjectsDB();
             subjectsDB1.setsUploadStatus(1);
+            subjectsDB1.setCensor(1);
             update = subjectsDB1.update(subjectsDBList.get(subject_position).getId());
         }
 
@@ -178,7 +179,7 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
         }
 
         //回调
-        if (update==0 || update1==0){
+        if (update==1 || update1==1){
             if (getPresenter() != null) {
                 getPresenter().UpDataDbSuccess(subjectsDBList, projectsDBS, project_position, subject_position);
             }
@@ -222,7 +223,7 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
             @Override
             public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
                 if (getPresenter() != null) {
-                    getPresenter().StartUiProgressSuccess(request,(int)currentSize,(int)totalSize,projectsDBS.get(project_position).getPname()+"\n第"+subjectsDBList.get(subject_position).getNumber()+"题\n"+name);
+                    getPresenter().StartUiProgressSuccess(request,(int)currentSize,(int)totalSize,"第"+subjectsDBList.get(subject_position).getNumber()+"题\n"+name);
                 }
             }
         });

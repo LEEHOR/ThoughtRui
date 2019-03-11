@@ -169,7 +169,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                     LatLng latLng = new LatLng(latitude, longitude);//公司坐标
                     double distance = DistanceUtil.getDistance(LocationPoint, latLng);
                     if (distance > 200) {
-                        KLog.d("在范围1");
+                        KLog.d("不在范围1");
                         isOnCircle = false;
                         //定位状态
                         //早班卡

@@ -85,6 +85,16 @@
             android:process=":remote"></service>
 
         <!-- 阿里云热更新 -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.coahr.thoughtrui"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <!--元数据-->
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
         <meta-data
             android:name="com.taobao.android.hotfix.IDSECRET"
             android:value="25584439-1" />
@@ -107,7 +117,6 @@
 
         <service android:name=".mvp.view.UMPush.MyNotificationService" />
         <service android:name=".mvp.view.UMPush.UmengNotificationService" />
-
         <receiver android:name=".mvp.view.UMPush.NotificationBroadcast" />
         <service android:name=".mvp.view.recorder.RecorderService"/>
 

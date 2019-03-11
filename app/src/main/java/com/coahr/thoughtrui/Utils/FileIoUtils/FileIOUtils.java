@@ -261,7 +261,8 @@ public class FileIOUtils {
                 if (suffix.toLowerCase().equals(".jpg") ||
                         suffix.toLowerCase().equals(".jpeg") ||
                         suffix.toLowerCase().equals(".bmp") ||
-                        suffix.toLowerCase().equals(".png")) {
+                        suffix.toLowerCase().equals(".png") ||
+                suffix.toLowerCase().equals(".gif")) {
                     list.add(fi.getPath());
                 }
             }

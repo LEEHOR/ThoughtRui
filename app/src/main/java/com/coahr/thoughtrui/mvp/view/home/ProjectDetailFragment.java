@@ -268,7 +268,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
 
     @Override
     public void getDateSizeSuccess(int subject, int files) {
-        tv_upload_status.setText("数据" + subject + "条，" + "数据" + files + "个未上传");
+        tv_upload_status.setText("数据" + subject + "条，" + "附件" + files + "个未上传");
     }
 
     @Override
@@ -312,7 +312,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
                     projectsDB.setUser(usersDBS.get(0));
                 }
                 projectsDB.save();
-                tv_upload_status.setText("数据" + 0 + "条，" + "数据" + 0 + "个未上传");
+                tv_upload_status.setText("数据" + 0 + "条，" + "附件" + 0 + "个未上传");
                 tv_fstatus.setText("暂无数据");
             }
 
@@ -342,16 +342,20 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
             Constants.ht_ProjectId = projectDetail.getData().getId();
             Constants.name_Project = projectDetail.getData().getPname();
             String s = projectDetail.getData().getCname();
-            if (s.equals("自由班次")) {
-                Constants.zao_ka = s;
-                Constants.wan_ka = s;
-            } else {
-                String[] split = s.split("-");
-                if (split.length > 1) {
-                    Constants.zao_ka = split[0];
-                    Constants.wan_ka = split[1];
+            if (s != null) {
+                if (s.equals("自由班次")) {
+                    Constants.zao_ka = s;
+                    Constants.wan_ka = s;
+                } else {
+                    String[] split = s.split("-");
+                    if (split.length > 1) {
+                        Constants.zao_ka = split[0];
+                        Constants.wan_ka = split[1];
+                    }
                 }
+
             }
+
         }
     }
 
@@ -369,12 +373,12 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
         List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", projectId);
         if (projectsDBS != null && projectsDBS.size() > 0) {
             ProjectsDB projectsDB = projectsDBS.get(0);
-           // tv_cName.setText(projectsDB.getcName());
+         //   tv_cName.setText(projectsDB.getcName());
             tv_cCode.setText(projectsDB.getCode());
             tv_cLevel.setText(projectsDB.getGrade());
             tv_cAddress.setText(projectsDB.getAddress() + projectsDB.getLocation());
             tv_time_cycle.setText(TimeUtils.getStingYMDHM(projectsDB.getUploadTime()));
-           // tv_Kclass.setText(projectsDB.getcName());
+            tv_Kclass.setText(projectsDB.getCname());
             project_detail_name.setText(projectsDB.getPname());
             String progress = projectsDB.getProgress();
             String[] split_p = progress.split("/");

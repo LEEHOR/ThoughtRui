@@ -4,6 +4,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 
+import androidx.annotation.BoolRes;
 import androidx.annotation.NonNull;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.cardview.widget.CardView;
@@ -97,6 +98,8 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     private OSSClient ossClient;
     private final int GETSUBJECTLIST = 1;
     private final int UPDATE_PROGRESS = 2;
+    private final int UPDATE_TITTLE=3;
+    private final int UPDATE_MESSAGE=4;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -113,6 +116,12 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                     }
                     tv_tittle.setText(msg.obj.toString());
                     break;
+                case  UPDATE_TITTLE:
+                    tv_message_tittle.setText(msg.obj.toString());
+                    break;
+                case  UPDATE_MESSAGE:
+                    tv_tittle.setText(msg.obj.toString());
+                    break;
             }
         }
     };
@@ -125,6 +134,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     //上传文件的数组
     private List<String> up_picList = new ArrayList<>();
     private int subject_position;
+    private TextView tv_message_tittle;
 
     @Override
     public UploadC.Presenter getPresenter() {
@@ -221,7 +231,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     @Override
     public void onDestroy() {
         super.onDestroy();
-       // ImmersionBar.with(this).destroy();
+        // ImmersionBar.with(this).destroy();
     }
 
     @Override
@@ -250,11 +260,15 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     @Override
     public void getSubjectListSuccess(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position) {
         //获取上传文件列表
+        Message mes = mHandler.obtainMessage(UPDATE_TITTLE, projectsDBS.get(project_position).getPname());
+        mes.sendToTarget();
         p.UpLoadFileList(subjectsDBList, projectsDBS, project_position, 0);
     }
 
     @Override
     public void getSubjectListFailure(String failure) {
+        Message mes = mHandler.obtainMessage(UPDATE_MESSAGE, "当前题目下没有可以上传的文件");
+        mes.sendToTarget();
         ToastUtils.showLong(failure);
     }
 
@@ -262,7 +276,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     @Override
     public void getUpLoadFileListSuccess(List<String> list, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
         //开始上传
-        KLog.d("上传1",subjectsDBList.get(subject_position).getHt_id(),projectsDBS.get(project_position).getPid(),project_position, subject_position);
+        KLog.d("上传1", subjectsDBList.get(subject_position).getHt_id(), projectsDBS.get(project_position).getPid(), project_position, subject_position);
         p.startUpLoad(ossClient, list, subjectsDBList, projectsDBS, project_position, subject_position);
     }
 
@@ -287,7 +301,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     //=================OSS上传回调
     @Override
     public void UploadCallBack(List<String> list, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position, int uploadSuccessSize, int uploadFailSize, int totalSize) {
-       KLog.d("上传5",uploadSuccessSize,uploadFailSize,totalSize);
+        KLog.d("上传5", uploadSuccessSize, uploadFailSize, totalSize);
         if (totalSize == (uploadSuccessSize + uploadFailSize)) {
             if (totalSize == uploadSuccessSize) {  //上传成功
                 //回调服务器
@@ -301,7 +315,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                         up_picList.add(list.get(i));
                     }
                 }
-                //回调到回台服务器
+                //回调到后台服务器
                 callbackForServer(projectsDBS, subjectsDBList, up_picList, textMassage, uPAudioPath, project_position, subject_position);
             } else {         //上传失败
                 p.UpDataDb(subjectsDBList, projectsDBS, project_position, subject_position, false);
@@ -322,18 +336,18 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     @Override
     public void UpDataDbSuccess(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
         //如果当前项目下的题目数据上传完毕，则开始传下一个项目
-        KLog.d("上传4",project_position,projectsDBS.size(), subject_position,subjectsDBList.size());
+        KLog.d("上传4", project_position, projectsDBS.size(), subject_position, subjectsDBList.size());
         if (subject_position == subjectsDBList.size() - 1) {
             //1.查询下一个项目
-            if (project_position<projectsDBS.size()-1){
-                KLog.d("上传3","切换下一个项目");
-                p.getSubjectList(projectsDBS, project_position+=1);
+            if (project_position < projectsDBS.size() - 1) {
+                KLog.d("上传3", "切换下一个项目");
+                p.getSubjectList(projectsDBS, project_position += 1);
             } else {
                 ToastUtils.showLong("上传完成");
             }
         } else {   //项目下还有题目没传，开始下一题
-            KLog.d("上传2","切换下一个题目");
-            p.UpLoadFileList(subjectsDBList, projectsDBS, project_position, subject_position+=1);
+            KLog.d("上传2", "切换下一个题目");
+            p.UpLoadFileList(subjectsDBList, projectsDBS, project_position, subject_position += 1);
 
         }
     }
@@ -403,6 +417,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
      */
     private void showProgressDialog() {
         inflate = LayoutInflater.from(_mActivity).inflate(R.layout.dialog_progress, null);
+        tv_message_tittle = inflate.findViewById(R.id.tv_message_tittle);
         tv_tittle = inflate.findViewById(R.id.tv_progress_info);
         progressBar = inflate.findViewById(R.id.progress_bar);
         new MaterialDialog.Builder(_mActivity)
@@ -527,7 +542,6 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     }
 
 
-
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
@@ -550,9 +564,10 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     private void callbackForServer(List<ProjectsDB> projectsDB, List<SubjectsDB> subjectsDB, List<String> picList, String text, String audioPath, int project_position, int subject_position) {
         Map map = new HashMap();
         map.put("projectId", projectsDB.get(project_position).getPid());
+        map.put("censor",subjectsDB.get(subject_position).getCensor());
         map.put("answerId", subjectsDB.get(subject_position).getHt_id());
         map.put("number", subjectsDB.get(subject_position).getNumber());
-        map.put("stage", projectsDB.get(project_position).getStage());
+        map.put("stage", "1");
         if (text != null) {
             String[] split = text.split("&");
             if (split != null && split.length > 0) {
