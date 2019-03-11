@@ -76,7 +76,7 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_times.setText(projectsDBList.get(i).getPname());
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_code.setText(projectsDBList.get(i).getCode());
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_name.setText(projectsDBList.get(i).getPname());
-                ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_company.setText(projectsDBList.get(i).getdName());
+              //  ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_company.setText(projectsDBList.get(i).getdName());
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_address.setText(projectsDBList.get(i).getAddress());
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_update_time.setText(TimeUtils.getStringDate_start(projectsDBList.get(i).getModifyTime()));
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_cardView.setOnClickListener(new View.OnClickListener() {
@@ -105,7 +105,7 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_times.setText(projectsDBList.get(i).getPname());
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_code.setText(projectsDBList.get(i).getCode());
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_name.setText(projectsDBList.get(i).getPname());
-                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_company.setText(projectsDBList.get(i).getdName());
+               // ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_company.setText(projectsDBList.get(i).getdName());
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_address.setText(projectsDBList.get(i).getAddress());
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_update_time.setText(TimeUtils.getStringDate_start(projectsDBList.get(i).getModifyTime()));
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_cardView.setOnClickListener(new View.OnClickListener() {
@@ -135,7 +135,7 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_times.setText(projectsDBList.get(i).getPname());
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_code.setText(projectsDBList.get(i).getCode());
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_name.setText(projectsDBList.get(i).getPname());
-                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_company.setText(projectsDBList.get(i).getdName());
+               // ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_company.setText(projectsDBList.get(i).getdName());
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_address.setText(projectsDBList.get(i).getAddress());
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_update_time.setText(TimeUtils.getStringDate_start(projectsDBList.get(i).getModifyTime()));
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).uncomplete_cardView.setOnClickListener(new View.OnClickListener() {
@@ -165,7 +165,7 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_times.setText(projectsDBList.get(i).getPname());
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_code.setText(projectsDBList.get(i).getCode());
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_name.setText(projectsDBList.get(i).getPname());
-                ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_company.setText(projectsDBList.get(i).getdName());
+               // ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_company.setText(projectsDBList.get(i).getdName());
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_address.setText(projectsDBList.get(i).getAddress());
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_cardView.setOnClickListener(new View.OnClickListener() {
                     @Override

@@ -161,13 +161,13 @@ public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implemen
           //  projectsDB.setInspect(listBean.getInspect()); //检验方式
             projectsDB.setPname(listBean.getPname());  //项目名
             projectsDB.setAddress(listBean.getAreaAddress());
-            projectsDB.setStartTime(listBean.getStartTime());
-            projectsDB.setcName(listBean.getCname());
+           // projectsDB.setStartTime(listBean.getStartTime());
+          //  projectsDB.setcName(listBean.getCname());
            // projectsDB.setCode(listBean.getCode());
            // projectsDB.setDownloadTime(listBean.getDownloadTime());
             projectsDB.setCompleteStatus(listBean.getCompleteStatus());
             projectsDB.setProgress(listBean.getProgress());
-            projectsDB.setdName(listBean.getDname());
+           // projectsDB.setdName(listBean.getDname());
             projectsDB.setLatitude(listBean.getLatitude());
             projectsDB.setLocation(listBean.getLocation());
             projectsDB.setLongitude(listBean.getLongitude());

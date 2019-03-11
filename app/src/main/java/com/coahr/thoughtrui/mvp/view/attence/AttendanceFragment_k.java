@@ -408,173 +408,175 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
     }
     @Override
     public void getMainDataSuccess(Attendance attendance) {
-        closeStatus = attendance.getData().getCloseStatus();
-        //获取门店的经纬度
-        latitude = attendance.getData().getLatitude();
-        longitude = attendance.getData().getLongitude();
-        classId = attendance.getData().getClassId();
-        dealerId = attendance.getData().getDealerId();
-        projectId = attendance.getData().getProjectId();
-        String str = attendance.getData().getCname();
-        if (str.equals("自由班次")) {
-            tv_in_time.setText(str);
-            tv_out_time.setText(str);
-        } else {
-            String[] split = str.split("-");
-            if (split.length > 1) {
-                tv_in_time.setText(split[0]);
-                tv_out_time.setText(split[1]);
+        if (attendance.getData() != null) {
+            closeStatus = attendance.getData().getCloseStatus();
+            //获取门店的经纬度
+            latitude = attendance.getData().getLatitude();
+            longitude = attendance.getData().getLongitude();
+            classId = attendance.getData().getClassId();
+            dealerId = attendance.getData().getDealerId();
+            projectId = attendance.getData().getProjectId();
+            String str = attendance.getData().getCname();
+            if (str.equals("自由班次")) {
+                tv_in_time.setText(str);
+                tv_out_time.setText(str);
+            } else {
+                String[] split = str.split("-");
+                if (split.length > 1) {
+                    tv_in_time.setText(split[0]);
+                    tv_out_time.setText(split[1]);
+                }
             }
-        }
-        //判断上下班卡 1上班卡 2下班卡
+            //判断上下班卡 1上班卡 2下班卡
 
 
-        type = attendance.getData().getType();
-        k_bean = attendance.getData().getAttendance();
-        if (type == 1) { //渲染上班卡（没打卡）
-            //早班打卡信息隐藏
-            include_start.setVisibility(View.GONE);
-            //早班打卡区域显示
-            push_in2_re.setVisibility(View.VISIBLE);
-            //早班卡底部定位栏显示
-            in_bottom_address_in.setVisibility(View.VISIBLE);
-            //晚班区域隐藏
-            push_out_re.setVisibility(View.GONE);
-            //先关闭定位
-            if (baiduLocationHelper != null) {
-                baiduLocationHelper.stopLocation();
-            }
-            //开启连续定位
-            p.startLocations(4);
+            type = attendance.getData().getType();
+            k_bean = attendance.getData().getAttendance();
+            if (type == 1) { //渲染上班卡（没打卡）
+                //早班打卡信息隐藏
+                include_start.setVisibility(View.GONE);
+                //早班打卡区域显示
+                push_in2_re.setVisibility(View.VISIBLE);
+                //早班卡底部定位栏显示
+                in_bottom_address_in.setVisibility(View.VISIBLE);
+                //晚班区域隐藏
+                push_out_re.setVisibility(View.GONE);
+                //先关闭定位
+                if (baiduLocationHelper != null) {
+                    baiduLocationHelper.stopLocation();
+                }
+                //开启连续定位
+                p.startLocations(4);
 
-        } else if(type==2) {  //（打了早班卡，下班卡没打）
-            if (k_bean != null) { //判断是否为空
-                k_id = k_bean.getId();
-                if (k_id != null && !k_id.equals("")) {
-                    //早班卡逻辑判断
-                    long inTime = k_bean.getInTime();
-                    if (inTime != 0) {   //如果不为0则打卡了否则没打卡
-                        //早班打卡信息显示
-                        include_start.setVisibility(View.VISIBLE);
-                        //早班打卡区域隐藏
-                        push_in2_re.setVisibility(View.GONE);
-                        //早班卡底部定位栏隐藏
-                        in_bottom_address_in.setVisibility(View.GONE);
-                        //早班卡打卡所在位置经纬度
-                        inLat = k_bean.getInLat();
-                        inLng = k_bean.getInLng();
-                        //早班打卡位置状态
-                        startLocationStatus = k_bean.getStartLocationStatus();
-                        //早班打卡时间状态
-                        startTimeStatus = k_bean.getStartTimeStatus();
-                        //早班打卡时间
-                        String stringDate_start = TimeUtils.getStingHM(k_bean.getInTime());
-                        start_time_d.setText(stringDate_start);
-                        //图标
-                        if (startLocationStatus == 1 && startTimeStatus == 1) {  //在范围内
-                            start_tag.setImageResource(R.mipmap.kaoqinz);
-                            //早班打卡位置
-                            tv_start_location.setText(attendance.getData().getAreaAddress() + attendance.getData().getLocation());
-                        } else if (startLocationStatus == -1 || startTimeStatus == -1) {
-                            start_tag.setImageResource(R.mipmap.kaoqinyc);
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    getAddress(1,inLat,inLng);
-                                }
-                            }).start();
+            } else if (type == 2) {  //（打了早班卡，下班卡没打）
+                if (k_bean != null) { //判断是否为空
+                    k_id = k_bean.getId();
+                    if (k_id != null && !k_id.equals("")) {
+                        //早班卡逻辑判断
+                        long inTime = k_bean.getInTime();
+                        if (inTime != 0) {   //如果不为0则打卡了否则没打卡
+                            //早班打卡信息显示
+                            include_start.setVisibility(View.VISIBLE);
+                            //早班打卡区域隐藏
+                            push_in2_re.setVisibility(View.GONE);
+                            //早班卡底部定位栏隐藏
+                            in_bottom_address_in.setVisibility(View.GONE);
+                            //早班卡打卡所在位置经纬度
+                            inLat = k_bean.getInLat();
+                            inLng = k_bean.getInLng();
+                            //早班打卡位置状态
+                            startLocationStatus = k_bean.getStartLocationStatus();
+                            //早班打卡时间状态
+                            startTimeStatus = k_bean.getStartTimeStatus();
+                            //早班打卡时间
+                            String stringDate_start = TimeUtils.getStingHM(k_bean.getInTime());
+                            start_time_d.setText(stringDate_start);
+                            //图标
+                            if (startLocationStatus == 1 && startTimeStatus == 1) {  //在范围内
+                                start_tag.setImageResource(R.mipmap.kaoqinz);
+                                //早班打卡位置
+                                tv_start_location.setText(attendance.getData().getAreaAddress() + attendance.getData().getLocation());
+                            } else if (startLocationStatus == -1 || startTimeStatus == -1) {
+                                start_tag.setImageResource(R.mipmap.kaoqinyc);
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        getAddress(1, inLat, inLng);
+                                    }
+                                }).start();
+                            }
                         }
+                        //晚班卡逻辑判断
+                        //晚班界面显示
+                        push_out_re.setVisibility(View.VISIBLE);
+                        //晚班打卡区域显示
+                        push_out2_re.setVisibility(View.VISIBLE);
+                        //晚班打卡定位栏
+                        in_bottom_address.setVisibility(View.VISIBLE);
+                        //晚班卡打卡信息隐藏
+                        include_end.setVisibility(View.GONE);
+
+                        //先关闭定位
+                        if (baiduLocationHelper != null) {
+                            baiduLocationHelper.stopLocation();
+                        }
+                        //开启连续定位
+                        p.startLocations(4);
                     }
-                    //晚班卡逻辑判断
+                }
+            } else if (type == 3) { //(上下班卡都打了)
+                //早班卡逻辑判断
+                long inTime = k_bean.getInTime();
+                if (inTime != 0) {   //如果不为0则打卡了否则没打卡
+                    //早班打卡信息显示
+                    include_start.setVisibility(View.VISIBLE);
+                    //早班打卡区域隐藏
+                    push_in2_re.setVisibility(View.GONE);
+                    //早班卡底部定位栏隐藏
+                    in_bottom_address_in.setVisibility(View.GONE);
+                    //早班卡打卡所在位置经纬度
+                    inLat = k_bean.getInLat();
+                    inLng = k_bean.getInLng();
+                    //早班打卡位置状态
+                    startLocationStatus = k_bean.getStartLocationStatus();
+                    //早班打卡时间状态
+                    startTimeStatus = k_bean.getStartTimeStatus();
+                    //早班打卡时间
+                    String stringDate_start = TimeUtils.getStingHM(k_bean.getInTime());
+                    start_time_d.setText(stringDate_start);
+                    //早班打卡位置
+
+                    //图标
+                    if (startLocationStatus == 1 && startTimeStatus == 1) {  //在范围内
+                        start_tag.setImageResource(R.mipmap.kaoqinz);
+                        tv_start_location.setText(attendance.getData().getAreaAddress() + attendance.getData().getLocation());
+                    } else if (startLocationStatus == -1 || startTimeStatus == -1) {
+                        start_tag.setImageResource(R.mipmap.kaoqinyc);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                getAddress(1, inLat, inLng);
+                            }
+                        }).start();
+                    }
+                }
+
+                //晚班卡逻辑判断
+                long outTime = k_bean.getOutTime();
+                if (outTime != 0) {
                     //晚班界面显示
                     push_out_re.setVisibility(View.VISIBLE);
-                    //晚班打卡区域显示
-                    push_out2_re.setVisibility(View.VISIBLE);
-                    //晚班打卡定位栏
-                    in_bottom_address.setVisibility(View.VISIBLE);
+                    //晚班打卡区域隐藏
+                    push_out2_re.setVisibility(View.GONE);
+                    //晚班打卡定位栏隐藏
+                    in_bottom_address.setVisibility(View.GONE);
                     //晚班卡打卡信息隐藏
-                    include_end.setVisibility(View.GONE);
+                    include_end.setVisibility(View.VISIBLE);
+                    //晚班打卡时间
+                    String stringDate_start = TimeUtils.getStingHM(k_bean.getOutTime());
+                    end_tv_time_d.setText(stringDate_start);
+                    //晚班打卡位置状态
+                    endLocationStatus = k_bean.getEndLocationStatus();
+                    //晚班打卡时间状态
+                    endTimeStatus = k_bean.getEndTimeStatus();
+                    //晚班打卡经纬度
+                    outLat = k_bean.getOutLat();
+                    outLng = k_bean.getOutLng();
+                    if (endLocationStatus == 1 && endTimeStatus == 1) {
+                        //晚班打卡位置(正常就直接显示上班地址)
+                        tv_end_location.setText(attendance.getData().getAreaAddress() + attendance.getData().getLocation());
+                        end_tag.setImageResource(R.mipmap.kaoqinz);
+                    } else if (endLocationStatus == -1 || endTimeStatus == -1) {
+                        end_tag.setImageResource(R.mipmap.kaoqinyc);
+                        //晚班打卡位置(异常显示当时打卡位置)
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                getAddress(2, outLat, outLng);
+                            }
+                        }).start();
 
-                    //先关闭定位
-                    if (baiduLocationHelper != null) {
-                        baiduLocationHelper.stopLocation();
                     }
-                    //开启连续定位
-                    p.startLocations(4);
-                }
-            }
-        } else if (type==3){ //(上下班卡都打了)
-            //早班卡逻辑判断
-            long inTime = k_bean.getInTime();
-            if (inTime != 0) {   //如果不为0则打卡了否则没打卡
-                //早班打卡信息显示
-                include_start.setVisibility(View.VISIBLE);
-                //早班打卡区域隐藏
-                push_in2_re.setVisibility(View.GONE);
-                //早班卡底部定位栏隐藏
-                in_bottom_address_in.setVisibility(View.GONE);
-                //早班卡打卡所在位置经纬度
-                inLat = k_bean.getInLat();
-                inLng = k_bean.getInLng();
-                //早班打卡位置状态
-                startLocationStatus = k_bean.getStartLocationStatus();
-                //早班打卡时间状态
-                startTimeStatus = k_bean.getStartTimeStatus();
-                //早班打卡时间
-                String stringDate_start = TimeUtils.getStingHM(k_bean.getInTime());
-                start_time_d.setText(stringDate_start);
-                //早班打卡位置
-
-                //图标
-                if (startLocationStatus == 1 && startTimeStatus == 1) {  //在范围内
-                    start_tag.setImageResource(R.mipmap.kaoqinz);
-                    tv_start_location.setText(attendance.getData().getAreaAddress() + attendance.getData().getLocation());
-                } else if (startLocationStatus == -1 || startTimeStatus == -1) {
-                    start_tag.setImageResource(R.mipmap.kaoqinyc);
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            getAddress(1,inLat,inLng);
-                        }
-                    }).start();
-                }
-            }
-
-            //晚班卡逻辑判断
-            long outTime = k_bean.getOutTime();
-            if (outTime!=0) {
-                //晚班界面显示
-                push_out_re.setVisibility(View.VISIBLE);
-                //晚班打卡区域隐藏
-                push_out2_re.setVisibility(View.GONE);
-                //晚班打卡定位栏隐藏
-                in_bottom_address.setVisibility(View.GONE);
-                //晚班卡打卡信息隐藏
-                include_end.setVisibility(View.VISIBLE);
-                //晚班打卡时间
-                String stringDate_start = TimeUtils.getStingHM(k_bean.getOutTime());
-                end_tv_time_d.setText(stringDate_start);
-                //晚班打卡位置状态
-                endLocationStatus = k_bean.getEndLocationStatus();
-                //晚班打卡时间状态
-                endTimeStatus = k_bean.getEndTimeStatus();
-                //晚班打卡经纬度
-                outLat= k_bean.getOutLat();
-                outLng= k_bean.getOutLng();
-                if (endLocationStatus ==1 && endTimeStatus==1){
-                    //晚班打卡位置(正常就直接显示上班地址)
-                    tv_end_location.setText(attendance.getData().getAreaAddress() + attendance.getData().getLocation());
-                    end_tag.setImageResource(R.mipmap.kaoqinz);
-                } else if (endLocationStatus ==-1 || endTimeStatus==-1){
-                    end_tag.setImageResource(R.mipmap.kaoqinyc);
-                    //晚班打卡位置(异常显示当时打卡位置)
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            getAddress(2,outLat,outLng);
-                        }
-                    }).start();
-
                 }
             }
         }

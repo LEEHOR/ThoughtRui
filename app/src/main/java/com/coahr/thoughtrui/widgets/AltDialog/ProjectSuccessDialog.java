@@ -131,9 +131,9 @@ public class ProjectSuccessDialog extends BaseDialogFragment<ProjectSuccessDialo
 
     private  void getSubjectList(){
         if (projectsDBS != null && projectsDBS.size()>0) {
-            long startTime = projectsDBS.get(0).getStartTime();
-            String stingYMDHM = TimeUtils.getStingYMDHM(startTime);
-            tv_start_time.setText("始于"+stingYMDHM);
+          //  long startTime = projectsDBS.get(0).getStartTime();
+          //  String stingYMDHM = TimeUtils.getStingYMDHM(startTime);
+          //  tv_start_time.setText("始于"+stingYMDHM);
 
             String stingYMDHM1 = TimeUtils.getStingYMDHM(System.currentTimeMillis());
             tv_end_time.setText("终于"+stingYMDHM1);

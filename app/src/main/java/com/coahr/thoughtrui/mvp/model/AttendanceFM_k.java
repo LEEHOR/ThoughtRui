@@ -76,7 +76,7 @@ public class AttendanceFM_k extends BaseModel<AttendanceFC_k.Presenter> implemen
     }
 
     @Override
-    public void getMainData(Map map) {
+    public void getMainData(Map<String,Object> map) {
       mRxManager.add(createFlowable(new SimpleFlowableOnSubscribe<Attendance>(getApiService().getAttendanceInfo(map))).subscribeWith(new SimpleDisposableSubscriber<Attendance>() {
         @Override
         public void _onNext(Attendance attendance) {

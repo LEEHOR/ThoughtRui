@@ -43,7 +43,7 @@ public class UpLoadAdapter extends BaseQuickAdapter<ProjectsDB,BaseViewHolder> {
                     .setText(R.id.up_tv_time,item.getPname())
                     .setText(R.id.up_tv_project_code,item.getCode())
                     .setText(R.id.up_tv_project_name,item.getPname())
-                    .setText(R.id.up_tv_project_company,item.getcName())
+                   // .setText(R.id.up_tv_project_company,item.getcName())
                     .setText(R.id.up_tv_project_address,item.getAddress()+item.getLocation())
                     .setText(R.id.up_tv_update_time,TimeUtils.getStingYMDHM(item.getModifyTime()));
         }

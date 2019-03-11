@@ -27,14 +27,11 @@ public class ProjectsDB extends DataSupport {
     private int id;
     private String Pid;
     private String progress;
+    private String  Cname;
     private String Pname;
-    private long startTime;
-    private long endTime;
     private String grade;
     private String address;
     private String location;
-    private String cName;
-    private String dName;
     private String code;
     private int completeStatus;
     private double latitude;
@@ -61,18 +58,15 @@ public class ProjectsDB extends DataSupport {
     public ProjectsDB() {
     }
 
-    public ProjectsDB(int id, String pid, String progress, String pname, long startTime, long endTime, String grade, String address, String location, String cName, String dName, String code, int completeStatus, double latitude, double longitude, long modifyTime, int pUploadStatus, int isComplete, String stage, String notice, long downloadTime, int isDeletes, String manager, String sale_code, String service_code, long uploadTime, UsersDB user, List<SubjectsDB> subjectsDBList) {
+    public ProjectsDB(int id, String pid, String progress, String cname, String pname, String grade, String address, String location, String code, int completeStatus, double latitude, double longitude, long modifyTime, int pUploadStatus, int isComplete, String stage, String notice, long downloadTime, int isDeletes, String manager, String sale_code, String service_code, long uploadTime, UsersDB user, List<SubjectsDB> subjectsDBList) {
         this.id = id;
         Pid = pid;
         this.progress = progress;
+        Cname = cname;
         Pname = pname;
-        this.startTime = startTime;
-        this.endTime = endTime;
         this.grade = grade;
         this.address = address;
         this.location = location;
-        this.cName = cName;
-        this.dName = dName;
         this.code = code;
         this.completeStatus = completeStatus;
         this.latitude = latitude;
@@ -90,6 +84,14 @@ public class ProjectsDB extends DataSupport {
         this.uploadTime = uploadTime;
         this.user = user;
         this.subjectsDBList = subjectsDBList;
+    }
+
+    public String getCname() {
+        return Cname;
+    }
+
+    public void setCname(String cname) {
+        Cname = cname;
     }
 
     public void setId(int id) {
@@ -120,22 +122,6 @@ public class ProjectsDB extends DataSupport {
         Pname = pname;
     }
 
-    public long getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(long startTime) {
-        this.startTime = startTime;
-    }
-
-    public long getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(long endTime) {
-        this.endTime = endTime;
-    }
-
     public String getGrade() {
         return grade;
     }
@@ -160,21 +146,6 @@ public class ProjectsDB extends DataSupport {
         this.location = location;
     }
 
-    public String getcName() {
-        return cName;
-    }
-
-    public void setcName(String cName) {
-        this.cName = cName;
-    }
-
-    public String getdName() {
-        return dName;
-    }
-
-    public void setdName(String dName) {
-        this.dName = dName;
-    }
 
     public String getCode() {
         return code;

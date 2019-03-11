@@ -352,14 +352,10 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void Event_SubjectList_jump(EvenBus_SubjectList_id subjectList_id) {
         if (subjectList_id != null) {
-            if (htId_List != null) {
-                for (int i = 0; i <htId_List.size() ; i++) {
-                    if (htId_List.get(i).equals(subjectList_id.getSub_id())){
-                        p_mytitle.getTvTittle().setText("第" + (i+1) + "题");
-                        project_viewPage.setCurrentItem(i);
-                        return;
-                    }
-                }
+            List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectByTogether_Where(SubjectsDB.class, "ht_id=?", subjectList_id.getSub_id());
+            if (subjectsDBS != null && subjectsDBS.size()>0) {
+                p_mytitle.getTvTittle().setText("第" + (subjectsDBS.get(0).getNumber()) + "题");
+                        project_viewPage.setCurrentItem(subjectsDBS.get(0).getNumber()-1);
             }
         }
     }

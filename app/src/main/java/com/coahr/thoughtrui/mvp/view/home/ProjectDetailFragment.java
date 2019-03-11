@@ -292,7 +292,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
             } else {
                 List<UsersDB> usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", Constants.sessionId);
                 ProjectsDB projectsDB = new ProjectsDB();
-                projectsDB.setcName(projectDetail.getData().getCname());
+              //  projectsDB.setcName(projectDetail.getData().getCname());
                 projectsDB.setProgress(projectDetail.getData().getProgress());
                 projectsDB.setManager(projectDetail.getData().getManager());
                 projectsDB.setLocation(projectDetail.getData().getLocation());
@@ -301,7 +301,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
                 projectsDB.setAddress(projectDetail.getData().getAreaAddress());
                 projectsDB.setGrade(projectDetail.getData().getGrade());
                 projectsDB.setPname(projectDetail.getData().getPname());
-                projectsDB.setdName(projectDetail.getData().getDname());
+            //    projectsDB.setdName(projectDetail.getData().getDname());
                 projectsDB.setLongitude(projectDetail.getData().getLongitude());
                 projectsDB.setLatitude(projectDetail.getData().getLatitude());
                 projectsDB.setModifyTime(0);
@@ -369,12 +369,12 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
         List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", projectId);
         if (projectsDBS != null && projectsDBS.size() > 0) {
             ProjectsDB projectsDB = projectsDBS.get(0);
-            tv_cName.setText(projectsDB.getcName());
+           // tv_cName.setText(projectsDB.getcName());
             tv_cCode.setText(projectsDB.getCode());
             tv_cLevel.setText(projectsDB.getGrade());
             tv_cAddress.setText(projectsDB.getAddress() + projectsDB.getLocation());
             tv_time_cycle.setText(TimeUtils.getStingYMDHM(projectsDB.getUploadTime()));
-            tv_Kclass.setText(projectsDB.getcName());
+           // tv_Kclass.setText(projectsDB.getcName());
             project_detail_name.setText(projectsDB.getPname());
             String progress = projectsDB.getProgress();
             String[] split_p = progress.split("/");
@@ -393,15 +393,17 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
             Constants.DbProjectId = String.valueOf(projectsDB.getId());
             Constants.ht_ProjectId = projectsDB.getPid();
             Constants.name_Project = projectsDB.getPname();
-            String s = projectsDB.getcName();
-            if (s.equals("自由班次")) {
-                Constants.zao_ka = s;
-                Constants.wan_ka = s;
-            } else {
-                String[] split = s.split("-");
-                if (split.length > 1) {
-                    Constants.zao_ka = split[0];
-                    Constants.wan_ka = split[1];
+            String s = projectsDB.getCname();
+            if (s != null) {
+                if (s.equals("自由班次")) {
+                    Constants.zao_ka = s;
+                    Constants.wan_ka = s;
+                } else {
+                    String[] split = s.split("-");
+                    if (split.length > 1) {
+                        Constants.zao_ka = split[0];
+                        Constants.wan_ka = split[1];
+                    }
                 }
             }
             p.getSubjectList(projectsDB);

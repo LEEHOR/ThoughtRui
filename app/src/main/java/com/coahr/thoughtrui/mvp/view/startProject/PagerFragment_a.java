@@ -200,6 +200,8 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     private String audioPath;
     //是否在录音
     private boolean isRecorder;
+    //标准分数
+    private String standard_score;
     private PhotoAlbumDialogFragment photoAlbumDialogFragment;
     //评论输入窗口
     EvaluateInputDialogFragment dialogFragment = EvaluateInputDialogFragment.newInstance();
@@ -354,8 +356,15 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 fill_in_blankDialog.setOnClick(new Fill_in_blankDialog.InPutOnClick() {
                     @Override
                     public void setOnClick(String text) {
-                        ed_score.setText(text);
-                        p.saveAnswers(text, remark, ht_projectId, number, ht_id);
+                        if (text != null && standard_score!=null) {
+                            if (Integer.parseInt(text)<=Integer.parseInt(standard_score) && Integer.parseInt(text)>=0){
+                                ed_score.setText(text);
+                                p.saveAnswers(text, remark, ht_projectId, number, ht_id);
+                            } else {
+                                    ToastUtils.showLong("请输入正确的分数");
+                            }
+                        }
+
                     }
 
                     @Override
@@ -490,9 +499,9 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             }
 
             if (subjectsDB.getType() == 1) {  //填空题
-
                 re_score.setVisibility(View.VISIBLE);
                 rg_gr.setVisibility(View.GONE);
+                standard_score=subjectsDB.getOptions();
                 tv_standard_score.setText("标准分数：" + subjectsDB.getOptions());
             }
             tv_describe.setText("说明：" + subjectsDB.getDescription());
@@ -680,7 +689,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
      */
     @Override
     public void getUpLoadFileListSuccess(List<String> list, String projectsDB_id, SubjectsDB subjectsDB) {
-        ToastUtils.showLong("获取题目列表成功");
+        ToastUtils.showLong("阿里云上传获取题目列表成功");
         showProgressDialog();
         p.startUpload(ossClient, list, projectsDB, subjectsDB);
     }
@@ -693,7 +702,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
     @Override
     public void startUploadCallBack(List<String> list, int uploadSuccessSize, int uploadFailSize, int totalSize, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
-        KLog.a("上传", totalSize, uploadFailSize, uploadSuccessSize);
+        KLog.d("阿里云上传回调", totalSize, uploadFailSize, uploadSuccessSize);
         //上传成功
         if (totalSize == (uploadSuccessSize + uploadFailSize)) {
             if (totalSize == uploadSuccessSize) {
@@ -733,12 +742,12 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     @Override
     public void CallBackSuccess(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
         p.UpDataDb(projectsDB, subjectsDB);
-        KLog.d("回调成功");
+        KLog.d("阿里云上传回调成功");
     }
 
     @Override
     public void CallBackFailure(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
-        KLog.d("回调失败");
+        KLog.d("阿里云上传回调失败");
         fr_upload.setEnabled(true);
     }
 
@@ -1106,14 +1115,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             }
         }
         map.put("picture", stringBuffer.toString());
-        KLog.d("回调", picList.size(), text);
 
-       /* _mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        });*/
         mHandler.post(new Runnable() {
             @Override
             public void run() {

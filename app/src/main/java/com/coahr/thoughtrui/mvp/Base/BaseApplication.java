@@ -108,7 +108,6 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
         mPushAgent.register(new IUmengRegisterCallback() {
             @Override
             public void onSuccess(String deviceToken) {
-                KLog.d(TAG, "device token: " + deviceToken);
                 Constants.devicestoken = deviceToken;
                 PreferenceUtils.setPrefString(mContext, Constants.devicestoken_key, deviceToken);
             }

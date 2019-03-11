@@ -87,7 +87,14 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-
+                    <ImageView
+                        android:visibility="invisible"
+                        android:id="@+id/iv_project_tag"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
+                        android:src="@mipmap/home_unfinished"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
                     <ImageView
                         android:id="@+id/histore_bg"
                         android:layout_width="match_parent"

@@ -379,6 +379,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
         if (projectsDBS != null && projectsDBS.size() > 0) {
             ProjectsDB projectsDB = new ProjectsDB();
             projectsDB.setDownloadTime(System.currentTimeMillis());
+            projectsDB.setCname(projectsDBS.get(0).getCname());
             projectsDB.update(projectsDBS.get(0).getId());
         }
         if (isNetworkAvailable()) {

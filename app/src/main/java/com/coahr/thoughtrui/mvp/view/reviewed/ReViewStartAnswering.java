@@ -196,6 +196,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
     private ProjectsDB projectsDB;
     private String uPAudioPath;
     private String textMassage;
+    private String standard_score;
 
     public static ReViewStartAnswering newInstance(int position, String DbProjectId, String ht_ProjectId, int countSize, String ht_id) {
         ReViewStartAnswering reViewStartAnswering = new ReViewStartAnswering();
@@ -304,8 +305,16 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
                 dialog.setOnClick(new Fill_in_blankDialog.InPutOnClick() {
                     @Override
                     public void setOnClick(String text) {
-                        ed_score.setText(text);
-                        p.saveAnswers(text, remark, ht_projectId, number, ht_id);
+                        if (text != null && standard_score !=null) {
+                            if (Integer.parseInt(text)<=Integer.parseInt(standard_score) && Integer.parseInt(text)>=0){
+                                ed_score.setText(text);
+                                p.saveAnswers(text, remark, ht_projectId, number, ht_id);
+                            } else {
+                                ToastUtils.showLong("请输入正确的分数");
+                            }
+                        }
+                       // ed_score.setText(text);
+                       // p.saveAnswers(text, remark, ht_projectId, number, ht_id);
                     }
 
                     @Override
@@ -343,6 +352,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
             if (subjectsDB.getType()==1){  //填空题
                 re_score.setVisibility(View.VISIBLE);
                 rg_gr.setVisibility(View.GONE);
+                standard_score =subjectsDB.getOptions();
                 tv_standard_score.setText("标准分数："+subjectsDB.getOptions());
 
             }
