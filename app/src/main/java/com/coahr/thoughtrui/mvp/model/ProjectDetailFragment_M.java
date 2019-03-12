@@ -52,8 +52,8 @@ public class ProjectDetailFragment_M extends BaseModel<ProjectDetailFragment_C.P
         int unComplete=0;
         int file_lists=0;
         for (int i = 0; i < subjectsDBList.size(); i++) {
-            if (subjectsDBList.get(i).getsUploadStatus()==0){
-                unComplete++;
+            unComplete++;
+            if (subjectsDBList.get(i).getIsComplete() == 1 && subjectsDBList.get(i).getsUploadStatus() == 0){
                 List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + projectsDB.getPid() + "/" + subjectsDBList.get(i).getNumber() + "_" + subjectsDBList.get(i).getHt_id());
                 if (fileList != null && fileList.size()>0) {
                     for (int j = 0; j <fileList.size() ; j++) {
@@ -64,11 +64,8 @@ public class ProjectDetailFragment_M extends BaseModel<ProjectDetailFragment_C.P
                 }
             }
         }
-        if (unComplete!=0 && file_lists!=0){
-            getPresenter().getDateSizeSuccess(unComplete,file_lists);
-        } else {
-            getPresenter().getDateSizeFailure("暂无附件");
-        }
+        getPresenter().getDateSizeSuccess(unComplete,file_lists);
+
     }
 
     @Override

@@ -132,13 +132,13 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.re_message_center: //消息中心
-                ToastUtils.showLong("暂未完成，敬请期待");
+                goOtherPage(ConstantsActivity.class, Constants.fragment_myFragment, Constants.fragment_umeng);
                 break;
             case R.id.re_upload_options: //数据上传设置
-                ToastUtils.showLong("暂未完成，敬请期待");
+                goOtherPage(ConstantsActivity.class, Constants.fragment_myFragment, Constants.fragment_uploadOptions);
                 break;
             case R.id.re_clear_cache: //清除缓存
-                ToastUtils.showLong("暂未完成，敬请期待");
+                ClearDataDialog("提示","清除图片缓存");
                 break;
             case R.id.re_change_pass: //修改密码
                 goOtherPage(ConstantsActivity.class, Constants.fragment_myFragment, Constants.fragment_ChangePass);
@@ -147,7 +147,6 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
                 goOtherPage(ConstantsActivity.class, Constants.fragment_myFragment, Constants.fragment_feedback);
                 break;
             case R.id.tv_quit_account:  //退出登录
-                // quitAccount();
                 if (haslogin()) {
                     showDialog();
                 } else {
@@ -354,5 +353,34 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+    /**
+     * 清除缓存
+     *
+     * @param title
+     * @param Content
+     */
+    private void ClearDataDialog(String title, String Content) {
+        new MaterialDialog.Builder(_mActivity)
+                .title(title)
+                .content(Content)
+                .negativeText("取消")
+                .positiveText("确认")
+                .cancelable(false)
+                .canceledOnTouchOutside(false)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                        dialog.dismiss();
+                    }
+                }).build().show();
     }
 }

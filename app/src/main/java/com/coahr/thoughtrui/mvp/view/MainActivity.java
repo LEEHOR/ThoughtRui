@@ -2,25 +2,11 @@ package com.coahr.thoughtrui.mvp.view;
 
 
 import android.Manifest;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.Uri;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import android.view.KeyEvent;
 import android.widget.Toast;
-
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
-
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.ActivityManagerUtils;
 import com.coahr.thoughtrui.Utils.Permission.OnRequestPermissionListener;
@@ -32,29 +18,19 @@ import com.coahr.thoughtrui.mvp.Base.BaseActivity;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.constract.MainActivityC;
 import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_LoginSuccess;
-import com.coahr.thoughtrui.mvp.model.Bean.Event_Main;
 import com.coahr.thoughtrui.mvp.presenter.MainActivityP;
-import com.coahr.thoughtrui.mvp.view.home.MainFragment;
 import com.coahr.thoughtrui.mvp.view.home.MainInfoFragment;
 import com.coahr.thoughtrui.mvp.view.mydata.MyFragment;
 import com.coahr.thoughtrui.mvp.view.reviewed.ReviewedFragment;
 import com.coahr.thoughtrui.mvp.view.upload.UploadFragment;
 import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
 import com.coahr.thoughtrui.widgets.BroadcastReceiver.AliyunHotReceiver;
-import com.coahr.thoughtrui.widgets.BroadcastReceiver.NetWorkReceiver;
-import com.coahr.thoughtrui.widgets.BroadcastReceiver.isRegister;
 import com.coahr.thoughtrui.widgets.MyBottomNavigation.MyBottomNavigation;
-import com.socks.library.KLog;
-import com.taobao.sophix.SophixManager;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
 import java.util.List;
-
 import javax.inject.Inject;
-
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import butterknife.BindView;
@@ -97,41 +73,14 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
         }
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
-        manager = LocalBroadcastManager.getInstance(this);
-        if (!isRegister.isRegister(manager, "hotAliyun")) {
-            aliyunHotReceiver = new AliyunHotReceiver();
-            IntentFilter filter = new IntentFilter();
-            filter.addAction("hotAliyun");
-            manager.registerReceiver(aliyunHotReceiver, filter);
-            aliyunHotReceiver.setHotListener(new AliyunHotReceiver.hotListener() {
-                @Override
-                public void getPathDetail(String path_info, String path_version, String app_version) {
-                    Dialog("雷诺" + app_version + "修复补丁。", "补丁版本：" + path_version + "\n" + "补丁说明：" + path_info + "\n" +
-                            "点击【立即修复】重新打开应用");
-                }
-            });
-        }
-
-        Intent intent = getIntent();
-        if (intent != null) {
-            String scheme = intent.getScheme();
-
-            Uri uri = intent.getData();
-            if (uri != null) {
-                String host = uri.getHost();
-                String path = uri.getPath();
-                KLog.d("第三方调用","scheme:"+scheme,"host:"+host,"path:"+path);
-            }
-
-        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (aliyunHotReceiver != null) {
+        /*if (aliyunHotReceiver != null) {
             manager.unregisterReceiver(aliyunHotReceiver);
-        }
+        }*/
 
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
@@ -194,19 +143,8 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
             ToastUtils.showLong(getResources().getString(R.string.carsuper_exit));
             exitTime = System.currentTimeMillis();
         } else {
-            // PreferenceUtils.remove(BaseApplication.mContext, Constants.sessionId_key);
-            if (PreferenceUtils.contains(BaseApplication.mContext, Constants.AliYunHot_key)) {
-                prefBoolean = PreferenceUtils.getPrefBoolean(BaseApplication.mContext, Constants.AliYunHot_key, false);
-                PreferenceUtils.remove(BaseApplication.mContext, Constants.AliYunHot_key);
-                PreferenceUtils.remove(BaseApplication.mContext, Constants.pathVersion_key);
-                PreferenceUtils.remove(BaseApplication.mContext, Constants.path_key);
-            }
             finish();
-            if (prefBoolean) {
-                SophixManager.getInstance().killProcessSafely();
-            } else {
-                ActivityManagerUtils.getInstance().appExit();
-            }
+            ActivityManagerUtils.getInstance().appExit();
         }
     }
 
@@ -219,7 +157,6 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
             RequestPermissionUtils.requestPermission(this, new OnRequestPermissionListener() {
                 @Override
                 public void PermissionSuccess(List<String> permissions) {
-                    SophixManager.getInstance().queryAndLoadNewPatch();
                 }
 
                 @Override
@@ -229,12 +166,10 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
 
                 @Override
                 public void PermissionHave() {
-                    SophixManager.getInstance().queryAndLoadNewPatch();
                 }
             }, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE);
 
         } else {
-            SophixManager.getInstance().queryAndLoadNewPatch();
         }
     }
 

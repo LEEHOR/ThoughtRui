@@ -787,7 +787,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
 
                             //  EventBus.getDefault().post(new isCompleteBean(true, number-1, 1));
                         }
-                        EventBus.getDefault().postSticky(new isCompleteBean(true, number - 1, 1));
+                        EventBus.getDefault().postSticky(new isCompleteBean(true, number - 1, 1,2));
                     } else {
                         showDialog("", "是否关闭录音");
                     }
@@ -807,7 +807,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
                             subjectsDB.updateAsync(subjectsDB_now.getId());
 
                         }
-                        EventBus.getDefault().postSticky(new isCompleteBean(true, number + 1, 2));
+                        EventBus.getDefault().postSticky(new isCompleteBean(true, number + 1, 2,2));
                     } else {
                         showDialog("", "是否关闭录音");
                     }

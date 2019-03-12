@@ -17,11 +17,13 @@ public class isCompleteBean {
     private int position;
 
     private  int upOrDown;
+    private int type;  //1.答题页面 2.审核页面
 
-    public isCompleteBean(boolean isComplete, int position, int upOrDown) {
+    public isCompleteBean(boolean isComplete, int position, int upOrDown, int type) {
         this.isComplete = isComplete;
         this.position = position;
         this.upOrDown = upOrDown;
+        this.type = type;
     }
 
     public isCompleteBean() {
@@ -49,5 +51,13 @@ public class isCompleteBean {
 
     public void setUpOrDown(int upOrDown) {
         this.upOrDown = upOrDown;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

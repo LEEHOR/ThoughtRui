@@ -423,7 +423,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                             subjectsDB.setIsComplete(1);
                             subjectsDB.update(subjectsDB_now.getId());
                         }
-                        EventBus.getDefault().postSticky(new isCompleteBean(true, number - 1, 1));
+                        EventBus.getDefault().postSticky(new isCompleteBean(true, number - 1, 1,1));
                     } else {
                         ToastUtils.showLong("已经是第一题");
                     }
@@ -441,7 +441,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                             subjectsDB.setIsComplete(1);
                             subjectsDB.update(subjectsDB_now.getId());
                         }
-                        EventBus.getDefault().postSticky(new isCompleteBean(true, number + 1, 2));
+                        EventBus.getDefault().postSticky(new isCompleteBean(true, number + 1, 2,1));
                     } else {
                         showStopAudioDialog("", "是否停止录音");
                     }

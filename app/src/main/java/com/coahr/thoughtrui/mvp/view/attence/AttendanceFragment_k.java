@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
+
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -138,7 +139,6 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
     private String classId;
     private String dealerId;
     private String projectId;
-    private EvaluateInputDialogFragment dialogFragment;
     //门店所在的经纬度
     private double latitude;
     private double longitude;
@@ -151,8 +151,8 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
      */
     private BaiduLocationHelper baiduLocationHelper;
     private static final int LOCATIONMESSAGE = 1;
-    private static final  int zao_daka=2;
-    private static final  int wan_daka=3;
+    private static final int zao_daka = 2;
+    private static final int wan_daka = 3;
     private double continueStla;
     private double continueStlo;
     @SuppressLint("HandlerLeak")
@@ -216,6 +216,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
             mHandler.postDelayed(run_time, 1000);
         }
     };
+
     public static AttendanceFragment_k newInstance() {
         AttendanceFragment_k attendanceFragment_k = new AttendanceFragment_k();
         return attendanceFragment_k;
@@ -235,14 +236,8 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
 
     @Override
     public void initView() {
-        dialogFragment = new EvaluateInputDialogFragment();
-        dialogFragment.setOnInputCallback(new EvaluateInputDialogFragment.InputCallback() {
-            @Override
-            public void onInputSend(String input, AppCompatDialogFragment dialog) {
-                dialogs = dialog;
-                PushAttendanceRemark(input);
-            }
-        });
+
+
         start_time_d = include_start.findViewById(R.id.attendance_time_k);
         start_tag = include_start.findViewById(R.id.iv_attendance_tag_start);
         tv_start_location = include_start.findViewById(R.id.tv_attendance_address_k);
@@ -280,14 +275,14 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                 }
                 //连续定位
                 p.startLocations(4);
-                if (continueStla ==0 || continueStlo==0){
+                if (continueStla == 0 || continueStlo == 0) {
                     ToastUtils.showLong("正在定位请稍后");
                     return;
                 }
                 PushCard();
             }
         });
-  //早班卡重新定位
+        //早班卡重新定位
         relocation_in.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -323,13 +318,13 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         re_push_clock_in.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (continueStla ==0 || continueStlo==0){
+                if (continueStla == 0 || continueStlo == 0) {
                     ToastUtils.showLong("正在定位请稍后");
                     return;
                 }
                 if (isOnCircle) {
                     PushCard();
-                }else {
+                } else {
                     new MaterialDialog.Builder(_mActivity)
                             .title("提示")
                             .content("当前不在考勤范围内")
@@ -360,13 +355,13 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         re_push_clock_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (continueStla ==0 || continueStlo==0){
+                if (continueStla == 0 || continueStlo == 0) {
                     ToastUtils.showLong("正在定位请稍后");
                     return;
                 }
                 if (isOnCircle) {
                     PushCard();
-                }else {
+                } else {
                     new MaterialDialog.Builder(_mActivity)
                             .title("提示")
                             .content("当前不在考勤范围内")
@@ -395,7 +390,15 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         end_tv_bz.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialogFragment.show(_mActivity.getSupportFragmentManager(), TAG);
+                EvaluateInputDialogFragment dialogFragment = new EvaluateInputDialogFragment();
+                dialogFragment.setOnInputCallback(new EvaluateInputDialogFragment.InputCallback() {
+                    @Override
+                    public void onInputSend(String input, AppCompatDialogFragment dialog) {
+                        dialogs = dialog;
+                        PushAttendanceRemark(input);
+                    }
+                });
+                dialogFragment.show(getFragmentManager(),TAG);
             }
         });
     }
@@ -406,6 +409,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         getData();
         mHandler.post(run_time); //开启时间线程
     }
+
     @Override
     public void getMainDataSuccess(Attendance attendance) {
         if (attendance.getData() != null) {
@@ -584,9 +588,9 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
     }
 
     @Override
-    public void getMainDataFailure(String failure,int code) {
+    public void getMainDataFailure(String failure, int code) {
         ToastUtils.showLong(failure);
-        if (code !=-1){
+        if (code != -1) {
 
         } else {
             loginDialog();
@@ -600,10 +604,10 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
     }
 
     @Override
-    public void sendRemarkFailure(String failure,int code) {
+    public void sendRemarkFailure(String failure, int code) {
         dialogs.dismiss();
         ToastUtils.showLong(failure);
-        if (code!=-1){
+        if (code != -1) {
 
         } else {
             loginDialog();
@@ -623,7 +627,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         continueStlo = location.getLongitude();
         //当前定位位置
         Location_now = location.getAddress().street;
-        KLog.d("当前定位",location.getAddress().street);
+        KLog.d("当前定位", location.getAddress().street);
         //把定位信息赋值
         location_address_in.setText(Location_now);
         location_address_out.setText(Location_now);
@@ -641,7 +645,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
 
     @Override
     public void getPushSuccess(PushAttendanceCard pushAttendanceCard) {
-        if (type==3){
+        if (type == 3) {
             if (baiduLocationHelper != null) {
                 baiduLocationHelper.stopLocation();
             }
@@ -653,9 +657,9 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
     }
 
     @Override
-    public void getPushFail(String failure,int code) {
+    public void getPushFail(String failure, int code) {
         ToastUtils.showLong(failure + "请重新打卡");
-        if (code !=-1){
+        if (code != -1) {
 
         } else {
             loginDialog();
@@ -667,7 +671,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         Map<String, Object> map = new HashMap<>();
         map.put("projectId", Constants.ht_ProjectId);
         map.put("sessionId", Constants.sessionId);
-        map.put("token",Constants.devicestoken);
+        map.put("token", Constants.devicestoken);
         p.getMainData(map);
     }
 
@@ -682,12 +686,12 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         map.put("dealerId", dealerId);
         map.put("latitude", continueStla);
         map.put("longitude", continueStlo);
-        if (type==1){
-            map.put("startLocationStatus",isOnCircle?1:-1);
+        if (type == 1) {
+            map.put("startLocationStatus", isOnCircle ? 1 : -1);
         } else {
-            map.put("endLocationStatus",isOnCircle?1:-1);
+            map.put("endLocationStatus", isOnCircle ? 1 : -1);
         }
-        map.put("token",Constants.devicestoken);
+        map.put("token", Constants.devicestoken);
         p.getPushCard(map);
     }
 
@@ -700,8 +704,8 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         Map<String, Object> map = new HashMap();
         map.put("id", classId);
         map.put("remark", remark);
-        map.put("sessionid",Constants.sessionId);
-        map.put("token",Constants.devicestoken);
+        map.put("sessionid", Constants.sessionId);
+        map.put("token", Constants.devicestoken);
         p.sendRemark(map);
     }
 
@@ -764,13 +768,12 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
     }
 
     /**
-     *
      * @param type_daka
      * @param lat
      * @param lng
      */
-    private void getAddress(final int type_daka,double lat,double lng){
-        BaiduApi baiduApi=new BaiduApi.Builder()
+    private void getAddress(final int type_daka, double lat, double lng) {
+        BaiduApi baiduApi = new BaiduApi.Builder()
                 .default_lat(String.valueOf(lat))
                 .default_lot(String.valueOf(lng))
                 .default_methodType(BaiduApi.OkHttpMethodType.POST)
@@ -780,21 +783,21 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                         if (response.isSuccessful()) {
                             try {
                                 String string = response.body().string();
-                                Gson gson=new Gson();
+                                Gson gson = new Gson();
                                 BaiduApiBean baiduApiBean = gson.fromJson(string, BaiduApiBean.class);
-                                if (baiduApiBean.getStatus()==0) {
-                                    KLog.d("地址",baiduApiBean.getResult().getAddressComponent().getStreet());
-                                    if (type_daka==1){
-                                        Message message=new Message();
-                                        message.what=zao_daka;
-                                        message.obj=baiduApiBean.getResult().getAddressComponent().getStreet();
+                                if (baiduApiBean.getStatus() == 0) {
+                                    KLog.d("地址", baiduApiBean.getResult().getAddressComponent().getStreet());
+                                    if (type_daka == 1) {
+                                        Message message = new Message();
+                                        message.what = zao_daka;
+                                        message.obj = baiduApiBean.getResult().getAddressComponent().getStreet();
                                         mHandler.sendMessage(message);
-                                       // tv_start_location.setText(baiduApiBean.getResult().getAddressComponent().getStreet());
+                                        // tv_start_location.setText(baiduApiBean.getResult().getAddressComponent().getStreet());
                                     } else {
-                                       // tv_end_location.setText(baiduApiBean.getResult().getAddressComponent().getStreet());
-                                        Message message=new Message();
-                                        message.what=wan_daka;
-                                        message.obj=baiduApiBean.getResult().getAddressComponent().getStreet();
+                                        // tv_end_location.setText(baiduApiBean.getResult().getAddressComponent().getStreet());
+                                        Message message = new Message();
+                                        message.what = wan_daka;
+                                        message.obj = baiduApiBean.getResult().getAddressComponent().getStreet();
                                         mHandler.sendMessage(message);
                                     }
                                 }
@@ -805,6 +808,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                         }
 
                     }
+
                     @Override
                     public void getAddressFailure(String e) {
 
@@ -822,8 +826,8 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
     /**
      * 登录Dialog
      */
-    private void loginDialog(){
-        Login_DialogFragment login_dialogFragment=Login_DialogFragment.newInstance(Constants.MyTabFragmentCode);
+    private void loginDialog() {
+        Login_DialogFragment login_dialogFragment = Login_DialogFragment.newInstance(Constants.MyTabFragmentCode);
 
         login_dialogFragment.setLoginListener(new Login_DialogFragment.loginListener() {
             @Override
@@ -846,7 +850,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                 }
             }
         });
-        login_dialogFragment.show(getFragmentManager(),TAG);
+        login_dialogFragment.show(getFragmentManager(), TAG);
     }
 
     @Override

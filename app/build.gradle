@@ -23,9 +23,9 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
         multiDexEnabled true
-        manifestPlaceholders = [qqappid: "1232323"]
+        //manifestPlaceholders = [qqappid: "1232323"]
         testInstrumentationRunner "android.support.ThreeNode.runner.AndroidJUnitRunner"
         ndk { abiFilters "armeabi", "arm64-v8a", "armeabi-v7a" }
     }
@@ -77,11 +77,8 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0-beta01'
     testImplementation 'junit:junit:4.12'
-
-    //  androidTestImplementation 'com.android.support.ThreeNode:runner:1.0.2'
-
-    // androidTestImplementation 'com.android.support.ThreeNode.espresso:espresso-core:3.0.2'
 
     //dagger2 依赖注入控制反转
     implementation 'com.google.dagger:dagger:2.16'
@@ -93,7 +90,7 @@ dependencies {
     //基于扁平化的设计，有可能用不上
     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
     implementation 'com.google.android.material:material:1.0.0-beta01'
-
+    implementation 'androidx.cardview:cardview:1.0.0-beta01'
     //log框架，可指定logcat窗口，标红鲜艳
     implementation 'com.github.zhaokaiqiang.klog:library:1.5.0'
 
@@ -138,22 +135,17 @@ dependencies {
     //动态申请权限
     implementation 'com.yanzhenjie:permission:2.0.0-rc12'
 
-    //阿里云热更新
-    implementation('com.aliyun.ams:alicloud-android-hotfix:3.2.8') {
-        exclude(module: 'alicloud-android-utdid')
-        exclude(module: 'alicloud-android-utils')
-    }
-
     //网络日志
     implementation 'com.squareup.okhttp3:logging-interceptor:3.5.0'
 
     //litepal数据库
     implementation 'org.litepal.android:core:1.6.1'
-    implementation 'androidx.cardview:cardview:1.0.0-beta01'
     implementation 'org.greenrobot:eventbus:3.0.0'
 
     //图片选择
     implementation 'cn.finalteam.rxgalleryfinal:library:1.1.3'
+
+    //百度定位
     implementation files('libs/BaiduLBS_Android.jar')
 
     //日期选择器
@@ -174,19 +166,17 @@ dependencies {
     implementation 'com.umeng.sdk:push:4.0.0'
 
     //最新版com.umeng.sdk:common和分享share-core不兼容导致报错故使用旧版本
-    implementation 'com.umeng.sdk:share-core:6.9.1'
-    implementation 'com.umeng.sdk:share-qq:6.9.1.1'
-    implementation('com.umeng.sdk:share-wechat:6.9.1') {
-        exclude group: 'com.tencent.mm.opensdk', module: 'wechat-sdk-android-without-mta'
-    }
-
+   // implementation 'com.umeng.sdk:share-core:6.9.1'
+   // implementation 'com.umeng.sdk:share-qq:6.9.1.1'
+   // implementation 'com.umeng.sdk:share-wechat:6.9.1'
     //分享面板
-    implementation 'com.umeng.sdk:shareboard-widget:6.9.1'
+    //implementation 'com.umeng.sdk:shareboard-widget:6.9.1'
+
+    //录音
     implementation 'com.kailashdabhi:om-recorder:1.1.5'
 
     //阿里云对象存储
     implementation 'com.aliyun.dpa:oss-android-sdk:+'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0-beta01'
 
     //仿ios
     implementation 'com.contrarywind:Android-PickerView:4.1.6'

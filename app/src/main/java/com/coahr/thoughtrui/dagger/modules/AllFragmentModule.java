@@ -14,6 +14,7 @@ import com.coahr.thoughtrui.mvp.view.home.ProjectTemplate;
 import com.coahr.thoughtrui.mvp.view.mydata.ChangePasswordFragment;
 import com.coahr.thoughtrui.mvp.view.mydata.Fragment_Feedback;
 import com.coahr.thoughtrui.mvp.view.mydata.LoginFragment;
+import com.coahr.thoughtrui.mvp.view.mydata.UploadOptions;
 import com.coahr.thoughtrui.mvp.view.reviewed.ReViewStartAnswering;
 import com.coahr.thoughtrui.mvp.view.reviewed.ReviewMainPager;
 import com.coahr.thoughtrui.mvp.view.reviewed.ReviewSubjectList;
@@ -129,4 +130,7 @@ public abstract class AllFragmentModule {
 
     @ContributesAndroidInjector()
     abstract SearchFragment searchFragment();
+
+    @ContributesAndroidInjector()
+    abstract UploadOptions uploadOptions();
 }

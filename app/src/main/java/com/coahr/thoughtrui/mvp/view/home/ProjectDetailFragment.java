@@ -98,6 +98,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
     private String templateId;
     private String dealerId;
     private int type;
+    private boolean isHaveProject;
 
     public static ProjectDetailFragment newInstance(String projectId, String templateId, String dealerId, int type) {
         ProjectDetailFragment projectDetailFragment = new ProjectDetailFragment();
@@ -224,12 +225,17 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
      * 跳转到考勤页面
      */
     private void JumpToAttendance() {
-        if (NetWorkAvailable.isNetworkAvailable(BaseApplication.mContext)) {
-            Intent intent = new Intent(_mActivity, AttendanceRootActivity.class);
-            startActivity(intent);
+        if (isHaveProject) {
+            if (NetWorkAvailable.isNetworkAvailable(BaseApplication.mContext)) {
+                Intent intent = new Intent(_mActivity, AttendanceRootActivity.class);
+                startActivity(intent);
+            } else {
+                ToastUtils.showLong("没有网络，无法打卡");
+            }
         } else {
-            ToastUtils.showLong("没有网络，无法打卡");
+            ToastUtils.showLong("当前项目没有数据，请刷新后再试");
         }
+
 
     }
 
@@ -237,11 +243,15 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
      * 跳转到开始访问页面
      */
     private void JumpToStartProject() {
-        if (NetWorkAvailable.isNetworkAvailable(BaseApplication.mContext)) {
-            Intent intent = new Intent(_mActivity, StartProjectActivity.class);
-            startActivity(intent);
+        if (isHaveProject) {
+            if (NetWorkAvailable.isNetworkAvailable(BaseApplication.mContext)) {
+                Intent intent = new Intent(_mActivity, StartProjectActivity.class);
+                startActivity(intent);
+            } else {
+                ToastUtils.showLong("没有网络，无法访问");
+            }
         } else {
-            ToastUtils.showLong("没有网络，无法访问");
+            ToastUtils.showLong("当前项目没有数据，请刷新后再试");
         }
     }
 
@@ -268,6 +278,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
 
     @Override
     public void getDateSizeSuccess(int subject, int files) {
+
         tv_upload_status.setText("数据" + subject + "条，" + "附件" + files + "个未上传");
     }
 
@@ -279,6 +290,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
     @Override
     public void getProjectDetailSuccess(ProjectDetail projectDetail) {
         if (projectDetail.getData() != null) {
+            isHaveProject = true;
             int id = 0;
             List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", projectDetail.getData().getId());
             if (projectsDBS != null && projectsDBS.size() > 0) {
@@ -287,12 +299,14 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
                 projectsDB.setDownloadTime(projectDetail.getData().getUploadTime());
                 projectsDB.setProgress(projectDetail.getData().getProgress());
                 int update = projectsDB.update(projectsDBS.get(0).getId());
+                Constants.ht_ProjectId = projectDetail.getData().getId();
+                Constants.name_Project = projectDetail.getData().getPname();
                 //获取数据
                 p.getSubjectList(projectsDBS.get(0));
             } else {
                 List<UsersDB> usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", Constants.sessionId);
                 ProjectsDB projectsDB = new ProjectsDB();
-              //  projectsDB.setcName(projectDetail.getData().getCname());
+                //  projectsDB.setcName(projectDetail.getData().getCname());
                 projectsDB.setProgress(projectDetail.getData().getProgress());
                 projectsDB.setManager(projectDetail.getData().getManager());
                 projectsDB.setLocation(projectDetail.getData().getLocation());
@@ -301,13 +315,14 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
                 projectsDB.setAddress(projectDetail.getData().getAreaAddress());
                 projectsDB.setGrade(projectDetail.getData().getGrade());
                 projectsDB.setPname(projectDetail.getData().getPname());
-            //    projectsDB.setdName(projectDetail.getData().getDname());
+                //    projectsDB.setdName(projectDetail.getData().getDname());
                 projectsDB.setLongitude(projectDetail.getData().getLongitude());
                 projectsDB.setLatitude(projectDetail.getData().getLatitude());
                 projectsDB.setModifyTime(0);
                 projectsDB.setUploadTime(projectDetail.getData().getUploadTime());
                 projectsDB.setService_code(projectDetail.getData().getService_code());
                 projectsDB.setNotice(projectDetail.getData().getNotice());
+                projectsDB.setStage("1");
                 if (usersDBS != null && usersDBS.size() > 0) {
                     projectsDB.setUser(usersDBS.get(0));
                 }
@@ -338,7 +353,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
             tv_project_manager.setText(projectDetail.getData().getManager());
             tv_project_user.setText(Constants.user_name);
             tv_project_describe.setText(projectDetail.getData().getNotice());
-            Constants.DbProjectId = String.valueOf(id);
+            List<ProjectsDB> projectsDBS1 = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", projectDetail.getData().getId());
             Constants.ht_ProjectId = projectDetail.getData().getId();
             Constants.name_Project = projectDetail.getData().getPname();
             String s = projectDetail.getData().getCname();
@@ -361,7 +376,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
 
     @Override
     public void getProjectDetailFailure(String fail) {
-
+        isHaveProject = false;
     }
 
     /**
@@ -373,7 +388,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
         List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", projectId);
         if (projectsDBS != null && projectsDBS.size() > 0) {
             ProjectsDB projectsDB = projectsDBS.get(0);
-         //   tv_cName.setText(projectsDB.getcName());
+            //   tv_cName.setText(projectsDB.getcName());
             tv_cCode.setText(projectsDB.getCode());
             tv_cLevel.setText(projectsDB.getGrade());
             tv_cAddress.setText(projectsDB.getAddress() + projectsDB.getLocation());
@@ -397,6 +412,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
             Constants.DbProjectId = String.valueOf(projectsDB.getId());
             Constants.ht_ProjectId = projectsDB.getPid();
             Constants.name_Project = projectsDB.getPname();
+            isHaveProject = true;
             String s = projectsDB.getCname();
             if (s != null) {
                 if (s.equals("自由班次")) {

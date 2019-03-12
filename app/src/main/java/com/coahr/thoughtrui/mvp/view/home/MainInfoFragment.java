@@ -38,6 +38,8 @@ public class MainInfoFragment extends BaseChildFragment<MainInfoFragment_C.Prese
     CardView card_start;
     @BindView(R.id.iv_project_tag)
     ImageView iv_project_tag;
+    @BindView(R.id.iv_massage_center)
+    ImageView iv_massage_center;
     @Override
     public BaseContract.Presenter getPresenter() {
         return p;
@@ -65,7 +67,12 @@ public class MainInfoFragment extends BaseChildFragment<MainInfoFragment_C.Prese
                 JumpToProjectList();
             }
         });
-
+        iv_massage_center.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                JumpToMassage();
+            }
+        });
 
     }
 
@@ -95,6 +102,16 @@ public class MainInfoFragment extends BaseChildFragment<MainInfoFragment_C.Prese
         startActivity(intent);
     }
 
+    /**
+     * 跳转到消息中心
+     */
+    private void JumpToMassage(){
+        Intent intent=new Intent(_mActivity, ConstantsActivity.class);
+        intent.putExtra("from", Constants.fragment_mainInfo);
+        // intent.putExtra("url","http://www.baidu.com");
+        intent.putExtra("to", Constants.fragment_uploadOptions);
+        startActivity(intent);
+    }
     @Override
     public void onDestroy() {
         super.onDestroy();

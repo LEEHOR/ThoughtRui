@@ -12,7 +12,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
+import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
+import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
+import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.TimeUtils;
 import com.coahr.thoughtrui.commom.Constants;
 
@@ -138,6 +141,7 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
                // ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_company.setText(projectsDBList.get(i).getdName());
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_address.setText(projectsDBList.get(i).getAddress());
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_update_time.setText(TimeUtils.getStringDate_start(projectsDBList.get(i).getModifyTime()));
+                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_item_data.setText(getItemDate(projectsDBList.get(i).getPid()));
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).uncomplete_cardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -355,5 +359,37 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
         void unDownLoadClick(ProjectsDB projectsDB);
 
         void unDownLoadLongClick(ProjectsDB projectsDB);
+    }
+
+    /**
+     * 获取题目的数据
+     */
+    private String getItemDate(String id) {
+        String massage = "暂无数据上传";
+        int CountAll = 0;
+        int dataSize = 0;
+        List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", id);
+        if (projectsDBS != null && projectsDBS.size() > 0) {
+            List<SubjectsDB> subjectsDBS = projectsDBS.get(0).getSubjectsDBList();
+            if (subjectsDBS != null && subjectsDBS.size() > 0) {
+                for (int i = 0; i < subjectsDBS.size(); i++) {
+                    CountAll++;
+                    if (subjectsDBS.get(i).getIsComplete() == 1 && subjectsDBS.get(i).getsUploadStatus() == 0) {
+                        List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + id + "/" + subjectsDBS.get(i).getNumber() + "_" + subjectsDBS.get(i).getHt_id());
+                        if (fileList != null && fileList.size() > 0) {
+                            for (int j = 0; j < fileList.size(); j++) {
+                                if (!fileList.get(i).endsWith("txt")) {
+                                    dataSize++;
+                                }
+                            }
+                        }
+                    }
+                }
+                massage = "共有" + CountAll + "题," + dataSize + "数据未上传";
+            } else {
+
+            }
+        }
+        return massage;
     }
 }

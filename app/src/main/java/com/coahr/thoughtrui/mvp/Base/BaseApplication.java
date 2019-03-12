@@ -1,9 +1,10 @@
 package com.coahr.thoughtrui.mvp.Base;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageManager;
+
+import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
 import androidx.fragment.app.Fragment;
 
@@ -15,14 +16,10 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.dagger.components.DaggerApplicationComponents;
 import com.coahr.thoughtrui.mvp.view.UMPush.UmengNotificationService;
 import com.socks.library.KLog;
-import com.taobao.sophix.PatchStatus;
-import com.taobao.sophix.SophixManager;
-import com.taobao.sophix.listener.PatchLoadStatusListener;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.MsgConstant;
 import com.umeng.message.PushAgent;
-import com.umeng.socialize.PlatformConfig;
 
 import org.litepal.LitePal;
 
@@ -41,13 +38,13 @@ import static anet.channel.bytes.a.TAG;
  * on 11:45
  */
 public class BaseApplication extends MultiDexApplication implements HasActivityInjector, HasSupportFragmentInjector {
-    public interface MsgDisplayListener {
+  /*  public interface MsgDisplayListener {
         void CODE_DOWNLOAD_SUCCESS(String appVersion,String Info,int HandlePatchVersion );
         void CODE_LOAD_RELAUNCH(String appVersion,String Info,int HandlePatchVersion);
         void CODE_LOAD_MFITEM(String appVersion,String Info,int HandlePatchVersion);
         void Other(String appVersion,int code,String Info,int HandlePatchVersion);
-    }
-    private static MsgDisplayListener listeners;
+    }*/
+  //  private static MsgDisplayListener listeners;
     public static Context mContext;
     //内部封装map管理众多activity的component
     @Inject
@@ -60,6 +57,7 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
         super.onCreate();
         DaggerApplicationComponents.create().inject(this);
         mContext=getApplicationContext();
+        MultiDex.install(mContext);
         LitePal.initialize(getApplicationContext());
         SDKInitializer.initialize(getApplicationContext());
         //自4.3.0起，百度地图SDK所有接口均支持百度坐标和国测局坐标，用此方法设置您使用的坐标类型.
@@ -68,8 +66,8 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
         UMConfigure.init(this,
                 UMConfigure.DEVICE_TYPE_PHONE, "ced813027db2c5016506edd6827d3d95");
 
-        PlatformConfig.setWeixin("wx89f3b1477df1aa39", "b3ad27916ad0fa404f5d1478f3cc0bc2");
-        PlatformConfig.setQQZone("","");
+      //  PlatformConfig.setWeixin("wx89f3b1477df1aa39", "b3ad27916ad0fa404f5d1478f3cc0bc2");
+     //   PlatformConfig.setQQZone("","");
         initPush();
         if (PreferenceUtils.contains(mContext, Constants.user_key)) {
            Constants.user_name= PreferenceUtils.getPrefString(mContext, Constants.user_key, "");
@@ -127,7 +125,7 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
      * 初始化阿里热更新
      */
     private void initSophix(){
-        final String appVersion = getAppVersion();
+   /*     final String appVersion = getAppVersion();
         SophixManager.getInstance().setContext(this)
                 .setAppVersion(appVersion)
                 .setAesKey(null)
@@ -162,7 +160,7 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
                             }
                         }
                     }
-                }).initialize();
+                }).initialize();*/
     }
     private String getAppVersion() {
         String appVersion;
@@ -173,7 +171,7 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
         }
         return  appVersion;
     }
-    public static void setListener(MsgDisplayListener listener) {
+  /*  public static void setListener(MsgDisplayListener listener) {
         listeners = listener;
-    }
+    }*/
 }

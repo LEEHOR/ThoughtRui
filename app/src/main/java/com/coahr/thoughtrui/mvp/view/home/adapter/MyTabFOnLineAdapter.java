@@ -1,18 +1,25 @@
 package com.coahr.thoughtrui.mvp.view.home.adapter;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.coahr.thoughtrui.DBbean.ProjectsDB;
+import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
+import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
+import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.TimeUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.model.Bean.HomeDataList;
+import com.socks.library.KLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +31,7 @@ import java.util.List;
  * 首页项目adapter
  */
 public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<HomeDataList.DataBean.AllListBean> allListBean=new ArrayList<>();
+    private List<HomeDataList.DataBean.AllListBean> allListBean = new ArrayList<>();
     private Context context;
     private int type;
     // 0 1 2  3 新项目 已完成 未完成  全部
@@ -32,7 +39,7 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private int complete = 1;
     private int uncomplete = 2;
     private int undownload = 3;
-    private int unKnow=4;
+    private int unKnow = 4;
     private adapter_online adapter_online;
 
     public void setHomeDataList(List<HomeDataList.DataBean.AllListBean> allListBean_a, Context context) {
@@ -67,11 +74,11 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (viewHolder != null && viewHolder.itemView != null) {
             if (viewHolder instanceof newListHaveBeenCancelViewHolder) {
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_schedule.setText(allListBean.get(i).getProgress());
-                ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_explain.setText(Constants.user_type == 1 ? "["+allListBean.get(i).getSale_code()+"]"
-                        : Constants.user_type == 2 ? "["+allListBean.get(i).getSale_code()+"]"
-                        : "["+allListBean.get(i).getSale_code()+"]");
+                ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_explain.setText(Constants.user_type == 1 ? "[" + allListBean.get(i).getSale_code() + "]"
+                        : Constants.user_type == 2 ? "[" + allListBean.get(i).getSale_code() + "]"
+                        : "[" + allListBean.get(i).getSale_code() + "]");
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_times.setText(allListBean.get(i).getPname());
-               // ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_code.setText(allListBean.get(i).getCode());
+                // ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_code.setText(allListBean.get(i).getCode());
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_name.setText(allListBean.get(i).getPname());
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_company.setText(allListBean.get(i).getDname());
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_address.setText(allListBean.get(i).getAreaAddress());
@@ -84,6 +91,7 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         }
                     }
                 });
+
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_cardView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
@@ -96,11 +104,11 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
             if (viewHolder instanceof completeListHaveBeenCancelViewHolder) {
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_schedule.setText(allListBean.get(i).getProgress());
-                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_explain.setText(Constants.user_type == 1 ? "["+allListBean.get(i).getSale_code()+"]"
-                        : Constants.user_type == 2 ? "["+allListBean.get(i).getSale_code()+"]"
-                        : "["+allListBean.get(i).getSale_code()+"]");
+                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_explain.setText(Constants.user_type == 1 ? "[" + allListBean.get(i).getSale_code() + "]"
+                        : Constants.user_type == 2 ? "[" + allListBean.get(i).getSale_code() + "]"
+                        : "[" + allListBean.get(i).getSale_code() + "]");
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_times.setText(allListBean.get(i).getPname());
-               // ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_code.setText(allListBean.get(i).getCode());
+                // ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_code.setText(allListBean.get(i).getCode());
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_name.setText(allListBean.get(i).getPname());
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_company.setText(allListBean.get(i).getDname());
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_address.setText(allListBean.get(i).getAreaAddress());
@@ -126,15 +134,16 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             if (viewHolder instanceof unCompleteListHaveBeenCancelViewHolder) {
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_schedule.setText(allListBean.get(i).getProgress());
-                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_explain.setText(Constants.user_type == 1 ? "["+allListBean.get(i).getSale_code()+"]"
-                        : Constants.user_type == 2 ? "["+allListBean.get(i).getSale_code()+"]"
-                        : "["+allListBean.get(i).getSale_code()+"]");
+                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_explain.setText(Constants.user_type == 1 ? "[" + allListBean.get(i).getSale_code() + "]"
+                        : Constants.user_type == 2 ? "[" + allListBean.get(i).getSale_code() + "]"
+                        : "[" + allListBean.get(i).getSale_code() + "]");
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_times.setText(allListBean.get(i).getPname());
-               // ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_code.setText(allListBean.get(i).getCode());
+                // ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_code.setText(allListBean.get(i).getCode());
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_name.setText(allListBean.get(i).getPname());
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_company.setText(allListBean.get(i).getDname());
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_address.setText(allListBean.get(i).getAreaAddress());
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_update_time.setText(TimeUtils.getStringDate_start(allListBean.get(i).getModifyTime()));
+                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_item_data.setText(getItemDate(allListBean.get(i).getId()));
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).uncomplete_cardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -152,15 +161,17 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         return false;
                     }
                 });
+
+
             }
 
             if (viewHolder instanceof unDownLoadListHaveBeenCancelViewHolder) {
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_schedule.setText(allListBean.get(i).getProgress());
-                ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_explain.setText(Constants.user_type == 1 ? "["+allListBean.get(i).getSale_code()+"]"
-                        : Constants.user_type == 2 ? "["+allListBean.get(i).getSale_code()+"]"
-                        : "["+allListBean.get(i).getSale_code()+"]");
+                ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_explain.setText(Constants.user_type == 1 ? "[" + allListBean.get(i).getSale_code() + "]"
+                        : Constants.user_type == 2 ? "[" + allListBean.get(i).getSale_code() + "]"
+                        : "[" + allListBean.get(i).getSale_code() + "]");
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_times.setText(allListBean.get(i).getPname());
-               // ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_code.setText(allListBean.get(i).getCode());
+                // ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_code.setText(allListBean.get(i).getCode());
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_name.setText(allListBean.get(i).getPname());
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_company.setText(allListBean.get(i).getDname());
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_address.setText(allListBean.get(i).getAreaAddress());
@@ -192,7 +203,7 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public int getItemCount() {
         if (allListBean != null) {
-            return  allListBean.size();
+            return allListBean.size();
         }
         return 0;
     }
@@ -237,6 +248,7 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public class newListHaveBeenCancelViewHolder extends RecyclerView.ViewHolder {
+        private TextView new_tv_update_message_date;
         private CardView new_cardView;
         private TextView new_tv_schedule;
         private TextView new_tv_explain;
@@ -258,6 +270,7 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             new_tv_project_company = itemView.findViewById(R.id.new_tv_project_company);
             new_tv_project_address = itemView.findViewById(R.id.new_tv_project_address);
             new_tv_update_time = itemView.findViewById(R.id.new_tv_update_time);
+            new_tv_update_message_date = itemView.findViewById(R.id.new_tv_update_message_date);
 
         }
     }
@@ -316,6 +329,7 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public class unDownLoadListHaveBeenCancelViewHolder extends RecyclerView.ViewHolder {
+        private TextView unComplete_item_data;
         private CardView undownload_cardView;
         private TextView undownload_tv_schedule;
         private TextView undownload_tv_explain;
@@ -335,6 +349,7 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             undownload_tv_project_name = itemView.findViewById(R.id.undownload_tv_project_name);
             undownload_tv_project_company = itemView.findViewById(R.id.undownload_tv_project_company);
             undownload_tv_project_address = itemView.findViewById(R.id.undownload_tv_project_address);
+            unComplete_item_data = itemView.findViewById(R.id.unComplete_item_data);
         }
     }
 
@@ -358,5 +373,37 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         void unDownLoadClick(HomeDataList.DataBean.AllListBean newListBean);
 
         void unDownLoadLongClick(HomeDataList.DataBean.AllListBean newListBean);
+    }
+
+    /**
+     * 获取题目的数据
+     */
+    private String getItemDate(String id) {
+        String massage = "暂无数据上传";
+        int CountAll = 0;
+        int dataSize = 0;
+        List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", id);
+        if (projectsDBS != null && projectsDBS.size() > 0) {
+            List<SubjectsDB> subjectsDBS = projectsDBS.get(0).getSubjectsDBList();
+            if (subjectsDBS != null && subjectsDBS.size() > 0) {
+                for (int i = 0; i < subjectsDBS.size(); i++) {
+                    CountAll++;
+                    if (subjectsDBS.get(i).getIsComplete() == 1 && subjectsDBS.get(i).getsUploadStatus() == 0) {
+                        List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + id + "/" + subjectsDBS.get(i).getNumber() + "_" + subjectsDBS.get(i).getHt_id());
+                        if (fileList != null && fileList.size() > 0) {
+                            for (int j = 0; j < fileList.size(); j++) {
+                                if (!fileList.get(i).endsWith("txt")) {
+                                    dataSize++;
+                                }
+                            }
+                        }
+                    }
+                }
+                massage = "共有" + CountAll + "题," + dataSize + "数据未上传";
+            } else {
+
+            }
+        }
+        return massage;
     }
 }

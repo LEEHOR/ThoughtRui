@@ -6,6 +6,7 @@ import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseSupportActivity;
+import com.coahr.thoughtrui.mvp.view.UMPush.Fragment_Umeng;
 import com.coahr.thoughtrui.mvp.view.WebView.Fragment_WebView;
 import com.coahr.thoughtrui.mvp.view.home.DealerFragment;
 import com.coahr.thoughtrui.mvp.view.home.MainFragment;
@@ -14,6 +15,7 @@ import com.coahr.thoughtrui.mvp.view.home.ProjectTemplate;
 import com.coahr.thoughtrui.mvp.view.mydata.ChangePasswordFragment;
 import com.coahr.thoughtrui.mvp.view.mydata.Fragment_Feedback;
 import com.coahr.thoughtrui.mvp.view.mydata.LoginFragment;
+import com.coahr.thoughtrui.mvp.view.mydata.UploadOptions;
 import com.coahr.thoughtrui.mvp.view.search.SearchFragment;
 import com.coahr.thoughtrui.mvp.view.subjectList.Fragment_Topics;
 import com.coahr.thoughtrui.mvp.view.projectAnnex.FragmentAnnexViewPager;
@@ -80,6 +82,12 @@ public class ConstantsActivity extends BaseSupportActivity {
                 break;
             case Constants.fragment_search: //搜索页
                 loadRootFragment(R.id.Constants_Fragment, SearchFragment.instance(getIntent().getIntExtra("type",0)));
+                break;
+            case Constants.fragment_umeng: //消息页
+                loadRootFragment(R.id.Constants_Fragment, Fragment_Umeng.newInstance());
+                break;
+            case Constants.fragment_uploadOptions: //上传设置
+                loadRootFragment(R.id.Constants_Fragment, UploadOptions.newInstance());
                 break;
         }
     }

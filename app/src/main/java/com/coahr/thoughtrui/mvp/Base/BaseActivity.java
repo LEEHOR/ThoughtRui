@@ -6,12 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.coahr.thoughtrui.Utils.KeyBoardUtils;
 import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.commom.ActivityManager;
@@ -19,10 +14,7 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.widgets.BroadcastReceiver.NetWorkReceiver;
 import com.gyf.barlibrary.ImmersionBar;
 import com.socks.library.KLog;
-import com.taobao.sophix.SophixManager;
-
 import org.litepal.LitePal;
-
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import dagger.android.AndroidInjection;
@@ -117,33 +109,5 @@ public abstract class BaseActivity<P extends BaseContract.Presenter> extends Sup
             return true;
         }
         return false;
-    }
-    /**
-     * @param title
-     * @param Content
-     */
-    public void Dialog(String title, String Content) {
-        new MaterialDialog.Builder(this)
-                .title(title)
-                .content(Content)
-                .negativeText("下次再说")
-                .positiveText("立即更新")
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
-                    }
-                })
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        PreferenceUtils.remove(BaseApplication.mContext,  Constants.AliYunHot_key);
-                        PreferenceUtils.remove(BaseApplication.mContext,Constants.pathVersion_key);
-                        PreferenceUtils.remove(BaseApplication.mContext,Constants.path_key);
-                        dialog.dismiss();
-                        SophixManager.getInstance().killProcessSafely();
-
-                    }
-                }).build().show();
     }
 }

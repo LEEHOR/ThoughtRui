@@ -337,7 +337,10 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     public void UpDataDbSuccess(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
         //如果当前项目下的题目数据上传完毕，则开始传下一个项目
         KLog.d("上传4", project_position, projectsDBS.size(), subject_position, subjectsDBList.size());
-        if (subject_position == subjectsDBList.size() - 1) {
+        if (subject_position < subjectsDBList.size()-1) {
+            KLog.d("上传2", "切换下一个题目");
+            p.UpLoadFileList(subjectsDBList, projectsDBS, project_position, subject_position += 1);
+        } else {   //项目下还有题目没传，开始下一题
             //1.查询下一个项目
             if (project_position < projectsDBS.size() - 1) {
                 KLog.d("上传3", "切换下一个项目");
@@ -345,10 +348,6 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
             } else {
                 ToastUtils.showLong("上传完成");
             }
-        } else {   //项目下还有题目没传，开始下一题
-            KLog.d("上传2", "切换下一个题目");
-            p.UpLoadFileList(subjectsDBList, projectsDBS, project_position, subject_position += 1);
-
         }
     }
 
@@ -567,7 +566,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
         map.put("censor",subjectsDB.get(subject_position).getCensor());
         map.put("answerId", subjectsDB.get(subject_position).getHt_id());
         map.put("number", subjectsDB.get(subject_position).getNumber());
-        map.put("stage", "1");
+        map.put("stage", projectsDB.get(project_position).getStage());
         if (text != null) {
             String[] split = text.split("&");
             if (split != null && split.length > 0) {
@@ -576,7 +575,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                         String s = split[0];
                         String string = SaveOrGetAnswers.getString(s, ":");
                         if (string != null && !string.equals("") && !string.equals("null")) {
-                            map.put("answer", s);
+                            map.put("answer", string);
                             KLog.d("anwser" + string);
                         } else {
                             map.put("anwser", "");

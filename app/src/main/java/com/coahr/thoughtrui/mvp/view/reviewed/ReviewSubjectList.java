@@ -148,15 +148,16 @@ public class ReviewSubjectList extends BaseFragment<ReviewSubjectList_C.Presente
                         SubjectsDB subjectsDB=new SubjectsDB();
                         subjectsDB.setToDefault("isComplete");
                         subjectsDB.setToDefault("sUploadStatus");
+                        subjectsDB.setCensor(2);
                         subjectsDB.update(subjectsDBS.get(0).getId());
                     }
                 }
-
                 List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", projectId);
                 if (projectsDBS != null && projectsDBS.size()>0) {
                     ProjectsDB projectsDB=new ProjectsDB();
                     projectsDB.setToDefault("isComplete");
                     projectsDB.setToDefault("pUploadStatus");
+                    projectsDB.setStage("2");
                     projectsDB.update(projectsDBS.get(0).getId());
                 }
                 adapter.setTag(statues);

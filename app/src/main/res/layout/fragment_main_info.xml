@@ -18,6 +18,7 @@
             android:src="@drawable/bg_maininfo" />
 
         <ImageView
+            android:id="@+id/iv_massage_center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

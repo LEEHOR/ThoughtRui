@@ -66,21 +66,22 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     @BindView(R.id.p_mytitle)
     MyTittleBar p_mytitle;
     private StartProjectAdapter startProjectAdapter;
-    private List<String> htId_List=new ArrayList<>();
+    private List<String> htId_List = new ArrayList<>();
     private int subject_size; //题目个数
-        //定位是否成功
+    //定位是否成功
     private boolean isLocationSuccess;
     //是否首次定位
     private boolean isFirstLocation;
     private double latitude;
     private double longitude;
-    private Handler mHandler=new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
         }
     };
     private BaiduLocationHelper baiduLocationHelper_s;
+
     @Override
     public StartProjectActivity_C.Presenter getPresenter() {
         return p;
@@ -126,9 +127,9 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     @Override
     public void initData() {
         if (getNetWork()) {
-            if (haslogin()){
+            if (haslogin()) {
                 getData();
-               // p.getLocation(2);
+                // p.getLocation(2);
             } else {
                 ToastUtils.showLong("请登录后再试");
             }
@@ -153,26 +154,27 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     @Override
     public void getLocationSuccess(BDLocation location, BaiduLocationHelper baiduLocationHelper) {
         this.isLocationSuccess = true;
-        this.baiduLocationHelper_s=baiduLocationHelper;
+        this.baiduLocationHelper_s = baiduLocationHelper;
         latitude = location.getLatitude();
         longitude = location.getLongitude();
         if (!isFirstLocation) {
-              //  mHandler.post(run_location);
-                getData();
-            }
+            //  mHandler.post(run_location);
+            getData();
+        }
 
-        isFirstLocation=true;
+        isFirstLocation = true;
 
     }
 
     @Override
     public void getLocationFailure(int failure, BaiduLocationHelper baiduLocationHelper) {
-        this.isLocationSuccess=false;
+        this.isLocationSuccess = false;
     }
 
     @Override
     public void getMainDataSuccess(QuestionBean questionBean) {
-        final List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "id=?", Constants.DbProjectId);
+
+        final List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", Constants.ht_ProjectId);
         if (projectsDBS != null && projectsDBS.size() > 0) {
             final List<QuestionBean.DataBean.QuestionListBean> questionList = questionBean.getData().getQuestionList();
             if (questionList != null && questionList.size() > 0) {
@@ -234,15 +236,15 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     }
 
     @Override
-    public void getMainDataFailure(String failure,int code) {
+    public void getMainDataFailure(String failure, int code) {
         ToastUtils.showLong(failure);
-        if (code!=-1){
+        if (code != -1) {
             p.getOfflineDate(Constants.DbProjectId, Constants.ht_ProjectId);
         } else {
             if (baiduLocationHelper_s != null) {
                 baiduLocationHelper_s.stopLocation();
             }
-         //   mHandler.removeCallbacks(run_location);
+            //   mHandler.removeCallbacks(run_location);
             loginDialog();
         }
 
@@ -253,8 +255,8 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
 
         this.subject_size = size;
         htId_List.clear();
-        this.htId_List=ht_list;
-        KLog.d("项目Id2",ht_projectId,dbProjectId);
+        this.htId_List = ht_list;
+        KLog.d("项目Id2", ht_projectId, dbProjectId);
         startProjectAdapter = new StartProjectAdapter(getSupportFragmentManager(), size, dbProjectId, ht_projectId, Constants.name_Project, ht_list);
 
         project_viewPage.setAdapter(startProjectAdapter);
@@ -270,8 +272,8 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     private void getData() {
         Map<String, Object> map = new HashMap<>();
         map.put("projectId", Constants.ht_ProjectId);
-        map.put("sessionid",Constants.sessionId);
-        map.put("token",Constants.devicestoken);
+        map.put("sessionid", Constants.sessionId);
+        map.put("token", Constants.devicestoken);
         p.getMainData(map);
     }
 
@@ -325,39 +327,42 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         int isposition = isCompleteBean.getPosition();
         int isupOrDown = isCompleteBean.getUpOrDown();
         boolean complete = isCompleteBean.isComplete();
+        int type = isCompleteBean.getType();
+        if (type == 1) {  //答题页面
+            if (complete) {
+                if (isupOrDown == 1) {  //上翻页
+                    KLog.d("上翻页" + isposition);
+                    if (isposition > 0) {
+                        project_viewPage.setCurrentItem(project_viewPage.getCurrentItem() - 1);
+                        p_mytitle.getTvTittle().setText("第" + (isposition) + "题");
+                    }
 
-        if (complete) {
-            if (isupOrDown == 1) {  //上翻页
-                KLog.d("上翻页" + isposition);
-                if (isposition > 0) {
-                    project_viewPage.setCurrentItem(project_viewPage.getCurrentItem() - 1);
-                    p_mytitle.getTvTittle().setText("第" + (isposition) + "题");
                 }
+                if (isupOrDown == 2) {
+                    KLog.d("下翻页" + isposition);
+                    project_viewPage.setCurrentItem(project_viewPage.getCurrentItem() + 1);
+                    p_mytitle.getTvTittle().setText("第" + (isposition) + "题");
 
+                }
+            } else {
+                ToastUtils.showLong("当前题目未完成");
             }
-            if (isupOrDown == 2) {
-                KLog.d("下翻页" + isposition);
-                project_viewPage.setCurrentItem(project_viewPage.getCurrentItem() + 1);
-                p_mytitle.getTvTittle().setText("第" + (isposition) + "题");
-
-            }
-        } else {
-            ToastUtils.showLong("当前题目未完成");
         }
     }
 
     /**
      * 跳转
+     *
      * @param subjectList_id
      */
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void Event_SubjectList_jump(EvenBus_SubjectList_id subjectList_id) {
         if (subjectList_id != null) {
             List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectByTogether_Where(SubjectsDB.class, "ht_id=?", subjectList_id.getSub_id());
-            if (subjectsDBS != null && subjectsDBS.size()>0) {
-                KLog.d("跳转",subjectList_id.getSub_id(),subjectsDBS.get(0).getNumber());
+            if (subjectsDBS != null && subjectsDBS.size() > 0) {
+                KLog.d("跳转", subjectList_id.getSub_id(), subjectsDBS.get(0).getNumber());
                 p_mytitle.getTvTittle().setText("第" + (subjectsDBS.get(0).getNumber()) + "题");
-                        project_viewPage.setCurrentItem(subjectsDBS.get(0).getNumber()-1);
+                project_viewPage.setCurrentItem(subjectsDBS.get(0).getNumber() - 1);
             }
         }
     }
@@ -375,18 +380,18 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     private Runnable run_location = new Runnable() {
         @Override
         public void run() {
-                if (isLocationSuccess){
-                    KLog.d("发送数据");
-                }
-         //   mHandler.postDelayed(run_location, 1000*3);
+            if (isLocationSuccess) {
+                KLog.d("发送数据");
+            }
+            //   mHandler.postDelayed(run_location, 1000*3);
         }
     };
 
     /**
      * 登录Dialog
      */
-    private void loginDialog(){
-        Login_DialogFragment login_dialogFragment=Login_DialogFragment.newInstance(Constants.MyTabFragmentCode);
+    private void loginDialog() {
+        Login_DialogFragment login_dialogFragment = Login_DialogFragment.newInstance(Constants.MyTabFragmentCode);
 
         login_dialogFragment.setLoginListener(new Login_DialogFragment.loginListener() {
             @Override
@@ -394,16 +399,16 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                 dialogFragment.dismiss();
                 if (haslogin()) {
                     if (getNetWork()) {  //有网络
-                        isFirstLocation=false;
-                       p.getLocation(2);
+                        isFirstLocation = false;
+                        p.getLocation(2);
                     } else { //无网络
-                       ToastUtils.showLong("请连接网络后再试");
+                        ToastUtils.showLong("请连接网络后再试");
                     }
                 } else {
                     ToastUtils.showLong("请重新登录");
                 }
             }
         });
-        login_dialogFragment.show(getSupportFragmentManager(),TAG);
+        login_dialogFragment.show(getSupportFragmentManager(), TAG);
     }
 }

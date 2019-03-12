@@ -112,9 +112,9 @@ public class Constants {
 
     public static final int fragment_feedback=12; //帮助与反馈
 
-    public static final int fragment_mainInfo=13;
+    public static final int fragment_mainInfo=13; //首页选择
 
-    public static final int fragment_main=14;
+    public static final int fragment_main=14;  //首页
 
     public static final int fragment_template=15; //项目模板
 
@@ -124,6 +124,9 @@ public class Constants {
 
     public static final int fragment_search=18; //搜索页
 
+    public static final int fragment_umeng=19; //消息中心
+
+    public static final int fragment_uploadOptions=20; //上传设置
 
     /**
      * PreferenceUtils键
