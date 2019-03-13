@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.TouchDelegate;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ProgressBar;
@@ -98,8 +99,8 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     private OSSClient ossClient;
     private final int GETSUBJECTLIST = 1;
     private final int UPDATE_PROGRESS = 2;
-    private final int UPDATE_TITTLE=3;
-    private final int UPDATE_MESSAGE=4;
+    private final int UPDATE_TITTLE = 3;
+    private final int UPDATE_MESSAGE = 4;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -116,10 +117,10 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                     }
                     tv_tittle.setText(msg.obj.toString());
                     break;
-                case  UPDATE_TITTLE:
+                case UPDATE_TITTLE:
                     tv_message_tittle.setText(msg.obj.toString());
                     break;
-                case  UPDATE_MESSAGE:
+                case UPDATE_MESSAGE:
                     tv_tittle.setText(msg.obj.toString());
                     break;
             }
@@ -266,10 +267,17 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     }
 
     @Override
-    public void getSubjectListFailure(String failure) {
+    public void getSubjectListFailure(String failure, List<ProjectsDB> projectsDBS, int project_position) {
         Message mes = mHandler.obtainMessage(UPDATE_MESSAGE, "当前题目下没有可以上传的文件");
         mes.sendToTarget();
         ToastUtils.showLong(failure);
+        //开始查询下一个项目下的题目
+        if (project_position < projectsDBS.size() - 1) {
+            KLog.d("上传6", "切换下一个项目");
+            p.getSubjectList(projectsDBS, project_position += 1);
+        } else {
+
+        }
     }
 
     //========获取上传文件列表集合回调
@@ -337,7 +345,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     public void UpDataDbSuccess(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
         //如果当前项目下的题目数据上传完毕，则开始传下一个项目
         KLog.d("上传4", project_position, projectsDBS.size(), subject_position, subjectsDBList.size());
-        if (subject_position < subjectsDBList.size()-1) {
+        if (subject_position < subjectsDBList.size() - 1) {
             KLog.d("上传2", "切换下一个题目");
             p.UpLoadFileList(subjectsDBList, projectsDBS, project_position, subject_position += 1);
         } else {   //项目下还有题目没传，开始下一题
@@ -390,14 +398,18 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                 break;
             case R.id.tv_Batch_UpLoad:
                 type = 2;
-                if (Constants.isNetWorkConnect) {
-                    if (Constants.NetWorkType != null && Constants.NetWorkType.equals("WIFI")) {
-                        NetWorkDialog("提示", "是否上传", 1);
-                    } else if (Constants.NetWorkType != null && Constants.NetWorkType.equals("MOBILE")) {
-                        NetWorkDialog("提示", "当前为移动网络是否继续上传", 2);
+                if (ck_listProjectDb != null && ck_listProjectDb.size() > 0) {
+                    if (Constants.isNetWorkConnect) {
+                        if (Constants.NetWorkType != null && Constants.NetWorkType.equals("WIFI")) {
+                            NetWorkDialog("提示", "是否上传", 1);
+                        } else if (Constants.NetWorkType != null && Constants.NetWorkType.equals("MOBILE")) {
+                            NetWorkDialog("提示", "当前为移动网络是否继续上传", 2);
+                        }
+                    } else {
+                        NetWorkDialog("提示", "当前网络不可用无法上传", 3);
                     }
                 } else {
-                    NetWorkDialog("提示", "当前网络不可用无法上传", 3);
+                    ToastUtils.showLong("请选择要上传的项目");
                 }
                 break;
             case R.id.ck_bottom:
@@ -563,7 +575,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     private void callbackForServer(List<ProjectsDB> projectsDB, List<SubjectsDB> subjectsDB, List<String> picList, String text, String audioPath, int project_position, int subject_position) {
         Map map = new HashMap();
         map.put("projectId", projectsDB.get(project_position).getPid());
-        map.put("censor",subjectsDB.get(subject_position).getCensor());
+        map.put("censor", subjectsDB.get(subject_position).getCensor());
         map.put("answerId", subjectsDB.get(subject_position).getHt_id());
         map.put("number", subjectsDB.get(subject_position).getNumber());
         map.put("stage", projectsDB.get(project_position).getStage());

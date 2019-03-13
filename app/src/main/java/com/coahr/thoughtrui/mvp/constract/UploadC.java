@@ -28,7 +28,7 @@ public interface UploadC  {
         void  getProjectListFailure(String failure);
 
         void getSubjectListSuccess(List<SubjectsDB> subjectsDBList,List<ProjectsDB> projectsDBS,int project_position);
-        void getSubjectListFailure(String failure);
+        void getSubjectListFailure(String failure,List<ProjectsDB> projectsDBS,int project_position);
 
         void getUpLoadFileListSuccess(List<String> list,List<SubjectsDB> subjectsDBList,List<ProjectsDB> projectsDBS,int project_position,int subject_position);
         void getUpLoadFileListFailure(String failure);
@@ -62,7 +62,7 @@ public interface UploadC  {
         //获取题目列表
         void getSubjectList(List<ProjectsDB> projectsDBS,int position);
         void getSubjectListSuccess(List<SubjectsDB> subjectsDBList,List<ProjectsDB> projectsDBS,int project_position);
-        void getSubjectListFailure(String failure);
+        void getSubjectListFailure(String failure,List<ProjectsDB> projectsDBS,int project_position);
 
         //获取上传文件列表
         void UpLoadFileList(List<SubjectsDB> subjectsDBList,List<ProjectsDB> projectsDBS,int project_position,int subject_position);

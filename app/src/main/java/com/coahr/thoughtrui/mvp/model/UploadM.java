@@ -85,7 +85,7 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
         if (subjectsDBS != null && subjectsDBS.size() > 0) {
             getPresenter().getSubjectListSuccess(subjectsDBS, projectsDBS,position);
         } else {
-            getPresenter().getSubjectListFailure("当前项目下没有可以上传的题目");
+            getPresenter().getSubjectListFailure("当前项目下没有可以上传的题目",projectsDBS,position);
         }
 
     }

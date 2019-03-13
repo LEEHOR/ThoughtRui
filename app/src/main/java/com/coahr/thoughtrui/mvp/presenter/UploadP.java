@@ -67,9 +67,9 @@ public class UploadP extends BasePresenter<UploadC.View,UploadC.Model> implement
     }
 
     @Override
-    public void getSubjectListFailure(String failure) {
+    public void getSubjectListFailure(String failure,List<ProjectsDB> projectsDBS,int project_position) {
         if (getView() != null) {
-            getView().getSubjectListFailure(failure);
+            getView().getSubjectListFailure(failure,projectsDBS,project_position);
         }
     }
 

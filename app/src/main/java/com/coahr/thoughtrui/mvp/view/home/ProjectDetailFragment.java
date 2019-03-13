@@ -500,7 +500,4 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
         return isHaveLocationPermission;
     }
 
-    private void setDate_show() {
-
-    }
 }
