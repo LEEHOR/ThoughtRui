@@ -20,28 +20,6 @@ public class AliyunHotReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        KLog.d("SophixStubApplication","接受广播1");
-        if (getHotUpdate()) {
-            String path_key = PreferenceUtils.getPrefString(BaseApplication.mContext, Constants.path_key, "");
-            String pathVersion_key = PreferenceUtils.getPrefString(BaseApplication.mContext, Constants.pathVersion_key, "");
-            String app_version_key = PreferenceUtils.getPrefString(BaseApplication.mContext, Constants.app_version_key, "");
-            KLog.d("测试补丁1");
-            if (hotListener != null) {
-                hotListener.getPathDetail(path_key,pathVersion_key,app_version_key);
-                KLog.d("SophixStubApplication","接受广播2");
-            }
-        }
-
-    }
-    /**
-     * 阿里云热更新检测
-     */
-    public boolean getHotUpdate() {
-        if (PreferenceUtils.contains(BaseApplication.mContext, Constants.AliYunHot_key)) {
-            boolean prefBoolean = PreferenceUtils.getPrefBoolean(BaseApplication.mContext, Constants.AliYunHot_key, false);
-            return prefBoolean;
-        }
-        return false;
     }
     public interface hotListener{
         void getPathDetail(String path_info,String path_version,String app_version);

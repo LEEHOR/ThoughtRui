@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
+import com.coahr.thoughtrui.commom.Constants;
 import com.socks.library.KLog;
 
 /**
@@ -30,6 +31,7 @@ public class NetWorkReceiver extends BroadcastReceiver {
         String netWorkSubtypeName = isNetWorkSubtypeName(activeNetworkInfo);
         boolean netWorkConnected = isNetWorkConnected(activeNetworkInfo);
         NetworkInfo.DetailedState detailedState = getDetailedState(activeNetworkInfo);
+
         if (netStatusListener != null) {
             netStatusListener.getNetState(netWorkSubtypeName,netWorkConnected,detailedState);
         }

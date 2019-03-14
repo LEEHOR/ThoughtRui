@@ -11,6 +11,7 @@ import com.coahr.thoughtrui.Utils.KeyBoardUtils;
 import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.commom.ActivityManager;
 import com.coahr.thoughtrui.commom.Constants;
+import com.coahr.thoughtrui.mvp.view.TimeService.TimeTaskReceiver;
 import com.coahr.thoughtrui.widgets.BroadcastReceiver.NetWorkReceiver;
 import com.gyf.barlibrary.ImmersionBar;
 import com.socks.library.KLog;
@@ -72,11 +73,14 @@ public abstract class BaseActivity<P extends BaseContract.Presenter> extends Sup
         netWorkReceiver.setNetStatusListener(new NetWorkReceiver.INetStatusListener() {
             @Override
             public void getNetState(String netWorkType, boolean isConnect, NetworkInfo.DetailedState detailedState) {
+                KLog.d("网络",isConnect,netWorkType);
                 Constants.isNetWorkConnect=isConnect;
                 Constants.NetWorkType=netWorkType;
-                KLog.d("网络",isConnect,netWorkType);
             }
         });
+
+       // TimeTaskReceiver timeTaskReceiver = new TimeTaskReceiver();
+
     }
     public void showLoading() {
 

@@ -19,6 +19,7 @@ import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.constract.MainActivityC;
 import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_LoginSuccess;
 import com.coahr.thoughtrui.mvp.presenter.MainActivityP;
+import com.coahr.thoughtrui.mvp.view.TimeService.AlarmTimerUtil;
 import com.coahr.thoughtrui.mvp.view.home.MainInfoFragment;
 import com.coahr.thoughtrui.mvp.view.mydata.MyFragment;
 import com.coahr.thoughtrui.mvp.view.reviewed.ReviewedFragment;
@@ -52,6 +53,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     private boolean prefBoolean;
     private AliyunHotReceiver aliyunHotReceiver;
     private LocalBroadcastManager manager;
+    private AlarmTimerUtil alarmTimerUtil;
 
     @Override
     public MainActivityC.Presenter getPresenter() {
@@ -72,6 +74,9 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
             mFragments[3] = MyFragment.newInstance();
         }
         super.onCreate(savedInstanceState);
+        alarmTimerUtil = AlarmTimerUtil.getInstance(BaseApplication.mContext);
+        alarmTimerUtil.createGetUpAlarmManager(this,"TIMER_ACTION",10);
+        alarmTimerUtil.getUpAlarmManagerStartWork();
         EventBus.getDefault().register(this);
     }
 

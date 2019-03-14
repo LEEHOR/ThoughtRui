@@ -38,6 +38,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".mvp.view.MainActivity"
+            android:enabled="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -87,19 +88,36 @@
         <service android:name=".mvp.view.recorder.RecorderService"/>
 
         <!--监听网络状态-->
-        <receiver android:name=".widgets.BroadcastReceiver.NetWorkReceiver" >
+      <!--  <receiver android:name=".widgets.BroadcastReceiver.NetWorkReceiver"
+            android:exported="false"
+            android:enabled="true">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
                 <action android:name="android.net.wifi.STATE_CHANGE" />
             </intent-filter>
-        </receiver>
+        </receiver>-->
 
         <receiver android:name=".widgets.BroadcastReceiver.AliyunHotReceiver">
             <intent-filter >
              <action android:name="hotAliyun"/>
             </intent-filter>
         </receiver>
+
+        <!--轮询-->
+        <receiver android:name=".mvp.view.TimeService.TimeTaskReceiver"
+            android:exported="true"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="TIMER_ACTION"/>
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".mvp.view.TimeService.TimeTaskService">
+            <intent-filter>
+                <action android:name="TIMER_ACTION"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
