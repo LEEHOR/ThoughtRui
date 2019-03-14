@@ -54,5 +54,7 @@ public class ApiContact {
     public static final String project_detail="app/template/genProject.htm";
     //搜索
     public static final String search="app/home/search.htm";
+    //评审详情
+    public static final String  CensorDetail="app/censor/detail.htm";
 
 }

@@ -10,6 +10,9 @@ import android.graphics.Color;
 import android.os.Build;
 
 import com.coahr.thoughtrui.R;
+import com.coahr.thoughtrui.commom.Constants;
+import com.coahr.thoughtrui.mvp.Base.BaseApplication;
+import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
 
 import androidx.core.app.NotificationCompat;
 
@@ -26,12 +29,14 @@ public class NotificationUtil {
      *
      * @param context
      */
-    public static void notifyMsg(Context context, int nid, NotificationManager mNotifyMgr) {
+    public static void notifyMsg(Context context, int nid, NotificationManager mNotifyMgr,int toFragment,String tittle,String ContentText) {
         if (mNotifyMgr == null) {
             mNotifyMgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         }
         //准备intent
-        Intent intent = new Intent();
+        Intent intent=new Intent(BaseApplication.mContext, ConstantsActivity.class);
+        intent.putExtra("from", Constants.fragment_mainInfo);
+        intent.putExtra("to", toFragment);
         //notification
         Notification notification = null;
         // 构建 PendingIntent
@@ -54,35 +59,35 @@ public class NotificationUtil {
             Notification.Builder builder = new Notification.Builder(context, id);
             builder.setAutoCancel(true)
                     .setContentIntent(pi)
-                    .setContentTitle("测试标题")
-                    .setContentText("测试内容1")
+                    .setContentTitle(tittle)
+                    .setContentText(ContentText)
                     .setOngoing(false)
                     .setSmallIcon(R.mipmap.ic_desktop)
                     .setWhen(System.currentTimeMillis());
-            builder.setSubText("哈哈哈哈哈哈哈");
+            builder.setSubText(tittle);
             notification = builder.build();
         } else if (Build.VERSION.SDK_INT >= 23) {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-            builder.setContentTitle("测试标题")
-                    .setContentText("测试内容2")
+            builder.setContentTitle(tittle)
+                    .setContentText(ContentText)
                     .setSmallIcon(R.mipmap.ic_desktop)
                     .setContentIntent(pi)
                     .setAutoCancel(true)
                     .setOngoing(false)
                     .setWhen(System.currentTimeMillis());
-            builder.setSubText("哈哈哈哈哈哈哈");
+            builder.setSubText(tittle);
             notification = builder.build();
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN &&
                 Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
             Notification.Builder builder = new Notification.Builder(context);
             builder.setAutoCancel(true)
                     .setContentIntent(pi)
-                    .setContentTitle("测试标题")
-                    .setContentText("测试内容3")
+                    .setContentTitle(tittle)
+                    .setContentText(ContentText)
                     .setOngoing(false)
                     .setSmallIcon(R.mipmap.ic_desktop)
                     .setWhen(System.currentTimeMillis());
-            builder.setSubText("哈哈哈哈哈哈哈");
+            builder.setSubText(tittle);
             notification = builder.build();
         }
         if (notification != null) {

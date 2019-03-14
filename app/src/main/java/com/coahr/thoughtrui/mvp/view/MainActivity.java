@@ -2,6 +2,7 @@ package com.coahr.thoughtrui.mvp.view;
 
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
@@ -20,6 +21,8 @@ import com.coahr.thoughtrui.mvp.constract.MainActivityC;
 import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_LoginSuccess;
 import com.coahr.thoughtrui.mvp.presenter.MainActivityP;
 import com.coahr.thoughtrui.mvp.view.TimeService.AlarmTimerUtil;
+import com.coahr.thoughtrui.mvp.view.TimeService.LocalService;
+import com.coahr.thoughtrui.mvp.view.TimeService.RomoteService;
 import com.coahr.thoughtrui.mvp.view.home.MainInfoFragment;
 import com.coahr.thoughtrui.mvp.view.mydata.MyFragment;
 import com.coahr.thoughtrui.mvp.view.reviewed.ReviewedFragment;
@@ -33,7 +36,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 import javax.inject.Inject;
 import androidx.appcompat.app.AppCompatDialogFragment;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import butterknife.BindView;
 import me.yokeyword.fragmentation.SupportFragment;
 
@@ -50,10 +52,6 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     private static final long INTERVAL_TIME = 2000;
     private String sessionId;
     private int page = 0; //当前显示页面
-    private boolean prefBoolean;
-    private AliyunHotReceiver aliyunHotReceiver;
-    private LocalBroadcastManager manager;
-    private AlarmTimerUtil alarmTimerUtil;
 
     @Override
     public MainActivityC.Presenter getPresenter() {
@@ -74,18 +72,19 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
             mFragments[3] = MyFragment.newInstance();
         }
         super.onCreate(savedInstanceState);
-        alarmTimerUtil = AlarmTimerUtil.getInstance(BaseApplication.mContext);
-        alarmTimerUtil.createGetUpAlarmManager(this,"TIMER_ACTION",10);
-        alarmTimerUtil.getUpAlarmManagerStartWork();
+       /* AlarmTimerUtil  alarmTimerUtil = AlarmTimerUtil.getInstance(BaseApplication.mContext);
+        alarmTimerUtil.createGetUpAlarmManager(BaseApplication.mContext,"TIMER_ACTION",10);
+        alarmTimerUtil.getUpAlarmManagerStartWork();*/
+       Intent intent=new Intent(this, LocalService.class);
+        startService(intent);
+        Intent intents=new Intent(this, RomoteService.class);
+        startService(intents);
         EventBus.getDefault().register(this);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        /*if (aliyunHotReceiver != null) {
-            manager.unregisterReceiver(aliyunHotReceiver);
-        }*/
 
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);

@@ -8,7 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
+import android.text.format.Time;
 
+import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.socks.library.KLog;
 
 /**
@@ -18,12 +20,11 @@ import com.socks.library.KLog;
  * 描述：
  */
 public class AlarmTimerUtil {
-    private static final long TIME_INTERVAL = 5 * 1000;//闹钟执行任务的时间间隔
+    private static final long TIME_INTERVAL = 60*1000*20;//闹钟执行任务的时间间隔
     private Context context;
     public static AlarmManager am;
     public static PendingIntent pendingIntent;
     private Intent intent;
-    private int id=0;
     private AlarmTimerUtil(Context aContext) {
         this.context = aContext;
     }
@@ -42,15 +43,14 @@ public class AlarmTimerUtil {
         return instance;
     }
 
-    public void createGetUpAlarmManager(Activity activity,String action, int alarmId) {
+    public void createGetUpAlarmManager(Context activity,String action, int alarmId) {
         am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        intent = new Intent(activity, TimeTaskReceiver.class);
+        intent = new Intent(activity, TimeTaskService.class);
         intent.setAction(action);
         intent.putExtra("msg", "赶紧起床");
-        intent.putExtra("notifyId",id++);
-        pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);//每隔5秒发送一次广播
+        //pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);//每隔5秒发送一次广播
         //服务这么写
-        //pendingIntent = PendingIntent.getService(context, alarmId, intent, 0);
+        pendingIntent = PendingIntent.getService(context, alarmId, intent, 0);
     }
 
     @SuppressLint("NewApi")
@@ -80,16 +80,22 @@ public class AlarmTimerUtil {
     }
 
     @SuppressLint("NewApi")
-    public void getUpAlarmManagerWorkOnReceiver() {
-        intent.putExtra("notifyId",id++);
+    public void getUpAlarmManagerWorkOnReceiver(Context context) {
+        AlarmManager   alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, TimeTaskService.class);
+        intent.setAction("TIMER_ACTION");
+        intent.putExtra("msg", "赶紧起床");
+        //pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);//每隔5秒发送一次广播
+        //服务这么写
+        PendingIntent  pendingIntents = PendingIntent.getService(context, 0, intent, 0);
         KLog.d("轮询", "extra = 1");
         //高版本重复设置闹钟达到低版本中setRepeating相同效果
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {// 6.0及以上
-            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
-                    System.currentTimeMillis() + TIME_INTERVAL, pendingIntent);
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
+                    System.currentTimeMillis() + TIME_INTERVAL, pendingIntents);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {// 4.4及以上
-            am.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
-                    + TIME_INTERVAL, pendingIntent);
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
+                    + TIME_INTERVAL, pendingIntents);
         }
     }
 
@@ -97,10 +103,10 @@ public class AlarmTimerUtil {
      * 取消闹钟
      */
     public void cancelAlarmTimer(String action, int alarmId) {
-        Intent myIntent = new Intent();
+        Intent myIntent = new Intent(BaseApplication.mContext,TimeTaskReceiver.class);
         myIntent.setAction(action);
-//        PendingIntent sender = PendingIntent.getBroadcast(context, alarmId, myIntent, 0);//如果是广播，就这么写
-        PendingIntent sender = PendingIntent.getService(context, alarmId, myIntent, 0);
+        PendingIntent sender = PendingIntent.getBroadcast(context, alarmId, myIntent, 0);//如果是广播，就这么写
+       // PendingIntent sender = PendingIntent.getService(context, alarmId, myIntent, 0);
         AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarm.cancel(sender);
     }

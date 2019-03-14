@@ -152,9 +152,10 @@ public class ReviewStartViewPager extends BaseFragment {
     }
 
     private void setViewPager() {
+        KLog.d("项目Id",ht_projectId);
         List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", ht_projectId);
         if (projectsDBS != null && projectsDBS.size() > 0) {
-            List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectByTogether_Where(SubjectsDB.class, "ht_id=?", ht_id_list.get(position));
+            List<SubjectsDB> subjectsDBS = projectsDBS.get(0).getSubjectsDBList();
             if (subjectsDBS != null && subjectsDBS.size() > 0) {
                 myTittleBar.getTvTittle().setText("第" + subjectsDBS.get(0).getNumber() + "题");
             }
