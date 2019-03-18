@@ -1,6 +1,7 @@
 package com.coahr.thoughtrui.mvp.model;
 
 import com.baidu.location.BDLocation;
+import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.Utils.BaiDuLocation.BaiduLocationHelper;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
@@ -75,19 +76,25 @@ public class StartProjectActivity_M extends BaseModel<StartProjectActivity_C.Pre
     }
 
     @Override
-    public void getOfflineDate(String dbProjectId,String ht_projectId) {
-        List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectByTogether_Where(SubjectsDB.class, "projectsdb_id=?", dbProjectId);
-        List<String> ht_list=new ArrayList<>();
-        if (subjectsDBS !=null && subjectsDBS.size()>0){
-            ht_list.clear();
-            for (int i = 0; i <subjectsDBS.size() ; i++) {
-                String ht_id = subjectsDBS.get(i).getHt_id();
-                ht_list.add(ht_id);
+    public void getOfflineDate(String ht_projectId) {
+        List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", ht_projectId);
+        if (projectsDBS != null && projectsDBS.size()>0) {
+            List<SubjectsDB> subjectsDBList = projectsDBS.get(0).getSubjectsDBList();
+            if (subjectsDBList !=null && subjectsDBList.size()>0){
+                List<String> ht_list=new ArrayList<>();
+                ht_list.clear();
+                for (int i = 0; i <subjectsDBList.size() ; i++) {
+                    String ht_id = subjectsDBList.get(i).getHt_id();
+                    ht_list.add(ht_id);
+                }
+                getPresenter().getOfflineSuccess(subjectsDBList.size(),ht_projectId,ht_list);
+            } else {
+                getPresenter().getOfflineFailure(0);
             }
-           getPresenter().getOfflineSuccess(subjectsDBS.size(), dbProjectId,ht_projectId,ht_list);
         } else {
             getPresenter().getOfflineFailure(0);
         }
+
     }
     private void initlocation() {
         baiduLocationHelper.registerLocationCallback(onLocationCallBack);

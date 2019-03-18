@@ -24,7 +24,7 @@ public interface StartProjectActivity_C {
 
         void getMainDataFailure(String failure,int code);
 
-        void getOfflineSuccess(int size, String dbProjectId, String ht_projectId, List<String> ht_id);
+        void getOfflineSuccess(int size, String ht_projectId, List<String> ht_id);
 
         void getOfflineFailure(int failure);
 
@@ -44,9 +44,9 @@ public interface StartProjectActivity_C {
 
         void getMainDataFailure(String failure,int code);
 
-        void getOfflineDate(String dbProjectId, String ht_projectId);
+        void getOfflineDate(String ht_projectId);
 
-        void getOfflineSuccess(int size, String dbProjectId, String ht_projectId, List<String> ht_id);
+        void getOfflineSuccess(int size,String ht_projectId, List<String> ht_id);
 
         void getOfflineFailure(int failure);
 
@@ -60,7 +60,7 @@ public interface StartProjectActivity_C {
         void getMainData(Map map);
 
 
-        void getOfflineDate(String dbProjectId, String ht_projectId);
+        void getOfflineDate( String ht_projectId);
 
     }
 }

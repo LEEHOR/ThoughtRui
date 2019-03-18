@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.coahr.thoughtrui.R;
+import com.coahr.thoughtrui.Utils.DensityUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
@@ -18,6 +19,7 @@ import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.FragmentSearch_c;
 import com.coahr.thoughtrui.mvp.model.Bean.SearchBeans;
 import com.coahr.thoughtrui.mvp.presenter.FragmentSearch_P;
+import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
 import com.coahr.thoughtrui.mvp.view.home.ProjectDetailFragment;
 import com.coahr.thoughtrui.mvp.view.search.adapter.SearchAdapter;
 
@@ -26,6 +28,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
@@ -50,6 +53,7 @@ public class SearchFragment extends BaseFragment<FragmentSearch_c.Presenter> imp
     private int type;
     private LinearLayoutManager manager;
     private SearchAdapter adapter;
+    private SpacesItemDecoration spacesItemDecoration;
 
     @Override
     public FragmentSearch_c.Presenter getPresenter() {
@@ -84,7 +88,13 @@ public class SearchFragment extends BaseFragment<FragmentSearch_c.Presenter> imp
         }
 
     }
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        spacesItemDecoration = new SpacesItemDecoration(0, DensityUtils.dp2px(BaseApplication.mContext, 10));
 
+
+    }
     @Override
     public void initData() {
         search_cancel.setOnClickListener(new View.OnClickListener() {
@@ -136,6 +146,12 @@ public class SearchFragment extends BaseFragment<FragmentSearch_c.Presenter> imp
         adapter = new SearchAdapter();
         search_recy.setLayoutManager(manager);
         search_recy.setAdapter(adapter);
+        if (search_recy.getItemDecorationCount() == 0) {
+            search_recy.addItemDecoration(spacesItemDecoration);
+        } else {
+            search_recy.removeItemDecoration(spacesItemDecoration);
+
+        }
         adapter.setOnClick(new SearchAdapter.OnClick() {
             @Override
             public void getOnClick(SearchBeans.DataBean.SearchListBean item) {

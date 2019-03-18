@@ -33,9 +33,9 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
     }
 
     @Override
-    public void getSubject(String DbProjectId, String ht_ProjectId, Activity activity,int number,String ht_id) {
+    public void getSubject(String DbProjectId, Activity activity,int number,String ht_id) {
         if (mModle != null) {
-            mModle.getSubject(DbProjectId,ht_ProjectId,activity,number,ht_id);
+            mModle.getSubject(DbProjectId,activity,number,ht_id);
         }
     }
 

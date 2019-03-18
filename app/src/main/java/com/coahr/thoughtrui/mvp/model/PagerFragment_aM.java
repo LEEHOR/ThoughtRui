@@ -62,7 +62,7 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
     private int uploadSuccess, uploadFailure;
 
     @Override
-    public void getSubject(final String DbProjectId, final String ht_ProjectId, Activity activity, int number, String ht_id) {
+    public void getSubject( final String ht_ProjectId, Activity activity, int number, String ht_id) {
         List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectByTogether_Where(SubjectsDB.class, "ht_id=?", ht_id);
         if (subjectsDBS != null && subjectsDBS.size() > 0) {
             // getImage(ht_ProjectId,activity,number,ht_id);

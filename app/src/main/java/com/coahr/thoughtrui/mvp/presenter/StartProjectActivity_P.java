@@ -67,16 +67,16 @@ public class StartProjectActivity_P extends BasePresenter<StartProjectActivity_C
     }
 
     @Override
-    public void getOfflineDate(String dbProjectId,String ht_projectId) {
+    public void getOfflineDate(String ht_projectId) {
         if (mModle != null) {
-            mModle.getOfflineDate(dbProjectId,ht_projectId);
+            mModle.getOfflineDate(ht_projectId);
         }
     }
 
     @Override
-    public void getOfflineSuccess(int size, String dbProjectId, String ht_projectId, List<String> ht_list) {
+    public void getOfflineSuccess(int size,String ht_projectId, List<String> ht_list) {
         if (getView() != null) {
-            getView().getOfflineSuccess(size, dbProjectId,ht_projectId,ht_list);
+            getView().getOfflineSuccess(size,ht_projectId,ht_list);
         }
     }
 

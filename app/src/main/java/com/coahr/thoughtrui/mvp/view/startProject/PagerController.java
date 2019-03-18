@@ -37,7 +37,7 @@ public class PagerController {
                 List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectByTogether_Where(SubjectsDB.class, "projectsdb_id=?", projectId);
                 if (subjectsDBS !=null && subjectsDBS.size()>0){
                     for (int i = 0; i < subjectsDBS.size(); i++) {
-                       fragmentArrayList.add(PagerFragment_a.newInstance(i,projectId,Constants.ht_ProjectId,10,Constants.name_Project,null)) ;
+                       fragmentArrayList.add(PagerFragment_a.newInstance(i,projectId,10,Constants.name_Project,null)) ;
                     }
                 }
                 break;

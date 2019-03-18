@@ -1,9 +1,6 @@
 package com.coahr.thoughtrui.mvp.view.TimeService;
 
 import android.app.IntentService;
-import android.app.NotificationManager;
-import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 
@@ -13,11 +10,8 @@ import com.coahr.thoughtrui.DBbean.UsersDB;
 import com.coahr.thoughtrui.Utils.HttpLogging.MyHttpLogging;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.commom.Constants;
-import com.coahr.thoughtrui.dagger.modules.retrofit.OkHttpModule;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
-import com.coahr.thoughtrui.mvp.model.Bean.BaiduApiBean;
 import com.coahr.thoughtrui.mvp.model.Bean.CensorBean;
-import com.coahr.thoughtrui.mvp.view.UMPush.NotificationUtil;
 import com.google.gson.Gson;
 import com.socks.library.KLog;
 
@@ -25,7 +19,6 @@ import java.io.IOException;
 import java.util.List;
 
 import androidx.annotation.Nullable;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -85,7 +78,7 @@ public class TimeTaskService extends IntentService {
             if (projectsDBSList != null && projectsDBSList.size() > 0) {
                 for (int i = 0; i < projectsDBSList.size(); i++) {
                     KLog.d("项目",projectsDBSList.get(i).getPid());
-                    if (projectsDBSList.get(i).getIsComplete()==1 && projectsDBSList.get(i).getpUploadStatus()==1) {
+                    if (projectsDBSList.get(i).getIsComplete()==1 && projectsDBSList.get(i).getpUploadStatus()==0) {
                         Intent intent = new Intent(this, TimeTaskReceiver.class);
                         intent.putExtra("type",1);
                         intent.putExtra("ContentTittle","[任务上传]");
@@ -94,7 +87,7 @@ public class TimeTaskService extends IntentService {
                         intent.setAction("TIMER_ACTION");
                         sendBroadcast(intent);
                     }
-                    if (projectsDBSList.get(i).getUploadTime()<=System.currentTimeMillis()){
+                    if (projectsDBSList.get(i).getModifyTime()<=System.currentTimeMillis()){
                         Intent intent = new Intent(this, TimeTaskReceiver.class);
                         intent.putExtra("type",2);
                         intent.putExtra("ContentTittle","[超期提醒]");

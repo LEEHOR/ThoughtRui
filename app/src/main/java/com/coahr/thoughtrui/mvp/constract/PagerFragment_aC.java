@@ -68,7 +68,7 @@ public interface PagerFragment_aC {
 
      interface Presenter extends BaseContract.Presenter {
 
-        void getSubject(String DbProjectId,String ht_ProjectId, Activity activity,int number,String ht_id);
+        void getSubject(String ht_ProjectId, Activity activity,int number,String ht_id);
         void getSubjectSuccess(SubjectsDB subjectsDB);
         void getSubjectFailure(String failure);
 
@@ -122,7 +122,7 @@ public interface PagerFragment_aC {
      interface Model extends BaseContract.Model {
 
 
-         void getSubject(String DbProjectId,String ht_ProjectId, Activity activity,int number,String ht_id);
+         void getSubject(String ht_ProjectId, Activity activity,int number,String ht_id);
 
          void getImage(String ht_ProjectId, Activity activity,int number,String ht_id);
 

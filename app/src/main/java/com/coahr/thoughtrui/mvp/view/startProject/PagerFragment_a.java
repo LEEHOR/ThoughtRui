@@ -247,11 +247,10 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     private String textMassage;
     private String uPAudioPath;
 
-    public static PagerFragment_a newInstance(int position, String DbProjectId, String ht_ProjectId, int countSize, String name_project, String ht_id) {
+    public static PagerFragment_a newInstance(int position, String ht_ProjectId, int countSize, String name_project, String ht_id) {
         PagerFragment_a pagerFragment_a = new PagerFragment_a();
         Bundle bundle = new Bundle();
         bundle.putInt("position", position);
-        bundle.putString("DbProjectId", DbProjectId);
         bundle.putString("ht_ProjectId", ht_ProjectId);
         bundle.putInt("countSize", countSize);
         bundle.putString("name_project", name_project);
@@ -283,7 +282,6 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         progressBar = inflate.findViewById(R.id.progress_bar);
 
         if (getArguments() != null) {
-            dbProjectId = getArguments().getString("DbProjectId");
             ht_projectId = getArguments().getString("ht_ProjectId");
             countSize = getArguments().getInt("countSize");
             ht_id = getArguments().getString("ht_id");
@@ -381,11 +379,11 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             @Override
             public void onClick(View view) {
                 if (tv_Unfold.getTag()==null || tv_Unfold.getTag().equals("1")){ //展开
-                    img_recycler.setVisibility(View.VISIBLE);
+                    img_recycler.setVisibility(View.GONE);
                     tv_Unfold.setText("关闭");
                     tv_Unfold.setTag("2");
                 }  else if (tv_Unfold.getTag().equals("2")){  //关闭
-                    img_recycler.setVisibility(View.GONE);
+                    img_recycler.setVisibility(View.VISIBLE);
                     tv_Unfold.setText("展开");
                     tv_Unfold.setTag("1");
                 } else if (tv_Unfold.getTag().equals("3")){
@@ -660,12 +658,12 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         ed_score.setFocusableInTouchMode(false);
         KeyBoardUtils.hideKeybord(ed_score, _mActivity);
         p.getAnswer(ht_projectId, _mActivity, number, ht_id);
-        ToastUtils.showLong("答案保存成功");
+        ToastUtils.showLong("保存成功");
     }
 
     @Override
     public void saveAnswersFailure() {
-        ToastUtils.showLong("答案保存失败");
+        ToastUtils.showLong("保存失败");
     }
 
     @Override
@@ -793,7 +791,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
      * 获取题目信息
      */
     private void getSubjectDetail() {
-        p.getSubject(dbProjectId, ht_projectId, _mActivity, number, ht_id);
+        p.getSubject(ht_projectId, _mActivity, number, ht_id);
     }
 
     /**

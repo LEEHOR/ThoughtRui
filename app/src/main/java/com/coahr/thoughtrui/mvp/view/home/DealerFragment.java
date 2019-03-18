@@ -15,7 +15,9 @@ import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.LoadCity.JsonBean;
 import com.coahr.thoughtrui.Utils.LoadCity.JsonFileReader;
+import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
+import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
@@ -240,7 +242,7 @@ public class DealerFragment extends BaseFragment<ProjectDealer_c.Presenter> impl
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
                 //返回的分别是三个级别的选中位置
                 tv_select_project.setText(list.get(options1).getName());
-                tv_project_id.setText(list.get(options1).getSale_code());
+                tv_project_id.setText(Constants.user_type==1?list.get(options1).getSale_code():Constants.user_type==2?list.get(options1).getService_code():list.get(options1).getService_code());
                 Dealer_id=list.get(options1).getId();
             }
         })

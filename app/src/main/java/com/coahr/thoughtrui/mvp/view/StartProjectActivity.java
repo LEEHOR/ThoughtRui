@@ -229,7 +229,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                 }
 
             }
-            p.getOfflineDate(Constants.DbProjectId, Constants.ht_ProjectId);
+            p.getOfflineDate( Constants.ht_ProjectId);
         } else {
             ToastUtils.showLong("当前项目不存在");
         }
@@ -239,7 +239,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     public void getMainDataFailure(String failure, int code) {
         ToastUtils.showLong(failure);
         if (code != -1) {
-            p.getOfflineDate(Constants.DbProjectId, Constants.ht_ProjectId);
+            p.getOfflineDate(Constants.ht_ProjectId);
         } else {
             if (baiduLocationHelper_s != null) {
                 baiduLocationHelper_s.stopLocation();
@@ -251,13 +251,13 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     }
 
     @Override
-    public void getOfflineSuccess(int size, String dbProjectId, String ht_projectId, List<String> ht_list) {
+    public void getOfflineSuccess(int size, String ht_projectId, List<String> ht_list) {
 
         this.subject_size = size;
         htId_List.clear();
         this.htId_List = ht_list;
-        KLog.d("项目Id2", ht_projectId, dbProjectId);
-        startProjectAdapter = new StartProjectAdapter(getSupportFragmentManager(), size, dbProjectId, ht_projectId, Constants.name_Project, ht_list);
+        KLog.d("项目Id2", ht_projectId);
+        startProjectAdapter = new StartProjectAdapter(getSupportFragmentManager(), size, ht_projectId, Constants.name_Project, ht_list);
 
         project_viewPage.setAdapter(startProjectAdapter);
         project_viewPage.setCurrentItem(0);

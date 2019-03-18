@@ -17,14 +17,12 @@ import java.util.List;
 public class StartProjectAdapter extends FragmentPagerAdapter {
 
   private int size;
-  private String DbProjectId;  //本地数据库id
   private String ht_ProjectId; //服务器端Id
     private String name_project; //项目名
     private List<String> id_list;
-    public StartProjectAdapter(FragmentManager fm, int size, String DbProjectId, String ht_ProjectId, String name_project, List<String> ht_list) {
+    public StartProjectAdapter(FragmentManager fm, int size, String ht_ProjectId, String name_project, List<String> ht_list) {
         super(fm);
        this.size=size;
-       this.DbProjectId=DbProjectId;
        this.ht_ProjectId=ht_ProjectId;
        this.name_project=name_project;
        this.id_list=ht_list;
@@ -34,7 +32,7 @@ public class StartProjectAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int i) {
 
-            return PagerFragment_a.newInstance(i,DbProjectId,ht_ProjectId,size,name_project,id_list.get(i));
+            return PagerFragment_a.newInstance(i,ht_ProjectId,size,name_project,id_list.get(i));
         }
 
     @Override
