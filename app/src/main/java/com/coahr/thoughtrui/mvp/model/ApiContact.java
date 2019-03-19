@@ -56,5 +56,7 @@ public class ApiContact {
     public static final String search="app/home/search.htm";
     //评审详情
     public static final String  CensorDetail="app/censor/detail.htm";
+    //实时定位
+    public static final String Rtsl="app/rta/send.htm";
 
 }

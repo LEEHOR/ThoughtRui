@@ -77,7 +77,6 @@ public class TimeTaskService extends IntentService {
             List<ProjectsDB> projectsDBSList = usersDBS.get(0).getProjectsDBSList();
             if (projectsDBSList != null && projectsDBSList.size() > 0) {
                 for (int i = 0; i < projectsDBSList.size(); i++) {
-                    KLog.d("项目",projectsDBSList.get(i).getPid());
                     if (projectsDBSList.get(i).getIsComplete()==1 && projectsDBSList.get(i).getpUploadStatus()==0) {
                         Intent intent = new Intent(this, TimeTaskReceiver.class);
                         intent.putExtra("type",1);

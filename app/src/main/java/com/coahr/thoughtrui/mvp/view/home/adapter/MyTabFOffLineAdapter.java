@@ -74,7 +74,7 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
             if (viewHolder instanceof newListHaveBeenCancelViewHolder) {
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_schedule.setText(projectsDBList.get(i).getProgress());
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_explain.setText(Constants.user_type == 1 ? "[" + projectsDBList.get(i).getSale_code() + "]"
-                        : Constants.user_type == 2 ? "[" + projectsDBList.get(i).getSale_code() + "]"
+                        : Constants.user_type == 2 ? "[" + projectsDBList.get(i).getService_code() + "]"
                         : "[" + projectsDBList.get(i).getSale_code() + "]");
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_times.setText(projectsDBList.get(i).getPname());
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_code.setText(projectsDBList.get(i).getCode());
@@ -103,7 +103,7 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
             if (viewHolder instanceof completeListHaveBeenCancelViewHolder) {
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_schedule.setText(projectsDBList.get(i).getProgress());
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_explain.setText(Constants.user_type == 1 ? "[" + projectsDBList.get(i).getSale_code() + "]"
-                        : Constants.user_type == 2 ? "[" + projectsDBList.get(i).getSale_code() + "]"
+                        : Constants.user_type == 2 ? "[" + projectsDBList.get(i).getService_code() + "]"
                         : "[" + projectsDBList.get(i).getSale_code() + "]");
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_times.setText(projectsDBList.get(i).getPname());
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_code.setText(projectsDBList.get(i).getCode());
@@ -133,7 +133,7 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
             if (viewHolder instanceof unCompleteListHaveBeenCancelViewHolder) {
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_schedule.setText(projectsDBList.get(i).getProgress());
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_explain.setText(Constants.user_type == 1 ? "[" + projectsDBList.get(i).getSale_code() + "]"
-                        : Constants.user_type == 2 ? "[" + projectsDBList.get(i).getSale_code() + "]"
+                        : Constants.user_type == 2 ? "[" + projectsDBList.get(i).getService_code() + "]"
                         : "[" + projectsDBList.get(i).getSale_code() + "]");
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_times.setText(projectsDBList.get(i).getPname());
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_code.setText(projectsDBList.get(i).getCode());
@@ -164,7 +164,7 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
             if (viewHolder instanceof unDownLoadListHaveBeenCancelViewHolder) {
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_schedule.setText(projectsDBList.get(i).getProgress());
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_explain.setText(Constants.user_type == 1 ? "[" + projectsDBList.get(i).getSale_code() + "]"
-                        : Constants.user_type == 2 ? "[" + projectsDBList.get(i).getSale_code() + "]"
+                        : Constants.user_type == 2 ? "[" + projectsDBList.get(i).getService_code() + "]"
                         : "[" + projectsDBList.get(i).getSale_code() + "]");
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_times.setText(projectsDBList.get(i).getPname());
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_code.setText(projectsDBList.get(i).getCode());

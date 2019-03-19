@@ -82,13 +82,13 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
 
         mAdapter = new NodeTreeAdapter(_mActivity, treeList, mLinkedList);
         treeList.setAdapter(mAdapter);
-            mAdapter.setOnThreeClick(new NodeTreeAdapter.onThreeClick() {
-                @Override
-                public void threeHt_idOnClick(String ht_id) {
-                    EventBus.getDefault().postSticky(new EvenBus_SubjectList_id(ht_id));
-                    _mActivity.onBackPressed();
-                }
-            });
+        mAdapter.setOnThreeClick(new NodeTreeAdapter.onThreeClick() {
+            @Override
+            public void threeHt_idOnClick(String ht_id) {
+                EventBus.getDefault().postSticky(new EvenBus_SubjectList_id(ht_id));
+                _mActivity.onBackPressed();
+            }
+        });
     }
 
     @Override
@@ -122,49 +122,14 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
                     //子节点1
                     if (questionListBean.getQuesList() != null && questionListBean.getQuesList().size() > 0) {
                         for (int j = 0; j < questionListBean.getQuesList().size(); j++) {
-//                            Object o = questionListBean.getQuesList().get(j);
-//                            ThreeNode rootChild_1 = new ThreeNode(o.getId(), questionListBean.getId(), quesListRoot.getTitle());
-//                            baseNodeList.add(rootChild_1);
+                            SubjectListBean.DataBean.QuestionListBean.QuesListBean quesListBean_ch = questionListBean.getQuesList().get(j);
+                            ThreeNode rootChild_1 = new ThreeNode(quesListBean_ch.getId(), questionListBean.getId(), quesListBean_ch.getTitle());
+                            baseNodeList.add(rootChild_1);
                         }
-                    } else { //子节点2
-                        if (questionListBean.getValue() != null && questionListBean.getValue().size() > 0) {
-                            for (int j = 0; j < questionListBean.getValue().size(); j++) {
-                                SubjectListBean.DataBean.QuestionListBean.ValueBeanX valueBeanRoot = questionListBean.getValue().get(j);
-                                ThreeNode rootChild_2 = new ThreeNode(valueBeanRoot.getId(), questionListBean.getId(), valueBeanRoot.getName());
-                                baseNodeList.add(rootChild_2);
-                                //孙子节点1
-                                if (valueBeanRoot.getQuesList() != null && valueBeanRoot.getQuesList().size() > 0) {
-                                    for (int k = 0; k < valueBeanRoot.getQuesList().size(); k++) {
-                                        SubjectListBean.DataBean.QuestionListBean.ValueBeanX.QuesListX quesListX = valueBeanRoot.getQuesList().get(k);
-                                        //  KLog.d("孙子节点1",quesListChild.getTitle());
-                                        ThreeNode root_grand_1 = new ThreeNode(quesListX.getId(), valueBeanRoot.getId(), quesListX.getTitle());
-                                        baseNodeList.add(root_grand_1);
-                                    }
-                                } else {
-                                    //孙子节点2
-                                    if (valueBeanRoot.getValue() != null && valueBeanRoot.getValue().size() > 0) {
-                                        for (int k = 0; k < valueBeanRoot.getValue().size(); k++) {
-                                            SubjectListBean.DataBean.QuestionListBean.ValueBeanX.ValueBean valueBean = valueBeanRoot.getValue().get(k);
-                                            ThreeNode root_grand_2 = new ThreeNode(valueBean.getId(), valueBeanRoot.getId(), valueBean.getName());
-                                            baseNodeList.add(root_grand_2);
-                                            //重孙节点 great-grandson
-                                            if (valueBean.getQuesList() != null && valueBean.getQuesList().size() > 0) {
-                                                for (int l = 0; l < valueBean.getQuesList().size(); l++) {
-                                                    SubjectListBean.DataBean.QuestionListBean.ValueBeanX.ValueBean.QuesListBean quesListBean = valueBean.getQuesList().get(l);
-                                                    ThreeNode great_grandson = new ThreeNode(quesListBean.getId(), valueBean.getId(), quesListBean.getTitle());
-                                                    baseNodeList.add(great_grandson);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                    } else {  //子节点2
 
-                            }
-                        }
                     }
-
                 }
-
             }
         }
         setAdapter(baseNodeList);
@@ -196,7 +161,7 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
     private void getHttp() {
         Map map = new HashMap();
         map.put("projectId", Constants.ht_ProjectId);
-        KLog.d("项目Id",Constants.ht_ProjectId);
+        KLog.d("项目Id", Constants.ht_ProjectId);
         map.put("token", Constants.devicestoken);
         map.put("sessionid", Constants.sessionId);
         p.getSubjectList(map);

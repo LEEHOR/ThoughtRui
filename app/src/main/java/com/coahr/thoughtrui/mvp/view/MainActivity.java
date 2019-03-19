@@ -2,14 +2,24 @@ package com.coahr.thoughtrui.mvp.view;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 
+import android.os.Handler;
+import android.os.Message;
+import android.telephony.TelephonyManager;
 import android.widget.Toast;
+
+import com.baidu.location.BDLocation;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.ActivityManagerUtils;
+import com.coahr.thoughtrui.Utils.BaiDuLocation.BaiduLocationHelper;
 import com.coahr.thoughtrui.Utils.Permission.OnRequestPermissionListener;
 import com.coahr.thoughtrui.Utils.Permission.RequestPermissionUtils;
 import com.coahr.thoughtrui.Utils.PreferenceUtils;
@@ -30,11 +40,17 @@ import com.coahr.thoughtrui.mvp.view.upload.UploadFragment;
 import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
 import com.coahr.thoughtrui.widgets.BroadcastReceiver.AliyunHotReceiver;
 import com.coahr.thoughtrui.widgets.MyBottomNavigation.MyBottomNavigation;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import javax.inject.Inject;
+
 import androidx.appcompat.app.AppCompatDialogFragment;
 import butterknife.BindView;
 import me.yokeyword.fragmentation.SupportFragment;
@@ -52,6 +68,16 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     private static final long INTERVAL_TIME = 2000;
     private String sessionId;
     private int page = 0; //当前显示页面
+    private static int TIMES = 60 * 1000 * 20;
+    private static int SEND_MESSAGE = 1;
+    private Handler mHandker = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+        }
+    };
+    private TelephonyManager tm;
 
     @Override
     public MainActivityC.Presenter getPresenter() {
@@ -75,9 +101,9 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
        /* AlarmTimerUtil  alarmTimerUtil = AlarmTimerUtil.getInstance(BaseApplication.mContext);
         alarmTimerUtil.createGetUpAlarmManager(BaseApplication.mContext,"TIMER_ACTION",10);
         alarmTimerUtil.getUpAlarmManagerStartWork();*/
-       Intent intent=new Intent(this, LocalService.class);
+        Intent intent = new Intent(this, LocalService.class);
         startService(intent);
-        Intent intents=new Intent(this, RomoteService.class);
+        Intent intents = new Intent(this, RomoteService.class);
         startService(intents);
         EventBus.getDefault().register(this);
     }
@@ -85,7 +111,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     @Override
     public void onDestroy() {
         super.onDestroy();
-
+        mHandker.removeCallbacksAndMessages(null);
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
@@ -96,7 +122,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
      */
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void EvenBus(EvenBus_LoginSuccess evenBus_loginSuccess) {
-        if (evenBus_loginSuccess.getLoginType()==100){
+        if (evenBus_loginSuccess.getLoginType() == 100) {
             showFragment(0);
         }
     }
@@ -108,6 +134,8 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
 
     @Override
     public void initView() {
+
+        tm = (TelephonyManager) BaseApplication.mContext.getSystemService(Context.TELEPHONY_SERVICE);
         getLocationPermission();
         myBottomNavigation.setOnTabPositionListener(new MyBottomNavigation.OnTabPositionListener() {
             @Override
@@ -126,7 +154,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
         if (!haslogin()) {
             loginDialog();
         }
-
+        p.getLocation(1);
     }
 
     private void showFragment(int position) {
@@ -155,12 +183,18 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     /**
      * 动态获取定位权限
      */
+    @SuppressLint("MissingPermission")
     private void getLocationPermission() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             RequestPermissionUtils.requestPermission(this, new OnRequestPermissionListener() {
+                @SuppressLint("MissingPermission")
                 @Override
                 public void PermissionSuccess(List<String> permissions) {
+
+                    String deviceId = tm.getDeviceId();
+                    Constants.devicestoken=deviceId;
+                    PreferenceUtils.setPrefString(BaseApplication.mContext,Constants.devicestoken_key,deviceId);
                 }
 
                 @Override
@@ -170,10 +204,16 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
 
                 @Override
                 public void PermissionHave() {
+                    String deviceId = tm.getDeviceId();
+                    Constants.devicestoken=deviceId;
+                    PreferenceUtils.setPrefString(BaseApplication.mContext,Constants.devicestoken_key,deviceId);
                 }
             }, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE);
 
         } else {
+            String deviceId = tm.getDeviceId();
+            Constants.devicestoken=deviceId;
+            PreferenceUtils.setPrefString(BaseApplication.mContext,Constants.devicestoken_key,deviceId);
         }
     }
 
@@ -191,5 +231,43 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
             }
         });
         login_dialogFragment.show(getSupportFragmentManager(), TAG);
+    }
+
+
+    @Override
+    public void getLocationSuccess(BDLocation location, BaiduLocationHelper baiduLocationHelper) {
+        baiduLocationHelper.stopLocation();
+        mHandker.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                sendRTSL(location.getLongitude(), location.getLatitude());
+                p.getLocation(1);
+            }
+        }, 10*1000);
+    }
+
+    @Override
+    public void getLocationFailure(int failure, BaiduLocationHelper baiduLocationHelper) {
+        baiduLocationHelper.stopLocation();
+        p.getLocation(1);
+    }
+
+    @Override
+    public void sendRtslSuccess(String success) {
+
+    }
+
+    @Override
+    public void sendRtslFail(String fail) {
+
+    }
+
+    private void sendRTSL(double lon, double lat) {
+        Map map = new HashMap();
+        map.put("sessionId", Constants.sessionId);
+        map.put("token", Constants.devicestoken);
+        map.put("longitude", String.valueOf(lon));
+        map.put("latitude", String.valueOf(lat));
+        p.sendRtsl(map);
     }
 }

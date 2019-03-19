@@ -74,7 +74,7 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (viewHolder != null && viewHolder.itemView != null) {
             if (viewHolder instanceof newListHaveBeenCancelViewHolder) {
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_schedule.setText(allListBean.get(i).getProgress());
-                ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_explain.setText(Constants.user_type == 1 ? "[" + allListBean.get(i).getSale_code() + "]"
+                ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_explain.setText(Constants.user_type == 1 ? "[" + allListBean.get(i).getService_code() + "]"
                         : Constants.user_type == 2 ? "[" + allListBean.get(i).getSale_code() + "]"
                         : "[" + allListBean.get(i).getSale_code() + "]");
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_times.setText(allListBean.get(i).getPname());
@@ -104,7 +104,7 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
             if (viewHolder instanceof completeListHaveBeenCancelViewHolder) {
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_schedule.setText(allListBean.get(i).getProgress());
-                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_explain.setText(Constants.user_type == 1 ? "[" + allListBean.get(i).getSale_code() + "]"
+                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_explain.setText(Constants.user_type == 1 ? "[" + allListBean.get(i).getService_code() + "]"
                         : Constants.user_type == 2 ? "[" + allListBean.get(i).getSale_code() + "]"
                         : "[" + allListBean.get(i).getSale_code() + "]");
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_times.setText(allListBean.get(i).getPname());
@@ -135,7 +135,7 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if (viewHolder instanceof unCompleteListHaveBeenCancelViewHolder) {
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_schedule.setText(allListBean.get(i).getProgress());
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_explain.setText(Constants.user_type == 1 ? "[" + allListBean.get(i).getSale_code() + "]"
-                        : Constants.user_type == 2 ? "[" + allListBean.get(i).getSale_code() + "]"
+                        : Constants.user_type == 2 ? "[" + allListBean.get(i).getService_code() + "]"
                         : "[" + allListBean.get(i).getSale_code() + "]");
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_times.setText(allListBean.get(i).getPname());
                 // ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_code.setText(allListBean.get(i).getCode());
@@ -168,7 +168,7 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if (viewHolder instanceof unDownLoadListHaveBeenCancelViewHolder) {
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_schedule.setText(allListBean.get(i).getProgress());
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_explain.setText(Constants.user_type == 1 ? "[" + allListBean.get(i).getSale_code() + "]"
-                        : Constants.user_type == 2 ? "[" + allListBean.get(i).getSale_code() + "]"
+                        : Constants.user_type == 2 ? "[" + allListBean.get(i).getService_code() + "]"
                         : "[" + allListBean.get(i).getSale_code() + "]");
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_times.setText(allListBean.get(i).getPname());
                 // ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_code.setText(allListBean.get(i).getCode());
