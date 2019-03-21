@@ -2,6 +2,7 @@ package com.coahr.thoughtrui.widgets.AltDialog;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.coahr.thoughtrui.mvp.constract.LoginFragmentC;
 import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_LoginSuccess;
 import com.coahr.thoughtrui.mvp.model.Bean.LoginBean;
 import com.coahr.thoughtrui.mvp.presenter.LoginFragmentP;
+import com.socks.library.KLog;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -54,7 +56,6 @@ public class Login_DialogFragment extends BaseDialogFragment<LoginFragmentC.Pres
     Button loginBtn;
     private loginListener loginListener;
     private int pager_number;
-
     @Override
     public LoginFragmentC.Presenter getPresenter() {
         return p;
@@ -92,6 +93,7 @@ public class Login_DialogFragment extends BaseDialogFragment<LoginFragmentC.Pres
                 return false;
             }
         });
+
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -103,6 +105,8 @@ public class Login_DialogFragment extends BaseDialogFragment<LoginFragmentC.Pres
                     ToastUtils.showLong("请输入4位及以上字符的密码");
                     return;
                 }
+
+                KLog.d("登录中",user_account.getText().toString(),user_password.getText().toString());
                 Map<String, Object> map = new HashMap<>();
                 map.put("username", user_account.getText().toString());
                 map.put("password", user_password.getText().toString());
@@ -176,6 +180,7 @@ public class Login_DialogFragment extends BaseDialogFragment<LoginFragmentC.Pres
 
     @Override
     public void onLoginFailure(String failure) {
+        KLog.d("错误",failure);
         ToastUtils.showLong(failure);
     }
 

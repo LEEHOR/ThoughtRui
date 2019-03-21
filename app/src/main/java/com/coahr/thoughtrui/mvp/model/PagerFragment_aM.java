@@ -81,7 +81,6 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
     public void getImage(final String ht_ProjectId, Activity activity, final int number, final String ht_id) {
         //获取当前题目下的图片
         List<String> picturesList = FileIOUtils.getPictures(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id);
-        KLog.d("图片", Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id);
         if (picturesList != null) {
             getPresenter().getImageSuccess(picturesList);
         } else {

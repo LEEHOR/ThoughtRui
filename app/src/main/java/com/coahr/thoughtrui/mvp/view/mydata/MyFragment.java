@@ -273,7 +273,6 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
         upload.setText(String.valueOf(unUpload));
         complete.setText(String.valueOf(unComplete));
         star.setText(String.valueOf(unStart));
-        KLog.d("onResume", unLoad, unStart, unUpload, unComplete);
     }
 
     /**

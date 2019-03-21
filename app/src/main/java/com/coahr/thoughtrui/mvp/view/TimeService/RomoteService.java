@@ -39,9 +39,6 @@ public class RomoteService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        System.out.println("远程服务started");
-        KLog.d("RomoteService","远程服务started");
-        Toast.makeText(this, " 远程服务started", Toast.LENGTH_SHORT).show();
         this.bindService(new Intent(this, LocalService.class), conn, Context.BIND_IMPORTANT);
 
         return START_STICKY;
@@ -63,8 +60,6 @@ public class RomoteService extends Service {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            System.out.println("本地服务killed");
-            KLog.d("RomoteService","本地服务killed");
             //开启本地服务
             RomoteService.this.startService(new Intent(RomoteService.this, LocalService.class));
             //绑定本地服务

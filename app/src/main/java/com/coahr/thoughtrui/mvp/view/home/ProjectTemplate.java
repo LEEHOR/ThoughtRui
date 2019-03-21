@@ -138,7 +138,6 @@ public class ProjectTemplate extends BaseFragment<ProjectTemplate_c.Presenter> i
         templateAdapter.setOnClick(new ProjectTemplateAdapter.OnClick() {
             @Override
             public void getOnClick(Template_list.TemplateListBean item) {
-                KLog.d("点击"+item.getName());
                 JumpToProjectTemplate(item.getId());
             }
         });

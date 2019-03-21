@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,8 +19,6 @@ import android.widget.Toast;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.KeyBoardUtils;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
-import com.coahr.thoughtrui.widgets.Keyboard.AnFQNumEditText;
-import com.coahr.thoughtrui.widgets.Keyboard.KeyboardChangeListener;
 import com.coahr.thoughtrui.widgets.Keyboard.SoftKeyboardStateHelper;
 import com.socks.library.KLog;
 
@@ -73,12 +70,11 @@ public class EvaluateInputDialogFragment extends AppCompatDialogFragment {
         softKeyboardStateHelper.addSoftKeyboardStateListener(new SoftKeyboardStateHelper.SoftKeyboardStateListener() {
             @Override
             public void onSoftKeyboardOpened(int keyboardHeightInPx) {
-                KLog.d("哈哈哈","打开");
+
             }
 
             @Override
             public void onSoftKeyboardClosed() {
-                KLog.d("哈哈哈","关闭");
                 KeyBoardUtils.hideKeybord(etInput, getActivity());
                 dismiss();
             }

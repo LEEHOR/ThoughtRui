@@ -156,7 +156,6 @@ public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implemen
             }
         } else {
             ProjectsDB projectsDB = new ProjectsDB();
-            KLog.d("缓存", listBean.getId());
             projectsDB.setPid(listBean.getId());
            // projectsDB.setRecord(listBean.getRecord()); //录音方式
           //  projectsDB.setInspect(listBean.getInspect()); //检验方式

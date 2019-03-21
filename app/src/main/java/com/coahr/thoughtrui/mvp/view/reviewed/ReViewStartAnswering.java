@@ -213,7 +213,6 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // spacesItemDecoration = new SpacesItemDecoration(DensityUtils.dp2px(BaseApplication.mContext, 2), DensityUtils.dp2px(BaseApplication.mContext, 2), getResources().getColor(R.color.colorPrimaryDark));
     }
 
     @Override
@@ -267,7 +266,6 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
             @Override
             public void onInputSend(String input, AppCompatDialogFragment dialog) {
                 if (input != null && !input.equals("")) {
-                    KLog.d("输入", input);
                     tv_bianji.setText(input);
                     p.saveAnswers(answers, input, ht_projectId, number, ht_id);
                     dialogFragment.dismiss();
@@ -581,7 +579,6 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
         if (totalSize == (uploadSuccessSize + uploadFailSize)) {
             if (totalSize == uploadSuccessSize) {
                 fileList_Call.clear();
-                KLog.d("阿里云上传成功" + projectsDB.getPname() + "/" + subjectsDB.getNumber());
                 //当前题目下数据上传成功
                 //执行回调
                 for (int i = 0; i < list.size(); i++) {
@@ -616,12 +613,10 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
     @Override
     public void CallBackSuccess(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
         p.UpDataDb(projectsDB, subjectsDB);
-        KLog.d("回调成功");
     }
 
     @Override
     public void CallBackFailure(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
-        KLog.d("回调失败");
         fr_upload.setEnabled(true);
     }
 
@@ -659,8 +654,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
                         String s = split[0];
                         String string = SaveOrGetAnswers.getString(s, ":");
                         if (string != null && !string.equals("") && !string.equals("null")) {
-                            map.put("answer", s);
-                            KLog.d("anwser" + string);
+                            map.put("answer", string);
                         } else {
                             map.put("anwser", "");
                         }
@@ -695,7 +689,6 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
             }
         }
         map.put("picture", stringBuffer.toString());
-        KLog.d("回调", picList.size(), text);
 
        /* _mActivity.runOnUiThread(new Runnable() {
             @Override
@@ -742,7 +735,6 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
                         new Recorder.OnSilenceListener() {
                             @Override
                             public void onSilence(long silenceTime) {
-                                Log.e("silenceTime", String.valueOf(silenceTime));
                             }
                         }, 200
                 ), file()
@@ -750,7 +742,6 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
     }
 
     private void animateVoice(final float maxPeak) {
-        // recordButton.animate().scaleX(1 + maxPeak).scaleY(1 + maxPeak).setDuration(10).start();
     }
 
     private PullableSource mic() {
@@ -768,7 +759,6 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
         if (!file.exists()) {
             file.mkdirs();
         }
-        KLog.d("路径", Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id);
         return new File(file, "录音" + number + ".wav");
     }
 
@@ -936,7 +926,6 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
             if (rb_no.isChecked()) {
                 answers = "否";
             }
-            KLog.d("选择", answers);
             p.saveAnswers(answers, remark, ht_projectId, number, ht_id);
         }
     }

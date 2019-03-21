@@ -2,6 +2,7 @@ package com.coahr.thoughtrui.mvp.Base;
 
 import com.coahr.thoughtrui.commom.RxManager;
 import com.coahr.thoughtrui.mvp.model.ApiService;
+import com.socks.library.KLog;
 
 import java.lang.ref.WeakReference;
 
@@ -89,6 +90,7 @@ public class BaseModel<P extends BaseContract.Presenter> implements BaseContract
                             getPresenter().dismissLoading();
                         }
                         e.onNext(response.body());
+                        KLog.d("RESPON",response.body().toString());
                     }
 
                     @Override

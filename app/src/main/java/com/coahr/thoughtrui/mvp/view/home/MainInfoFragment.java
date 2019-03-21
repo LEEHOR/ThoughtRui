@@ -97,7 +97,6 @@ public class MainInfoFragment extends BaseChildFragment<MainInfoFragment_C.Prese
     private void JumpToProjectTemplate(){
         Intent intent=new Intent(_mActivity, ConstantsActivity.class);
         intent.putExtra("from", Constants.fragment_mainInfo);
-       // intent.putExtra("url","http://www.baidu.com");
         intent.putExtra("to", Constants.fragment_template);
         startActivity(intent);
     }
@@ -108,8 +107,7 @@ public class MainInfoFragment extends BaseChildFragment<MainInfoFragment_C.Prese
     private void JumpToMassage(){
         Intent intent=new Intent(_mActivity, ConstantsActivity.class);
         intent.putExtra("from", Constants.fragment_mainInfo);
-        // intent.putExtra("url","http://www.baidu.com");
-        intent.putExtra("to", Constants.fragment_uploadOptions);
+        intent.putExtra("to", Constants.fragment_umeng);
         startActivity(intent);
     }
     @Override

@@ -54,7 +54,6 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
     public void getSubject(String DbProjectId, String ht_ProjectId, Activity activity, int number, String ht_id) {
         List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectByTogether_Where(SubjectsDB.class, "ht_id=?", ht_id);
         if (subjectsDBS != null && subjectsDBS.size() > 0) {
-            KLog.d("题目Id", subjectsDBS.get(0).getHt_id());
          //   getImage(ht_ProjectId, activity, number, ht_id);
           //  getAnswer(ht_ProjectId, activity, number, ht_id);
           //  getAudio(ht_ProjectId, activity, number, ht_id);
@@ -277,7 +276,6 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
                     Log.e("RawMessage", serviceException.getRawMessage());
                     info = serviceException.toString();
                 }
-                KLog.d("上传异常", info);
                 uploadFailure++;
                 if (getPresenter() != null) {
                     getPresenter().startUploadCallBack(list, uploadSuccess, uploadFailure, count, projectsDB, subjectsDB);

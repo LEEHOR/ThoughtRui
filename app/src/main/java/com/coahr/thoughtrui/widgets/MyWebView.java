@@ -164,9 +164,7 @@ webView.onResume() ;
         }
     }
 
-    public void OnDestroy() {
-        this.destroy();
-    }
+
 
     public void setWebViewCallBack(WebViewCallBack webViewCallBack) {
         this.webViewCallBack = webViewCallBack;

@@ -169,7 +169,6 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                     LatLng latLng = new LatLng(latitude, longitude);//公司坐标
                     double distance = DistanceUtil.getDistance(LocationPoint, latLng);
                     if (distance > 200) {
-                        KLog.d("不在范围1");
                         isOnCircle = false;
                         //定位状态
                         //早班卡
@@ -180,7 +179,6 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                         location_message_out.setText("不在考勤范围");
                     } else {
                         isOnCircle = true;
-                        KLog.d("在范围21");
                         //早班卡
                         location_message_in.setTextColor(Color.rgb(153, 153, 153));
                         location_message_in.setText("已进入考勤范围");
@@ -236,7 +234,6 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
 
     @Override
     public void initView() {
-
 
         start_time_d = include_start.findViewById(R.id.attendance_time_k);
         start_tag = include_start.findViewById(R.id.iv_attendance_tag_start);
@@ -627,7 +624,6 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         continueStlo = location.getLongitude();
         //当前定位位置
         Location_now = location.getAddress().street;
-        KLog.d("当前定位", location.getAddress().street);
         //把定位信息赋值
         location_address_in.setText(Location_now);
         location_address_out.setText(Location_now);
@@ -747,7 +743,6 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        KLog.d("隐藏了吗", hidden);
         if (hidden) {
             mHandler.removeCallbacks(run_time);
             mHandler.removeMessages(LOCATIONMESSAGE);
@@ -786,7 +781,6 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                                 Gson gson = new Gson();
                                 BaiduApiBean baiduApiBean = gson.fromJson(string, BaiduApiBean.class);
                                 if (baiduApiBean.getStatus() == 0) {
-                                    KLog.d("地址", baiduApiBean.getResult().getAddressComponent().getStreet());
                                     if (type_daka == 1) {
                                         Message message = new Message();
                                         message.what = zao_daka;

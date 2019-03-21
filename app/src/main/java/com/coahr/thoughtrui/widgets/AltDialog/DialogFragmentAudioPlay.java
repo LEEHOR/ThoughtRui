@@ -32,6 +32,7 @@ import static android.content.Context.BIND_AUTO_CREATE;
  * Created by Leehor
  * on 2018/12/27
  * on 9:18
+ * 音频播放
  */
 public class DialogFragmentAudioPlay extends BaseDialogFragment implements View.OnClickListener {
     @BindView(R.id.play_seekBar)
@@ -51,12 +52,12 @@ public class DialogFragmentAudioPlay extends BaseDialogFragment implements View.
     private MediaPlayer mediaPlayer;
     private String audioPath;
     private boolean isPrepare; //是否准备
-    private int PlayType=1;
-    private final int AUDIO_PLAY=1;  //开始播放
-    private final int AUDIO_PAUSE=2; //暂停播放
-    private final int AUDIO_RESUME=3; //继续播放
-    private final int AUDIO_STOP=4;  //停止播放
-    private  final  int UPDATE_AUDIO_TIME=1;
+    private int PlayType = 1;
+    private final int AUDIO_PLAY = 1;  //开始播放
+    private final int AUDIO_PAUSE = 2; //暂停播放
+    private final int AUDIO_RESUME = 3; //继续播放
+    private final int AUDIO_STOP = 4;  //停止播放
+    private final int UPDATE_AUDIO_TIME = 1;
     private MusicService musicService;
     //  回调onServiceConnected 函数，通过IBinder 获取 Service对象，实现Activity与 Service的绑定
     private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -66,7 +67,7 @@ public class DialogFragmentAudioPlay extends BaseDialogFragment implements View.
             musicService.setMusicPlayListener(new MusicPlayListener() {
                 @Override
                 public void PausePlay() {
-                    if (mediaPlayer != null && isPrepare){
+                    if (mediaPlayer != null && isPrepare) {
                         mediaPlayer.stop();
                         release();
                         upDateUi(4);
@@ -74,6 +75,7 @@ public class DialogFragmentAudioPlay extends BaseDialogFragment implements View.
                 }
             });
         }
+
         @Override
         public void onServiceDisconnected(ComponentName name) {
             musicService = null;
@@ -85,7 +87,7 @@ public class DialogFragmentAudioPlay extends BaseDialogFragment implements View.
     /**
      * 开启和绑定服务
      */
-    private void startAndBindService(){
+    private void startAndBindService() {
         intent = new Intent(getActivity(), MusicService.class);
         getActivity().startService(intent);
         getActivity().bindService(intent, serviceConnection, BIND_AUTO_CREATE);
@@ -94,19 +96,21 @@ public class DialogFragmentAudioPlay extends BaseDialogFragment implements View.
     /**
      * 关闭和解绑服务
      */
-    private void unbindAndStopService(){
+    private void unbindAndStopService() {
         getActivity().unbindService(serviceConnection);
         getActivity().stopService(intent);
     }
-    private Handler mHandler=new Handler(){
+
+    //逻辑控制
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if (msg.what==UPDATE_AUDIO_TIME) {
+            if (msg.what == UPDATE_AUDIO_TIME) {
                 int currentPosition = mediaPlayer.getCurrentPosition();
                 int duration = mediaPlayer.getDuration();
                 //设置播放时间
-                updateTime(tv_play_point,tv_play_count,currentPosition,duration);
+                updateTime(tv_play_point, tv_play_count, currentPosition, duration);
                 //设置播放进度
                 play_seekBar.setMax(duration);
                 play_seekBar.setProgress(currentPosition);
@@ -116,13 +120,13 @@ public class DialogFragmentAudioPlay extends BaseDialogFragment implements View.
 
     };
 
-    public static DialogFragmentAudioPlay newInstance(String audioPath,String audioName) {
-        DialogFragmentAudioPlay audioPlay=new DialogFragmentAudioPlay();
-        Bundle bundle=new Bundle();
-        bundle.putString("audioPath",audioPath);
-        bundle.putString("audioName",audioName);
+    public static DialogFragmentAudioPlay newInstance(String audioPath, String audioName) {
+        DialogFragmentAudioPlay audioPlay = new DialogFragmentAudioPlay();
+        Bundle bundle = new Bundle();
+        bundle.putString("audioPath", audioPath);
+        bundle.putString("audioName", audioName);
         audioPlay.setArguments(bundle);
-        return  audioPlay;
+        return audioPlay;
     }
 
     @Override
@@ -215,48 +219,48 @@ public class DialogFragmentAudioPlay extends BaseDialogFragment implements View.
 
     @Override
     public void onClick(View view) {
-            switch (view.getId()){
-                case R.id.play_button:
-                    if (PlayType==AUDIO_PLAY) {
-                        if (isPrepare){
-                            mediaPlayer.start();
-                        } else {
-                            prepare();
-                            mediaPlayer.start();
-                        }
-                        upDateUi(PlayType);
-                    } else if (mediaPlayer != null && isPrepare && PlayType==AUDIO_PAUSE){
-                        mediaPlayer.pause();
-                        upDateUi(PlayType);
-                    } else if (mediaPlayer != null && isPrepare && PlayType==AUDIO_RESUME){
+        switch (view.getId()) {
+            case R.id.play_button:
+                if (PlayType == AUDIO_PLAY) {
+                    if (isPrepare) {
                         mediaPlayer.start();
-                        upDateUi(PlayType);
+                    } else {
+                        prepare();
+                        mediaPlayer.start();
                     }
-                    break;
-                case R.id.stop_button:
-                    if (mediaPlayer != null && isPrepare){
-                        mediaPlayer.stop();
-                        release();
-                        upDateUi(4);
-                    }
-                    break;
-                case R.id.iv_close:
-                    if (mediaPlayer != null){
-                        mediaPlayer.stop();
-                        release();
-                        upDateUi(4);
-                    }
-                   dismiss();
-                    break;
-            }
+                    upDateUi(PlayType);
+                } else if (mediaPlayer != null && isPrepare && PlayType == AUDIO_PAUSE) {
+                    mediaPlayer.pause();
+                    upDateUi(PlayType);
+                } else if (mediaPlayer != null && isPrepare && PlayType == AUDIO_RESUME) {
+                    mediaPlayer.start();
+                    upDateUi(PlayType);
+                }
+                break;
+            case R.id.stop_button:
+                if (mediaPlayer != null && isPrepare) {
+                    mediaPlayer.stop();
+                    release();
+                    upDateUi(4);
+                }
+                break;
+            case R.id.iv_close:
+                if (mediaPlayer != null) {
+                    mediaPlayer.stop();
+                    release();
+                    upDateUi(4);
+                }
+                dismiss();
+                break;
+        }
     }
 
-    class SeekBarChangeListenerS implements SeekBar.OnSeekBarChangeListener{
+    class SeekBarChangeListenerS implements SeekBar.OnSeekBarChangeListener {
 
         @Override
         public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
             //设置当前的播放时间
-            updateTime(tv_play_point,null,i,0);
+            updateTime(tv_play_point, null, i, 0);
         }
 
         @Override
@@ -281,60 +285,58 @@ public class DialogFragmentAudioPlay extends BaseDialogFragment implements View.
 
     /**
      * ui更新
+     *
      * @param type
      */
-    private void upDateUi(int type){
-        if (type==1){  //开始播放
+    private void upDateUi(int type) {
+        if (type == 1) {  //开始播放
             play_button.setImageResource(R.mipmap.ic_pause);
             stop_button.setImageResource(R.mipmap.ic_stoping);
-            PlayType=AUDIO_PAUSE;
+            PlayType = AUDIO_PAUSE;
             mHandler.sendEmptyMessage(UPDATE_AUDIO_TIME);
         }
-        if (type==2){  //暂停播放
+        if (type == 2) {  //暂停播放
             play_button.setImageResource(R.mipmap.ic_play_circle_filled);
             stop_button.setImageResource(R.mipmap.ic_stoping);
-            PlayType=AUDIO_RESUME;
+            PlayType = AUDIO_RESUME;
             mHandler.removeMessages(UPDATE_AUDIO_TIME);
         }
-        if (type==3){  //继续播放
+        if (type == 3) {  //继续播放
             play_button.setImageResource(R.mipmap.ic_pause);
             stop_button.setImageResource(R.mipmap.ic_stoping);
-           // PlayType=AUDIO_STOP;
-            PlayType=AUDIO_PAUSE;
+            // PlayType=AUDIO_STOP;
+            PlayType = AUDIO_PAUSE;
             mHandler.sendEmptyMessage(UPDATE_AUDIO_TIME);
         }
-        if (type==4){  //停止播放
+        if (type == 4) {  //停止播放
             play_button.setImageResource(R.mipmap.ic_play_circle_filled);
             stop_button.setImageResource(R.mipmap.ic_stop);
-            PlayType=AUDIO_PLAY;
+            PlayType = AUDIO_PLAY;
             mHandler.removeMessages(UPDATE_AUDIO_TIME);
             play_seekBar.setProgress(0);
-            updateTime(tv_play_point,null,0,0);
+            updateTime(tv_play_point, null, 0, 0);
 
         }
     }
 
-    public interface mediaPlayListener{
+    public interface mediaPlayListener {
         void onPlayComplete();
     }
 
     /**
      * 更新时间
-     * @param audioPoint
-     *      播放时间控件
-     * @param audioCount
-     *      总时间控件
-     * @param pointTime
-     *      播放位置
-     * @param CountTime
-     * 总时长
+     *
+     * @param audioPoint 播放时间控件
+     * @param audioCount 总时间控件
+     * @param pointTime  播放位置
+     * @param CountTime  总时长
      */
-    private void updateTime(TextView audioPoint,TextView audioCount,int pointTime,int CountTime){
+    private void updateTime(TextView audioPoint, TextView audioCount, int pointTime, int CountTime) {
         if (audioPoint != null) {
-            TimeUtils.updataTimeFormat(audioPoint,pointTime);
+            TimeUtils.updataTimeFormat(audioPoint, pointTime);
         }
-        if (audioCount!=null){
-            TimeUtils.updataTimeFormat(audioCount,CountTime);
+        if (audioCount != null) {
+            TimeUtils.updataTimeFormat(audioCount, CountTime);
         }
     }
 
@@ -342,27 +344,28 @@ public class DialogFragmentAudioPlay extends BaseDialogFragment implements View.
     public void onDestroy() {
         unbindAndStopService();
         super.onDestroy();
+        mHandler.removeCallbacksAndMessages(null);
     }
 
     /**
      * 释放
      */
-    private void release(){
+    private void release() {
         if (mediaPlayer != null) {
-            isPrepare=false;
+            isPrepare = false;
             mediaPlayer.release();
             mediaPlayer.setOnCompletionListener(null);
             mediaPlayer.setOnErrorListener(null);
             mediaPlayer.setOnCompletionListener(null);
-            mediaPlayer=null;
+            mediaPlayer = null;
         }
     }
 
     /**
      * 准备
      */
-    private void prepare(){
-        if (audioPath !=null && mediaPlayer==null){
+    private void prepare() {
+        if (audioPath != null && mediaPlayer == null) {
             mediaPlayer = new MediaPlayer();
             try {
                 mediaPlayer.setDataSource(audioPath);
@@ -386,10 +389,10 @@ public class DialogFragmentAudioPlay extends BaseDialogFragment implements View.
                 mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                     @Override
                     public void onPrepared(MediaPlayer mediaPlayer) {
-                        isPrepare=true;
+                        isPrepare = true;
                         int duration = mediaPlayer.getDuration();
                         //TimeUtils.updataTimeFormat(tv_play_count,duration);
-                        updateTime(null,tv_play_count,0,duration);
+                        updateTime(null, tv_play_count, 0, duration);
                         play_seekBar.setMax(duration);
                     }
                 });

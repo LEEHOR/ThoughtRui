@@ -46,8 +46,6 @@ public class LocalService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        KLog.d("LocalService","本地服务started");
-        System.out.println("本地服务started");
         this.bindService(new Intent(LocalService.this, RomoteService.class), conn, Context.BIND_IMPORTANT);
         AlarmTimerUtil instance = AlarmTimerUtil.getInstance(this);
         instance.createGetUpAlarmManager(this,"TIMER_ACTION",10);
@@ -62,9 +60,6 @@ public class LocalService extends Service {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            KLog.d("LocalService","远程服务killed");
-            System.out.println("远程服务killed");
-            Toast.makeText(LocalService.this, "远程服务killed", Toast.LENGTH_SHORT).show();
             //开启远程服务
             LocalService.this.startService(new Intent(LocalService.this, RomoteService.class));
             //绑定远程服务

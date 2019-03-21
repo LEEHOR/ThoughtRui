@@ -99,12 +99,14 @@ public class Fragment_WebView extends BaseFragment {
 
     @Override
     public void onDestroy() {
+        super.onDestroy();
         if (myWebView != null) {
             myWebView.clearCache(true);
             myWebView.clearHistory();
+            myWebView.destroy();
         }
+
         myWebView=null;
-        super.onDestroy();
     }
 
     @Override

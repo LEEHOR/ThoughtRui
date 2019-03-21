@@ -63,7 +63,6 @@ public class TimeTaskService extends IntentService {
         onStart(intent,startId);
         //高版本重复设置闹钟达到低版本中setRepeating相同效果
         AlarmTimerUtil.getInstance(BaseApplication.mContext).getUpAlarmManagerWorkOnReceiver(this);
-        KLog.d("轮询", intent.getStringExtra("msg"));
 
         return START_STICKY;
     }

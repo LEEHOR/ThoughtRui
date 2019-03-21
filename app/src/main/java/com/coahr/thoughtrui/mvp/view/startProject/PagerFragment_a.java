@@ -1,16 +1,9 @@
 package com.coahr.thoughtrui.mvp.view.startProject;
 
-import android.Manifest;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.IntentFilter;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.media.AudioFormat;
 import android.media.MediaRecorder;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -22,45 +15,22 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.alibaba.sdk.android.oss.ClientConfiguration;
-import com.alibaba.sdk.android.oss.ClientException;
-import com.alibaba.sdk.android.oss.OSS;
 import com.alibaba.sdk.android.oss.OSSClient;
-import com.alibaba.sdk.android.oss.ServiceException;
-import com.alibaba.sdk.android.oss.callback.OSSCompletedCallback;
-import com.alibaba.sdk.android.oss.callback.OSSProgressCallback;
-import com.alibaba.sdk.android.oss.common.OSSLog;
 import com.alibaba.sdk.android.oss.common.auth.OSSAuthCredentialsProvider;
-import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
-import com.alibaba.sdk.android.oss.common.auth.OSSFederationToken;
-import com.alibaba.sdk.android.oss.common.auth.OSSStsTokenCredentialProvider;
-import com.alibaba.sdk.android.oss.internal.OSSAsyncTask;
-import com.alibaba.sdk.android.oss.model.OSSRequest;
-import com.alibaba.sdk.android.oss.model.PutObjectRequest;
-import com.alibaba.sdk.android.oss.model.PutObjectResult;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
@@ -69,9 +39,6 @@ import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.Utils.FileIoUtils.SaveOrGetAnswers;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.KeyBoardUtils;
-import com.coahr.thoughtrui.Utils.Permission.OnRequestPermissionListener;
-import com.coahr.thoughtrui.Utils.Permission.RequestPermissionUtils;
-import com.coahr.thoughtrui.Utils.Permission.RuntimeRationale;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
@@ -87,15 +54,9 @@ import com.coahr.thoughtrui.widgets.AltDialog.DialogFragmentAudioPlay;
 import com.coahr.thoughtrui.widgets.AltDialog.EvaluateInputDialogFragment;
 import com.coahr.thoughtrui.widgets.AltDialog.Fill_in_blankDialog;
 import com.coahr.thoughtrui.widgets.AltDialog.ProjectSuccessDialog;
-import com.coahr.thoughtrui.widgets.BroadcastReceiver.NetWorkReceiver;
-import com.coahr.thoughtrui.widgets.UIPlayer.uiDisPlayer;
 import com.socks.library.KLog;
-import com.yanzhenjie.permission.Action;
-import com.yanzhenjie.permission.AndPermission;
 
 import org.greenrobot.eventbus.EventBus;
-import org.litepal.crud.async.UpdateOrDeleteExecutor;
-import org.litepal.crud.callback.UpdateOrDeleteCallback;
 
 import java.io.File;
 import java.io.IOException;
@@ -113,6 +74,7 @@ import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultDisposable;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
+
 import omrecorder.AudioChunk;
 import omrecorder.AudioRecordConfig;
 import omrecorder.OmRecorder;
@@ -288,7 +250,6 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectBy_Where(SubjectsDB.class, new String[]{"number"}, "ht_id=?", ht_id);
             if (subjectsDBS != null && subjectsDBS.size() > 0) {
                 number = subjectsDBS.get(0).getNumber();
-                KLog.d("题号", number, ht_id);
             }
             List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", ht_projectId);
             if (projectsDBS != null && projectsDBS.size() > 0) {
@@ -339,7 +300,6 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             @Override
             public void onInputSend(String input, AppCompatDialogFragment dialog) {
                 if (input != null && !input.equals("")) {
-                    KLog.d("输入", input);
                     tv_bianji.setText(input);
                     p.saveAnswers(answers, input, ht_projectId, number, ht_id);
                     dialogFragment.dismiss();
@@ -414,7 +374,6 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             //上一题
             case R.id.tv_last:
                 if (!isRecorder) {  //判断是否在录音
-                    KLog.d("题号", number);
                     if (number > 1) {
                         if (isComplete()) {
                             SubjectsDB subjectsDB = new SubjectsDB();
@@ -618,7 +577,6 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                                 answers = string;
                                 isAnswer = true;
                                 ed_score.setText(string);
-                                KLog.d("选择" + string);
                             }
                         }
                         if (i == 1) {
@@ -727,12 +685,10 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
     @Override
     public void startUploadCallBack(List<String> list, int uploadSuccessSize, int uploadFailSize, int totalSize, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
-        KLog.d("阿里云上传回调", totalSize, uploadFailSize, uploadSuccessSize);
         //上传成功
         if (totalSize == (uploadSuccessSize + uploadFailSize)) {
             if (totalSize == uploadSuccessSize) {
                 fileList_Call.clear();
-                KLog.d("阿里云上传成功" + projectsDB.getPname() + "/" + subjectsDB.getNumber());
                 //当前题目下数据上传成功
                 //执行回调
                 for (int i = 0; i < list.size(); i++) {
@@ -767,12 +723,10 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     @Override
     public void CallBackSuccess(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
         p.UpDataDb(projectsDB, subjectsDB);
-        KLog.d("阿里云上传回调成功");
     }
 
     @Override
     public void CallBackFailure(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
-        KLog.d("阿里云上传回调失败");
         fr_upload.setEnabled(true);
     }
 
@@ -953,7 +907,6 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                         new Recorder.OnSilenceListener() {
                             @Override
                             public void onSilence(long silenceTime) {
-                                Log.e("silenceTime", String.valueOf(silenceTime));
                               /*  Toast.makeText(WavRecorderActivity.this, "silence of " + silenceTime + " detected",
                                         Toast.LENGTH_SHORT).show();*/
                             }
@@ -1108,7 +1061,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                         String s = split[0];
                         String string = SaveOrGetAnswers.getString(s, ":");
                         if (string != null && !string.equals("") && !string.equals("null")) {
-                            map.put("answer", s);
+                            map.put("answer", string);
                             KLog.d("anwser" + string);
                         } else {
                             map.put("anwser", "");

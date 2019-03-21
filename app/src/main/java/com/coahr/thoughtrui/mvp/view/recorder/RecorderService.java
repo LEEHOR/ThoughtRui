@@ -191,7 +191,6 @@ public class RecorderService extends Service {
                 mRecorder.prepare();
                 isPrepare = true;
             } catch (IOException e) {
-                KLog.e("录音", e.toString());
             }
         }
     }

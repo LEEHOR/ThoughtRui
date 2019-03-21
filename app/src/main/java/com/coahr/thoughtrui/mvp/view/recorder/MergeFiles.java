@@ -23,7 +23,6 @@ public class MergeFiles {
      * @param targetPath 合并后路径
      */
     public static void uniteAMRFile(final List<String> partsPaths, final String targetPath, String recorderName,MergeFileListener mergeFileListener) {
-        Log.e("合并文件操作", "开始合并");
         if (partsPaths != null && partsPaths.size() > 0) {
             if (targetPath == null || recorderName==null) {
                 mergeFileListener.mergeFailure("目标文件或文件名为空");
@@ -60,7 +59,6 @@ public class MergeFiles {
                 e.printStackTrace();
             }
         } else {
-            Log.e("合并文件操作", "List为空");
             mergeFileListener.mergeFailure("列表不能为空");
         }
     }

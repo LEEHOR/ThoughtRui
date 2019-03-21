@@ -128,7 +128,6 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
             templateId = getArguments().getString("templateId");
             dealerId = getArguments().getString("dealerId");
             type = getArguments().getInt("type");
-            KLog.d("项目Id", projectId);
         }
         kaoqing.setOnClickListener(this);
         fangwen.setOnClickListener(this);

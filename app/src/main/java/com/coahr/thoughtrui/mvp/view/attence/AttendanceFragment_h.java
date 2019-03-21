@@ -223,7 +223,6 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
     }
 
     private void initTimePickerDialog() {
-        KLog.e(TAG, "---initTimePickerDialog---pre---");
         long tenYears = 10L * 365 * 1000 * 60 * 60 * 24L;
         long fourHour = 60 * 60 * 4L * 1000;
         datePickerDialog = new TimePickerDialog.Builder()
@@ -250,7 +249,6 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
 
     @Override
     public void onDateSet(TimePickerDialog timePickerView, long millseconds) {
-        KLog.d("选择的时间",millseconds);
         getHistory(Constants.ht_ProjectId, millseconds);
     }
 
@@ -275,7 +273,6 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
                                 Gson gson = new Gson();
                                 BaiduApiBean baiduApiBean = gson.fromJson(string, BaiduApiBean.class);
                                 if (baiduApiBean.getStatus() == 0) {
-                                    KLog.d("地址", baiduApiBean.getResult().getAddressComponent().getStreet());
                                     if (type_daka == 1) {
                                         Message message = new Message();
                                         message.what = zao_daka;

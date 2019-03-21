@@ -88,7 +88,6 @@ public class AlarmTimerUtil {
         //pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);//每隔5秒发送一次广播
         //服务这么写
         PendingIntent  pendingIntents = PendingIntent.getService(context, 0, intent, 0);
-        KLog.d("轮询", "extra = 1");
         //高版本重复设置闹钟达到低版本中setRepeating相同效果
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {// 6.0及以上
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
@@ -111,3 +110,4 @@ public class AlarmTimerUtil {
         alarm.cancel(sender);
     }
 }
+ 

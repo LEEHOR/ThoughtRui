@@ -27,7 +27,7 @@ public class pageAdapter extends BaseQuickAdapter<CensorBean.DataBean.ListBean,B
         if (item != null) {
             helper.setText(R.id.tv_schedule,item.getProgress())
                     .setText(R.id.tv_explain,Constants.user_type == 1 ? "["+item.getSale_code()+"]"
-                            : Constants.user_type == 2 ? "["+item.getSale_code()+"]"
+                            : Constants.user_type == 2 ? "["+item.getService_code()+"]"
                             : "["+item.getSale_code()+"]")
                     .setText(R.id.tv_project_times,item.getPname())
                     .setText(R.id.tv_project_code,item.getCode())

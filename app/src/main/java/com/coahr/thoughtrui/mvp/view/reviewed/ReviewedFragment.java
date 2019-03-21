@@ -69,6 +69,7 @@ public class ReviewedFragment extends BaseFragment {
                 return false;
             }
         });
+
         search_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,6 +78,7 @@ public class ReviewedFragment extends BaseFragment {
                 search_cancel.setVisibility(View.GONE);
             }
         });
+
         ed_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {

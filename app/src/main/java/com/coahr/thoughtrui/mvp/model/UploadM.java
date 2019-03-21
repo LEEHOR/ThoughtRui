@@ -95,7 +95,6 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
         List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + projectsDBS.get(project_position).getPid() + "/" + subjectsDBList.get(subject_position).getNumber() + "_" + subjectsDBList.get(subject_position).getHt_id());
         if (fileList != null && fileList.size() > 0) {
             for (int i = 0; i <fileList.size() ; i++) {
-                KLog.d("上传文件准备",fileList.get(i));
             }
             getPresenter().getUpLoadFileListSuccess(fileList, subjectsDBList, projectsDBS,project_position,subject_position);
         } else {
@@ -201,14 +200,11 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
      */
     public OSSAsyncTask asyncPutImage(OSSClient oss, String localFile, final int count,  List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position, final List<String> list) {
         if (localFile.equals("")) {
-            Log.w("AsyncPutImage", "ObjectNull");
             return null;
         }
 
         File file = new File(localFile);
         if (!file.exists()) {
-            Log.w("AsyncPutImage", "FileNotExist");
-            Log.w("LocalFile", localFile);
             return null;
         }
         String name = getName(localFile, "/");
@@ -255,7 +251,6 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
                     Log.e("RawMessage", serviceException.getRawMessage());
                     info = serviceException.toString();
                 }
-               KLog.d("上传日志",info);
                 UpLoadFailureCount++;
                 if (getPresenter() != null) {
                     getPresenter().UploadCallBack(list,subjectsDBList,projectsDBS,project_position,subject_position,

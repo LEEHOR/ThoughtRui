@@ -5,7 +5,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -38,7 +37,6 @@ import com.coahr.thoughtrui.mvp.view.mydata.MyFragment;
 import com.coahr.thoughtrui.mvp.view.reviewed.ReviewedFragment;
 import com.coahr.thoughtrui.mvp.view.upload.UploadFragment;
 import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
-import com.coahr.thoughtrui.widgets.BroadcastReceiver.AliyunHotReceiver;
 import com.coahr.thoughtrui.widgets.MyBottomNavigation.MyBottomNavigation;
 
 import org.greenrobot.eventbus.EventBus;
@@ -243,7 +241,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
                 sendRTSL(location.getLongitude(), location.getLatitude());
                 p.getLocation(1);
             }
-        }, 10*1000);
+        }, TIMES);
     }
 
     @Override

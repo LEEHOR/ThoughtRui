@@ -29,7 +29,7 @@ import butterknife.BindView;
  * @author Leehor
  * 版本：
  * 创建日期：2019/1/11
- * 描述：
+ * 描述：修改密码
  */
 public class ChangePasswordFragment extends BaseFragment<ChangePassWord_C.Presenter> implements ChangePassWord_C.View {
 

@@ -74,7 +74,6 @@ public class Fragment_Feedback extends BaseFragment<Feedback_Fragment_C.Presente
 
         tv_submit.setOnClickListener(this);
 
-
     }
 
     @Override
@@ -157,7 +156,6 @@ public class Fragment_Feedback extends BaseFragment<Feedback_Fragment_C.Presente
                     ToastUtils.showLong("长度限制10-300字");
                     return;
                 }
-
                 getOptions(type, ed_input.getText().toString().trim());
                 tv_submit.setEnabled(false);
                 break;

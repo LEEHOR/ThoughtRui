@@ -41,82 +41,96 @@
             android:paddingLeft="@dimen/dp_20"
             android:paddingRight="@dimen/dp_20">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_start"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_40"
-                android:layout_marginRight="@dimen/dp_40"
-                app:cardBackgroundColor="#3A80FF"
-                app:cardCornerRadius="@dimen/dp_5">
+                android:layout_marginLeft="@dimen/dp_30"
+                android:layout_marginRight="@dimen/dp_30"
+                android:background="@drawable/bg_blue_rectangle">
 
-                <RelativeLayout
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_start"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
 
-                    <ImageView
-                        android:id="@+id/check_bg"
+                    app:cardBackgroundColor="#3A80FF"
+                    app:cardCornerRadius="@dimen/dp_5">
+
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:paddingTop="@dimen/dp_40"
-                        android:paddingBottom="@dimen/dp_20"
-                        android:src="@drawable/check" />
+                        android:layout_height="wrap_content">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/check_bg"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="15dp"
-                        android:text="开始检核"
-                        android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/dp_16" />
-                </RelativeLayout>
-            </androidx.cardview.widget.CardView>
+                        <ImageView
+                            android:id="@+id/check_bg"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:paddingTop="@dimen/dp_40"
+                            android:paddingBottom="@dimen/dp_20"
+                            android:src="@drawable/check" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_histore"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/check_bg"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginBottom="15dp"
+                            android:text="开始检核"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/dp_16" />
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+            </FrameLayout>
+
+
+
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_40"
+                android:layout_marginLeft="@dimen/dp_30"
                 android:layout_marginTop="@dimen/dp_20"
-                android:layout_marginRight="@dimen/dp_40"
-                app:cardBackgroundColor="#3A80FF"
-                app:cardCornerRadius="@dimen/dp_5">
+                android:layout_marginRight="@dimen/dp_30"
+                android:background="@drawable/bg_blue_rectangle">
 
-                <RelativeLayout
+                <androidx.cardview.widget.CardView
+                    android:visibility="visible"
+                    android:id="@+id/card_histore"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <ImageView
-                        android:visibility="invisible"
-                        android:id="@+id/iv_project_tag"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentRight="true"
-                        android:src="@mipmap/home_unfinished"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                    <ImageView
-                        android:id="@+id/histore_bg"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="#3A80FF"
+                    app:cardCornerRadius="@dimen/dp_5">
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:paddingTop="@dimen/dp_40"
-                        android:paddingBottom="@dimen/dp_20"
-                        android:src="@drawable/historelist" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/histore_bg"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="15dp"
-                        android:text="历史项目"
-                        android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/dp_16" />
-                </RelativeLayout>
-            </androidx.cardview.widget.CardView>
-
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:text="hahahahahaahahahah"
+                            android:textColor="@color/colorWhite"
+                            android:id="@+id/iv_project_tag"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentRight="true"
+                            android:src="@mipmap/home_unfinished" />
+                        <ImageView
+                            android:id="@+id/histore_bg"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:paddingTop="@dimen/dp_40"
+                            android:paddingBottom="@dimen/dp_20"
+                            android:src="@drawable/historelist" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/histore_bg"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginBottom="15dp"
+                            android:text="历史项目"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/dp_16" />
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+            </FrameLayout>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

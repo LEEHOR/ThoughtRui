@@ -56,6 +56,7 @@ import butterknife.BindView;
  * Created by Leehor
  * on 2018/11/12
  * on 17:12
+ * 上传页面
  */
 public class UploadFragment extends BaseFragment<UploadC.Presenter> implements UploadC.View, View.OnClickListener {
     @Inject
@@ -153,10 +154,6 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
 
     @Override
     public void initView() {
-  /*      ImmersionBar.with(this)
-                .statusBarColor(R.color.colorPrimary)
-                .statusBarDarkFont(true,0.2f)
-                .init();*/
         tv_Batch_Management.setOnClickListener(this);
         tv_all_upload.setOnClickListener(this);
         tv_Batch_UpLoad.setOnClickListener(this);
@@ -232,6 +229,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mHandler.removeCallbacksAndMessages(null);
         // ImmersionBar.with(this).destroy();
     }
 
@@ -345,10 +343,10 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     public void UpDataDbSuccess(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
         //如果当前项目下的题目数据上传完毕，则开始传下一个项目
         KLog.d("上传4", project_position, projectsDBS.size(), subject_position, subjectsDBList.size());
-        if (subject_position < subjectsDBList.size() - 1) {
+        if (subject_position < subjectsDBList.size() - 1) { //项目下还有题目没传，开始下一题
             KLog.d("上传2", "切换下一个题目");
             p.UpLoadFileList(subjectsDBList, projectsDBS, project_position, subject_position += 1);
-        } else {   //项目下还有题目没传，开始下一题
+        } else {   //上一个项目传完了，开始下一个项目
             //1.查询下一个项目
             if (project_position < projectsDBS.size() - 1) {
                 KLog.d("上传3", "切换下一个项目");
@@ -390,7 +388,6 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                     } else if (Constants.NetWorkType != null && Constants.NetWorkType.equals("MOBILE")) {
                         NetWorkDialog("提示", "当前为移动网络是否继续上传", 2);
                     }
-
                 } else {
                     NetWorkDialog("提示", "当前网络不可用无法上传", 3);
                 }
