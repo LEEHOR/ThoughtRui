@@ -39,10 +39,14 @@ public interface UploadC  {
                             int project_position,int subject_position,
                             int uploadSuccessSize,int uploadFailSize,int totalSize);
 
+        void Pic_Compulsory(List<String> list,List<SubjectsDB> subjectsDBList,List<ProjectsDB> projectsDBS,
+                            int project_position,int subject_position);
+
         void CallBackServerSuccess(List<SubjectsDB> subjectsDBList,List<ProjectsDB> projectsDBS,
                                    int project_position,int subject_position);
         void CallBackServerFailure(List<SubjectsDB> subjectsDBList,List<ProjectsDB> projectsDBS,
                                    int project_position,int subject_position);
+
 
         void UpDataDbSuccess(List<SubjectsDB> subjectsDBList,List<ProjectsDB> projectsDBS,
                              int project_position,int subject_position);
@@ -77,6 +81,9 @@ public interface UploadC  {
         void UploadCallBack(List<String> list,List<SubjectsDB> subjectsDBList,List<ProjectsDB> projectsDBS,
                             int project_position,int subject_position,
                             int uploadSuccessSize,int uploadFailSize,int totalSize);
+
+        void Pic_Compulsory(List<String> list,List<SubjectsDB> subjectsDBList,List<ProjectsDB> projectsDBS,
+                            int project_position,int subject_position);
 
         //回调上传
         void CallBackServer(Map<String,Object> map,List<SubjectsDB> subjectsDBList,List<ProjectsDB> projectsDBS,

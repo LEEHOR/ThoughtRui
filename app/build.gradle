@@ -42,17 +42,17 @@ android {
             jniLibs.srcDirs = ['libs']
         }
     }
-/*
-    allprojects {
+ /*   allprojects {
         repositories {
             google()
             maven { url "https://jitpack.io" }
         }
     }
+
     repositories {
         google()
-
     }*/
+
     compileOptions {
         sourceCompatibility 1.8
         targetCompatibility 1.8

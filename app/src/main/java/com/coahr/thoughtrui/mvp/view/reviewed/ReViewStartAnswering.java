@@ -197,6 +197,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
     private String uPAudioPath;
     private String textMassage;
     private String standard_score;
+    private Fill_in_blankDialog fill_in_blankDialog;
 
     public static ReViewStartAnswering newInstance(int position, String DbProjectId, String ht_ProjectId, int countSize, String ht_id) {
         ReViewStartAnswering reViewStartAnswering = new ReViewStartAnswering();
@@ -227,6 +228,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
 
     @Override
     public void initView() {
+        fill_in_blankDialog = Fill_in_blankDialog.newInstance();
         inflate = LayoutInflater.from(_mActivity).inflate(R.layout.dialog_progress, null);
         tv_tittle = inflate.findViewById(R.id.tv_progress_info);
         progressBar = inflate.findViewById(R.id.progress_bar);
@@ -246,7 +248,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
             }
         }
         adapter = new PagerFragmentPhotoAdapter();
-        gridLayoutManager = new GridLayoutManager(BaseApplication.mContext, 5);
+        gridLayoutManager = new GridLayoutManager(BaseApplication.mContext, 3);
         img_recycler.setLayoutManager(gridLayoutManager);
         img_recycler.setAdapter(adapter);
         img_recycler.addItemDecoration(new SpacesItemDecoration(DensityUtils.dp2px(BaseApplication.mContext, 4), DensityUtils.dp2px(BaseApplication.mContext, 4), getResources().getColor(R.color.colorWhite)));
@@ -299,45 +301,45 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
         ed_score.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fill_in_blankDialog dialog = new Fill_in_blankDialog();
-                dialog.setOnClick(new Fill_in_blankDialog.InPutOnClick() {
-                    @Override
-                    public void setOnClick(String text) {
-                        if (text != null && standard_score != null) {
-                            if (Integer.parseInt(text) <= Integer.parseInt(standard_score) && Integer.parseInt(text) >= 0) {
-                                ed_score.setText(text);
-                                p.saveAnswers(text, remark, ht_projectId, number, ht_id);
-                            } else {
-                                ToastUtils.showLong("请输入正确的分数");
-                            }
-                        }
-                        // ed_score.setText(text);
-                        // p.saveAnswers(text, remark, ht_projectId, number, ht_id);
-                    }
 
-                    @Override
-                    public void setOnClickFailure() {
-                        ToastUtils.showLong("请输入正确的数值");
-                    }
-                });
+                fill_in_blankDialog.show(getFragmentManager(),TAG);
             }
         });
+        fill_in_blankDialog.setOnClick(new Fill_in_blankDialog.InPutOnClick() {
+            @Override
+            public void setOnClick(String text) {
+                if (text != null && standard_score != null) {
+                    if (Integer.parseInt(text) <= Integer.parseInt(standard_score) && Integer.parseInt(text) >= 0) {
+                        ed_score.setText(text);
+                        p.saveAnswers(text, remark, ht_projectId, number, ht_id);
+                    } else {
+                        ToastUtils.showLong("请输入正确的分数");
+                    }
+                }
+                // ed_score.setText(text);
+                // p.saveAnswers(text, remark, ht_projectId, number, ht_id);
+            }
 
+            @Override
+            public void setOnClickFailure() {
+                ToastUtils.showLong("请输入正确的数值");
+            }
+        });
         //图片的展开和关闭
         tv_Unfold.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (tv_Unfold.getTag()==null || tv_Unfold.getTag().equals("1")){ //展开
-                    img_recycler.setVisibility(View.VISIBLE);
-                    tv_Unfold.setText("关闭");
-                    tv_Unfold.setTag("2");
-                }  else if (tv_Unfold.getTag().equals("2")){  //关闭
                     img_recycler.setVisibility(View.GONE);
                     tv_Unfold.setText("展开");
+                    tv_Unfold.setTag("2");
+                }  else if (tv_Unfold.getTag().equals("2")){  //关闭
+                    img_recycler.setVisibility(View.VISIBLE);
+                    tv_Unfold.setText("关闭");
                     tv_Unfold.setTag("1");
                 } else if (tv_Unfold.getTag().equals("3")){
                     tv_Unfold.setText("关闭");
-                    tv_Unfold.setTag("2");
+                    tv_Unfold.setTag("1");
                     isDeletePic=false;
                     p.getImage(ht_projectId, _mActivity, number, ht_id);
                 }
@@ -579,6 +581,8 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
         if (totalSize == (uploadSuccessSize + uploadFailSize)) {
             if (totalSize == uploadSuccessSize) {
                 fileList_Call.clear();
+                uPAudioPath=null;
+                textMassage=null;
                 //当前题目下数据上传成功
                 //执行回调
                 for (int i = 0; i < list.size(); i++) {
@@ -671,6 +675,9 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
                     }
                 }
             }
+        } else {
+            map.put("anwser", "");
+            map.put("description", "");
         }
         map.put("audioCount", recorderPath != null ? 0 : 1);
         map.put("audio", recorderPath != null ? FileIOUtils.getE(recorderPath, "/") : "");
@@ -679,12 +686,24 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
         StringBuffer stringBuffer = new StringBuffer();
         for (int i = 0; i < picList.size(); i++) {
             if (picList.size() == 1) {
-                stringBuffer.append(FileIOUtils.getE(picList.get(i), "/"));
+                stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg")?picList.get(i)+"_"+i+".jpg"
+                        :FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png")?picList.get(i)+"_"+i+".png"
+                        :FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif")?picList.get(i)+"_"+i+".gif"
+                        :FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg")?picList.get(i)+"_"+i+".jpeg"
+                        :picList.get(i)+"_"+i+".png");
             } else {
                 if (i == (picList.size() - 1)) {
-                    stringBuffer.append(FileIOUtils.getE(picList.get(i), "/"));
+                    stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg")?picList.get(i)+"_"+i+".jpg"
+                            :FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png")?picList.get(i)+"_"+i+".png"
+                            :FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif")?picList.get(i)+"_"+i+".gif"
+                            :FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg")?picList.get(i)+"_"+i+".jpeg"
+                            :picList.get(i)+"_"+i+".png");
                 } else {
-                    stringBuffer.append(FileIOUtils.getE(picList.get(i), "/") + ";");
+                    stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg")?picList.get(i)+"_"+i+".jpg"+";"
+                            :FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png")?picList.get(i)+"_"+i+".png"+";"
+                            :FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif")?picList.get(i)+"_"+i+".gif"+";"
+                            :FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg")?picList.get(i)+"_"+i+".jpeg"+";"
+                            :picList.get(i)+"_"+i+".png"+";");
                 }
             }
         }
@@ -873,7 +892,6 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
                     protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
                         List<MediaBean> mediaBeanList = imageMultipleResultEvent.getResult();
                         if (mediaBeanList != null && mediaBeanList.size() > 0) {
-                            KLog.d(mediaBeanList.get(0).getOriginalPath());
                             p.SaveImages(mediaBeanList, ht_projectId, number, ht_id);
                         }
                     }

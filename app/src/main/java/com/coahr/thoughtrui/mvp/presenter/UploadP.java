@@ -25,7 +25,7 @@ import javax.inject.Inject;
  * on 2018/11/12
  * on 17:10
  */
-public class UploadP extends BasePresenter<UploadC.View,UploadC.Model> implements UploadC.Presenter {
+public class UploadP extends BasePresenter<UploadC.View, UploadC.Model> implements UploadC.Presenter {
     @Inject
     public UploadP(UploadFragment mview, UploadM mModel) {
         super(mview, mModel);
@@ -62,14 +62,14 @@ public class UploadP extends BasePresenter<UploadC.View,UploadC.Model> implement
     @Override
     public void getSubjectListSuccess(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position) {
         if (getView() != null) {
-            getView().getSubjectListSuccess(subjectsDBList,projectsDBS,project_position);
+            getView().getSubjectListSuccess(subjectsDBList, projectsDBS, project_position);
         }
     }
 
     @Override
-    public void getSubjectListFailure(String failure,List<ProjectsDB> projectsDBS,int project_position) {
+    public void getSubjectListFailure(String failure, List<ProjectsDB> projectsDBS, int project_position) {
         if (getView() != null) {
-            getView().getSubjectListFailure(failure,projectsDBS,project_position);
+            getView().getSubjectListFailure(failure, projectsDBS, project_position);
         }
     }
 
@@ -103,9 +103,9 @@ public class UploadP extends BasePresenter<UploadC.View,UploadC.Model> implement
     }
 
     @Override
-    public void startUpLoad(OSSClient ossClient,List<String> list, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
+    public void startUpLoad(OSSClient ossClient, List<String> list, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
         if (mModle != null) {
-            mModle.startUpLoad(ossClient,list, subjectsDBList, projectsDBS, project_position, subject_position);
+            mModle.startUpLoad(ossClient, list, subjectsDBList, projectsDBS, project_position, subject_position);
         }
     }
 
@@ -115,6 +115,14 @@ public class UploadP extends BasePresenter<UploadC.View,UploadC.Model> implement
             getView().UploadCallBack(list, subjectsDBList, projectsDBS, project_position, subject_position, uploadSuccessSize, uploadFailSize, totalSize);
         }
     }
+
+    @Override
+    public void Pic_Compulsory(List<String> list, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
+        if (getView() != null) {
+            getView().Pic_Compulsory(list, subjectsDBList, projectsDBS, project_position, subject_position);
+        }
+    }
+
 
     @Override
     public void CallBackServer(Map<String, Object> map, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
@@ -138,9 +146,9 @@ public class UploadP extends BasePresenter<UploadC.View,UploadC.Model> implement
     }
 
     @Override
-    public void UpDataDb(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position,boolean success) {
+    public void UpDataDb(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position, boolean success) {
         if (mModle != null) {
-            mModle.UpDataDb(subjectsDBList, projectsDBS, project_position, subject_position,success);
+            mModle.UpDataDb(subjectsDBList, projectsDBS, project_position, subject_position, success);
         }
     }
 

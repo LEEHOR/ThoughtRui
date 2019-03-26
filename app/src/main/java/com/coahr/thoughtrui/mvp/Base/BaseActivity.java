@@ -11,7 +11,6 @@ import com.coahr.thoughtrui.Utils.KeyBoardUtils;
 import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.commom.ActivityManager;
 import com.coahr.thoughtrui.commom.Constants;
-import com.coahr.thoughtrui.mvp.view.TimeService.TimeTaskReceiver;
 import com.coahr.thoughtrui.widgets.BroadcastReceiver.NetWorkReceiver;
 import com.gyf.barlibrary.ImmersionBar;
 import com.socks.library.KLog;

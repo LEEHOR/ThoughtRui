@@ -59,16 +59,14 @@ public class FileIOUtils {
                         deleteFile(oldfile);
                     }
                     KLog.d("截取的地址", substring);
-                    ToastUtils.showShort( name + "保存完成");
                     return true;
                 } else {
-                    ToastUtils.showShort( name + "文件已存在");
                     return true;
                 }
             }
         } catch (Exception e) {
-            ToastUtils.showLong(e.toString());
             e.printStackTrace();
+            KLog.e(e.toString());
             return  false;
         }
         return false;

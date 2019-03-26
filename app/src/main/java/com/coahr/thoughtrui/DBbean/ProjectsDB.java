@@ -29,6 +29,7 @@ public class ProjectsDB extends DataSupport {
     private String progress;
     private String  Cname;
     private String Pname;
+    private String Dname;
     private String grade;
     private String address;
     private String location;
@@ -58,12 +59,13 @@ public class ProjectsDB extends DataSupport {
     public ProjectsDB() {
     }
 
-    public ProjectsDB(int id, String pid, String progress, String cname, String pname, String grade, String address, String location, String code, int completeStatus, double latitude, double longitude, long modifyTime, int pUploadStatus, int isComplete, String stage, String notice, long downloadTime, int isDeletes, String manager, String sale_code, String service_code, long uploadTime, UsersDB user, List<SubjectsDB> subjectsDBList) {
+    public ProjectsDB(int id, String pid, String progress, String cname, String pname, String dname, String grade, String address, String location, String code, int completeStatus, double latitude, double longitude, long modifyTime, int pUploadStatus, int isComplete, String stage, String notice, long downloadTime, int isDeletes, String manager, String sale_code, String service_code, long uploadTime, UsersDB user, List<SubjectsDB> subjectsDBList) {
         this.id = id;
         Pid = pid;
         this.progress = progress;
         Cname = cname;
         Pname = pname;
+        Dname = dname;
         this.grade = grade;
         this.address = address;
         this.location = location;
@@ -281,5 +283,13 @@ public class ProjectsDB extends DataSupport {
 
     public void setUploadTime(long uploadTime) {
         this.uploadTime = uploadTime;
+    }
+
+    public String getDname() {
+        return Dname;
+    }
+
+    public void setDname(String dname) {
+        Dname = dname;
     }
 }

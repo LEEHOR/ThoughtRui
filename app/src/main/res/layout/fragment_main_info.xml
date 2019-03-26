@@ -36,7 +36,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
+            android:gravity="top"
             android:orientation="vertical"
             android:paddingLeft="@dimen/dp_20"
             android:paddingRight="@dimen/dp_20">
@@ -46,13 +46,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dp_30"
                 android:layout_marginRight="@dimen/dp_30"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/bg_blue_rectangle">
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/card_start"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     app:cardBackgroundColor="#3A80FF"
                     app:cardCornerRadius="@dimen/dp_5">
 

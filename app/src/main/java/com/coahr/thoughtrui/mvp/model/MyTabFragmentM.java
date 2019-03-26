@@ -143,10 +143,7 @@ public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implemen
             ProjectsDB projectsDB=new ProjectsDB();
            // projectsDB.setDownloadTime(listBean.getDownloadTime());
             projectsDB.setCompleteStatus(listBean.getCompleteStatus());
-            projectsDB.setCname(listBean.getCname());
             projectsDB.setProgress(listBean.getProgress());
-            projectsDB.setSale_code(listBean.getSale_code());
-            projectsDB.setService_code(listBean.getService_code());
             if (usersDBS != null && usersDBS.size()>0) {
                 projectsDB.setUser(usersDBS.get(0));
             }
@@ -167,14 +164,14 @@ public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implemen
            // projectsDB.setDownloadTime(listBean.getDownloadTime());
             projectsDB.setCompleteStatus(listBean.getCompleteStatus());
             projectsDB.setProgress(listBean.getProgress());
-           // projectsDB.setdName(listBean.getDname());
+            projectsDB.setDname(listBean.getDname());
             projectsDB.setLatitude(listBean.getLatitude());
             projectsDB.setLocation(listBean.getLocation());
             projectsDB.setLongitude(listBean.getLongitude());
             projectsDB.setModifyTime(listBean.getModifyTime());
             projectsDB.setNotice(listBean.getNotice());
           //  projectsDB.setEndTime(listBean.getEndTime());
-           // projectsDB.setManager(listBean.getManager());
+            projectsDB.setManager(listBean.getManager());
             projectsDB.setService_code(listBean.getService_code());
             projectsDB.setSale_code(listBean.getSale_code());
             projectsDB.setIsComplete(0);

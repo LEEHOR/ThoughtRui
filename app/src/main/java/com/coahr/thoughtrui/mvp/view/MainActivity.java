@@ -5,16 +5,21 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.baidu.location.BDLocation;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.ActivityManagerUtils;
@@ -52,6 +57,7 @@ import javax.inject.Inject;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import butterknife.BindView;
 import me.yokeyword.fragmentation.SupportFragment;
+import omrecorder.PullableSource;
 
 public class MainActivity extends BaseActivity<MainActivityC.Presenter> implements MainActivityC.View {
 
@@ -66,7 +72,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     private static final long INTERVAL_TIME = 2000;
     private String sessionId;
     private int page = 0; //当前显示页面
-    private static int TIMES = 60 * 1000 * 20;
+    private static int TIMES = 60 * 1000 * 15;
     private static int SEND_MESSAGE = 1;
     private Handler mHandker = new Handler() {
         @Override
@@ -75,7 +81,6 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
 
         }
     };
-    private TelephonyManager tm;
 
     @Override
     public MainActivityC.Presenter getPresenter() {
@@ -132,8 +137,6 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
 
     @Override
     public void initView() {
-
-        tm = (TelephonyManager) BaseApplication.mContext.getSystemService(Context.TELEPHONY_SERVICE);
         getLocationPermission();
         myBottomNavigation.setOnTabPositionListener(new MyBottomNavigation.OnTabPositionListener() {
             @Override
@@ -185,33 +188,49 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     private void getLocationPermission() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            RequestPermissionUtils.requestPermission(this, new OnRequestPermissionListener() {
+            RequestPermissionUtils.requestPermission(MainActivity.this, new OnRequestPermissionListener() {
                 @SuppressLint("MissingPermission")
                 @Override
                 public void PermissionSuccess(List<String> permissions) {
 
-                    String deviceId = tm.getDeviceId();
-                    Constants.devicestoken=deviceId;
-                    PreferenceUtils.setPrefString(BaseApplication.mContext,Constants.devicestoken_key,deviceId);
                 }
 
                 @Override
                 public void PermissionFail(List<String> permissions) {
                     Toast.makeText(MainActivity.this, "获取权限失败", Toast.LENGTH_LONG).show();
+                    new MaterialDialog.Builder(BaseApplication.mContext)
+                            .title("获取权限失败")
+                            .content("我们需要当前权限")
+                            .negativeText("取消")
+                            .positiveText("确认")
+                            .cancelable(false)
+                            .canceledOnTouchOutside(false)
+                            .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                                }
+                            })
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    Uri packageURI = Uri.parse("package:" + "com.coahr.thoughtrui");
+                                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageURI);
+                                    startActivity(intent);
+                                }
+                            })
+                            .build().show();
+
                 }
 
                 @Override
                 public void PermissionHave() {
-                    String deviceId = tm.getDeviceId();
-                    Constants.devicestoken=deviceId;
-                    PreferenceUtils.setPrefString(BaseApplication.mContext,Constants.devicestoken_key,deviceId);
+
                 }
             }, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE);
 
         } else {
-            String deviceId = tm.getDeviceId();
-            Constants.devicestoken=deviceId;
-            PreferenceUtils.setPrefString(BaseApplication.mContext,Constants.devicestoken_key,deviceId);
+
         }
     }
 

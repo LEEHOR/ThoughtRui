@@ -464,7 +464,6 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
         if (haslogin()) {
             Map<String, Object> map = new HashMap<>();
             map.put("sessionId", Constants.sessionId);
-            map.put("token", Constants.devicestoken);
             p.getHomeData(map);
         } else {
             isLoad = false;

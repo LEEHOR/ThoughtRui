@@ -312,6 +312,8 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
             if (totalSize == uploadSuccessSize) {  //上传成功
                 //回调服务器
                 up_picList.clear();
+                uPAudioPath = null;
+                textMassage = null;
                 for (int i = 0; i < list.size(); i++) {
                     if (list.get(i).endsWith(".wav") || list.get(i).endsWith(".arm") || list.get(i).endsWith(".mp3")) {
                         uPAudioPath = list.get(i);
@@ -327,6 +329,16 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                 p.UpDataDb(subjectsDBList, projectsDBS, project_position, subject_position, false);
             }
         }
+    }
+
+    @Override
+    public void Pic_Compulsory(List<String> list, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
+        up_picList.clear();
+        uPAudioPath = null;
+        textMassage = null;
+
+        callbackForServer(projectsDBS, subjectsDBList, up_picList, textMassage, uPAudioPath, project_position, subject_position);
+
     }
 
     @Override
@@ -602,24 +614,45 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                     }
                 }
             }
+        } else {
+            map.put("answer", "");
+            map.put("description", "");
         }
         map.put("audioCount", audioPath != null ? 1 : 0);
         map.put("audio", audioPath != null ? getName(audioPath, "/") : "");
         map.put("pictureCount", picList.size());
-
-        StringBuffer stringBuffer = new StringBuffer();
-        for (int i = 0; i < picList.size(); i++) {
-            if (picList.size() == 1) {
-                stringBuffer.append(getName(picList.get(i), "/"));
-            } else {
-                if (i == (picList.size() - 1)) {
-                    stringBuffer.append(getName(picList.get(i), "/"));
+        if (picList != null && picList.size() > 0) {
+            StringBuffer stringBuffer = new StringBuffer();
+            for (int i = 0; i < picList.size(); i++) {
+                if (picList.size() == 1) {
+                    stringBuffer.append(getName(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB.get(subject_position) + "_" + i + ".jpg"
+                            : getName(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB.get(subject_position) + "_" + i + ".png"
+                            : getName(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB.get(subject_position) + "_" + i + ".gif"
+                            : getName(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB.get(subject_position) + "_" + i + ".jpeg"
+                            : subjectsDB.get(subject_position) + "_" + i + ".png");
                 } else {
-                    stringBuffer.append(getName(picList.get(i), "/") + ";");
+                    if (i == (picList.size() - 1)) {
+                        stringBuffer.append(getName(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB.get(subject_position) + "_" + i + ".jpg"
+                                : getName(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB.get(subject_position) + "_" + i + ".png"
+                                : getName(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB.get(subject_position) + "_" + i + ".gif"
+                                : getName(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB.get(subject_position) + "_" + i + ".jpeg"
+                                : subjectsDB.get(subject_position) + "_" + i + ".png");
+                    } else {
+                        stringBuffer.append(getName(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB.get(subject_position) + "_" + i + ".jpg" + ";"
+                                : getName(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB.get(subject_position) + "_" + i + ".png" + ";"
+                                : getName(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB.get(subject_position) + "_" + i + ".gif" + ";"
+                                : getName(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB.get(subject_position) + "_" + i + ".jpeg" + ";"
+                                : subjectsDB.get(subject_position) + "_" + i + ".png" + ";");
+                    }
                 }
+                map.put("picture", stringBuffer.toString());
+                map.put("pictureCount", picList.size());
             }
+        } else {
+            map.put("picture", "");
+            map.put("pictureCount", 0);
         }
-        map.put("picture", stringBuffer.toString());
+
         mHandler.post(new Runnable() {
             @Override
             public void run() {

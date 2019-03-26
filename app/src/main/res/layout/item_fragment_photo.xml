@@ -6,13 +6,13 @@
     <ImageView
         android:layout_gravity="center"
         android:id="@+id/photo_image"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
     <ImageView
         android:id="@+id/photo_image_de"
         android:visibility="gone"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:src="@mipmap/shanchu"
         android:layout_gravity="end|top"
         android:layout_width="@dimen/dp_20"

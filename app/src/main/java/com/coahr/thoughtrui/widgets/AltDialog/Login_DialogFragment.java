@@ -1,7 +1,14 @@
 package com.coahr.thoughtrui.widgets.AltDialog;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -11,10 +18,15 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.coahr.thoughtrui.DBbean.UsersDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
+import com.coahr.thoughtrui.Utils.Permission.OnRequestPermissionListener;
+import com.coahr.thoughtrui.Utils.Permission.RequestPermissionUtils;
 import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.Utils.ScreenUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
@@ -25,6 +37,7 @@ import com.coahr.thoughtrui.mvp.constract.LoginFragmentC;
 import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_LoginSuccess;
 import com.coahr.thoughtrui.mvp.model.Bean.LoginBean;
 import com.coahr.thoughtrui.mvp.presenter.LoginFragmentP;
+import com.coahr.thoughtrui.mvp.view.MainActivity;
 import com.socks.library.KLog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -32,9 +45,11 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.inject.Inject;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.fragment.app.DialogFragment;
 import butterknife.BindView;
@@ -56,6 +71,17 @@ public class Login_DialogFragment extends BaseDialogFragment<LoginFragmentC.Pres
     Button loginBtn;
     private loginListener loginListener;
     private int pager_number;
+    private TelephonyManager telephonyManager;
+    //随机数
+    private static final char[] CHARS = {
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+            'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+    };
+    private static final int DEFAULT_CODE_LENGTH = 15;
+
     @Override
     public LoginFragmentC.Presenter getPresenter() {
         return p;
@@ -63,13 +89,14 @@ public class Login_DialogFragment extends BaseDialogFragment<LoginFragmentC.Pres
 
     /**
      * 页码
+     *
      * @param pager_number
      * @return
      */
     public static Login_DialogFragment newInstance(int pager_number) {
         Login_DialogFragment login_dialogFragment = new Login_DialogFragment();
-        Bundle bundle=new Bundle();
-        bundle.putInt("pager_number",pager_number);
+        Bundle bundle = new Bundle();
+        bundle.putInt("pager_number", pager_number);
         login_dialogFragment.setArguments(bundle);
         return login_dialogFragment;
     }
@@ -81,6 +108,15 @@ public class Login_DialogFragment extends BaseDialogFragment<LoginFragmentC.Pres
 
     @Override
     public void initView() {
+        if (PreferenceUtils.getPrefString(BaseApplication.mContext, Constants.devicestoken_key, null) ==null) {
+            StringBuilder buffer = new StringBuilder();
+            Random random = new Random();
+            for (int i = 0; i < DEFAULT_CODE_LENGTH; i++) {
+                buffer.append(CHARS[random.nextInt(CHARS.length)]);
+            }
+            Constants.devicestoken=buffer.toString();
+            PreferenceUtils.setPrefString(BaseApplication.mContext,Constants.devicestoken_key,buffer.toString());
+        }
         this.getDialog().setCancelable(false);
         this.getDialog().setCanceledOnTouchOutside(false);
         this.getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
@@ -106,11 +142,11 @@ public class Login_DialogFragment extends BaseDialogFragment<LoginFragmentC.Pres
                     return;
                 }
 
-                KLog.d("登录中",user_account.getText().toString(),user_password.getText().toString());
+                KLog.d("登录中", user_account.getText().toString(), user_password.getText().toString(),Constants.devicestoken);
                 Map<String, Object> map = new HashMap<>();
                 map.put("username", user_account.getText().toString());
                 map.put("password", user_password.getText().toString());
-                map.put("token",Constants.devicestoken);
+                map.put("token", Constants.devicestoken);
                 p.Login(map);
             }
         });
@@ -156,10 +192,10 @@ public class Login_DialogFragment extends BaseDialogFragment<LoginFragmentC.Pres
         }
         Constants.sessionId = loginBean.getData().getSessionId();
         Constants.user_name = loginBean.getData().getName();
-        Constants.user_type=loginBean.getData().getType();
+        Constants.user_type = loginBean.getData().getType();
         PreferenceUtils.setPrefString(BaseApplication.mContext, Constants.sessionId_key, loginBean.getData().getSessionId());
         PreferenceUtils.setPrefString(BaseApplication.mContext, Constants.user_key, loginBean.getData().getName());
-        PreferenceUtils.setPrefInt(BaseApplication.mContext,Constants.user_type_key,loginBean.getData().getType());
+        PreferenceUtils.setPrefInt(BaseApplication.mContext, Constants.user_type_key, loginBean.getData().getType());
        /* if (pager_number== Constants.MyTabFragmentCode) {
 
         } else if (pager_number==Constants.MainActivityCode){
@@ -180,7 +216,7 @@ public class Login_DialogFragment extends BaseDialogFragment<LoginFragmentC.Pres
 
     @Override
     public void onLoginFailure(String failure) {
-        KLog.d("错误",failure);
+        KLog.d("错误", failure);
         ToastUtils.showLong(failure);
     }
 
@@ -195,7 +231,7 @@ public class Login_DialogFragment extends BaseDialogFragment<LoginFragmentC.Pres
     /**
      * 清楚当前账户信息
      */
-    private void clearAccount(){
+    private void clearAccount() {
         Constants.wan_ka = null;
         Constants.zao_ka = null;
         Constants.DbProjectId = null;

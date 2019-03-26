@@ -40,8 +40,8 @@ public interface PagerFragment_aC {
         void DeleteImageSuccess(String Massage);
         void DeleteImageFailure(String Massage);
 
-        void saveAnswersSuccess();
-        void saveAnswersFailure();
+        void saveAnswersSuccess(int type);
+        void saveAnswersFailure(int type);
 
         void SaveImagesSuccess();
         void SaveImagesFailure();
@@ -56,10 +56,15 @@ public interface PagerFragment_aC {
 
         void startUploadCallBack(List<String> list,int uploadSuccessSize,int uploadFailSize,int totalSize,ProjectsDB projectsDB,SubjectsDB subjectsDB);
 
+        void Pic_CompulsoryC(List<String> list,ProjectsDB projectsDB,SubjectsDB subjectsDB);
+        void Pic_CompulsoryD(List<String> list,ProjectsDB projectsDB,SubjectsDB subjectsDB);
+
         void showProgress(int currentSize, int totalSize,String info);
 
         void CallBackSuccess(ProjectsDB projectsDB,SubjectsDB subjectsDB);
         void CallBackFailure(ProjectsDB projectsDB,SubjectsDB subjectsDB);
+
+
 
         void UpDataDbSuccess();
         void UpDataDbFailure(String fail);
@@ -84,9 +89,9 @@ public interface PagerFragment_aC {
          void getAnswerSuccess(String Massage);
         void getAnswerFailure();
 
-         void saveAnswers(String answers, String remark,String ht_ProjectId,int number,String ht_id);
-         void saveAnswersSuccess();
-         void saveAnswersFailure();
+         void saveAnswers(String answers, String remark,String ht_ProjectId,int number,String ht_id,int type);
+         void saveAnswersSuccess(int type);
+         void saveAnswersFailure(int type);
 
          void SaveImages(List<MediaBean> mediaBeanList,String ht_ProjectId,int number,String ht_id);
          void SaveImagesSuccess();
@@ -104,7 +109,11 @@ public interface PagerFragment_aC {
          //开始上传
          void startUpload(OSSClient ossClient, List<String> list, ProjectsDB projectsDB,SubjectsDB subjectsDB);
          void startUploadCallBack(List<String> list,int uploadSuccessSize,int uploadFailSize,int totalSize,ProjectsDB projectsDB,SubjectsDB subjectsDB);
+
+         void Pic_CompulsoryC(List<String> list,ProjectsDB projectsDB,SubjectsDB subjectsDB);
+         void Pic_CompulsoryD(List<String> list,ProjectsDB projectsDB,SubjectsDB subjectsDB);
          void showProgress(int currentSize, int totalSize,String info);
+
          //每题上传完成后的回调
          void CallBack(Map<String,Object> map, ProjectsDB projectsDB, SubjectsDB subjectsDB);
          void CallBackSuccess(ProjectsDB projectsDB,SubjectsDB subjectsDB);
@@ -130,7 +139,7 @@ public interface PagerFragment_aC {
 
          void DeleteImage(String deleteImagePath);
 
-         void saveAnswers(String answers, String remark,String ht_ProjectId,int number,String ht_id);
+         void saveAnswers(String answers, String remark,String ht_ProjectId,int number,String ht_id,int type);
 
          void SaveImages(List<MediaBean> mediaBeanList,String ht_ProjectId,int number,String ht_id);
 

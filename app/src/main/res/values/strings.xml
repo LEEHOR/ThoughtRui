@@ -1,7 +1,7 @@
 <resources>
 
     <string name="carsuper_exit">再按一次退出程序</string>
-    <string name="app_name">华晨雷诺检核系统</string>
+    <string name="app_name">RBJ掌上检核</string>
     <string name="recyclerview_item_foot">正在加载...</string>
     <string name="home">首页</string>
     <string name="upload">上传</string>

@@ -44,12 +44,11 @@ public class UpLoadAdapter extends BaseQuickAdapter<ProjectsDB, BaseViewHolder> 
     protected void convert(BaseViewHolder helper, final ProjectsDB item) {
         if (item != null) {
             helper.setText(R.id.up_tv_schedule, item.getProgress())
-                    .setText(R.id.f_type, Constants.user_type == 1 ? "[" + item.getSale_code() + "]"
-                            : Constants.user_type == 2 ? "[" + item.getService_code() + "]" : "[" + item.getSale_code() + "]")
+                    .setText(R.id.f_type, item.getSale_code() !=null?"["+item.getSale_code()+"]":"["+item.getService_code()+"]")
                     .setText(R.id.up_tv_time, item.getPname())
                     .setText(R.id.up_tv_project_code, item.getCode())
                     .setText(R.id.up_tv_project_name, item.getPname())
-                    // .setText(R.id.up_tv_project_company,item.getcName())
+                     .setText(R.id.up_tv_project_company,item.getDname())
                     .setText(R.id.up_tv_project_address, item.getAddress() + item.getLocation())
                     .setText(R.id.up_tv_update_time, TimeUtils.getStingYMDHM(item.getModifyTime()));
             String itemDate = getItemDate(item.getPid());
@@ -139,7 +138,7 @@ public class UpLoadAdapter extends BaseQuickAdapter<ProjectsDB, BaseViewHolder> 
                         List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + id + "/" + subjectsDBS.get(i).getNumber() + "_" + subjectsDBS.get(i).getHt_id());
                         if (fileList != null && fileList.size() > 0) {
                             for (int j = 0; j < fileList.size(); j++) {
-                                if (!fileList.get(i).endsWith("txt")) {
+                                if (!fileList.get(j).endsWith("txt")) {
                                     dataSize++;
                                 }
                             }

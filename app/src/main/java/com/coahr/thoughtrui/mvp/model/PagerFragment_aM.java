@@ -34,6 +34,7 @@ import com.coahr.thoughtrui.mvp.model.Bean.UpLoadCallBack;
 import com.socks.library.KLog;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +54,7 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
     private OSSClient ossClient;
     private int update1;
     private int update;
+    private List<String> picList = new ArrayList<>();
 
     @Inject
     public PagerFragment_aM() {
@@ -62,7 +64,7 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
     private int uploadSuccess, uploadFailure;
 
     @Override
-    public void getSubject( final String ht_ProjectId, Activity activity, int number, String ht_id) {
+    public void getSubject(final String ht_ProjectId, Activity activity, int number, String ht_id) {
         List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectByTogether_Where(SubjectsDB.class, "ht_id=?", ht_id);
         if (subjectsDBS != null && subjectsDBS.size() > 0) {
             // getImage(ht_ProjectId,activity,number,ht_id);
@@ -113,12 +115,12 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
     }
 
     @Override
-    public void saveAnswers(String answers, String remark, String ht_ProjectId, int number, String ht_id) {
+    public void saveAnswers(String answers, String remark, String ht_ProjectId, int number, String ht_id, int type) {
         boolean b = SaveOrGetAnswers.saveToFile(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id + "/", "AnswerAndRemark.txt", "1答案:" + answers + "&2备注:" + remark, false);
         if (b) {
-            getPresenter().saveAnswersSuccess();
+            getPresenter().saveAnswersSuccess(type);
         } else {
-            getPresenter().saveAnswersFailure();
+            getPresenter().saveAnswersFailure(type);
         }
     }
 
@@ -159,22 +161,45 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
 
     @Override
     public void startUpload(OSSClient ossClient, List<String> list, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
-
+        picList.clear();
+        String audioPath = null;
+        int CountSize = 0;
         if (list != null && list.size() > 0) {
-            int CountSize = 0;
             for (int i = 0; i < list.size(); i++) {
-                if (!list.get(i).endsWith("txt")) {
+                if (list.get(i).toLowerCase().endsWith("png") || list.get(i).toLowerCase().endsWith("jpeg")
+                        || list.get(i).toLowerCase().endsWith("jpg") || list.get(i).toLowerCase().endsWith("gif")) {
                     CountSize++;
+                    picList.add(list.get(i));
+                }
+                if (list.get(i).toLowerCase().endsWith("wav") || list.get(i).toLowerCase().endsWith(".amr")
+                        || list.get(i).toLowerCase().endsWith(".aac")) {
+                    CountSize++;
+                    audioPath = list.get(i);
+                }
+
+            }
+
+            if (audioPath != null) {
+                OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
+                        audioPath, CountSize, projectsDB, subjectsDB, list, 1, 0);
+            }
+
+            if (picList != null && picList.size() > 0) {
+                for (int i = 0; i < picList.size(); i++) {
+                    OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
+                            picList.get(i), CountSize, projectsDB, subjectsDB, list, 2, i + 1);
                 }
             }
 
-            for (int i = 0; i < list.size(); i++) {
-                if (!list.get(i).endsWith("txt")) {
-                    OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
-                            list.get(i), CountSize, projectsDB, subjectsDB, list);
+            if (audioPath == null && (picList == null || picList.size() == 0)) {
+                if (getPresenter() != null) {
+                    getPresenter().Pic_CompulsoryC(list, projectsDB, subjectsDB);
                 }
             }
+
+
         }
+
     }
 
     @Override
@@ -235,7 +260,7 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
      * @param localFile 文件
      * @param count     总大小
      */
-    public OSSAsyncTask asyncPutImage(OSS oss, String localFile, final int count, final ProjectsDB projectsDB, final SubjectsDB subjectsDB, final List<String> list) {
+    public OSSAsyncTask asyncPutImage(OSS oss, String localFile, final int count, final ProjectsDB projectsDB, final SubjectsDB subjectsDB, final List<String> list, int type, int picPosition) {
         if (localFile.equals("")) {
             return null;
         }
@@ -245,10 +270,16 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
         }
         String name = getName(localFile, "/");
         String object = null;
-        if (localFile.endsWith("wav")) {
-            object = projectsDB.getPid() + "/audios/" + name;
+        if (type == 1) {
+            String audioName = getName(localFile, "/");
+            object = projectsDB.getPid() + "/audios/" + audioName;
         } else {
-            object = projectsDB.getPid() + "/pictures/" + subjectsDB.getNumber() + "/" + name;
+            String picName = getName(localFile, ".").toLowerCase().equals("png") ? subjectsDB.getNumber() + "_" + picPosition + ".png"
+                    : getName(localFile, ".").toLowerCase().equals("jpeg") ? subjectsDB.getNumber() + "_" + picPosition + ".jpeg"
+                    : getName(localFile, ".").toLowerCase().equals("jpg") ? subjectsDB.getNumber() + "_" + picPosition + ".jpg"
+                    : getName(localFile, ".").toLowerCase().equals("gif") ? subjectsDB.getNumber() + "_" + picPosition + ".gif"
+                    : subjectsDB.getNumber() + "_" + picPosition + ".png";
+            object = projectsDB.getPid() + "/pictures/" + subjectsDB.getNumber() + "/" + picName;
         }
         PutObjectRequest put = new PutObjectRequest(Constants.bucket, object, localFile);
         put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {

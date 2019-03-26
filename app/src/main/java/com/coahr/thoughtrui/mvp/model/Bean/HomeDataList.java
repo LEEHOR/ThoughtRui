@@ -110,6 +110,7 @@ public class HomeDataList {
             private String sale_code;
             private String service_code;
             private long startTime;
+            private String manager;
 
             public String getCname() {
                 return Cname;
@@ -245,6 +246,14 @@ public class HomeDataList {
 
             public void setStartTime(long startTime) {
                 this.startTime = startTime;
+            }
+
+            public String getManager() {
+                return manager;
+            }
+
+            public void setManager(String manager) {
+                this.manager = manager;
             }
         }
 
@@ -286,6 +295,7 @@ public class HomeDataList {
             private String sale_code;
             private String service_code;
             private long startTime;
+            private String manager;
 
             public String getCname() {
                 return Cname;
@@ -421,6 +431,14 @@ public class HomeDataList {
 
             public void setStartTime(long startTime) {
                 this.startTime = startTime;
+            }
+
+            public String getManager() {
+                return manager;
+            }
+
+            public void setManager(String manager) {
+                this.manager = manager;
             }
         }
     }

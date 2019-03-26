@@ -90,7 +90,6 @@ public class BaseModel<P extends BaseContract.Presenter> implements BaseContract
                             getPresenter().dismissLoading();
                         }
                         e.onNext(response.body());
-                        KLog.d("RESPON",response.body().toString());
                     }
 
                     @Override

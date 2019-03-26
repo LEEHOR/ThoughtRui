@@ -26,16 +26,16 @@ import cn.finalteam.rxgalleryfinal.bean.MediaBean;
  * on 2018/11/15
  * on 23:12
  */
-public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerFragment_aC.Model> implements PagerFragment_aC.Presenter {
+public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View, PagerFragment_aC.Model> implements PagerFragment_aC.Presenter {
     @Inject
     public PagerFragment_aP(PagerFragment_a mview, PagerFragment_aM mModel) {
         super(mview, mModel);
     }
 
     @Override
-    public void getSubject(String DbProjectId, Activity activity,int number,String ht_id) {
+    public void getSubject(String DbProjectId, Activity activity, int number, String ht_id) {
         if (mModle != null) {
-            mModle.getSubject(DbProjectId,activity,number,ht_id);
+            mModle.getSubject(DbProjectId, activity, number, ht_id);
         }
     }
 
@@ -54,9 +54,9 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
     }
 
     @Override
-    public void getImage(String ht_ProjectId,Activity activity,int number,String ht_id) {
+    public void getImage(String ht_ProjectId, Activity activity, int number, String ht_id) {
         if (mModle != null) {
-            mModle.getImage(ht_ProjectId,activity, number, ht_id);
+            mModle.getImage(ht_ProjectId, activity, number, ht_id);
         }
     }
 
@@ -96,9 +96,9 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
     }
 
     @Override
-    public void getAnswer(String ht_ProjectId,Activity activity,int number,String ht_id) {
+    public void getAnswer(String ht_ProjectId, Activity activity, int number, String ht_id) {
         if (mModle != null) {
-            mModle.getAnswer(ht_ProjectId,activity,number,ht_id);
+            mModle.getAnswer(ht_ProjectId, activity, number, ht_id);
         }
     }
 
@@ -117,30 +117,30 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
     }
 
     @Override
-    public void saveAnswers(String answers,String remark,String ht_ProjectId,int number,String ht_id) {
+    public void saveAnswers(String answers, String remark, String ht_ProjectId, int number, String ht_id, int type) {
         if (mModle != null) {
-            mModle.saveAnswers(answers,remark,ht_ProjectId,number,ht_id);
+            mModle.saveAnswers(answers, remark, ht_ProjectId, number, ht_id, type);
         }
     }
 
     @Override
-    public void saveAnswersSuccess() {
+    public void saveAnswersSuccess(int type) {
         if (getView() != null) {
-            getView().saveAnswersSuccess();
+            getView().saveAnswersSuccess(type);
         }
     }
 
     @Override
-    public void saveAnswersFailure() {
+    public void saveAnswersFailure(int type) {
         if (getView() != null) {
-            getView().saveAnswersFailure();
+            getView().saveAnswersFailure(type);
         }
     }
 
     @Override
-    public void SaveImages(List<MediaBean> mediaBeanList,String ht_ProjectId,int number,String ht_id) {
+    public void SaveImages(List<MediaBean> mediaBeanList, String ht_ProjectId, int number, String ht_id) {
         if (mModle != null) {
-            mModle.SaveImages(mediaBeanList,ht_ProjectId,number,ht_id);
+            mModle.SaveImages(mediaBeanList, ht_ProjectId, number, ht_id);
         }
     }
 
@@ -159,9 +159,9 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
     }
 
     @Override
-    public void getAudio(String ht_ProjectId,Activity activity,int number,String ht_id) {
+    public void getAudio(String ht_ProjectId, Activity activity, int number, String ht_id) {
         if (mModle != null) {
-            mModle.getAudio(ht_ProjectId,activity,number,ht_id);
+            mModle.getAudio(ht_ProjectId, activity, number, ht_id);
         }
     }
 
@@ -182,14 +182,14 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
     @Override
     public void UpLoadFileList(String projectsDB_id, SubjectsDB subjectsDB) {
         if (mModle != null) {
-            mModle.UpLoadFileList(projectsDB_id,subjectsDB);
+            mModle.UpLoadFileList(projectsDB_id, subjectsDB);
         }
     }
 
     @Override
     public void getUpLoadFileListSuccess(List<String> list, String projectsDB_id, SubjectsDB subjectsDB) {
         if (getView() != null) {
-            getView().getUpLoadFileListSuccess(list,projectsDB_id,subjectsDB);
+            getView().getUpLoadFileListSuccess(list, projectsDB_id, subjectsDB);
         }
     }
 
@@ -203,14 +203,28 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
     @Override
     public void startUpload(OSSClient ossClient, List<String> list, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
         if (mModle != null) {
-            mModle.startUpload(ossClient,list,projectsDB,subjectsDB);
+            mModle.startUpload(ossClient, list, projectsDB, subjectsDB);
         }
     }
 
     @Override
-    public void startUploadCallBack(List<String> list, int uploadSuccessSize, int uploadFailSize, int totalSize,ProjectsDB projectsDB,SubjectsDB subjectsDB) {
+    public void startUploadCallBack(List<String> list, int uploadSuccessSize, int uploadFailSize, int totalSize, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
         if (getView() != null) {
-            getView().startUploadCallBack(list, uploadSuccessSize, uploadFailSize, totalSize,projectsDB,subjectsDB);
+            getView().startUploadCallBack(list, uploadSuccessSize, uploadFailSize, totalSize, projectsDB, subjectsDB);
+        }
+    }
+
+    @Override
+    public void Pic_CompulsoryC(List<String> list, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
+        if (getView() != null) {
+            getView().Pic_CompulsoryC(list, projectsDB, subjectsDB);
+        }
+    }
+
+    @Override
+    public void Pic_CompulsoryD(List<String> list, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
+        if (getView() != null) {
+            getView().Pic_CompulsoryD(list, projectsDB, subjectsDB);
         }
     }
 
@@ -222,16 +236,16 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
     }
 
     @Override
-    public void CallBack(Map<String, Object> map,ProjectsDB projectsDB, SubjectsDB subjectsDB) {
+    public void CallBack(Map<String, Object> map, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
         if (mModle != null) {
-            mModle.CallBack(map,projectsDB,subjectsDB);
+            mModle.CallBack(map, projectsDB, subjectsDB);
         }
     }
 
     @Override
     public void CallBackSuccess(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
         if (getView() != null) {
-            getView().CallBackSuccess(projectsDB,subjectsDB);
+            getView().CallBackSuccess(projectsDB, subjectsDB);
         }
     }
 
@@ -245,7 +259,7 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
     @Override
     public void UpDataDb(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
         if (mModle != null) {
-            mModle.UpDataDb(projectsDB,subjectsDB);
+            mModle.UpDataDb(projectsDB, subjectsDB);
         }
     }
 
@@ -262,4 +276,5 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View,PagerF
             getView().UpDataDbFailure(fail);
         }
     }
+
 }

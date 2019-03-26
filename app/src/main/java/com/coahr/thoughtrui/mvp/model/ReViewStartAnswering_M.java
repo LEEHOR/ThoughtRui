@@ -25,6 +25,7 @@ import com.coahr.thoughtrui.mvp.model.Bean.UpLoadCallBack;
 import com.socks.library.KLog;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +45,7 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
     private int uploadSuccess;
     private int update;
     private int update1;
+    private List<String> picList = new ArrayList<>();
 
     @Inject
     public ReViewStartAnswering_M() {
@@ -54,9 +56,9 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
     public void getSubject(String DbProjectId, String ht_ProjectId, Activity activity, int number, String ht_id) {
         List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectByTogether_Where(SubjectsDB.class, "ht_id=?", ht_id);
         if (subjectsDBS != null && subjectsDBS.size() > 0) {
-         //   getImage(ht_ProjectId, activity, number, ht_id);
-          //  getAnswer(ht_ProjectId, activity, number, ht_id);
-          //  getAudio(ht_ProjectId, activity, number, ht_id);
+            //   getImage(ht_ProjectId, activity, number, ht_id);
+            //  getAnswer(ht_ProjectId, activity, number, ht_id);
+            //  getAudio(ht_ProjectId, activity, number, ht_id);
             getPresenter().getSubjectSuccess(subjectsDBS.get(0));
         } else {
             getPresenter().getSubjectFailure("0");
@@ -113,20 +115,16 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
 
     @Override
     public void SaveImages(final List<MediaBean> mediaBeanList, final String ht_ProjectId, final int number, final String ht_id) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < mediaBeanList.size(); i++) {
-                    String originalPath = mediaBeanList.get(i).getOriginalPath();
-                    boolean b = FileIOUtils.copyFile(originalPath, Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id + "/", FileIOUtils.getE(originalPath, "/"));
-                    if (b) {
-                        getPresenter().SaveImagesSuccess();
-                    } else {
-                        getPresenter().SaveImagesFailure();
-                    }
-                }
+
+        for (int i = 0; i < mediaBeanList.size(); i++) {
+            String originalPath = mediaBeanList.get(i).getOriginalPath();
+            boolean b = FileIOUtils.copyFile(originalPath, Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id + "/", FileIOUtils.getE(originalPath, "/"));
+            if (b) {
+                getPresenter().SaveImagesSuccess();
+            } else {
+                getPresenter().SaveImagesFailure();
             }
-        }).start();
+        }
     }
 
     @Override
@@ -151,20 +149,36 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
 
     @Override
     public void startUpload(OSSClient ossClient, List<String> list, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
+        picList.clear();
+        String audioPath = null;
+        int CountSize = 0;
         if (list != null && list.size() > 0) {
-            int CountSize=0;
             for (int i = 0; i < list.size(); i++) {
-                if (!list.get(i).endsWith("txt")) {
+                if (list.get(i).toLowerCase().endsWith("png") || list.get(i).toLowerCase().endsWith("jpeg")
+                        || list.get(i).toLowerCase().endsWith("jpg") || list.get(i).toLowerCase().endsWith("gif")) {
                     CountSize++;
+                    picList.add(list.get(i));
+                } else if (list.get(i).toLowerCase().endsWith("wav") || list.get(i).toLowerCase().endsWith(".amr")
+                        || list.get(i).toLowerCase().endsWith(".aac")) {
+                    CountSize++;
+                    audioPath = list.get(i);
                 }
             }
 
-            for (int i = 0; i < list.size(); i++) {
-                if (!list.get(i).endsWith("txt")) {
+            if (audioPath != null) {
+                OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
+                        audioPath, CountSize, projectsDB, subjectsDB, list, 1, 0);
+            }
+
+            if (picList != null && picList.size() > 0)
+            {
+                for (int i = 0; i < picList.size(); i++)
+                {
                     OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
-                            list.get(i), CountSize, projectsDB, subjectsDB, list);
+                            picList.get(i), CountSize, projectsDB, subjectsDB, list, 2, i + 1);
                 }
             }
+
         }
     }
 
@@ -191,22 +205,22 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
         subjectsDB1.setsUploadStatus(1);
         update = subjectsDB1.update(subjectsDB.getId());
         List<SubjectsDB> subjectsDBList = projectsDB.getSubjectsDBList();
-        if (subjectsDBList != null && subjectsDBList.size()>0) {
-            int up_subjectSize=0;
+        if (subjectsDBList != null && subjectsDBList.size() > 0) {
+            int up_subjectSize = 0;
             for (int i = 0; i < subjectsDBList.size(); i++) {
-                if (subjectsDBList.get(i).getsUploadStatus()==1){
+                if (subjectsDBList.get(i).getsUploadStatus() == 1) {
                     up_subjectSize++;
                 }
             }
-            if (up_subjectSize==subjectsDBList.size()){
-                ProjectsDB projectsDB1=new ProjectsDB();
+            if (up_subjectSize == subjectsDBList.size()) {
+                ProjectsDB projectsDB1 = new ProjectsDB();
                 projectsDB1.setIsComplete(1);
                 projectsDB1.setpUploadStatus(1);
                 update1 = projectsDB1.update(projectsDB.getId());
             }
         }
 
-        if (update ==1 || update1 ==1){
+        if (update == 1 || update1 == 1) {
             if (getPresenter() != null) {
                 getPresenter().UpDataDbSuccess();
             }
@@ -224,7 +238,7 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
      * @param localFile 文件
      * @param count     总大小
      */
-    public OSSAsyncTask asyncPutImage(OSS oss, String localFile, final int count, final ProjectsDB projectsDB, final SubjectsDB subjectsDB, final List<String> list) {
+    public OSSAsyncTask asyncPutImage(OSS oss, String localFile, final int count, final ProjectsDB projectsDB, final SubjectsDB subjectsDB, final List<String> list, int type, int pcPosition) {
         if (localFile.equals("")) {
             return null;
         }
@@ -234,17 +248,23 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
         }
         String name = getName(localFile, "/");
         String object = null;
-        if (localFile.endsWith("wav")) {
-            object = projectsDB.getPid() + "/audios/" + name;
+        if (type == 1) {
+            String audioName = getName(localFile, "/");
+            object = projectsDB.getPid() + "/audios/" + audioName;
         } else {
-            object = projectsDB.getPid() + "/pictures/" + subjectsDB.getNumber() + "/" + name;
+            String PicName = getName(localFile, ".").toLowerCase().equals("png") ? subjectsDB.getNumber() + "_" + pcPosition + ".png"
+                    : getName(localFile, ".").toLowerCase().equals("jpeg") ? subjectsDB.getNumber() + "_" + pcPosition + ".jpeg"
+                    : getName(localFile, ".").toLowerCase().equals("jpg") ? subjectsDB.getNumber() + "_" + pcPosition + ".jpg"
+                    : getName(localFile, ".").toLowerCase().equals("gif") ? subjectsDB.getNumber() + "_" + pcPosition + ".gif"
+                    : subjectsDB.getNumber() + "_" + pcPosition + ".png";
+            object = projectsDB.getPid() + "/pictures/" + subjectsDB.getNumber() + "/" + PicName;
         }
         PutObjectRequest put = new PutObjectRequest(Constants.bucket, object, localFile);
         put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
             @Override
             public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
                 if (getPresenter() != null) {
-                    getPresenter().showProgress((int) currentSize,(int)totalSize,projectsDB.getPname()+"\n第"+subjectsDB.getNumber()+"题\n"+name);
+                    getPresenter().showProgress((int) currentSize, (int) totalSize, projectsDB.getPname() + "\n第" + subjectsDB.getNumber() + "题\n" + name);
                 }
             }
         });

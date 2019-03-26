@@ -166,7 +166,6 @@ public class ReviewMainPager extends BaseChildFragment<ReviewMainPagerFragment_C
             if (search != null) {
                 map.put("search", search);
             }
-            map.put("token",Constants.devicestoken);
             p.getCensorList(map);
         }
     }

@@ -72,10 +72,7 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, final int i) {
         if (viewHolder != null && viewHolder.itemView != null) {
             if (viewHolder instanceof newListHaveBeenCancelViewHolder) {
-                ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_schedule.setText(projectsDBList.get(i).getProgress());
-                ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_explain.setText(Constants.user_type == 1 ? "[" + projectsDBList.get(i).getSale_code() + "]"
-                        : Constants.user_type == 2 ? "[" + projectsDBList.get(i).getService_code() + "]"
-                        : "[" + projectsDBList.get(i).getSale_code() + "]");
+                ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_schedule.setText(projectsDBList.get(i).getSale_code() !=null?projectsDBList.get(i).getSale_code():projectsDBList.get(i).getService_code());
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_times.setText(projectsDBList.get(i).getPname());
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_code.setText(projectsDBList.get(i).getCode());
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_name.setText(projectsDBList.get(i).getPname());
@@ -102,9 +99,7 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
             }
             if (viewHolder instanceof completeListHaveBeenCancelViewHolder) {
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_schedule.setText(projectsDBList.get(i).getProgress());
-                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_explain.setText(Constants.user_type == 1 ? "[" + projectsDBList.get(i).getSale_code() + "]"
-                        : Constants.user_type == 2 ? "[" + projectsDBList.get(i).getService_code() + "]"
-                        : "[" + projectsDBList.get(i).getSale_code() + "]");
+                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_explain.setText(projectsDBList.get(i).getSale_code() !=null?projectsDBList.get(i).getSale_code():projectsDBList.get(i).getService_code());
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_times.setText(projectsDBList.get(i).getPname());
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_code.setText(projectsDBList.get(i).getCode());
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_name.setText(projectsDBList.get(i).getPname());
@@ -132,9 +127,7 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             if (viewHolder instanceof unCompleteListHaveBeenCancelViewHolder) {
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_schedule.setText(projectsDBList.get(i).getProgress());
-                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_explain.setText(Constants.user_type == 1 ? "[" + projectsDBList.get(i).getSale_code() + "]"
-                        : Constants.user_type == 2 ? "[" + projectsDBList.get(i).getService_code() + "]"
-                        : "[" + projectsDBList.get(i).getSale_code() + "]");
+                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_explain.setText(projectsDBList.get(i).getSale_code() !=null?projectsDBList.get(i).getSale_code():projectsDBList.get(i).getService_code());
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_times.setText(projectsDBList.get(i).getPname());
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_code.setText(projectsDBList.get(i).getCode());
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_name.setText(projectsDBList.get(i).getPname());
@@ -163,9 +156,7 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             if (viewHolder instanceof unDownLoadListHaveBeenCancelViewHolder) {
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_schedule.setText(projectsDBList.get(i).getProgress());
-                ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_explain.setText(Constants.user_type == 1 ? "[" + projectsDBList.get(i).getSale_code() + "]"
-                        : Constants.user_type == 2 ? "[" + projectsDBList.get(i).getService_code() + "]"
-                        : "[" + projectsDBList.get(i).getSale_code() + "]");
+                ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_explain.setText(projectsDBList.get(i).getSale_code() !=null?projectsDBList.get(i).getSale_code():projectsDBList.get(i).getService_code());
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_times.setText(projectsDBList.get(i).getPname());
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_code.setText(projectsDBList.get(i).getCode());
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_name.setText(projectsDBList.get(i).getPname());
@@ -378,7 +369,7 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
                         List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + id + "/" + subjectsDBS.get(i).getNumber() + "_" + subjectsDBS.get(i).getHt_id());
                         if (fileList != null && fileList.size() > 0) {
                             for (int j = 0; j < fileList.size(); j++) {
-                                if (!fileList.get(i).endsWith("txt")) {
+                                if (!fileList.get(j).endsWith("txt")) {
                                     dataSize++;
                                 }
                             }

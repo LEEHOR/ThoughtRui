@@ -208,6 +208,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     private List<String> fileList_Call = new ArrayList<>();
     private String textMassage;
     private String uPAudioPath;
+    private Fill_in_blankDialog fill_in_blankDialog;
 
     public static PagerFragment_a newInstance(int position, String ht_ProjectId, int countSize, String name_project, String ht_id) {
         PagerFragment_a pagerFragment_a = new PagerFragment_a();
@@ -239,6 +240,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
     @Override
     public void initView() {
+        fill_in_blankDialog = Fill_in_blankDialog.newInstance();
         inflate = LayoutInflater.from(_mActivity).inflate(R.layout.dialog_progress, null);
         tv_tittle = inflate.findViewById(R.id.tv_progress_info);
         progressBar = inflate.findViewById(R.id.progress_bar);
@@ -301,36 +303,38 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             public void onInputSend(String input, AppCompatDialogFragment dialog) {
                 if (input != null && !input.equals("")) {
                     tv_bianji.setText(input);
-                    p.saveAnswers(answers, input, ht_projectId, number, ht_id);
+                    p.saveAnswers(answers, input, ht_projectId, number, ht_id, 2);
                     dialogFragment.dismiss();
                 }
             }
         });
+
         //输入分数
         ed_score.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fill_in_blankDialog fill_in_blankDialog = Fill_in_blankDialog.newInstance();
-                fill_in_blankDialog.setOnClick(new Fill_in_blankDialog.InPutOnClick() {
-                    @Override
-                    public void setOnClick(String text) {
-                        if (text != null && standard_score!=null) {
-                            if (Integer.parseInt(text)<=Integer.parseInt(standard_score) && Integer.parseInt(text)>=0){
-                                ed_score.setText(text);
-                                p.saveAnswers(text, remark, ht_projectId, number, ht_id);
-                            } else {
-                                    ToastUtils.showLong("请输入正确的分数");
-                            }
-                        }
-
-                    }
-
-                    @Override
-                    public void setOnClickFailure() {
-                        ToastUtils.showLong("请输入正确的数值");
-                    }
-                });
                 fill_in_blankDialog.show(getFragmentManager(), TAG);
+
+            }
+        });
+
+        fill_in_blankDialog.setOnClick(new Fill_in_blankDialog.InPutOnClick() {
+            @Override
+            public void setOnClick(String text) {
+                if (text != null && standard_score != null) {
+                    if (Integer.parseInt(text) <= Integer.parseInt(standard_score) && Integer.parseInt(text) >= 0) {
+                        ed_score.setText(text);
+                        p.saveAnswers(text, remark, ht_projectId, number, ht_id, 1);
+                    } else {
+                        ToastUtils.showLong("请输入正确的分数");
+                    }
+                }
+
+            }
+
+            @Override
+            public void setOnClickFailure() {
+                ToastUtils.showLong("请输入正确的数值");
             }
         });
 
@@ -338,18 +342,18 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         tv_Unfold.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (tv_Unfold.getTag()==null || tv_Unfold.getTag().equals("1")){ //展开
+                if (tv_Unfold.getTag() == null || tv_Unfold.getTag().equals("1")) { //关闭
                     img_recycler.setVisibility(View.GONE);
-                    tv_Unfold.setText("关闭");
-                    tv_Unfold.setTag("2");
-                }  else if (tv_Unfold.getTag().equals("2")){  //关闭
-                    img_recycler.setVisibility(View.VISIBLE);
                     tv_Unfold.setText("展开");
-                    tv_Unfold.setTag("1");
-                } else if (tv_Unfold.getTag().equals("3")){
-                    tv_Unfold.setText("关闭");
                     tv_Unfold.setTag("2");
-                    isDeletePic=false;
+                } else if (tv_Unfold.getTag().equals("2")) {  //关闭
+                    img_recycler.setVisibility(View.VISIBLE);
+                    tv_Unfold.setText("关闭");
+                    tv_Unfold.setTag("1");
+                } else if (tv_Unfold.getTag().equals("3")) {
+                    tv_Unfold.setText("关闭");
+                    tv_Unfold.setTag("1");
+                    isDeletePic = false;
                     p.getImage(ht_projectId, _mActivity, number, ht_id);
                 }
 
@@ -375,12 +379,29 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             case R.id.tv_last:
                 if (!isRecorder) {  //判断是否在录音
                     if (number > 1) {
-                        if (isComplete()) {
-                            SubjectsDB subjectsDB = new SubjectsDB();
-                            subjectsDB.setIsComplete(1);
-                            subjectsDB.update(subjectsDB_now.getId());
+                        if (subjectsDB_now.getPhotoStatus() == 1) {  //强制拍照
+                            if (!isAnswer) {
+                                ToastUtils.showLong("请填写答案");
+                                return;
+                            }
+                            if (!isPhotos) {
+                                ToastUtils.showLong("请拍摄照片");
+                                return;
+                            }
+                            if (isComplete()) {
+                                SubjectsDB subjectsDB = new SubjectsDB();
+                                subjectsDB.setIsComplete(1);
+                                subjectsDB.update(subjectsDB_now.getId());
+                            }
+                            EventBus.getDefault().postSticky(new isCompleteBean(true, number - 1, 1, 1));
+                        } else {
+                            if (isAnswer) {
+                                SubjectsDB subjectsDB = new SubjectsDB();
+                                subjectsDB.setIsComplete(1);
+                                subjectsDB.update(subjectsDB_now.getId());
+                            }
+                            EventBus.getDefault().postSticky(new isCompleteBean(true, number - 1, 1, 1));
                         }
-                        EventBus.getDefault().postSticky(new isCompleteBean(true, number - 1, 1,1));
                     } else {
                         ToastUtils.showLong("已经是第一题");
                     }
@@ -393,23 +414,57 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             case R.id.tv_next:
                 if (number < countSize) {
                     if (!isRecorder) {
-                        if (isComplete()) {
-                            SubjectsDB subjectsDB = new SubjectsDB();
-                            subjectsDB.setIsComplete(1);
-                            subjectsDB.update(subjectsDB_now.getId());
+                        if (subjectsDB_now.getPhotoStatus() == 1) {
+                            if (!isAnswer) {
+                                ToastUtils.showLong("请填写答案");
+                                return;
+                            }
+                            if (!isPhotos) {
+                                ToastUtils.showLong("请拍摄照片");
+                                return;
+                            }
+                            if (isComplete()) {
+                                SubjectsDB subjectsDB = new SubjectsDB();
+                                subjectsDB.setIsComplete(1);
+                                subjectsDB.update(subjectsDB_now.getId());
+                            }
+                            EventBus.getDefault().postSticky(new isCompleteBean(true, number + 1, 2, 1));
+                        } else {
+                            if (isAnswer) {
+                                SubjectsDB subjectsDB = new SubjectsDB();
+                                subjectsDB.setIsComplete(1);
+                                subjectsDB.update(subjectsDB_now.getId());
+                            }
+                            EventBus.getDefault().postSticky(new isCompleteBean(true, number + 1, 2, 1));
                         }
-                        EventBus.getDefault().postSticky(new isCompleteBean(true, number + 1, 2,1));
+
                     } else {
                         showStopAudioDialog("", "是否停止录音");
                     }
-
                 } else {
                     if (!isRecorder) {
-                        if (isComplete()) {
-                            SubjectsDB subjectsDB = new SubjectsDB();
-                            subjectsDB.setIsComplete(1);
-                            subjectsDB.updateAsync(subjectsDB_now.getId());
+                        if (subjectsDB_now.getPhotoStatus() == 1) {
+                            if (!isAnswer) {
+                                ToastUtils.showLong("请填写答案");
+                                return;
+                            }
+                            if (!isPhotos) {
+                                ToastUtils.showLong("请拍摄照片");
+                                return;
+                            }
+                            if (isComplete()) {
+                                SubjectsDB subjectsDB = new SubjectsDB();
+                                subjectsDB.setIsComplete(1);
+                                subjectsDB.update(subjectsDB_now.getId());
+                            }
+                        } else {
+                            if (isAnswer) {
+                                SubjectsDB subjectsDB = new SubjectsDB();
+                                subjectsDB.setIsComplete(1);
+                                subjectsDB.update(subjectsDB_now.getId());
+                            }
                         }
+
                         ToastUtils.showLong("已经是最后一题");
                         ProjectSuccessDialog projectSuccessDialog = ProjectSuccessDialog.newInstance(ht_projectId);
                         projectSuccessDialog.show(getChildFragmentManager(), TAG);
@@ -480,7 +535,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             if (subjectsDB.getType() == 1) {  //填空题
                 re_score.setVisibility(View.VISIBLE);
                 rg_gr.setVisibility(View.GONE);
-                standard_score=subjectsDB.getOptions();
+                standard_score = subjectsDB.getOptions();
                 tv_standard_score.setText("标准分数：" + subjectsDB.getOptions());
             }
             tv_describe.setText("说明：" + subjectsDB.getDescription());
@@ -591,6 +646,8 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 }
             }
 
+            UpdateDB();
+
         }
     }
 
@@ -611,22 +668,26 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     }
 
     @Override
-    public void saveAnswersSuccess() {
-        ed_score.setFocusable(false);
-        ed_score.setFocusableInTouchMode(false);
+    public void saveAnswersSuccess(int type) {
+        if (type == 1) {  //答案
+            if (ed_score != null) {
+                ed_score.setFocusable(false);
+                ed_score.setFocusableInTouchMode(false);
+            }
+        }
+
         KeyBoardUtils.hideKeybord(ed_score, _mActivity);
         p.getAnswer(ht_projectId, _mActivity, number, ht_id);
         ToastUtils.showLong("保存成功");
     }
 
     @Override
-    public void saveAnswersFailure() {
+    public void saveAnswersFailure(int type) {
         ToastUtils.showLong("保存失败");
     }
 
     @Override
     public void SaveImagesSuccess() {
-
         p.getImage(ht_projectId, _mActivity, number, ht_id);
         ToastUtils.showShort("图片保存成功");
     }
@@ -691,6 +752,8 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 fileList_Call.clear();
                 //当前题目下数据上传成功
                 //执行回调
+                uPAudioPath = null;
+                textMassage = null;
                 for (int i = 0; i < list.size(); i++) {
                     if (list.get(i).endsWith(".wav") || list.get(i).endsWith(".arm") || list.get(i).endsWith(".mp3")) {
                         uPAudioPath = list.get(i);
@@ -705,6 +768,26 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 fr_upload.setEnabled(true);
             }
         }
+    }
+
+    @Override
+    public void Pic_CompulsoryC(List<String> list, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
+        uPAudioPath = null;
+        textMassage = null;
+        fileList_Call.clear();
+        if (list != null && list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).endsWith(".txt")) {
+                    textMassage = SaveOrGetAnswers.readFromFile(list.get(i));
+                }
+            }
+        }
+        callbackForServer(projectsDB, subjectsDB, uPAudioPath, fileList_Call, textMassage);
+    }
+
+    @Override
+    public void Pic_CompulsoryD(List<String> list, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
+
     }
 
     @Override
@@ -729,6 +812,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     public void CallBackFailure(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
         fr_upload.setEnabled(true);
     }
+
 
     @Override
     public void UpDataDbSuccess() {
@@ -834,7 +918,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 answers = "否";
             }
             KLog.d("选择", answers);
-            p.saveAnswers(answers, remark, ht_projectId, number, ht_id);
+            p.saveAnswers(answers, remark, ht_projectId, number, ht_id, 1);
         }
     }
 
@@ -1049,7 +1133,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     private void callbackForServer(final ProjectsDB projectsDB, final SubjectsDB subjectsDB, String recorderPath, List<String> picList, String text) {
         final Map map = new HashMap();
         map.put("projectId", projectsDB.getPid());
-        map.put("censor",subjectsDB.getCensor());
+        map.put("censor", subjectsDB.getCensor());
         map.put("answerId", subjectsDB.getHt_id());
         map.put("number", subjectsDB.getNumber());
         map.put("stage", projectsDB.getStage());
@@ -1062,7 +1146,6 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                         String string = SaveOrGetAnswers.getString(s, ":");
                         if (string != null && !string.equals("") && !string.equals("null")) {
                             map.put("answer", string);
-                            KLog.d("anwser" + string);
                         } else {
                             map.put("anwser", "");
                         }
@@ -1072,31 +1155,51 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                         String string1 = SaveOrGetAnswers.getString(s1, ":");
                         if (string1 != null && !string1.equals("") && !string1.equals("null")) {
                             map.put("description", string1);
-                            KLog.d("description" + string1);
                         } else {
                             map.put("description", "");
                         }
                     }
                 }
             }
+        } else {
+            map.put("answer", "");
+            map.put("description", "");
         }
         map.put("audioCount", recorderPath != null ? 1 : 0);
         map.put("audio", recorderPath != null ? FileIOUtils.getE(recorderPath, "/") : "");
-        map.put("pictureCount", picList.size());
 
-        StringBuffer stringBuffer = new StringBuffer();
-        for (int i = 0; i < picList.size(); i++) {
-            if (picList.size() == 1) {
-                stringBuffer.append(FileIOUtils.getE(picList.get(i), "/"));
-            } else {
-                if (i == (picList.size() - 1)) {
-                    stringBuffer.append(FileIOUtils.getE(picList.get(i), "/"));
+
+        if (picList != null && picList.size() > 0) {
+            StringBuffer stringBuffer = new StringBuffer();
+            for (int i = 0; i < picList.size(); i++) {
+                if (picList.size() == 1) {
+                    stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg") ? picList.get(i) + "_" + i + ".jpg"
+                            : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png") ? picList.get(i) + "_" + i + ".png"
+                            : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif") ? picList.get(i) + "_" + i + ".gif"
+                            : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg") ? picList.get(i) + "_" + i + ".jpeg"
+                            : picList.get(i) + "_" + i + ".png");
                 } else {
-                    stringBuffer.append(FileIOUtils.getE(picList.get(i), "/") + ";");
+                    if (i == (picList.size() - 1)) {
+                        stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg") ? picList.get(i) + "_" + i + ".jpg"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png") ? picList.get(i) + "_" + i + ".png"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif") ? picList.get(i) + "_" + i + ".gif"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg") ? picList.get(i) + "_" + i + ".jpeg"
+                                : picList.get(i) + "_" + i + ".png");
+                    } else {
+                        stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg") ? picList.get(i) + "_" + i + ".jpg" + ";"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png") ? picList.get(i) + "_" + i + ".png" + ";"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif") ? picList.get(i) + "_" + i + ".gif" + ";"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg") ? picList.get(i) + "_" + i + ".jpeg" + ";"
+                                : picList.get(i) + "_" + i + ".png" + ";");
+                    }
                 }
             }
+            map.put("picture", stringBuffer.toString());
+            map.put("pictureCount", picList.size());
+        } else {
+            map.put("picture", "");
+            map.put("pictureCount", 0);
         }
-        map.put("picture", stringBuffer.toString());
 
         mHandler.post(new Runnable() {
             @Override
@@ -1206,10 +1309,22 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     /**
      * 修改数据库状态为完成
      */
-    private void UpdateDB(){
-        SubjectsDB subjectsDB = new SubjectsDB();
-        subjectsDB.setIsComplete(1);
-        subjectsDB.update(subjectsDB_now.getId());
+    private void UpdateDB() {
+        if (subjectsDB_now.getPhotoStatus() == 1) {
+            if (isPhotos && isAnswer) {
+                SubjectsDB subjectsDB = new SubjectsDB();
+                subjectsDB.setIsComplete(1);
+                subjectsDB.update(subjectsDB_now.getId());
+            }
+        } else {
+            if (isAnswer) {
+                SubjectsDB subjectsDB = new SubjectsDB();
+                subjectsDB.setIsComplete(1);
+                subjectsDB.update(subjectsDB_now.getId());
+            }
+
+        }
+
     }
 }
 

@@ -387,12 +387,12 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
         List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", projectId);
         if (projectsDBS != null && projectsDBS.size() > 0) {
             ProjectsDB projectsDB = projectsDBS.get(0);
-            //   tv_cName.setText(projectsDB.getcName());
-            tv_cCode.setText(projectsDB.getCode());
+            tv_cCode.setText(projectsDB.getSale_code() != null ? projectsDB.getSale_code() : projectsDB.getService_code());
             tv_cLevel.setText(projectsDB.getGrade());
             tv_cAddress.setText(projectsDB.getAddress() + projectsDB.getLocation());
             tv_time_cycle.setText(TimeUtils.getStingYMDHM(projectsDB.getUploadTime()));
             tv_Kclass.setText(projectsDB.getCname());
+            tv_cName.setText(projectsDB.getDname());
             project_detail_name.setText(projectsDB.getPname());
             String progress = projectsDB.getProgress();
             String[] split_p = progress.split("/");
