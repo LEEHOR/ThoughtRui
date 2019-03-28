@@ -380,14 +380,6 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 if (!isRecorder) {  //判断是否在录音
                     if (number > 1) {
                         if (subjectsDB_now.getPhotoStatus() == 1) {  //强制拍照
-                            if (!isAnswer) {
-                                ToastUtils.showLong("请填写答案");
-                                return;
-                            }
-                            if (!isPhotos) {
-                                ToastUtils.showLong("请拍摄照片");
-                                return;
-                            }
                             if (isComplete()) {
                                 SubjectsDB subjectsDB = new SubjectsDB();
                                 subjectsDB.setIsComplete(1);
@@ -501,6 +493,11 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 break;
 
             case R.id.fr_upload:
+
+                if (!isAnswer){
+                    ToastUtils.showLong("请填写答案");
+                    return;
+                }
                 fr_upload.setEnabled(false);
                 if (Constants.isNetWorkConnect) {
                     if (Constants.NetWorkType != null && Constants.NetWorkType.equals("WIFI")) {
@@ -583,7 +580,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
     @Override
     public void getImageFailure() {
-        ToastUtils.showLong("获取图片失败");
+       // ToastUtils.showLong("获取图片失败");
         isDeletePic = false;
         isPhotos = false;
     }
@@ -707,14 +704,13 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             tv_recorder_name.setText(audioName);
             tv_recorder_name.setTextColor(getResources().getColor(R.color.origin_3));
             //更新数据库完成状态
-            UpdateDB();
+          // UpdateDB();
         }
     }
 
     @Override
     public void getAudioFailure(String failure) {
         isHaveRecorder = false;
-        ToastUtils.showLong(failure + number);
         if (!isRecorder) {
             updateUi(1); //开始录音
             tv_recorder_name.setText("暂无录音");
@@ -765,6 +761,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 }
                 callbackForServer(projectsDB, subjectsDB, uPAudioPath, fileList_Call, textMassage);
             } else {
+                ToastUtils.showLong("上传失败");
                 fr_upload.setEnabled(true);
             }
         }
@@ -781,8 +778,10 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                     textMassage = SaveOrGetAnswers.readFromFile(list.get(i));
                 }
             }
+            callbackForServer(projectsDB, subjectsDB, uPAudioPath, fileList_Call, textMassage);
+        } else {
+            ToastUtils.showLong("暂无数据上传");
         }
-        callbackForServer(projectsDB, subjectsDB, uPAudioPath, fileList_Call, textMassage);
     }
 
     @Override
@@ -816,6 +815,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
     @Override
     public void UpDataDbSuccess() {
+        ToastUtils.showLong("上传成功");
         fr_upload.setEnabled(true);
     }
 

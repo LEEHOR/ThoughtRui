@@ -269,7 +269,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
             public void onInputSend(String input, AppCompatDialogFragment dialog) {
                 if (input != null && !input.equals("")) {
                     tv_bianji.setText(input);
-                    p.saveAnswers(answers, input, ht_projectId, number, ht_id);
+                    p.saveAnswers(answers, input, ht_projectId, number, ht_id, 2);
                     dialogFragment.dismiss();
                 }
             }
@@ -302,7 +302,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
             @Override
             public void onClick(View v) {
 
-                fill_in_blankDialog.show(getFragmentManager(),TAG);
+                fill_in_blankDialog.show(getFragmentManager(), TAG);
             }
         });
         fill_in_blankDialog.setOnClick(new Fill_in_blankDialog.InPutOnClick() {
@@ -311,7 +311,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
                 if (text != null && standard_score != null) {
                     if (Integer.parseInt(text) <= Integer.parseInt(standard_score) && Integer.parseInt(text) >= 0) {
                         ed_score.setText(text);
-                        p.saveAnswers(text, remark, ht_projectId, number, ht_id);
+                        p.saveAnswers(text, remark, ht_projectId, number, ht_id, 1);
                     } else {
                         ToastUtils.showLong("请输入正确的分数");
                     }
@@ -329,18 +329,18 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
         tv_Unfold.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (tv_Unfold.getTag()==null || tv_Unfold.getTag().equals("1")){ //展开
+                if (tv_Unfold.getTag() == null || tv_Unfold.getTag().equals("1")) { //展开
                     img_recycler.setVisibility(View.GONE);
                     tv_Unfold.setText("展开");
                     tv_Unfold.setTag("2");
-                }  else if (tv_Unfold.getTag().equals("2")){  //关闭
+                } else if (tv_Unfold.getTag().equals("2")) {  //关闭
                     img_recycler.setVisibility(View.VISIBLE);
                     tv_Unfold.setText("关闭");
                     tv_Unfold.setTag("1");
-                } else if (tv_Unfold.getTag().equals("3")){
+                } else if (tv_Unfold.getTag().equals("3")) {
                     tv_Unfold.setText("关闭");
                     tv_Unfold.setTag("1");
-                    isDeletePic=false;
+                    isDeletePic = false;
                     p.getImage(ht_projectId, _mActivity, number, ht_id);
                 }
 
@@ -404,13 +404,13 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
                 adapter.setNewData(imagePathList);
                 adapter.setImageList(imagePathList);
             }
-            UpdateDB();
         } else {
             isDeletePic = false;
             adapter.setIsDel(false);
             adapter.setNewData(imagePathList);
             adapter.setImageList(imagePathList);
         }
+        UpdateDB();
     }
 
     @Override
@@ -481,6 +481,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
             }
 
         }
+        UpdateDB();
     }
 
     @Override
@@ -506,7 +507,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
     }
 
     @Override
-    public void saveAnswersSuccess() {
+    public void saveAnswersSuccess(int type) {
         ed_score.setFocusable(false);
         ed_score.setFocusableInTouchMode(false);
         KeyBoardUtils.hideKeybord(ed_score, _mActivity);
@@ -515,7 +516,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
     }
 
     @Override
-    public void saveAnswersFailure() {
+    public void saveAnswersFailure(int type) {
 
         ToastUtils.showShort("答案保存失败");
     }
@@ -546,7 +547,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
                 updateUi(4); //播放录音
                 tv_recorder_name.setText(audioName);
                 tv_recorder_name.setTextColor(getResources().getColor(R.color.origin_3));
-                UpdateDB();
+                //UpdateDB();
             }
         }
     }
@@ -577,12 +578,13 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
     @Override
     public void startUploadCallBack(List<String> list, int uploadSuccessSize, int uploadFailSize, int totalSize, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
         KLog.a("上传", totalSize, uploadFailSize, uploadSuccessSize);
+        fileList_Call.clear();
+        uPAudioPath = null;
+        textMassage = null;
         //上传成功
         if (totalSize == (uploadSuccessSize + uploadFailSize)) {
+
             if (totalSize == uploadSuccessSize) {
-                fileList_Call.clear();
-                uPAudioPath=null;
-                textMassage=null;
                 //当前题目下数据上传成功
                 //执行回调
                 for (int i = 0; i < list.size(); i++) {
@@ -599,6 +601,22 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
                 fr_upload.setEnabled(true);
             }
         }
+    }
+
+    @Override
+    public void Up_Pic_Compulsory(ProjectsDB projectsDB, SubjectsDB subjectsDB,List<String> list) {
+        fileList_Call.clear();
+        uPAudioPath = null;
+        textMassage = null;
+        if (list !=null && list.size()>0){
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).endsWith(".txt")) {
+                    textMassage = SaveOrGetAnswers.readFromFile(list.get(i));
+                }
+            }
+        }
+        callbackForServer(projectsDB, subjectsDB, uPAudioPath, fileList_Call, textMassage);
+
     }
 
     @Override
@@ -681,40 +699,39 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
         }
         map.put("audioCount", recorderPath != null ? 0 : 1);
         map.put("audio", recorderPath != null ? FileIOUtils.getE(recorderPath, "/") : "");
-        map.put("pictureCount", picList.size());
 
-        StringBuffer stringBuffer = new StringBuffer();
-        for (int i = 0; i < picList.size(); i++) {
-            if (picList.size() == 1) {
-                stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg")?picList.get(i)+"_"+i+".jpg"
-                        :FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png")?picList.get(i)+"_"+i+".png"
-                        :FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif")?picList.get(i)+"_"+i+".gif"
-                        :FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg")?picList.get(i)+"_"+i+".jpeg"
-                        :picList.get(i)+"_"+i+".png");
-            } else {
-                if (i == (picList.size() - 1)) {
-                    stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg")?picList.get(i)+"_"+i+".jpg"
-                            :FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png")?picList.get(i)+"_"+i+".png"
-                            :FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif")?picList.get(i)+"_"+i+".gif"
-                            :FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg")?picList.get(i)+"_"+i+".jpeg"
-                            :picList.get(i)+"_"+i+".png");
+        if (picList != null && picList.size() > 0) {
+            StringBuffer stringBuffer = new StringBuffer();
+            for (int i = 0; i < picList.size(); i++) {
+                if (picList.size() == 1) {
+                    stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB_now.getNumber() + "_" + i + ".jpg"
+                            : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB_now.getNumber() + "_" + i + ".png"
+                            : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB_now.getNumber() + "_" + i + ".gif"
+                            : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB_now.getNumber() + "_" + i + ".jpeg"
+                            : subjectsDB_now.getNumber() + "_" + i + ".png");
                 } else {
-                    stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg")?picList.get(i)+"_"+i+".jpg"+";"
-                            :FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png")?picList.get(i)+"_"+i+".png"+";"
-                            :FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif")?picList.get(i)+"_"+i+".gif"+";"
-                            :FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg")?picList.get(i)+"_"+i+".jpeg"+";"
-                            :picList.get(i)+"_"+i+".png"+";");
+                    if (i == (picList.size() - 1)) {
+                        stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB_now.getNumber() + "_" + i + ".jpg"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB_now.getNumber() + "_" + i + ".png"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB_now.getNumber() + "_" + i + ".gif"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB_now.getNumber() + "_" + i + ".jpeg"
+                                : subjectsDB_now.getNumber() + "_" + i + ".png");
+                    } else {
+                        stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB_now.getNumber() + "_" + i + ".jpg" + ";"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB_now.getNumber() + "_" + i + ".png" + ";"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB_now.getNumber() + "_" + i + ".gif" + ";"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB_now.getNumber() + "_" + i + ".jpeg" + ";"
+                                : subjectsDB_now.getNumber()+ "_" + i + ".png" + ";");
+                    }
                 }
             }
+            map.put("pictureCount", picList.size());
+            map.put("picture", stringBuffer.toString());
+        } else {
+            map.put("pictureCount", 0);
+            map.put("picture", "");
         }
-        map.put("picture", stringBuffer.toString());
 
-       /* _mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        });*/
         mHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -789,18 +806,24 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
             case R.id.tv_last:
                 if (position > 0) {
                     if (!isRecorder) {
-                        if (isComplete()) {
-                            SubjectsDB subjectsDB = new SubjectsDB();
-                            subjectsDB.setIsComplete(1);
-                            subjectsDB.updateAsync(subjectsDB_now.getId());
-
-                            //  EventBus.getDefault().post(new isCompleteBean(true, number-1, 1));
+                        if (subjectsDB_now.getPhotoStatus() == 1) {
+                            if (isComplete()) {
+                                SubjectsDB subjectsDB = new SubjectsDB();
+                                subjectsDB.setIsComplete(1);
+                                subjectsDB.updateAsync(subjectsDB_now.getId());
+                            }
+                            EventBus.getDefault().postSticky(new isCompleteBean(true, number - 1, 1, 2));
+                        } else {
+                            if (isAnswer) {
+                                SubjectsDB subjectsDB = new SubjectsDB();
+                                subjectsDB.setIsComplete(1);
+                                subjectsDB.updateAsync(subjectsDB_now.getId());
+                            }
+                            EventBus.getDefault().postSticky(new isCompleteBean(true, number - 1, 1, 2));
                         }
-                        EventBus.getDefault().postSticky(new isCompleteBean(true, number - 1, 1,2));
                     } else {
                         showDialog("", "是否关闭录音");
                     }
-
 
                 } else {
                     ToastUtils.showLong("已经是第一题");
@@ -810,20 +833,60 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
             case R.id.tv_next:
                 if (position < countSize - 1) {
                     if (!isRecorder) {
-                        if (isComplete()) {
+                        if (subjectsDB_now.getPhotoStatus() == 1) {
+                            if (!isAnswer) {
+                                ToastUtils.showLong("请填写答案");
+                                return;
+                            }
+
+                            if (!isPhotos) {
+                                ToastUtils.showLong("请拍照");
+                                return;
+                            }
+
+                            if (isComplete()) {
+                                SubjectsDB subjectsDB = new SubjectsDB();
+                                subjectsDB.setIsComplete(1);
+                                subjectsDB.updateAsync(subjectsDB_now.getId());
+                            }
+                            EventBus.getDefault().postSticky(new isCompleteBean(true, number + 1, 2, 2));
+                        } else {
+                            if (!isAnswer) {
+                                ToastUtils.showLong("请填写答案");
+                                return;
+                            }
                             SubjectsDB subjectsDB = new SubjectsDB();
                             subjectsDB.setIsComplete(1);
                             subjectsDB.updateAsync(subjectsDB_now.getId());
-
+                            EventBus.getDefault().postSticky(new isCompleteBean(true, number + 1, 2, 2));
                         }
-                        EventBus.getDefault().postSticky(new isCompleteBean(true, number + 1, 2,2));
                     } else {
                         showDialog("", "是否关闭录音");
                     }
 
                 } else {
                     if (!isRecorder) {
-                        if (isComplete()) {
+                        if (subjectsDB_now.getPhotoStatus() == 1) {
+                            if (!isAnswer) {
+                                ToastUtils.showLong("请填写答案");
+                                return;
+                            }
+
+                            if (!isPhotos) {
+                                ToastUtils.showLong("请拍照");
+                                return;
+                            }
+
+                            if (isComplete()) {
+                                SubjectsDB subjectsDB = new SubjectsDB();
+                                subjectsDB.setIsComplete(1);
+                                subjectsDB.updateAsync(subjectsDB_now.getId());
+                            }
+                        } else {
+                            if (!isAnswer) {
+                                ToastUtils.showLong("请填写答案");
+                                return;
+                            }
                             SubjectsDB subjectsDB = new SubjectsDB();
                             subjectsDB.setIsComplete(1);
                             subjectsDB.updateAsync(subjectsDB_now.getId());
@@ -944,7 +1007,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
             if (rb_no.isChecked()) {
                 answers = "否";
             }
-            p.saveAnswers(answers, remark, ht_projectId, number, ht_id);
+            p.saveAnswers(answers, remark, ht_projectId, number, ht_id, 1);
         }
     }
 
@@ -1158,8 +1221,19 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
      * 修改数据库状态为完成
      */
     private void UpdateDB() {
-        SubjectsDB subjectsDB = new SubjectsDB();
-        subjectsDB.setIsComplete(1);
-        subjectsDB.update(subjectsDB_now.getId());
+        if (subjectsDB_now.getPhotoStatus() == 1) {
+            if (isAnswer && isPhotos) {
+                SubjectsDB subjectsDB = new SubjectsDB();
+                subjectsDB.setIsComplete(1);
+                subjectsDB.update(subjectsDB_now.getId());
+            }
+        } else {
+            if (isAnswer) {
+                SubjectsDB subjectsDB = new SubjectsDB();
+                subjectsDB.setIsComplete(1);
+                subjectsDB.update(subjectsDB_now.getId());
+            }
+        }
+
     }
 }

@@ -2,6 +2,7 @@ package com.coahr.thoughtrui.mvp.view.upload;
 
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 
 import androidx.annotation.BoolRes;
@@ -102,7 +103,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     private final int UPDATE_PROGRESS = 2;
     private final int UPDATE_TITTLE = 3;
     private final int UPDATE_MESSAGE = 4;
-    private Handler mHandler = new Handler() {
+    private Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -111,11 +112,8 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                     getSubjectListByOne();
                     break;
                 case UPDATE_PROGRESS:
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        progressBar.setProgress(msg.arg1, true);
-                    } else {
-                        progressBar.setProgress(msg.arg1);
-                    }
+                    progressBar.setMax(msg.arg2);
+                    progressBar.setProgress(msg.arg1);
                     tv_tittle.setText(msg.obj.toString());
                     break;
                 case UPDATE_TITTLE:
@@ -134,7 +132,6 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     private String uPAudioPath;
     private String textMassage;
     //上传文件的数组
-    private List<String> up_picList = new ArrayList<>();
     private int subject_position;
     private TextView tv_message_tittle;
 
@@ -293,25 +290,26 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
 
     //============进度更新
     @Override
-    public void StartUiProgressSuccess(PutObjectRequest request, int currentSize, int totalSize, String info) {
-        if (currentSize > 100) {
-            currentSize = 100;
-        } else if (currentSize < 0) {
-            currentSize = 0;
-        }
-        Message mes = mHandler.obtainMessage(UPDATE_PROGRESS, info);
-        mes.arg1 = currentSize;
-        mes.sendToTarget();
+    public void StartUiProgressSuccess( int currentSize, int totalSize, String info) {
+
+
+           if (currentSize < 0){
+               currentSize=0;
+           }
+            KLog.d(info,currentSize,totalSize);
+            Message mes = mHandler.obtainMessage(UPDATE_PROGRESS, info);
+            mes.arg1 = currentSize;
+            mes.arg2=totalSize;
+            mes.sendToTarget();
     }
 
     //=================OSS上传回调
     @Override
-    public void UploadCallBack(List<String> list, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position, int uploadSuccessSize, int uploadFailSize, int totalSize) {
+    public void UploadCallBack(List<String> list, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS,List<String> picList, int project_position, int subject_position, int uploadSuccessSize, int uploadFailSize, int totalSize) {
         KLog.d("上传5", uploadSuccessSize, uploadFailSize, totalSize);
         if (totalSize == (uploadSuccessSize + uploadFailSize)) {
             if (totalSize == uploadSuccessSize) {  //上传成功
                 //回调服务器
-                up_picList.clear();
                 uPAudioPath = null;
                 textMassage = null;
                 for (int i = 0; i < list.size(); i++) {
@@ -320,11 +318,11 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                     } else if (list.get(i).endsWith(".txt")) {
                         textMassage = SaveOrGetAnswers.readFromFile(list.get(i));
                     } else {
-                        up_picList.add(list.get(i));
+
                     }
                 }
                 //回调到后台服务器
-                callbackForServer(projectsDBS, subjectsDBList, up_picList, textMassage, uPAudioPath, project_position, subject_position);
+                callbackForServer(projectsDBS, subjectsDBList, picList, textMassage, uPAudioPath, project_position, subject_position);
             } else {         //上传失败
                 p.UpDataDb(subjectsDBList, projectsDBS, project_position, subject_position, false);
             }
@@ -333,11 +331,19 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
 
     @Override
     public void Pic_Compulsory(List<String> list, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
-        up_picList.clear();
         uPAudioPath = null;
         textMassage = null;
+        if (list !=null && list.size()>0){
+            for (int i = 0; i <list.size() ; i++) {
+                if (list.get(i).endsWith("txt")) {
+                    textMassage = SaveOrGetAnswers.readFromFile(list.get(i));
+                }
+            }
+            callbackForServer(projectsDBS, subjectsDBList, null, textMassage, uPAudioPath, project_position, subject_position);
+        } else {
+            p.UpDataDb(subjectsDBList, projectsDBS, project_position, subject_position, false);
+        }
 
-        callbackForServer(projectsDBS, subjectsDBList, up_picList, textMassage, uPAudioPath, project_position, subject_position);
 
     }
 
@@ -371,7 +377,20 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
 
     @Override
     public void UpDataDbFailure(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
-
+        //如果当前项目下的题目数据上传完毕，则开始传下一个项目
+        KLog.d("上传5", project_position, projectsDBS.size(), subject_position, subjectsDBList.size());
+        if (subject_position < subjectsDBList.size() - 1) { //项目下还有题目没传，开始下一题
+            KLog.d("上传5", "切换下一个题目");
+            p.UpLoadFileList(subjectsDBList, projectsDBS, project_position, subject_position += 1);
+        } else {   //上一个项目传完了，开始下一个项目
+            //1.查询下一个项目
+            if (project_position < projectsDBS.size() - 1) {
+                KLog.d("上传5", "切换下一个项目");
+                p.getSubjectList(projectsDBS, project_position += 1);
+            } else {
+                ToastUtils.showLong("上传完成");
+            }
+        }
     }
 
     @Override
@@ -625,24 +644,24 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
             StringBuffer stringBuffer = new StringBuffer();
             for (int i = 0; i < picList.size(); i++) {
                 if (picList.size() == 1) {
-                    stringBuffer.append(getName(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB.get(subject_position) + "_" + i + ".jpg"
-                            : getName(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB.get(subject_position) + "_" + i + ".png"
-                            : getName(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB.get(subject_position) + "_" + i + ".gif"
-                            : getName(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB.get(subject_position) + "_" + i + ".jpeg"
-                            : subjectsDB.get(subject_position) + "_" + i + ".png");
+                    stringBuffer.append(getName(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB.get(subject_position).getNumber() + "_" + i + ".jpg"
+                            : getName(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB.get(subject_position).getNumber() + "_" + i + ".png"
+                            : getName(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB.get(subject_position).getNumber() + "_" + i + ".gif"
+                            : getName(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB.get(subject_position).getNumber() + "_" + i + ".jpeg"
+                            : subjectsDB.get(subject_position).getNumber() + "_" + i + ".png");
                 } else {
                     if (i == (picList.size() - 1)) {
-                        stringBuffer.append(getName(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB.get(subject_position) + "_" + i + ".jpg"
-                                : getName(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB.get(subject_position) + "_" + i + ".png"
-                                : getName(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB.get(subject_position) + "_" + i + ".gif"
-                                : getName(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB.get(subject_position) + "_" + i + ".jpeg"
+                        stringBuffer.append(getName(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB.get(subject_position).getNumber() + "_" + i + ".jpg"
+                                : getName(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB.get(subject_position).getNumber() + "_" + i + ".png"
+                                : getName(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB.get(subject_position).getNumber() + "_" + i + ".gif"
+                                : getName(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB.get(subject_position).getNumber() + "_" + i + ".jpeg"
                                 : subjectsDB.get(subject_position) + "_" + i + ".png");
                     } else {
-                        stringBuffer.append(getName(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB.get(subject_position) + "_" + i + ".jpg" + ";"
-                                : getName(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB.get(subject_position) + "_" + i + ".png" + ";"
-                                : getName(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB.get(subject_position) + "_" + i + ".gif" + ";"
-                                : getName(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB.get(subject_position) + "_" + i + ".jpeg" + ";"
-                                : subjectsDB.get(subject_position) + "_" + i + ".png" + ";");
+                        stringBuffer.append(getName(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB.get(subject_position).getNumber() + "_" + i + ".jpg" + ";"
+                                : getName(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB.get(subject_position).getNumber() + "_" + i + ".png" + ";"
+                                : getName(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB.get(subject_position).getNumber() + "_" + i + ".gif" + ";"
+                                : getName(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB.get(subject_position).getNumber() + "_" + i + ".jpeg" + ";"
+                                : subjectsDB.get(subject_position).getNumber() + "_" + i + ".png" + ";");
                     }
                 }
                 map.put("picture", stringBuffer.toString());

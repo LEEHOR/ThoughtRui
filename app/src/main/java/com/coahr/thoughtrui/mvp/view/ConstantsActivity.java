@@ -89,6 +89,7 @@ public class ConstantsActivity extends BaseSupportActivity {
             case Constants.fragment_uploadOptions: //上传设置
                 loadRootFragment(R.id.Constants_Fragment, UploadOptions.newInstance());
                 break;
+
         }
     }
 

@@ -14,6 +14,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.UsersDB;
@@ -60,6 +61,8 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
     ViewPager viewPager;
     @BindView(R.id.ed_search)
     EditText tv_search;
+    @BindView(R.id.iv_message)
+    ImageView iv_message;
     private MainFragmentViewPageAdapter pageAdapter;
 
 
@@ -91,6 +94,12 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
                 JumpToProject();
             }
         });
+        iv_message.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                JumpToMassage();
+            }
+        });
 
     }
 
@@ -106,6 +115,13 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+    private void JumpToMassage(){
+        Intent intent=new Intent(_mActivity, ConstantsActivity.class);
+        intent.putExtra("from", Constants.fragment_main);
+        intent.putExtra("to", Constants.fragment_umeng);
+        startActivity(intent);
     }
 
     /**

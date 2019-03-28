@@ -198,4 +198,11 @@ public interface ApiService {
     @POST(ApiContact.Rtsl)
     Call<RTSL>RTSL (@FieldMap Map<String,Object> para);
 
+    /**
+     * 搜索请求
+     */
+    @FormUrlEncoded
+    @POST(ApiContact.notification)
+    Call<CensorBean>Notification (@FieldMap Map<String,Object> para);
+
 }

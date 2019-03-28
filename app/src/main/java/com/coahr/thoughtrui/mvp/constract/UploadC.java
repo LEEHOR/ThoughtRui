@@ -33,9 +33,9 @@ public interface UploadC  {
         void getUpLoadFileListSuccess(List<String> list,List<SubjectsDB> subjectsDBList,List<ProjectsDB> projectsDBS,int project_position,int subject_position);
         void getUpLoadFileListFailure(String failure);
 
-        void StartUiProgressSuccess(PutObjectRequest request, int currentSize, int totalSize,String info);
+        void StartUiProgressSuccess( int currentSize, int totalSize,String info);
 
-        void UploadCallBack(List<String> list,List<SubjectsDB> subjectsDBList,List<ProjectsDB> projectsDBS,
+        void UploadCallBack(List<String> list,List<SubjectsDB> subjectsDBList,List<ProjectsDB> projectsDBS,List<String> pic,
                             int project_position,int subject_position,
                             int uploadSuccessSize,int uploadFailSize,int totalSize);
 
@@ -74,15 +74,16 @@ public interface UploadC  {
         void getUpLoadFileListFailure(String failure);
 
         //上传的Ui更新
-        void StartUiProgressSuccess(PutObjectRequest request, int currentSize, int totalSize,String info);
+        void StartUiProgressSuccess( int currentSize, int totalSize,String info);
 
         //开始上传
         void startUpLoad(OSSClient ossClient,List<String> list, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position);
-        void UploadCallBack(List<String> list,List<SubjectsDB> subjectsDBList,List<ProjectsDB> projectsDBS,
+
+        void UploadCallBack(List<String> list,List<SubjectsDB> subjectsDBList,List<ProjectsDB> projectsDBS,List<String> pic,
                             int project_position,int subject_position,
                             int uploadSuccessSize,int uploadFailSize,int totalSize);
 
-        void Pic_Compulsory(List<String> list,List<SubjectsDB> subjectsDBList,List<ProjectsDB> projectsDBS,
+        void Pic_Compulsory(List<String> list,List<SubjectsDB> subjectsDBList,List<ProjectsDB> projectsDBS ,
                             int project_position,int subject_position);
 
         //回调上传

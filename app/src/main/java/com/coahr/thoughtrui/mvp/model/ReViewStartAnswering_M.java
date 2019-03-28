@@ -104,12 +104,12 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
     }
 
     @Override
-    public void saveAnswers(String answers, String remark, String ht_ProjectId, int number, String ht_id) {
+    public void saveAnswers(String answers, String remark, String ht_ProjectId, int number, String ht_id,int type) {
         boolean b = SaveOrGetAnswers.saveToFile(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id + "/", "AnswerAndRemark.txt", "1答案:" + answers + "&2备注:" + remark, false);
         if (b) {
-            getPresenter().saveAnswersSuccess();
+            getPresenter().saveAnswersSuccess(type);
         } else {
-            getPresenter().saveAnswersFailure();
+            getPresenter().saveAnswersFailure(type);
         }
     }
 
@@ -165,7 +165,8 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
                 }
             }
 
-            if (audioPath != null) {
+            if (audioPath != null)
+            {
                 OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
                         audioPath, CountSize, projectsDB, subjectsDB, list, 1, 0);
             }
@@ -177,6 +178,11 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
                     OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
                             picList.get(i), CountSize, projectsDB, subjectsDB, list, 2, i + 1);
                 }
+            }
+
+            if (audioPath == null  && (picList ==null || picList.size()==0))
+            {
+                getPresenter().Up_Pic_Compulsory(projectsDB, subjectsDB,list);
             }
 
         }

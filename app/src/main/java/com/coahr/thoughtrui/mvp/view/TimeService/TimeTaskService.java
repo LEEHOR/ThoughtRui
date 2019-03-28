@@ -10,15 +10,20 @@ import com.coahr.thoughtrui.DBbean.UsersDB;
 import com.coahr.thoughtrui.Utils.HttpLogging.MyHttpLogging;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.commom.Constants;
+import com.coahr.thoughtrui.commom.RxManager;
+import com.coahr.thoughtrui.dagger.modules.retrofit.RetrofitModule;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.model.Bean.CensorBean;
+import com.coahr.thoughtrui.mvp.model.Bean.NotificationBean;
 import com.google.gson.Gson;
 import com.socks.library.KLog;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.Nullable;
+import io.reactivex.disposables.Disposable;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -81,7 +86,7 @@ public class TimeTaskService extends IntentService {
                         intent.putExtra("type",1);
                         intent.putExtra("ContentTittle","[任务上传]");
                         intent.putExtra("ContentText","你有项目未上传，经销商代码为：");
-                        intent.putExtra("PCode",Constants.user_type==1?projectsDBSList.get(i).getSale_code():Constants.user_type==2?projectsDBSList.get(i).getService_code():"1");
+                        intent.putExtra("PCode",projectsDBSList.get(i).getSale_code()!=null?projectsDBSList.get(i).getSale_code():projectsDBSList.get(i).getService_code());
                         intent.setAction("TIMER_ACTION");
                         sendBroadcast(intent);
                     }
@@ -90,7 +95,7 @@ public class TimeTaskService extends IntentService {
                         intent.putExtra("type",2);
                         intent.putExtra("ContentTittle","[超期提醒]");
                         intent.putExtra("ContentText","你有项目已超期，经销商代码为：");
-                        intent.putExtra("PCode",Constants.user_type==1?projectsDBSList.get(i).getSale_code():Constants.user_type==2?projectsDBSList.get(i).getService_code():"1");
+                        intent.putExtra("PCode",projectsDBSList.get(i).getSale_code()!=null?projectsDBSList.get(i).getSale_code():projectsDBSList.get(i).getService_code());
                         intent.setAction("TIMER_ACTION");
                         sendBroadcast(intent);
                     }
@@ -140,8 +145,8 @@ public class TimeTaskService extends IntentService {
                                 Intent intent = new Intent(BaseApplication.mContext, TimeTaskReceiver.class);
                                 intent.putExtra("type",2);
                                 intent.putExtra("ContentTittle","[审核未通过]");
-                                intent.putExtra("ContentText","你有项目审核未通过");
-                                intent.putExtra("PCode",Constants.user_type==1?list.get(i).getSale_code():Constants.user_type==2?list.get(i).getService_code():"1");
+                                intent.putExtra("ContentText","你有项目审核未通过，经销商代码为：");
+                                intent.putExtra("PCode",list.get(i).getSale_code()!=null?list.get(i).getSale_code():list.get(i).getService_code());
                                 intent.setAction("TIMER_ACTION");
                                 sendBroadcast(intent);
                             }

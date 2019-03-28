@@ -31,6 +31,7 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
+import com.coahr.thoughtrui.mvp.model.Bean.NotificationBean;
 import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
 import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
 import com.coahr.thoughtrui.widgets.CircularImageView;
@@ -91,7 +92,7 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
 
     @BindView(R.id.tv_quit_account)
     TextView tv_quit_account; //退出登录
-
+    private int unLoad , unStart , unUpload , unComplete;
     public static MyFragment newInstance() {
         return new MyFragment();
     }
@@ -244,7 +245,10 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
      * @param complete
      */
     public void featchProjectInfo(TextView star, TextView download, TextView upload, TextView complete) {
-        int unLoad = 0, unStart = 0, unUpload = 0, unComplete = 0;
+         unLoad = 0;
+         unStart = 0;
+         unUpload = 0;
+         unComplete = 0;
         if (haslogin()) {
             List<UsersDB> usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", Constants.sessionId);
             if (usersDBS != null && usersDBS.size() > 0) {
@@ -255,7 +259,7 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
                             if (projectsDBSList.get(i).getDownloadTime() == -1) {
                                 unLoad++;
                             }
-                            if (projectsDBSList.get(i).getpUploadStatus() == 0) {
+                            if (projectsDBSList.get(i).getCompleteStatus()==1 && projectsDBSList.get(i).getpUploadStatus() == 0) {
                                 unUpload++;
                             }
                             if (projectsDBSList.get(i).getIsComplete() == 0) {
@@ -265,7 +269,9 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
                                 unStart++;
                             }
                         }
+
                     }
+
                 }
             }
         }
@@ -273,6 +279,12 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
         upload.setText(String.valueOf(unUpload));
         complete.setText(String.valueOf(unComplete));
         star.setText(String.valueOf(unStart));
+        if (Constants.message>0) {
+            tv_xx_count.setVisibility(View.VISIBLE);
+            tv_xx_count.setText((Constants.message)+"");
+        } else {
+            tv_xx_count.setVisibility(View.INVISIBLE);
+        }
     }
 
     /**
@@ -381,5 +393,16 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
                         dialog.dismiss();
                     }
                 }).build().show();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (Constants.message>0) {
+            tv_xx_count.setVisibility(View.VISIBLE);
+            tv_xx_count.setText((Constants.message)+"");
+        } else {
+            tv_xx_count.setVisibility(View.INVISIBLE);
+        }
     }
 }

@@ -28,7 +28,7 @@ public class PreferenceUtils {
                 .getDefaultSharedPreferences(context);
         return settings.contains(key);
     }
-    public static String getPrefString(Context context, String key,
+    public static String  getPrefString(Context context, String key,
                                        final String defaultValue) {
         final SharedPreferences settings = PreferenceManager
                 .getDefaultSharedPreferences(context);
@@ -109,8 +109,6 @@ public class PreferenceUtils {
         editor.clear();
         editor.commit();
     }
-
-
     /**
      * desc:保存对象
      * @param context
@@ -228,4 +226,6 @@ public class PreferenceUtils {
         }
         return retData;
     }
+
+
 }

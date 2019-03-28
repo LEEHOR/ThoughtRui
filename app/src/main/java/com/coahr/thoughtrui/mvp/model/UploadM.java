@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TimeUtils;
 
 import com.alibaba.sdk.android.oss.ClientConfiguration;
 import com.alibaba.sdk.android.oss.ClientException;
@@ -40,6 +41,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -64,6 +69,7 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
     private int UpLoadSuccessCount = 0;
     //上传失败的个数
     private int UpLoadFailureCount = 0;
+    ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(5);
 
     @Override
     public void getProjectList(String sessionId) {
@@ -105,13 +111,15 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
 
     @Override
     public void startUpLoad(OSSClient ossClient, List<String> list, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
-        int CountSize = 0;
+
         int picUp = 0;
         picList.clear();
-        String audioPath = null;
+
         ossAsyncTaskList.clear();
         UpLoadSuccessCount = 0;
         UpLoadFailureCount = 0;
+        int CountSize = 0;
+        String audioPath = null;
         if (list != null && list.size() > 0) {
             for (int i = 0; i < list.size(); i++) {
                 if (list.get(i).toLowerCase().endsWith("png") || list.get(i).toLowerCase().endsWith("jpeg")
@@ -127,7 +135,7 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
 
             if (audioPath != null) {
                 OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
-                        audioPath, CountSize, subjectsDBList, projectsDBS, project_position, subject_position, list, 1, 0);
+                        audioPath, CountSize, subjectsDBList, projectsDBS, project_position, subject_position, list, 1, 0, null);
                 if (ossAsyncTask != null) {
                     ossAsyncTaskList.add(ossAsyncTask);
                 }
@@ -136,7 +144,7 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
             if (picList != null && picList.size() > 0) {
                 for (int i = 0; i < picList.size(); i++) {
                     OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
-                            list.get(i), CountSize, subjectsDBList, projectsDBS, project_position, subject_position, list, 1, i + i);
+                            picList.get(i), CountSize, subjectsDBList, projectsDBS, project_position, subject_position, list, 2, i + 1, picList);
                     if (ossAsyncTask != null) {
                         ossAsyncTaskList.add(ossAsyncTask);
                     }
@@ -222,7 +230,7 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
      * @param localFile 文件
      * @param count     总大小
      */
-    public OSSAsyncTask asyncPutImage(OSSClient oss, String localFile, final int count, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position, final List<String> list, int type, int upPic) {
+    public OSSAsyncTask asyncPutImage(OSSClient oss, String localFile, final int count, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position, final List<String> list, int type, int upPic, List<String> picList) {
         if (localFile.equals("")) {
             return null;
         }
@@ -249,9 +257,9 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
         put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
             @Override
             public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
-                if (getPresenter() != null) {
-                    getPresenter().StartUiProgressSuccess(request, (int) currentSize, (int) totalSize, "第" + subjectsDBList.get(subject_position).getNumber() + "题\n" + fileName);
-                }
+
+                getPresenter().StartUiProgressSuccess((int) currentSize, (int) totalSize, "第" + subjectsDBList.get(subject_position).getNumber() + "题\n" + fileName);
+
             }
         });
         put.setCRC64(OSSRequest.CRC64Config.YES);
@@ -260,7 +268,7 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
             public void onSuccess(PutObjectRequest request, PutObjectResult result) {
                 UpLoadSuccessCount++;
                 if (getPresenter() != null) {
-                    getPresenter().UploadCallBack(list, subjectsDBList, projectsDBS, project_position, subject_position,
+                    getPresenter().UploadCallBack(list, subjectsDBList, projectsDBS, picList, project_position, subject_position,
                             UpLoadSuccessCount, UpLoadFailureCount, count);
                 }
             }
@@ -284,7 +292,7 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
                 }
                 UpLoadFailureCount++;
                 if (getPresenter() != null) {
-                    getPresenter().UploadCallBack(list, subjectsDBList, projectsDBS, project_position, subject_position,
+                    getPresenter().UploadCallBack(list, subjectsDBList, projectsDBS, picList, project_position, subject_position,
                             UpLoadSuccessCount, UpLoadFailureCount, count);
                 }
 

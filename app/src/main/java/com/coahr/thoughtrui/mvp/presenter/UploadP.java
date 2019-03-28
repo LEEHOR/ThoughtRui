@@ -96,9 +96,9 @@ public class UploadP extends BasePresenter<UploadC.View, UploadC.Model> implemen
     }
 
     @Override
-    public void StartUiProgressSuccess(PutObjectRequest request, int currentSize, int totalSize, String info) {
+    public void StartUiProgressSuccess( int currentSize, int totalSize, String info) {
         if (getView() != null) {
-            getView().StartUiProgressSuccess(request, currentSize, totalSize, info);
+            getView().StartUiProgressSuccess( currentSize, totalSize, info);
         }
     }
 
@@ -110,9 +110,9 @@ public class UploadP extends BasePresenter<UploadC.View, UploadC.Model> implemen
     }
 
     @Override
-    public void UploadCallBack(List<String> list, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position, int uploadSuccessSize, int uploadFailSize, int totalSize) {
+    public void UploadCallBack(List<String> list, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS,List<String> picList, int project_position, int subject_position, int uploadSuccessSize, int uploadFailSize, int totalSize) {
         if (getView() != null) {
-            getView().UploadCallBack(list, subjectsDBList, projectsDBS, project_position, subject_position, uploadSuccessSize, uploadFailSize, totalSize);
+            getView().UploadCallBack(list, subjectsDBList, projectsDBS,picList, project_position, subject_position, uploadSuccessSize, uploadFailSize, totalSize);
         }
     }
 

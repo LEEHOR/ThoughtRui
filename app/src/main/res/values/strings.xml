@@ -42,4 +42,8 @@
     <!--经销商选择-->
     <string name="Province">省&#8197;&#8197;&#8197;&#8197;&#8197;
         &#8197;&#8197;&#8197;&#8197;&#8197;市</string>
+
+    <string name="language_cn">中文</string>
+    <string name="language_en">ENGLISH</string>
+    <string name="language_auto">自动</string>
 </resources>

@@ -218,10 +218,14 @@
                     android:textSize="@dimen/dp_14" />
 
                 <TextView
+                    android:visibility="invisible"
+                    android:background="@drawable/bg_red_circle"
                     android:id="@+id/tv_xx_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/dp_10"
+                    android:textColor="#ffffff"
+                    android:textSize="@dimen/dp_12"
                     android:layout_toLeftOf="@+id/iv_xx_back" />
 
                 <ImageView

@@ -71,7 +71,6 @@ public class Login_DialogFragment extends BaseDialogFragment<LoginFragmentC.Pres
     Button loginBtn;
     private loginListener loginListener;
     private int pager_number;
-    private TelephonyManager telephonyManager;
     //随机数
     private static final char[] CHARS = {
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
@@ -108,15 +107,6 @@ public class Login_DialogFragment extends BaseDialogFragment<LoginFragmentC.Pres
 
     @Override
     public void initView() {
-        if (PreferenceUtils.getPrefString(BaseApplication.mContext, Constants.devicestoken_key, null) ==null) {
-            StringBuilder buffer = new StringBuilder();
-            Random random = new Random();
-            for (int i = 0; i < DEFAULT_CODE_LENGTH; i++) {
-                buffer.append(CHARS[random.nextInt(CHARS.length)]);
-            }
-            Constants.devicestoken=buffer.toString();
-            PreferenceUtils.setPrefString(BaseApplication.mContext,Constants.devicestoken_key,buffer.toString());
-        }
         this.getDialog().setCancelable(false);
         this.getDialog().setCanceledOnTouchOutside(false);
         this.getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {

@@ -30,9 +30,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:elevation="0dp">
-
+        android:layout_weight="1">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -40,7 +38,6 @@
             android:orientation="vertical"
             android:paddingLeft="@dimen/dp_20"
             android:paddingRight="@dimen/dp_20">
-
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -62,10 +59,10 @@
 
                         <ImageView
                             android:id="@+id/check_bg"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
-                            android:paddingTop="@dimen/dp_40"
+                            android:paddingTop="25dp"
                             android:paddingBottom="@dimen/dp_20"
                             android:src="@drawable/check" />
 
@@ -74,7 +71,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/check_bg"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginBottom="15dp"
+                            android:layout_marginBottom="@dimen/dp_10"
                             android:text="开始检核"
                             android:textColor="@color/colorWhite"
                             android:textSize="@dimen/dp_16" />
@@ -103,7 +100,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <ImageView
-                            android:text="hahahahahaahahahah"
                             android:textColor="@color/colorWhite"
                             android:id="@+id/iv_project_tag"
                             android:layout_width="wrap_content"
@@ -113,10 +109,10 @@
                             android:src="@mipmap/home_unfinished" />
                         <ImageView
                             android:id="@+id/histore_bg"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
-                            android:paddingTop="@dimen/dp_40"
+                            android:paddingTop="25dp"
                             android:paddingBottom="@dimen/dp_20"
                             android:src="@drawable/historelist" />
                         <TextView
@@ -124,7 +120,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/histore_bg"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginBottom="15dp"
+                            android:layout_marginBottom="@dimen/dp_10"
                             android:text="历史项目"
                             android:textColor="@color/colorWhite"
                             android:textSize="@dimen/dp_16" />

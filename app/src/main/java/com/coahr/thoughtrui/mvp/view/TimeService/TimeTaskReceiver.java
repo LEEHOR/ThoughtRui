@@ -23,17 +23,18 @@ public class TimeTaskReceiver extends BroadcastReceiver {
         String contentText = intent.getStringExtra("ContentText");
         String pCode = intent.getStringExtra("PCode");
         if (tittle !=null && contentText !=null &&  pCode !=null){
+            Constants.message++;
             if (type==1){
                 NotificationManager manager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-                NotificationUtil.notifyMsg(context,(int)System.currentTimeMillis(),manager,Constants.fragment_main,tittle,contentText+pCode);
+                NotificationUtil.notifyMsg(context,(int)System.currentTimeMillis(),manager,Constants.fragment_umeng,tittle,contentText+pCode);
             }
             if (type==2){
                 NotificationManager manager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-                NotificationUtil.notifyMsg(context,(int)System.currentTimeMillis(),manager,Constants.fragment_main,tittle,contentText+pCode);
+                NotificationUtil.notifyMsg(context,(int)System.currentTimeMillis(),manager,Constants.fragment_umeng,tittle,contentText+pCode);
             }
             if (type==3){
                 NotificationManager manager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-                NotificationUtil.notifyMsg(context,(int)System.currentTimeMillis(),manager,Constants.fragment_main,tittle,contentText+pCode);
+                NotificationUtil.notifyMsg(context,(int)System.currentTimeMillis(),manager,Constants.fragment_umeng,tittle,contentText+pCode);
             }
 
         }

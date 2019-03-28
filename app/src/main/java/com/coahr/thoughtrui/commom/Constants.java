@@ -2,6 +2,8 @@ package com.coahr.thoughtrui.commom;
 
 import com.coahr.thoughtrui.Utils.StoreSpaceUtils;
 
+import java.util.Locale;
+
 /**
  * Created by Leehor
  * on 2018/11/6
@@ -35,10 +37,14 @@ public class Constants {
     public static int timeout=15;
     //首页定位次数
     public static int location_counts;
+    //消息个数
+    public static int message;
     //早班班次
     public static String zao_ka;
     //晚班次
     public static String wan_ka;
+    //语言
+    public static Locale system_locale=Locale.CHINA;
     //阿里云上传的bucket
     public static final String bucket = "three-research";
 
@@ -128,6 +134,8 @@ public class Constants {
 
     public static final int fragment_uploadOptions=20; //上传设置
 
+    public static final int BaseApp=21; //App
+
     /**
      * PreferenceUtils键
      */
@@ -151,6 +159,8 @@ public class Constants {
     public static String pathVersion_key="aliyun_path_version";
     //app版本
     public static String app_version_key="app_version";
+    //语言
+    public  static String system_locale_key="system_locale";
 
 
     //网络类型判断

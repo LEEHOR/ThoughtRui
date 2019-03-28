@@ -115,23 +115,23 @@ public class ReViewStartAnswering_P extends BasePresenter<ReViewStartAnswering_C
     }
 
     @Override
-    public void saveAnswers(String answers, String remark, String ht_ProjectId, int number, String ht_id) {
+    public void saveAnswers(String answers, String remark, String ht_ProjectId, int number, String ht_id,int type) {
         if (mModle != null) {
-            mModle.saveAnswers(answers, remark, ht_ProjectId, number, ht_id);
+            mModle.saveAnswers(answers, remark, ht_ProjectId, number, ht_id,type);
         }
     }
 
     @Override
-    public void saveAnswersSuccess() {
+    public void saveAnswersSuccess(int type) {
         if (getView() != null) {
-            getView().saveAnswersSuccess();
+            getView().saveAnswersSuccess(type);
         }
     }
 
     @Override
-    public void saveAnswersFailure() {
+    public void saveAnswersFailure(int type) {
         if (getView() != null) {
-            getView().saveAnswersFailure();
+            getView().saveAnswersFailure(type);
         }
     }
 
@@ -209,6 +209,13 @@ public class ReViewStartAnswering_P extends BasePresenter<ReViewStartAnswering_C
     public void startUploadCallBack(List<String> list, int uploadSuccessSize, int uploadFailSize, int totalSize, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
         if (getView() != null) {
             getView().startUploadCallBack(list, uploadSuccessSize, uploadFailSize, totalSize, projectsDB, subjectsDB);
+        }
+    }
+
+    @Override
+    public void Up_Pic_Compulsory(ProjectsDB projectsDB, SubjectsDB subjectsDB,List<String> list) {
+        if (getView() != null) {
+            getView().Up_Pic_Compulsory(projectsDB, subjectsDB,list);
         }
     }
 

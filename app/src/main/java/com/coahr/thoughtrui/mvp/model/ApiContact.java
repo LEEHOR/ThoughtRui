@@ -58,5 +58,7 @@ public class ApiContact {
     public static final String  CensorDetail="app/censor/detail.htm";
     //实时定位
     public static final String Rtsl="app/rta/send.htm";
+    //通知
+    public static final String notification="app/censor/list.htm";
 
 }
