@@ -86,6 +86,10 @@ public class EvaluateInputDialogFragment extends AppCompatDialogFragment {
                 dismiss();
             }
         });
+        etInput.setFocusableInTouchMode(true);
+        etInput.setFocusable(true);
+        etInput.requestFocus();
+        etInput.findFocus();
     }
 
     @Override

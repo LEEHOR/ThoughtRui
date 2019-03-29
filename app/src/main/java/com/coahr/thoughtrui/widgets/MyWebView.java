@@ -63,7 +63,7 @@ webView.onResume() ;
 
 //缩放操作
         webSettings.setSupportZoom(true); //支持缩放，默认为true。是下面那个的前提。
-        webSettings.setBuiltInZoomControls(true); //设置内置的缩放控件。若为false，则该WebView不可缩放
+        webSettings.setBuiltInZoomControls(false); //设置内置的缩放控件。若为false，则该WebView不可缩放
         webSettings.setDisplayZoomControls(false); //隐藏原生的缩放控件
 
 //其他细节操作
@@ -73,11 +73,12 @@ webView.onResume() ;
          * LOAD_NO_CACHE: 不使用缓存，只从网络获取数据.
          * LOAD_CACHE_ELSE_NETWORK，只要本地有，无论是否过期，或者no-cache，都使用缓存中的数据。
          */
-        webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK); //关闭webview中缓存
+        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE); //关闭webview中缓存
         webSettings.setAllowFileAccess(true); //设置可以访问文件
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true); //支持通过JS打开新窗口
         webSettings.setLoadsImagesAutomatically(true); //支持自动加载图片
         webSettings.setDefaultTextEncodingName("utf-8");//设置编码格式
+        //webSettings.setAppCacheMaxSize(1024*1024*8);//设置缓冲大小，我设的是8M
     }
 
     //WebViewClient主要帮助WebView处理各种通知、请求事件

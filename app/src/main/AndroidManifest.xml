@@ -77,7 +77,7 @@
             android:theme="@style/Theme_Light.Default" />
         <!-- 答题 -->
         <activity android:name=".mvp.view.StartProjectActivity"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustResize"/>
         <!-- 百度定位AK鉴权 -->
         <!-- meta-data需要写在application中 -->
         <meta-data
@@ -131,6 +131,11 @@
                 <action android:name="TIMER_ACTION"/>
             </intent-filter>
         </service>
+
+        <!-- 腾讯X5内核初始化 -->
+
+
+        <service android:name="com.tencent.smtt.export.external.DexClassLoaderProviderService" android:label="dexopt" android:process=":dexopt"/>
     </application>
 
 </manifest>

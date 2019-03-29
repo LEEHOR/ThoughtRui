@@ -27,7 +27,7 @@ android {
         multiDexEnabled true
         //manifestPlaceholders = [qqappid: "1232323"]
         testInstrumentationRunner "android.support.ThreeNode.runner.AndroidJUnitRunner"
-        ndk { abiFilters "armeabi", "arm64-v8a", "armeabi-v7a" }
+        ndk { abiFilters "armeabi", "armeabi-v7a","x86" }
     }
     
     buildTypes {
@@ -91,6 +91,7 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
     implementation 'com.google.android.material:material:1.0.0-beta01'
     implementation 'androidx.cardview:cardview:1.0.0-beta01'
+
     //log框架，可指定logcat窗口，标红鲜艳
     implementation 'com.github.zhaokaiqiang.klog:library:1.5.0'
 
@@ -107,7 +108,9 @@ dependencies {
     //黄油刀系列
     implementation 'com.jakewharton:butterknife:10.0.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
+
     //implementation 'com.jakewharton:butterknife:8.4.0'
+
     //annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
 
     //简洁的Adapter
@@ -156,25 +159,38 @@ dependencies {
     //PushSDK必须依赖基础组件库，所以需要加入对应依赖
 
     //友盟统计
-   // implementation 'com.umeng.sdk:common:1.5.1'
-   // implementation 'com.umeng.sdk:analytics:7.5.0'
+
+    // implementation 'com.umeng.sdk:common:1.5.1'
+
+    // implementation 'com.umeng.sdk:analytics:7.5.0'
 
     //PushSDK必须依赖utdid库，所以需要加入对应依赖(alipay-sdk中包含alicloud-android-utdid避免重复)
-     //implementation 'com.umeng.umsdk:utdid:1.1.5.3'
+
+    //implementation 'com.umeng.umsdk:utdid:1.1.5.3'
 
     //PushSDK (阿里热更新包含了避免重复)
+
     //implementation 'com.umeng.sdk:push:4.0.0'
-//PushSDK必须依赖基础组件库，所以需要加入对应依赖
+
+    //PushSDK必须依赖基础组件库，所以需要加入对应依赖
     implementation 'com.umeng.umsdk:common:1.5.4'
-//PushSDK必须依赖utdid库，所以需要加入对应依赖
+
+    //PushSDK必须依赖utdid库，所以需要加入对应依赖
     implementation 'com.umeng.umsdk:utdid:1.1.5.3'
-//PushSDK
+
+    //PushSDK
     implementation 'com.umeng.umsdk:push:5.0.2'
+
     //最新版com.umeng.sdk:common和分享share-core不兼容导致报错故使用旧版本
-   // implementation 'com.umeng.sdk:share-core:6.9.1'
+
+    // implementation 'com.umeng.sdk:share-core:6.9.1'
+
     //implementation 'com.umeng.sdk:share-qq:6.9.1.1'
-   // implementation 'com.umeng.sdk:share-wechat:6.9.1'
+
+    // implementation 'com.umeng.sdk:share-wechat:6.9.1'
+
     //分享面板
+
     //implementation 'com.umeng.sdk:shareboard-widget:6.9.1'
 
     //录音
@@ -185,4 +201,5 @@ dependencies {
 
     //仿ios
     implementation 'com.contrarywind:Android-PickerView:4.1.6'
+    implementation files('libs/tbs_sdk_thirdapp_v3.6.0.1352_43618_sharewithdownload_withoutGame_obfs_20180918_120327.jar')
 }

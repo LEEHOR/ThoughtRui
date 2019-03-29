@@ -50,6 +50,7 @@ public class Fill_in_blankDialog extends BaseDialogFragment {
 
     @Override
     public void initView() {
+        KeyBoardUtils.UpdateUI(lin_all, getActivity());
         KeyBoardUtils.showKeybord(ed_input, getActivity());
         tv_view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,7 +102,10 @@ public class Fill_in_blankDialog extends BaseDialogFragment {
 
     @Override
     public void initData() {
-
+        ed_input.setFocusableInTouchMode(true);
+        ed_input.setFocusable(true);
+        ed_input.requestFocus();
+        ed_input.findFocus();
     }
 
     @Override
@@ -116,6 +120,7 @@ public class Fill_in_blankDialog extends BaseDialogFragment {
             window.getDecorView().setPadding(0, 0, 0, 0);
             window.setBackgroundDrawableResource(android.R.color.transparent);
             window.setLayout(lp.MATCH_PARENT, lp.MATCH_PARENT);
+            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
             window.setWindowAnimations(R.style.bottom_in_out_animation);
         }
     }

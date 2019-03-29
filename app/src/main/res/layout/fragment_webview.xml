@@ -8,9 +8,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 </com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar>
-    <com.coahr.thoughtrui.widgets.MyWebView
+    <com.coahr.thoughtrui.widgets.SimpleWebView
         android:id="@+id/myWebView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </com.coahr.thoughtrui.widgets.MyWebView>
+    </com.coahr.thoughtrui.widgets.SimpleWebView>
 </LinearLayout>

@@ -25,6 +25,8 @@
             android:padding="@dimen/dp_5"
             android:textSize="@dimen/dp_14"
             android:textColor="#333333"
+            android:focusableInTouchMode="true"
+            android:focusable="true"
             android:layout_toLeftOf="@+id/tv_send"
             android:background="@drawable/bg_fff_background" />
         <TextView

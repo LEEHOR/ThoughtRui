@@ -108,6 +108,7 @@ public class MainInfoFragment extends BaseChildFragment<MainInfoFragment_C.Prese
         Intent intent=new Intent(_mActivity, ConstantsActivity.class);
         intent.putExtra("from", Constants.fragment_mainInfo);
         intent.putExtra("to", Constants.fragment_umeng);
+       // intent.putExtra("url","http://61.183.131.58:8080/DFL_KM_GATEWAY/avicit/www/index.html?username_bGl3eA==");
         startActivity(intent);
     }
     @Override

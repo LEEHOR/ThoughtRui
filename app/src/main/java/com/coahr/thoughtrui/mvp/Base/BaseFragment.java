@@ -28,6 +28,7 @@ import com.coahr.thoughtrui.widgets.BroadcastReceiver.AliyunHotReceiver;
 
 import java.util.List;
 
+import androidx.fragment.app.Fragment;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import dagger.android.support.AndroidSupportInjection;

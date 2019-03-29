@@ -69,7 +69,7 @@ public class ConstantsActivity extends BaseSupportActivity {
                 loadRootFragment(R.id.Constants_Fragment, Fragment_Feedback.newInstance());
                 break;
             case Constants.fragment_main: //项目列表
-                loadRootFragment(R.id.Constants_Fragment, MainFragment.newInstance());
+                loadRootFragment(R.id.Constants_Fragment, MainFragment.newInstance(0,1));
                 break;
             case Constants.fragment_template: //项目模板
                 loadRootFragment(R.id.Constants_Fragment, ProjectTemplate.newInstance());

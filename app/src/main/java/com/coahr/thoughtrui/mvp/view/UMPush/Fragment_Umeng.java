@@ -20,6 +20,7 @@ import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
 import com.coahr.thoughtrui.mvp.view.MainActivity;
 import com.coahr.thoughtrui.mvp.view.UMPush.adapter.NotificationAdapter;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
+import com.coahr.thoughtrui.mvp.view.home.MainFragment;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
 
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
+import me.yokeyword.fragmentation.SupportFragment;
 
 /**
  * @author Leehor
@@ -187,10 +189,7 @@ public class Fragment_Umeng extends BaseFragment<Fragment_UmengP> implements Fra
      * 跳转到历史项目
      */
     private void JumpToProjectList(int i) {
-        Intent intent = new Intent(_mActivity, ConstantsActivity.class);
-        intent.putExtra("from", Constants.fragment_umeng);
-        intent.putExtra("to", i);
-        startActivity(intent);
+        start(MainFragment.newInstance(2,2));
     }
 
     private void JumpToMainActivity(int i) {

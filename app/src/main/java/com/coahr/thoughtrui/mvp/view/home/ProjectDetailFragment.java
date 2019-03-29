@@ -266,7 +266,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
 
     @Override
     public void getSubjectListSuccess(List<SubjectsDB> subjectsDBList, ProjectsDB projectsDB, int totalSize) {
-        tv_fstatus.setText(subjectsDBList.size() == totalSize ? "已完成" : "未完成" + "(" + subjectsDBList.size() + "/" + totalSize + ")");
+        tv_fstatus.setText(subjectsDBList != null && subjectsDBList.size() != 0 && subjectsDBList.size() == totalSize ? "已完成" : "未完成" + "(" + subjectsDBList.size() + "/" + totalSize + ")");
         p.getDateSize(subjectsDBList, projectsDB);
     }
 
@@ -277,7 +277,6 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
 
     @Override
     public void getDateSizeSuccess(int subject, int files) {
-
         tv_upload_status.setText("数据" + subject + "条，" + "附件" + files + "个未上传");
     }
 
@@ -310,16 +309,17 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
                 projectsDB.setManager(projectDetail.getData().getManager());
                 projectsDB.setLocation(projectDetail.getData().getLocation());
                 projectsDB.setPid(projectDetail.getData().getId());
-                projectsDB.setSale_code(projectDetail.getData().getSale_code());
                 projectsDB.setAddress(projectDetail.getData().getAreaAddress());
                 projectsDB.setGrade(projectDetail.getData().getGrade());
                 projectsDB.setPname(projectDetail.getData().getPname());
-                //    projectsDB.setdName(projectDetail.getData().getDname());
+                projectsDB.setDname(projectDetail.getData().getDname());
+                projectsDB.setCname(projectDetail.getData().getCname());
                 projectsDB.setLongitude(projectDetail.getData().getLongitude());
                 projectsDB.setLatitude(projectDetail.getData().getLatitude());
-                projectsDB.setModifyTime(0);
+                projectsDB.setModifyTime(System.currentTimeMillis());
                 projectsDB.setUploadTime(projectDetail.getData().getUploadTime());
                 projectsDB.setService_code(projectDetail.getData().getService_code());
+                projectsDB.setSale_code(projectDetail.getData().getSale_code());
                 projectsDB.setNotice(projectDetail.getData().getNotice());
                 projectsDB.setStage("1");
                 if (usersDBS != null && usersDBS.size() > 0) {
@@ -329,7 +329,6 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
                 tv_upload_status.setText("数据" + 0 + "条，" + "附件" + 0 + "个未上传");
                 tv_fstatus.setText("暂无数据");
             }
-
             tv_cName.setText(projectDetail.getData().getCname());
             tv_cCode.setText(Constants.user_type == 1 ? projectDetail.getData().getSale_code() : Constants.user_type == 2
                     ? projectDetail.getData().getService_code() : projectDetail.getData().getSale_code());
@@ -345,14 +344,11 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
                 project_detail_progress.setProgress(Integer.parseInt(split_p[0]));
             }
             project_detail_time.setText("发布于");
-           /* tv_type.setText(projectsDB.getInspect() == 1 ? "飞检"
-                    : projectsDB.getInspect() == 2 ? "神秘顾客"
-                    : projectsDB.getInspect() == 3 ? "新店验收"
-                    : "飞检");*/
+
             tv_project_manager.setText(projectDetail.getData().getManager());
             tv_project_user.setText(Constants.user_name);
             tv_project_describe.setText(projectDetail.getData().getNotice());
-            List<ProjectsDB> projectsDBS1 = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", projectDetail.getData().getId());
+            // List<ProjectsDB> projectsDBS1 = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", projectDetail.getData().getId());
             Constants.ht_ProjectId = projectDetail.getData().getId();
             Constants.name_Project = projectDetail.getData().getPname();
             String s = projectDetail.getData().getCname();
@@ -376,6 +372,8 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
     @Override
     public void getProjectDetailFailure(String fail) {
         isHaveProject = false;
+        tv_fstatus.setText("未完成" + "(" + 0 + "/" + 0 + ")");
+        tv_upload_status.setText("数据" + 0 + "条，" + "附件" + 0 + "个未上传");
     }
 
     /**
@@ -401,10 +399,6 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
                 project_detail_progress.setProgress(Integer.parseInt(split_p[0]));
             }
             project_detail_time.setText("发布于" + TimeUtils.getStingYMD(projectsDB.getModifyTime()));
-           /* tv_type.setText(projectsDB.getInspect() == 1 ? "飞检"
-                    : projectsDB.getInspect() == 2 ? "神秘顾客"
-                    : projectsDB.getInspect() == 3 ? "新店验收"
-                    : "飞检");*/
             tv_project_manager.setText(projectsDB.getManager());
             tv_project_user.setText(Constants.user_name);
             tv_project_describe.setText(projectsDB.getNotice());
@@ -426,6 +420,10 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
                 }
             }
             p.getSubjectList(projectsDB);
+        } else {
+            tv_fstatus.setText("未完成" + "(" + 0 + "/" + 0 + ")");
+            tv_upload_status.setText("数据" + 0 + "条，" + "附件" + 0 + "个未上传");
+
         }
     }
 

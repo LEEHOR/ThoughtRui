@@ -143,6 +143,13 @@ public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implemen
             ProjectsDB projectsDB=new ProjectsDB();
            // projectsDB.setDownloadTime(listBean.getDownloadTime());
             projectsDB.setCompleteStatus(listBean.getCompleteStatus());
+            //projectsDB.setGrade(listBean.getGrade());
+            projectsDB.setCname(listBean.getCname());
+            projectsDB.setDname(listBean.getDname());
+            projectsDB.setService_code(listBean.getService_code());
+            projectsDB.setSale_code(listBean.getSale_code());
+            projectsDB.setModifyTime(listBean.getModifyTime());
+            projectsDB.setUploadTime(listBean.getUploadTime());
             projectsDB.setProgress(listBean.getProgress());
             if (usersDBS != null && usersDBS.size()>0) {
                 projectsDB.setUser(usersDBS.get(0));
@@ -159,7 +166,7 @@ public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implemen
             projectsDB.setPname(listBean.getPname());  //项目名
             projectsDB.setAddress(listBean.getAreaAddress());
            // projectsDB.setStartTime(listBean.getStartTime());
-          //  projectsDB.setcName(listBean.getCname());
+            projectsDB.setCname(listBean.getCname());
            // projectsDB.setCode(listBean.getCode());
            // projectsDB.setDownloadTime(listBean.getDownloadTime());
             projectsDB.setCompleteStatus(listBean.getCompleteStatus());
@@ -170,7 +177,9 @@ public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implemen
             projectsDB.setLongitude(listBean.getLongitude());
             projectsDB.setModifyTime(listBean.getModifyTime());
             projectsDB.setNotice(listBean.getNotice());
+            projectsDB.setUploadTime(listBean.getModifyTime());
           //  projectsDB.setEndTime(listBean.getEndTime());
+            projectsDB.setGrade(listBean.getGrade());
             projectsDB.setManager(listBean.getManager());
             projectsDB.setService_code(listBean.getService_code());
             projectsDB.setSale_code(listBean.getSale_code());

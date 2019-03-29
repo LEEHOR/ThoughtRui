@@ -64,11 +64,17 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
     @BindView(R.id.iv_message)
     ImageView iv_message;
     private MainFragmentViewPageAdapter pageAdapter;
+    private int type;
+    private int page;
 
 
-
-    public static MainFragment newInstance() {
-        return new MainFragment();
+    public static MainFragment newInstance(int page,int type) {
+        MainFragment mainFragment=new MainFragment();
+        Bundle bundle=new Bundle();
+        bundle.putInt("page",page);
+        bundle.putInt("type",type);
+        mainFragment.setArguments(bundle);
+        return mainFragment;
     }
 
     @Override
@@ -88,6 +94,10 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
 
     @Override
     public void initView() {
+        if (getArguments() != null) {
+            type = getArguments().getInt("type");
+            page = getArguments().getInt("page");
+        }
         tv_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -109,7 +119,12 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
         viewPager.setAdapter(pageAdapter);
         home_tab.setupWithViewPager(viewPager);
         viewPager.setOffscreenPageLimit(1);
-        viewPager.setCurrentItem(0);
+        if (type==2){
+            viewPager.setCurrentItem(page);
+        } else {
+            viewPager.setCurrentItem(0);
+        }
+
     }
 
     @Override

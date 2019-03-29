@@ -20,6 +20,7 @@ import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.Feedback_Fragment_C;
 import com.coahr.thoughtrui.mvp.model.Bean.FeedBack;
 import com.coahr.thoughtrui.mvp.presenter.Feedback_Fragment_P;
+import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
 import com.socks.library.KLog;
 
 import java.util.HashMap;
@@ -53,6 +54,8 @@ public class Fragment_Feedback extends BaseFragment<Feedback_Fragment_C.Presente
     TextView tv_countSize;
     @BindView(R.id.tv_submit)
     TextView tv_submit;
+    @BindView(R.id.feedback_tittle)
+    MyTittleBar feedback_tittle;
     private String type;
 
     @Override
@@ -71,9 +74,13 @@ public class Fragment_Feedback extends BaseFragment<Feedback_Fragment_C.Presente
 
     @Override
     public void initView() {
-
         tv_submit.setOnClickListener(this);
-
+        feedback_tittle.getLeftIcon().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                _mActivity.onBackPressed();
+            }
+        });
     }
 
     @Override

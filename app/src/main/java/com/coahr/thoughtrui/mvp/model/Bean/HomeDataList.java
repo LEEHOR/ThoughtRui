@@ -111,6 +111,7 @@ public class HomeDataList {
             private String service_code;
             private long startTime;
             private String manager;
+            private long uploadTime;
 
             public String getCname() {
                 return Cname;
@@ -254,6 +255,14 @@ public class HomeDataList {
 
             public void setManager(String manager) {
                 this.manager = manager;
+            }
+
+            public long getUploadTime() {
+                return uploadTime;
+            }
+
+            public void setUploadTime(long uploadTime) {
+                this.uploadTime = uploadTime;
             }
         }
 
@@ -296,6 +305,7 @@ public class HomeDataList {
             private String service_code;
             private long startTime;
             private String manager;
+            private long uploadTime;
 
             public String getCname() {
                 return Cname;
@@ -439,6 +449,14 @@ public class HomeDataList {
 
             public void setManager(String manager) {
                 this.manager = manager;
+            }
+
+            public long getUploadTime() {
+                return uploadTime;
+            }
+
+            public void setUploadTime(long uploadTime) {
+                this.uploadTime = uploadTime;
             }
         }
     }

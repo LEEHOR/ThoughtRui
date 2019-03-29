@@ -147,11 +147,12 @@ public class ProjectTemplate extends BaseFragment<ProjectTemplate_c.Presenter> i
      * 跳转到经销商
      */
     private void JumpToProjectTemplate(String Template_id){
-        Intent intent=new Intent(_mActivity, ConstantsActivity.class);
+        start(DealerFragment.Instance(Template_id));
+      /*  Intent intent=new Intent(_mActivity, ConstantsActivity.class);
         intent.putExtra("from", Constants.fragment_mainInfo);
          intent.putExtra("Template_id",Template_id);
         intent.putExtra("to", Constants.fragment_Dealer);
-        startActivity(intent);
+        startActivity(intent);*/
     }
     @Override
     public void getProjectTemplatesSuccess(Template_list template_list) {

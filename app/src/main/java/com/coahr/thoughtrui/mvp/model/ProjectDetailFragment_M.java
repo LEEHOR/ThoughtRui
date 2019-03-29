@@ -27,24 +27,21 @@ public class ProjectDetailFragment_M extends BaseModel<ProjectDetailFragment_C.P
     public ProjectDetailFragment_M() {
         super();
     }
-   private List<SubjectsDB> list;
+   private List<SubjectsDB> list =new ArrayList<>();
     @Override
     public void getSubjectList(ProjectsDB projectsDB) {
 
         List<SubjectsDB> subjectsDBList = DataBaseWork.DBSelectByTogether_Where(SubjectsDB.class, "projectsdb_id=? ", String.valueOf(projectsDB.getId()));
+        list.clear();
         if (subjectsDBList != null && subjectsDBList.size()>0) {
-            list =new ArrayList<>();
+
             for (int i = 0; i < subjectsDBList.size(); i++) {
                 if (subjectsDBList.get(i).getIsComplete()==1){
                     list.add(subjectsDBList.get(i));
                 }
             }
         }
-        if (list!=null && list.size()>0){
-            getPresenter().getSubjectListSuccess(list,projectsDB,subjectsDBList.size());
-        } else {
-            getPresenter().getSubjectListFailure("暂无题目");
-        }
+        getPresenter().getSubjectListSuccess(list,projectsDB,subjectsDBList.size());
     }
 
     @Override
