@@ -8,6 +8,7 @@ import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.StartProjectActivity_C;
 import com.coahr.thoughtrui.mvp.model.Bean.QuestionBean;
+import com.socks.library.KLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +80,7 @@ public class StartProjectActivity_M extends BaseModel<StartProjectActivity_C.Pre
     public void getOfflineDate(String ht_projectId) {
         List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", ht_projectId);
         if (projectsDBS != null && projectsDBS.size()>0) {
-            List<SubjectsDB> subjectsDBList = projectsDBS.get(0).getSubjectsDBList();
+            List<SubjectsDB> subjectsDBList = DataBaseWork.DBSelectByTogether_order(SubjectsDB.class, new String[]{"projectsdb_id=?", String.valueOf(projectsDBS.get(0).getId())}, "number");
             if (subjectsDBList !=null && subjectsDBList.size()>0){
                 List<String> ht_list=new ArrayList<>();
                 ht_list.clear();

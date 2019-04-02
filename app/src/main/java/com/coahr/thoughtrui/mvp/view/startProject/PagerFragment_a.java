@@ -19,6 +19,7 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -132,6 +133,8 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     TextView tv_next;  //下一页
     @BindView(R.id.fr_upload)
     FrameLayout fr_upload; //上传
+    @BindView(R.id.iv_upload_tag)
+    ImageView iv_upload_tag;     //上传标志
     //==========================================================
     //项目本地数据库Id
     private String dbProjectId;
@@ -159,6 +162,8 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     private boolean isHaveRecorder;
     //是否有图片
     private boolean isPhotos;
+    //是否有备注
+    private boolean isDescribe;
     private String audioPath;
     //是否在录音
     private boolean isRecorder;
@@ -240,6 +245,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
     @Override
     public void initView() {
+        iv_upload_tag.setVisibility(View.VISIBLE);
         fill_in_blankDialog = Fill_in_blankDialog.newInstance();
         inflate = LayoutInflater.from(_mActivity).inflate(R.layout.dialog_progress, null);
         tv_tittle = inflate.findViewById(R.id.tv_progress_info);
@@ -379,19 +385,11 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             case R.id.tv_last:
                 if (!isRecorder) {  //判断是否在录音
                     if (number > 1) {
-                        if (subjectsDB_now.getPhotoStatus() == 1) {  //强制拍照
-                            if (isComplete()) {
-                                SubjectsDB subjectsDB = new SubjectsDB();
-                                subjectsDB.setIsComplete(1);
-                                subjectsDB.update(subjectsDB_now.getId());
-                            }
+                        if (UpdateDB()){
+
                             EventBus.getDefault().postSticky(new isCompleteBean(true, number - 1, 1, 1));
+
                         } else {
-                            if (isAnswer) {
-                                SubjectsDB subjectsDB = new SubjectsDB();
-                                subjectsDB.setIsComplete(1);
-                                subjectsDB.update(subjectsDB_now.getId());
-                            }
                             EventBus.getDefault().postSticky(new isCompleteBean(true, number - 1, 1, 1));
                         }
                     } else {
@@ -406,36 +404,45 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             case R.id.tv_next:
                 if (number < countSize) {
                     if (!isRecorder) {
-                        if (subjectsDB_now.getPhotoStatus() == 1) {
-                            if (!isAnswer) {
-                                ToastUtils.showLong("请填写答案");
-                                return;
-                            }
-                            if (!isPhotos) {
-                                ToastUtils.showLong("请拍摄照片");
-                                return;
-                            }
-                            if (isComplete()) {
-                                SubjectsDB subjectsDB = new SubjectsDB();
-                                subjectsDB.setIsComplete(1);
-                                subjectsDB.update(subjectsDB_now.getId());
-                            }
-                            EventBus.getDefault().postSticky(new isCompleteBean(true, number + 1, 2, 1));
-                        } else {
-                            if (isAnswer) {
-                                SubjectsDB subjectsDB = new SubjectsDB();
-                                subjectsDB.setIsComplete(1);
-                                subjectsDB.update(subjectsDB_now.getId());
-                            }
+                        if (UpdateDB()){
                             EventBus.getDefault().postSticky(new isCompleteBean(true, number + 1, 2, 1));
                         }
+//                        if (subjectsDB_now.getPhotoStatus() == 1) {
+//                            if (!isAnswer) {
+//                                ToastUtils.showLong("请填写答案");
+//                                return;
+//                            }
+//                            if (!isPhotos) {
+//                                ToastUtils.showLong("请拍摄照片");
+//                                return;
+//                            }
+//                            if (isComplete()) {
+//                                SubjectsDB subjectsDB = new SubjectsDB();
+//                                subjectsDB.setIsComplete(1);
+//                                subjectsDB.update(subjectsDB_now.getId());
+//                            }
+//                            EventBus.getDefault().postSticky(new isCompleteBean(true, number + 1, 2, 1));
+//                        } else {
+//                            if (isAnswer) {
+//                                SubjectsDB subjectsDB = new SubjectsDB();
+//                                subjectsDB.setIsComplete(1);
+//                                subjectsDB.update(subjectsDB_now.getId());
+//                            }
+//                            EventBus.getDefault().postSticky(new isCompleteBean(true, number + 1, 2, 1));
+//                        }
 
                     } else {
                         showStopAudioDialog("", "是否停止录音");
                     }
                 } else {
                     if (!isRecorder) {
-                        if (subjectsDB_now.getPhotoStatus() == 1) {
+
+                        if (UpdateDB()) {
+                            ToastUtils.showLong("已经是最后一题");
+                            ProjectSuccessDialog projectSuccessDialog = ProjectSuccessDialog.newInstance(ht_projectId);
+                            projectSuccessDialog.show(getChildFragmentManager(), TAG);
+                        }
+                     /*   if (subjectsDB_now.getPhotoStatus() == 1) {
                             if (!isAnswer) {
                                 ToastUtils.showLong("请填写答案");
                                 return;
@@ -455,11 +462,9 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                                 subjectsDB.setIsComplete(1);
                                 subjectsDB.update(subjectsDB_now.getId());
                             }
-                        }
+                        }*/
 
-                        ToastUtils.showLong("已经是最后一题");
-                        ProjectSuccessDialog projectSuccessDialog = ProjectSuccessDialog.newInstance(ht_projectId);
-                        projectSuccessDialog.show(getChildFragmentManager(), TAG);
+
                     } else {
                         showStopAudioDialog("", "是否停止录音");
                     }
@@ -494,7 +499,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
             case R.id.fr_upload:
 
-                if (!isAnswer){
+                if (!isAnswer) {
                     ToastUtils.showLong("请填写答案");
                     return;
                 }
@@ -521,12 +526,24 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         if (subjectsDB != null) {
             //题目
             project_detail_titlle.setText(subjectsDB.getTitle());
+            int i = subjectsDB.getsUploadStatus();
+            if (i==1){
+                iv_upload_tag.setImageResource(R.mipmap.uploaded);
+            } else {
+                iv_upload_tag.setImageResource(R.mipmap.not_uploaded);
+            }
             //String options = subjectsDB.getOptions();
             //判断是填空题还是选择题
             this.subjectsDBType = subjectsDB.getType();
             if (subjectsDB.getType() == 0) {  //判断
                 re_score.setVisibility(View.GONE);
                 rg_gr.setVisibility(View.VISIBLE);
+                String options = subjectsDB.getOptions();
+                String[] split = options.split("&");
+                if (split != null && split.length > 0) {
+                    rb_yes.setText(split[0]);
+                    rb_no.setText(split[1]);
+                }
             }
 
             if (subjectsDB.getType() == 1) {  //填空题
@@ -580,7 +597,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
     @Override
     public void getImageFailure() {
-       // ToastUtils.showLong("获取图片失败");
+        // ToastUtils.showLong("获取图片失败");
         isDeletePic = false;
         isPhotos = false;
     }
@@ -598,10 +615,10 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                             if (string != null && !string.equals("") && !string.equals("null")) {
                                 answers = string;
                                 isAnswer = true;
-                                if (string.equals("是")) {
+                                if (string.equals(rb_yes.getText().toString())) {
                                     rb_yes.toggle();
                                 }
-                                if (string.equals("否")) {
+                                if (string.equals(rb_no.getText().toString())) {
                                     rb_no.toggle();
                                 }
                             }
@@ -611,6 +628,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                             String string1 = SaveOrGetAnswers.getString(s1, ":");
                             if (string1 != null && !string1.equals("") && !string1.equals("null")) {
                                 remark = string1;
+                                isDescribe = true;
                                 tv_bianji.setText(string1);
                             }
                         }
@@ -681,6 +699,11 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     @Override
     public void saveAnswersFailure(int type) {
         ToastUtils.showLong("保存失败");
+        if (type == 1) {
+            isAnswer = false;
+        } else {
+            isDescribe = false;
+        }
     }
 
     @Override
@@ -704,7 +727,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             tv_recorder_name.setText(audioName);
             tv_recorder_name.setTextColor(getResources().getColor(R.color.origin_3));
             //更新数据库完成状态
-          // UpdateDB();
+            // UpdateDB();
         }
     }
 
@@ -817,12 +840,14 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     public void UpDataDbSuccess() {
         ToastUtils.showLong("上传成功");
         fr_upload.setEnabled(true);
+        iv_upload_tag.setImageResource(R.mipmap.uploaded);
     }
 
     @Override
     public void UpDataDbFailure(String fail) {
         ToastUtils.showLong(fail);
         fr_upload.setEnabled(true);
+        iv_upload_tag.setImageResource(R.mipmap.not_uploaded);
     }
 
     /**
@@ -912,10 +937,10 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 return;
             }
             if (rb_yes.isChecked()) {
-                answers = "是";
+                answers = rb_yes.getText().toString();
             }
             if (rb_no.isChecked()) {
-                answers = "否";
+                answers = rb_no.getText().toString();
             }
             KLog.d("选择", answers);
             p.saveAnswers(answers, remark, ht_projectId, number, ht_id, 1);
@@ -1309,22 +1334,172 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     /**
      * 修改数据库状态为完成
      */
-    private void UpdateDB() {
-        if (subjectsDB_now.getPhotoStatus() == 1) {
-            if (isPhotos && isAnswer) {
+    private boolean UpdateDB() {
+        if (subjectsDB_now.getPhotoStatus() == 1
+                && subjectsDB_now.getDescribeStatus() == 1
+                && subjectsDB_now.getRecordStatus() == 1) {
+            if (isPhotos && isAnswer && isDescribe && isHaveRecorder) {
                 SubjectsDB subjectsDB = new SubjectsDB();
                 subjectsDB.setIsComplete(1);
                 subjectsDB.update(subjectsDB_now.getId());
+                return true;
+            } else {
+                if (!isAnswer) {
+                    ToastUtils.showLong("请填写答案");
+                }
+                if (!isDescribe) {
+                    ToastUtils.showLong("请填写备注");
+                }
+                if (!isPhotos) {
+                    ToastUtils.showLong("请拍摄照片");
+                }
+                if (!isHaveRecorder) {
+                    ToastUtils.showLong("请开启录音");
+                }
+                return false;
+            }
+        } else if (subjectsDB_now.getPhotoStatus() == -1
+                && subjectsDB_now.getDescribeStatus() == 1
+                && subjectsDB_now.getRecordStatus() == 1) {
+            if (isAnswer && isDescribe && isHaveRecorder) {
+                SubjectsDB subjectsDB = new SubjectsDB();
+                subjectsDB.setIsComplete(1);
+                subjectsDB.update(subjectsDB_now.getId());
+
+                return true;
+            } else {
+                if (!isAnswer) {
+                    ToastUtils.showLong("请填写答案");
+                }
+                if (!isDescribe) {
+                    ToastUtils.showLong("请填写备注");
+                }
+                if (!isHaveRecorder) {
+                    ToastUtils.showLong("请开启录音");
+                }
+                return false;
+            }
+
+        } else if (subjectsDB_now.getPhotoStatus() == 1
+                && subjectsDB_now.getDescribeStatus() == -1
+                && subjectsDB_now.getRecordStatus() == 1) {
+            if (isAnswer && isPhotos && isHaveRecorder) {
+                SubjectsDB subjectsDB = new SubjectsDB();
+                subjectsDB.setIsComplete(1);
+                subjectsDB.update(subjectsDB_now.getId());
+                return true;
+            } else {
+                if (!isAnswer) {
+                    ToastUtils.showLong("请填写答案");
+                }
+                if (!isPhotos) {
+                    ToastUtils.showLong("请拍摄照片");
+                }
+                if (!isHaveRecorder) {
+                    ToastUtils.showLong("请开启录音");
+                }
+                return false;
+            }
+        } else if (subjectsDB_now.getPhotoStatus() == 1
+                && subjectsDB_now.getDescribeStatus() == 1
+                && subjectsDB_now.getRecordStatus() == -1) {
+            if (isAnswer && isDescribe && isPhotos) {
+                SubjectsDB subjectsDB = new SubjectsDB();
+                subjectsDB.setIsComplete(1);
+                subjectsDB.update(subjectsDB_now.getId());
+                return true;
+            } else {
+                if (!isAnswer) {
+                    ToastUtils.showLong("请填写答案");
+                }
+                if (!isPhotos) {
+                    ToastUtils.showLong("请拍摄照片");
+                }
+                if (!isDescribe) {
+                    ToastUtils.showLong("请填写备注");
+                }
+                return false;
+            }
+        } else if (subjectsDB_now.getPhotoStatus() == 1
+                && subjectsDB_now.getDescribeStatus() == -1
+                && subjectsDB_now.getRecordStatus() == -1) {
+            if (isAnswer && isPhotos) {
+                SubjectsDB subjectsDB = new SubjectsDB();
+                subjectsDB.setIsComplete(1);
+                subjectsDB.update(subjectsDB_now.getId());
+                return true;
+            } else {
+                if (!isAnswer) {
+                    ToastUtils.showLong("请填写答案");
+                }
+                if (!isPhotos) {
+                    ToastUtils.showLong("请拍摄图片");
+                }
+
+                return false;
+            }
+        } else if (subjectsDB_now.getPhotoStatus() == -1
+                && subjectsDB_now.getDescribeStatus() == -1
+                && subjectsDB_now.getRecordStatus() == 1) {
+            if (isAnswer && isHaveRecorder) {
+                SubjectsDB subjectsDB = new SubjectsDB();
+                subjectsDB.setIsComplete(1);
+                subjectsDB.update(subjectsDB_now.getId());
+                return true;
+            } else {
+                if (!isAnswer) {
+                    ToastUtils.showLong("请填写答案");
+                }
+                if (!isHaveRecorder) {
+                    ToastUtils.showLong("请开启录音");
+                }
+                return false;
+            }
+
+        } else if (subjectsDB_now.getPhotoStatus() == -1
+                && subjectsDB_now.getDescribeStatus() == 1
+                && subjectsDB_now.getRecordStatus() == -1) {
+            if (isAnswer && isHaveRecorder) {
+                SubjectsDB subjectsDB = new SubjectsDB();
+                subjectsDB.setIsComplete(1);
+                subjectsDB.update(subjectsDB_now.getId());
+                return true;
+            } else {
+                if (!isAnswer) {
+                    ToastUtils.showLong("请填写答案");
+                }
+                if (!isDescribe) {
+                    ToastUtils.showLong("请填写备注");
+                }
+                return false;
+            }
+        } else if (subjectsDB_now.getPhotoStatus() == -1
+                && subjectsDB_now.getDescribeStatus() == -1
+                && subjectsDB_now.getRecordStatus() == -1) {
+            if (isAnswer) {
+                SubjectsDB subjectsDB = new SubjectsDB();
+                subjectsDB.setIsComplete(1);
+                subjectsDB.update(subjectsDB_now.getId());
+                return true;
+            } else {
+                if (!isAnswer) {
+                    ToastUtils.showLong("请填写答案");
+                }
+                return false;
             }
         } else {
             if (isAnswer) {
                 SubjectsDB subjectsDB = new SubjectsDB();
                 subjectsDB.setIsComplete(1);
                 subjectsDB.update(subjectsDB_now.getId());
+                return true;
+            } else {
+                if (!isAnswer) {
+                    ToastUtils.showLong("请填写答案");
+                }
+                return false;
             }
-
         }
-
     }
 }
 

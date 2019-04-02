@@ -83,7 +83,7 @@ public class QuestionBean {
             private String quota1;
             private String quota2;
             private String quota3;
-
+            private Integer recordStatus;
             private String title;
             private Integer type;
 
@@ -182,6 +182,14 @@ public class QuestionBean {
 
             public void setNumber(int number) {
                 this.number = number;
+            }
+
+            public Integer getRecordStatus() {
+                return recordStatus;
+            }
+
+            public void setRecordStatus(Integer recordStatus) {
+                this.recordStatus = recordStatus;
             }
         }
     }

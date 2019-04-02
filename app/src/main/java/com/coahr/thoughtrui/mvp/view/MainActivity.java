@@ -72,7 +72,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     private static final long INTERVAL_TIME = 2000;
     private String sessionId;
     private int page = 0; //当前显示页面
-    private static int TIMES = 60 * 1000 * 15;
+    private static int TIMES = 60*1000*15;
     private static int SEND_MESSAGE = 1;
     private Handler mHandker = new Handler() {
         @Override

@@ -71,6 +71,7 @@ public class Login_DialogFragment extends BaseDialogFragment<LoginFragmentC.Pres
     Button loginBtn;
     private loginListener loginListener;
     private int pager_number;
+    private String token;
     //随机数
     private static final char[] CHARS = {
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
@@ -131,12 +132,23 @@ public class Login_DialogFragment extends BaseDialogFragment<LoginFragmentC.Pres
                     ToastUtils.showLong("请输入4位及以上字符的密码");
                     return;
                 }
+                String prefString = PreferenceUtils.getPrefString(BaseApplication.mContext, Constants.devicestoken_key, "");
+                if (prefString != null && !prefString.equals("")) {
+                    token = prefString;
+                } else {
+                    StringBuffer sb = new StringBuffer();
+                    Random random = new Random();
+                    for (int i = 0; i < 15; i++) {
+                        sb.append(CHARS[random.nextInt(CHARS.length)]);
+                    }
+                    token = sb.toString();
+                }
 
-                KLog.d("登录中", user_account.getText().toString(), user_password.getText().toString(),Constants.devicestoken);
+                KLog.d("登录中", user_account.getText().toString(), user_password.getText().toString(), token);
                 Map<String, Object> map = new HashMap<>();
                 map.put("username", user_account.getText().toString());
                 map.put("password", user_password.getText().toString());
-                map.put("token", Constants.devicestoken);
+                map.put("token", token);
                 p.Login(map);
             }
         });

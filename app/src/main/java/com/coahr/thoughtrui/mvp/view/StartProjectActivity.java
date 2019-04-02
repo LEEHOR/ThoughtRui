@@ -187,6 +187,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                             subjectsDB.setOptions(questionList.get(i).getOptions());
                             subjectsDB.setNumber(questionList.get(i).getNumber());
                             subjectsDB.setCensor(questionList.get(i).getCensor());
+                            subjectsDB.setRecordStatus(questionList.get(i).getRecordStatus());
                             subjectsDB.update(subjectsDBS.get(0).getId());
                         }
                     } else {
@@ -198,6 +199,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                         subjectsDB.setDescription(questionList.get(i).getDescribes());
                         subjectsDB.setPhotoStatus(questionList.get(i).getPhotoStatus());
                         subjectsDB.setDescribeStatus(questionList.get(i).getDescribeStatus());
+                        subjectsDB.setRecordStatus(questionList.get(i).getRecordStatus());
                         subjectsDB.setCensor(questionList.get(i).getCensor());
                         subjectsDB.setIsComplete(0);
                         subjectsDB.setType(questionList.get(i).getType());

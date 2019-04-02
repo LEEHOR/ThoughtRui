@@ -82,6 +82,7 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
         }
         if (PreferenceUtils.contains(mContext,Constants.devicestoken_key)){
             Constants.devicestoken=PreferenceUtils.getPrefString(mContext,Constants.devicestoken_key,"");
+            KLog.d(TAG,Constants.devicestoken);
         }
         if (PreferenceUtils.contains(mContext,Constants.user_type_key)){
             Constants.user_type=PreferenceUtils.getPrefInt(mContext,Constants.user_type_key,1);
@@ -97,42 +98,6 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
     @Override
     public AndroidInjector<Fragment> supportFragmentInjector() {
         return dispatchingAndroidFragmentInjector;
-    }
-    private void registerUmeng(){
-        mPushAgent.setNotificationPlaySound(MsgConstant.NOTIFICATION_PLAY_SERVER); //服务端控制声音
-
-        UmengNotificationClickHandler notificationClickHandler = new UmengNotificationClickHandler() {
-            @Override
-            public void dealWithCustomAction(Context context, UMessage msg) {
-                ToastUtils.showLong(TAG+msg.custom);
-                KLog.d(TAG,msg.custom);
-            }
-        };
-        mPushAgent.setNotificationClickHandler(notificationClickHandler);
-
-        mPushAgent.register(new IUmengRegisterCallback() {
-            @Override
-            public void onSuccess(String deviceToken) {
-                //注册成功会返回deviceToken deviceToken是推送消息的唯一标志
-                Constants.devicestoken=deviceToken;
-                PreferenceUtils.setPrefString(BaseApplication.mContext,Constants.devicestoken_key,deviceToken);
-                KLog.i(TAG,"注册成功：deviceToken：-------->  " + deviceToken);
-            }
-            @Override
-            public void onFailure(String s, String s1) {
-                KLog.e(TAG,"注册失败：-------->  " + "s:" + s + ",s1:" + s1);
-            }
-        });
-
-    }
-    private String getAppVersion() {
-        String appVersion;
-        try {
-            appVersion= this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            appVersion = "1.0.0";
-        }
-        return  appVersion;
     }
 
     private void initUpush() {
@@ -188,6 +153,8 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
             @Override
             public void onSuccess(String deviceToken) {
                 Log.i(TAG, "device token: " + deviceToken);
+                PreferenceUtils.setPrefString(BaseApplication.mContext,Constants.devicestoken_key,deviceToken);
+                Constants.devicestoken=deviceToken;
                 //sendBroadcast(new Intent(UPDATE_STATUS_ACTION));
             }
 

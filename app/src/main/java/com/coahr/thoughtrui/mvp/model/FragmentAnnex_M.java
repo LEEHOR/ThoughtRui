@@ -31,7 +31,7 @@ public class FragmentAnnex_M extends BaseModel<FragmentAnnex_C.Presenter> implem
 
     @Override
     public void getSubject(ProjectsDB projectsDB) {
-        List<SubjectsDB> subjectsDBList = DataBaseWork.DBSelectBy_Where(SubjectsDB.class,new String[]{"ht_id","number"},"projectsdb_id=?", String.valueOf(projectsDB.getId()));
+        List<SubjectsDB> subjectsDBList = DataBaseWork.DBSelectBy_order(SubjectsDB.class,new String[]{"projectsdb_id=?", String.valueOf(projectsDB.getId())},"number","ht_id","number");
         if (subjectsDBList != null && subjectsDBList.size()>0) {
             getPresenter().getSubjectSuccess(subjectsDBList,projectsDB);
         }else {

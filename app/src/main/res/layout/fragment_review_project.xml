@@ -51,7 +51,7 @@
                     android:drawableLeft="@drawable/radio_button"
                     android:drawablePadding="@dimen/dp_10"
                     android:buttonTintMode="src_in"
-                    android:text="是"
+
                     android:padding="@dimen/dp_10"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -60,7 +60,6 @@
                     android:button="@null"
                     android:drawableLeft="@drawable/radio_button"
                     android:drawablePadding="@dimen/dp_10"
-                    android:text="否"
                     android:padding="@dimen/dp_10"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -141,11 +140,13 @@
             android:layout_height="wrap_content">
             <RelativeLayout
                 android:id="@+id/re_top_1"
-                android:padding="@dimen/dp_10"
                 android:layout_alignParentTop="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <ImageView
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_marginBottom="@dimen/dp_10"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:id="@+id/iv_1"
@@ -161,6 +162,15 @@
                     android:layout_centerVertical="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
+                <ImageView
+                    android:visibility="invisible"
+                    android:id="@+id/iv_upload_tag"
+                    android:src="@mipmap/not_uploaded"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:scaleType="centerCrop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp" />
             </RelativeLayout>
             <View
                 android:layout_width="match_parent"
