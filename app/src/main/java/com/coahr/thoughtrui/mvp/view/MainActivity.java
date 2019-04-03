@@ -72,8 +72,9 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     private static final long INTERVAL_TIME = 2000;
     private String sessionId;
     private int page = 0; //当前显示页面
-    private static int TIMES = 60*1000*15;
+    private static int TIMES = 1000*60*5;
     private static int SEND_MESSAGE = 1;
+    private BaiduLocationHelper baiduLocationHelper_s;
     private Handler mHandker = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -81,6 +82,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
 
         }
     };
+    private Login_DialogFragment login_dialogFragment;
 
     @Override
     public MainActivityC.Presenter getPresenter() {
@@ -238,21 +240,27 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
      * 登录Dialog
      */
     private void loginDialog() {
-        Login_DialogFragment login_dialogFragment = Login_DialogFragment.newInstance(Constants.MainActivityCode);
+        if (login_dialogFragment == null) {
+            login_dialogFragment = Login_DialogFragment.newInstance(Constants.MainActivityCode);
 
-        login_dialogFragment.setLoginListener(new Login_DialogFragment.loginListener() {
-            @Override
-            public void loginSuccess(AppCompatDialogFragment dialogFragment) {
-                dialogFragment.dismiss();
-                showFragment(0);
-            }
-        });
-        login_dialogFragment.show(getSupportFragmentManager(), TAG);
+            login_dialogFragment.setLoginListener(new Login_DialogFragment.loginListener() {
+                @Override
+                public void loginSuccess(AppCompatDialogFragment dialogFragment) {
+                    dialogFragment.dismiss();
+                    login_dialogFragment=null;
+                    showFragment(0);
+                }
+            });
+            login_dialogFragment.show(getSupportFragmentManager(), TAG);
+        }
     }
 
 
     @Override
     public void getLocationSuccess(BDLocation location, BaiduLocationHelper baiduLocationHelper) {
+        this.baiduLocationHelper_s=baiduLocationHelper;
+        Constants.Longitude=location.getLongitude();
+        Constants.Latitude=location.getLatitude();
         baiduLocationHelper.stopLocation();
         mHandker.postDelayed(new Runnable() {
             @Override
@@ -265,18 +273,21 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
 
     @Override
     public void getLocationFailure(int failure, BaiduLocationHelper baiduLocationHelper) {
+        this.baiduLocationHelper_s=baiduLocationHelper;
         baiduLocationHelper.stopLocation();
         p.getLocation(1);
     }
 
     @Override
-    public void sendRtslSuccess(String success) {
+    public void sendRtslSuccess(String success,int result) {
 
     }
 
     @Override
-    public void sendRtslFail(String fail) {
-
+    public void sendRtslFail(String fail,int result) {
+        if (result==-1){
+            loginDialog();
+        }
     }
 
     private void sendRTSL(double lon, double lat) {
@@ -295,5 +306,23 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
             int page = intent.getIntExtra("page", 0);
                 showFragment(page);
         }*/
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (baiduLocationHelper_s != null) {
+            baiduLocationHelper_s.stopLocation();
+            p.getLocation(1);
+        }
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (baiduLocationHelper_s != null) {
+            baiduLocationHelper_s.stopLocation();
+        }
     }
 }

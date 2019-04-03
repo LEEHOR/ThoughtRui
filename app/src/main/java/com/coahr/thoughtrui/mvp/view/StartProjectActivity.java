@@ -8,9 +8,7 @@ import androidx.annotation.Nullable;
 
 import android.os.Handler;
 import android.os.Message;
-import android.view.TouchDelegate;
 import android.view.View;
-
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.baidu.location.BDLocation;
@@ -19,7 +17,6 @@ import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.BaiDuLocation.BaiduLocationHelper;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
-import com.coahr.thoughtrui.Utils.NetWorkAvailable;
 import com.coahr.thoughtrui.Utils.ScreenUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
@@ -40,9 +37,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,10 +63,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     private StartProjectAdapter startProjectAdapter;
     private List<String> htId_List = new ArrayList<>();
     private int subject_size; //题目个数
-    //定位是否成功
-    private boolean isLocationSuccess;
-    //是否首次定位
-    private boolean isFirstLocation;
+
     private double latitude;
     private double longitude;
     private Handler mHandler = new Handler() {
@@ -81,6 +73,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         }
     };
     private BaiduLocationHelper baiduLocationHelper_s;
+    private Login_DialogFragment login_dialogFragment;
 
     @Override
     public StartProjectActivity_C.Presenter getPresenter() {
@@ -106,7 +99,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                 ScreenUtils.getStatusBarHeight(BaseApplication.mContext),
                 p_mytitle.getPaddingRight(), p_mytitle.getPaddingBottom());
         p_mytitle.getRightText().setVisibility(View.VISIBLE);
-        p_mytitle.getRightText().setText("题目列表");
+        p_mytitle.getRightText().setText("检核项");
         p_mytitle.getRightText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,25 +111,26 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         p_mytitle.getLeftIcon().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showDialog("提示", "退出答题");
+                showDialog("提示", "退出检核");
             }
         });
-        p_mytitle.getTvTittle().setText("第" + 1 + "题");
+        p_mytitle.getTvTittle().setText("检核中(" + 1 + ")");
     }
 
     @Override
     public void initData() {
-        if (getNetWork()) {
+        p.getLocation(2);
+        if (Constants.isNetWorkConnect) {
             if (haslogin()) {
                 getData();
-                // p.getLocation(2);
             } else {
                 ToastUtils.showLong("请登录后再试");
+                loginDialog();
             }
 
         } else {
             ToastUtils.showLong("请开启网络以定位");
-            //p.getOfflineDate(Constants.DbProjectId, Constants.ht_ProjectId);
+
         }
     }
 
@@ -146,29 +140,32 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         ToastUtils.showLong(e.toString());
     }
 
-    private boolean getNetWork() {
-        boolean networkAvailable = NetWorkAvailable.isNetworkAvailable(BaseApplication.mContext);
-        return networkAvailable;
-    }
-
     @Override
     public void getLocationSuccess(BDLocation location, BaiduLocationHelper baiduLocationHelper) {
-        this.isLocationSuccess = true;
         this.baiduLocationHelper_s = baiduLocationHelper;
         latitude = location.getLatitude();
         longitude = location.getLongitude();
-        if (!isFirstLocation) {
-            //  mHandler.post(run_location);
-            getData();
-        }
+        Constants.Latitude = latitude;
+        Constants.Longitude = longitude;
+        baiduLocationHelper.stopLocation();
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                sendRTSL(longitude, latitude);
+                p.getLocation(2);
+            }
+        }, 1000 * 60 * 5);
 
-        isFirstLocation = true;
 
     }
 
     @Override
     public void getLocationFailure(int failure, BaiduLocationHelper baiduLocationHelper) {
-        this.isLocationSuccess = false;
+        this.baiduLocationHelper_s = baiduLocationHelper;
+        if (baiduLocationHelper != null) {
+            baiduLocationHelper.stopLocation();
+        }
+        p.getLocation(2);
     }
 
     @Override
@@ -199,7 +196,12 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                         subjectsDB.setDescription(questionList.get(i).getDescribes());
                         subjectsDB.setPhotoStatus(questionList.get(i).getPhotoStatus());
                         subjectsDB.setDescribeStatus(questionList.get(i).getDescribeStatus());
-                        subjectsDB.setRecordStatus(questionList.get(i).getRecordStatus());
+                        if (questionList.get(i).getRecordStatus() != null) {
+                            subjectsDB.setRecordStatus(questionList.get(i).getRecordStatus());
+                        } else {
+                            subjectsDB.setRecordStatus(-1);
+                        }
+
                         subjectsDB.setCensor(questionList.get(i).getCensor());
                         subjectsDB.setIsComplete(0);
                         subjectsDB.setType(questionList.get(i).getType());
@@ -231,7 +233,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                 }
 
             }
-            p.getOfflineDate( Constants.ht_ProjectId);
+            p.getOfflineDate(Constants.ht_ProjectId);
         } else {
             ToastUtils.showLong("当前项目不存在");
         }
@@ -243,10 +245,6 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         if (code != -1) {
             p.getOfflineDate(Constants.ht_ProjectId);
         } else {
-            if (baiduLocationHelper_s != null) {
-                baiduLocationHelper_s.stopLocation();
-            }
-            //   mHandler.removeCallbacks(run_location);
             loginDialog();
         }
 
@@ -271,6 +269,25 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         ToastUtils.showLong("当前题目不存在");
     }
 
+    @Override
+    public void sendRtslSuccess(String success, int result) {
+
+    }
+
+    @Override
+    public void sendRtslFail(String fail, int result) {
+        if (result == -1) {
+            if (baiduLocationHelper_s != null) {
+                baiduLocationHelper_s.stopLocation();
+            }
+            loginDialog();
+        }
+    }
+
+
+    /**
+     * 获取题目
+     */
     private void getData() {
         Map<String, Object> map = new HashMap<>();
         map.put("projectId", Constants.ht_ProjectId);
@@ -279,9 +296,24 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         p.getMainData(map);
     }
 
+    /**
+     * 获取定位
+     *
+     * @param lon
+     * @param lat
+     */
+    private void sendRTSL(double lon, double lat) {
+        Map map = new HashMap();
+        map.put("sessionId", Constants.sessionId);
+        map.put("token", Constants.devicestoken);
+        map.put("longitude", String.valueOf(lon));
+        map.put("latitude", String.valueOf(lat));
+        p.sendRtsl(map);
+    }
+
     @Override
     public void onBackPressedSupport() {
-        showDialog("提示", "退出答题");
+        showDialog("提示", "退出检核");
     }
 
     private void showDialog(String title, String Content) {
@@ -304,7 +336,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                 if (baiduLocationHelper_s != null) {
                     baiduLocationHelper_s.stopLocation();
                 }
-                mHandler.removeCallbacks(run_location);
+                mHandler.removeCallbacksAndMessages(null);
                 finish();
             }
         }).build().show();
@@ -315,7 +347,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
-        mHandler.removeCallbacks(run_location);
+        mHandler.removeCallbacksAndMessages(null);
         super.onDestroy();
     }
 
@@ -336,14 +368,14 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                     KLog.d("上翻页" + isposition);
                     if (isposition > 0) {
                         project_viewPage.setCurrentItem(project_viewPage.getCurrentItem() - 1);
-                        p_mytitle.getTvTittle().setText("第" + (isposition) + "题");
+                        p_mytitle.getTvTittle().setText("检核中(" + (isposition) + ")");
                     }
 
                 }
                 if (isupOrDown == 2) {
                     KLog.d("下翻页" + isposition);
                     project_viewPage.setCurrentItem(project_viewPage.getCurrentItem() + 1);
-                    p_mytitle.getTvTittle().setText("第" + (isposition) + "题");
+                    p_mytitle.getTvTittle().setText("检核中(" + (isposition) + ")");
 
                 }
             } else {
@@ -376,41 +408,40 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         }
     }
 
-    /**
-     * 设置系统时间
-     */
-    private Runnable run_location = new Runnable() {
-        @Override
-        public void run() {
-            if (isLocationSuccess) {
-                KLog.d("发送数据");
-            }
-            //   mHandler.postDelayed(run_location, 1000*3);
-        }
-    };
 
     /**
      * 登录Dialog
      */
     private void loginDialog() {
-        Login_DialogFragment login_dialogFragment = Login_DialogFragment.newInstance(Constants.MyTabFragmentCode);
-
-        login_dialogFragment.setLoginListener(new Login_DialogFragment.loginListener() {
-            @Override
-            public void loginSuccess(AppCompatDialogFragment dialogFragment) {
-                dialogFragment.dismiss();
-                if (haslogin()) {
-                    if (getNetWork()) {  //有网络
-                        isFirstLocation = false;
-                        p.getLocation(2);
-                    } else { //无网络
-                        ToastUtils.showLong("请连接网络后再试");
-                    }
-                } else {
-                    ToastUtils.showLong("请重新登录");
+        if (login_dialogFragment == null) {
+            login_dialogFragment = Login_DialogFragment.newInstance(Constants.MyTabFragmentCode);
+            login_dialogFragment.setLoginListener(new Login_DialogFragment.loginListener() {
+                @Override
+                public void loginSuccess(AppCompatDialogFragment dialogFragment) {
+                    dialogFragment.dismiss();
+                    login_dialogFragment = null;
                 }
-            }
-        });
-        login_dialogFragment.show(getSupportFragmentManager(), TAG);
+            });
+            login_dialogFragment.show(getSupportFragmentManager(), TAG);
+        }
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (baiduLocationHelper_s != null) {
+            baiduLocationHelper_s.stopLocation();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (baiduLocationHelper_s != null) {
+            baiduLocationHelper_s.stopLocation();
+            p.getLocation(2 );
+        }
+
     }
 }

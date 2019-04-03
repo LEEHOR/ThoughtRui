@@ -52,16 +52,17 @@ public class MainActivityP extends BasePresenter<MainActivityC.View,MainActivity
     }
 
     @Override
-    public void sendRtslSuccess(String success) {
+    public void sendRtslSuccess(String success, int result) {
         if (getView() != null) {
-            getView().sendRtslSuccess(success);
+            getView().sendRtslSuccess(success,result);
         }
     }
 
     @Override
-    public void sendRtslFail(String fail) {
+    public void sendRtslFail(String fail, int result) {
         if (getView() != null) {
-            getView().sendRtslFail(fail);
+            getView().sendRtslFail(fail,result);
         }
     }
+
 }

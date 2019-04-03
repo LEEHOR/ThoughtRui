@@ -86,4 +86,25 @@ public class StartProjectActivity_P extends BasePresenter<StartProjectActivity_C
             getView().getOfflineFailure(failure);
         }
     }
+
+    @Override
+    public void sendRtsl(Map<String, Object> map) {
+        if (mModle != null) {
+            mModle.sendRtsl(map);
+        }
+    }
+
+    @Override
+    public void sendRtslSuccess(String success,int result) {
+        if (getView() != null) {
+            getView().sendRtslSuccess(success,result);
+        }
+    }
+
+    @Override
+    public void sendRtslFail(String fail,int result) {
+        if (getView() != null) {
+            getView().sendRtslFail(fail,result);
+        }
+    }
 }

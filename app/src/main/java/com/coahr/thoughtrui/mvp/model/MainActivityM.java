@@ -66,9 +66,9 @@ public class MainActivityM extends BaseModel<MainActivityC.Presenter> implements
                     public void _onNext(RTSL rtsl) {
                         if (getPresenter() != null) {
                             if (rtsl.getResult()==1){
-                                getPresenter().sendRtslSuccess(rtsl.getMsg());
+                                getPresenter().sendRtslSuccess(rtsl.getMsg(),rtsl.getResult());
                             } else {
-                                getPresenter().sendRtslFail(rtsl.getMsg());
+                                getPresenter().sendRtslFail(rtsl.getMsg(),rtsl.getResult());
                             }
                         }
                     }

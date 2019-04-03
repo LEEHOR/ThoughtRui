@@ -2,9 +2,12 @@ package com.coahr.thoughtrui.widgets.AltDialog;
 
 import android.app.Dialog;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
+
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -118,11 +121,15 @@ public class EvaluateInputDialogFragment extends AppCompatDialogFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_send:
-                if (etInput.getText() != null && !etInput.getText().equals("")) {
-                    inputCallback.onInputSend(etInput.getText().toString(),this);
-                } else {
-                    Toast.makeText(BaseApplication.mContext, "请输入内容", Toast.LENGTH_LONG).show();
+                if (TextUtils.isEmpty(etInput.getText())) {
+                    Toast.makeText(getActivity(), "请输入内容", Toast.LENGTH_LONG).show();
+                    return;
                 }
+                if (etInput.getText().length() > 50 || etInput.getText().length() <0) {
+                    Toast.makeText(getActivity(), "请输入50字之内的内容", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                inputCallback.onInputSend(etInput.getText().toString(), this);
                 break;
         }
     }

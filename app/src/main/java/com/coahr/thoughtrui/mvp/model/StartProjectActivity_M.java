@@ -8,6 +8,7 @@ import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.StartProjectActivity_C;
 import com.coahr.thoughtrui.mvp.model.Bean.QuestionBean;
+import com.coahr.thoughtrui.mvp.model.Bean.RTSL;
 import com.socks.library.KLog;
 
 import java.util.ArrayList;
@@ -96,6 +97,23 @@ public class StartProjectActivity_M extends BaseModel<StartProjectActivity_C.Pre
             getPresenter().getOfflineFailure(0);
         }
 
+    }
+
+    @Override
+    public void sendRtsl(Map<String, Object> map) {
+        mRxManager.add(createFlowable(new SimpleFlowableOnSubscribe<RTSL>(getApiService().RTSL(map)))
+                .subscribeWith(new SimpleDisposableSubscriber<RTSL>() {
+                    @Override
+                    public void _onNext(RTSL rtsl) {
+                        if (getPresenter() != null) {
+                            if (rtsl.getResult()==1){
+                                getPresenter().sendRtslSuccess(rtsl.getMsg(),rtsl.getResult());
+                            } else {
+                                getPresenter().sendRtslFail(rtsl.getMsg(),rtsl.getResult());
+                            }
+                        }
+                    }
+                }));
     }
     private void initlocation() {
         baiduLocationHelper.registerLocationCallback(onLocationCallBack);

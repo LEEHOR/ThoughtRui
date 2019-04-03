@@ -28,6 +28,12 @@ public interface StartProjectActivity_C {
 
         void getOfflineFailure(int failure);
 
+
+
+        void sendRtslSuccess(String success,int result);
+
+        void sendRtslFail(String fail,int result);
+
     }
 
     interface Presenter extends BaseContract.Presenter {
@@ -50,6 +56,12 @@ public interface StartProjectActivity_C {
 
         void getOfflineFailure(int failure);
 
+        void sendRtsl(Map<String,Object> map);
+
+        void sendRtslSuccess(String success,int result);
+
+        void sendRtslFail(String fail,int result);
+
 
     }
 
@@ -61,6 +73,8 @@ public interface StartProjectActivity_C {
 
 
         void getOfflineDate( String ht_projectId);
+
+        void sendRtsl(Map<String,Object> map);
 
     }
 }

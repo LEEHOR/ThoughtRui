@@ -19,9 +19,9 @@ public interface MainActivityC {
 
         void getLocationFailure(int failure, BaiduLocationHelper baiduLocationHelper);
 
-        void sendRtslSuccess(String success);
+        void sendRtslSuccess(String success,int result);
 
-        void sendRtslFail(String fail);
+        void sendRtslFail(String fail,int result);
 
     }
 
@@ -35,9 +35,9 @@ public interface MainActivityC {
 
         void sendRtsl(Map<String,Object> map);
 
-        void sendRtslSuccess(String success);
+        void sendRtslSuccess(String success,int result);
 
-        void sendRtslFail(String fail);
+        void sendRtslFail(String fail,int result);
 
     }
 

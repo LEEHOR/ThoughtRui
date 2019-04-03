@@ -498,7 +498,9 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 break;
 
             case R.id.fr_upload:
-
+                if (!UpdateDB()) {
+                    return;
+                }
                 if (!isAnswer) {
                     ToastUtils.showLong("请填写答案");
                     return;
@@ -1192,8 +1194,6 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         }
         map.put("audioCount", recorderPath != null ? 1 : 0);
         map.put("audio", recorderPath != null ? FileIOUtils.getE(recorderPath, "/") : "");
-
-
         if (picList != null && picList.size() > 0) {
             StringBuffer stringBuffer = new StringBuffer();
             for (int i = 0; i < picList.size(); i++) {

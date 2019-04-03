@@ -3,7 +3,7 @@
     <!--数据库名-->
     <dbname value="ThoughtRui"></dbname>
     <!--数据库版本号-->
-    <version value="11"></version>
+    <version value="12"></version>
     <!--映射模型，稍后用到-->
     <list>
         <mapping class="com.coahr.thoughtrui.DBbean.UsersDB"></mapping>
