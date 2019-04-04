@@ -432,6 +432,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         super.onPause();
         if (baiduLocationHelper_s != null) {
             baiduLocationHelper_s.stopLocation();
+            mHandler.removeCallbacksAndMessages(null);
         }
     }
 

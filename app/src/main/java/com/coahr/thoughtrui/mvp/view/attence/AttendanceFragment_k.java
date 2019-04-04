@@ -211,7 +211,16 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
             // tv_time_clock.setText(simpleDateFormat.format(date)); //更新时间
             tv_time_clock_in.setText(simpleDateFormat.format(date));
             tv_time_clock_out.setText(simpleDateFormat.format(date));
+
             mHandler.postDelayed(run_time, 1000);
+        }
+    };
+
+    private Runnable runnable_location=new Runnable() {
+        @Override
+        public void run() {
+            p.startLocations(4);
+            mHandler.postDelayed(runnable_location, 3000);
         }
     };
 
@@ -245,14 +254,13 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         update_daka = include_end.findViewById(R.id.tv_update_daka);
         end_tv_bz = include_end.findViewById(R.id.tv_bzhu);
 
-  /*      //重新定位
-        relocation.setOnClickListener(new View.OnClickListener() {
+     /*   //重新定位
+        relocation_in.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (baiduLocationHelper != null) {
                     baiduLocationHelper.stopLocation();
                     if (mHandler != null) {
-                        mHandler.removeMessages(LOCATIONMESSAGE);
                         if (latitude != 0 && longitude != 0) {
                             p.startLocations(4);
                             mHandler.sendEmptyMessage(LOCATIONMESSAGE);
@@ -286,10 +294,10 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                 if (baiduLocationHelper != null) {
                     baiduLocationHelper.stopLocation();
                     if (mHandler != null) {
-                        mHandler.removeMessages(LOCATIONMESSAGE);
                         if (latitude != 0 && longitude != 0) {
+                            continueStla = 0 ;
+                            continueStlo = 0;
                             p.startLocations(4);
-                            mHandler.sendEmptyMessage(LOCATIONMESSAGE);
                         }
                     }
                 }
@@ -302,10 +310,10 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                 if (baiduLocationHelper != null) {
                     baiduLocationHelper.stopLocation();
                     if (mHandler != null) {
-                        mHandler.removeMessages(LOCATIONMESSAGE);
                         if (latitude != 0 && longitude != 0) {
+                            continueStla = 0 ;
+                            continueStlo = 0;
                             p.startLocations(4);
-                            mHandler.sendEmptyMessage(LOCATIONMESSAGE);
                         }
                     }
                 }
@@ -404,6 +412,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
     public void initData() {
         //获取打卡信息
         getData();
+        mHandler.post(runnable_location);
         mHandler.post(run_time); //开启时间线程
     }
 
@@ -442,12 +451,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                 in_bottom_address_in.setVisibility(View.VISIBLE);
                 //晚班区域隐藏
                 push_out_re.setVisibility(View.GONE);
-                //先关闭定位
-                if (baiduLocationHelper != null) {
-                    baiduLocationHelper.stopLocation();
-                }
-                //开启连续定位
-                p.startLocations(4);
+
 
             } else if (type == 2) {  //（打了早班卡，下班卡没打）
                 if (k_bean != null) { //判断是否为空
@@ -497,12 +501,6 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                         //晚班卡打卡信息隐藏
                         include_end.setVisibility(View.GONE);
 
-                        //先关闭定位
-                        if (baiduLocationHelper != null) {
-                            baiduLocationHelper.stopLocation();
-                        }
-                        //开启连续定位
-                        p.startLocations(4);
                     }
                 }
             } else if (type == 3) { //(上下班卡都打了)
@@ -629,22 +627,22 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         location_address_out.setText(Location_now);
 
         mHandler.sendEmptyMessage(LOCATIONMESSAGE);
+
+        baiduLocationHelper.stopLocation();
+
     }
 
     @Override
     public void LocationContinuouslyFailure(int failure, BaiduLocationHelper baiduLocationHelper) {
         this.baiduLocationHelper = baiduLocationHelper;
         baiduLocationHelper.stopLocation();
-        mHandler.removeMessages(LOCATIONMESSAGE);
+        ToastUtils.showLong("定位失败,请打开定位");
         p.startLocations(4);
     }
 
     @Override
     public void getPushSuccess(PushAttendanceCard pushAttendanceCard) {
         if (type == 3) {
-            if (baiduLocationHelper != null) {
-                baiduLocationHelper.stopLocation();
-            }
             mHandler.removeMessages(LOCATIONMESSAGE);
             mHandler.removeCallbacks(run_time);
         }
@@ -710,6 +708,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         super.onDestroy();
         mHandler.removeMessages(LOCATIONMESSAGE);
         mHandler.removeCallbacks(run_time);
+        mHandler.removeCallbacks(runnable_location);
         if (baiduLocationHelper != null) {
             baiduLocationHelper.stopLocation();
         }
@@ -719,6 +718,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
     public void onResume() {
         super.onResume();
         mHandler.post(run_time);
+        mHandler.post(runnable_location);
         if (latitude != 0 && longitude != 0) {
             p.startLocations(4);
         }
@@ -734,6 +734,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
     public void onPause() {
         super.onPause();
         mHandler.removeCallbacks(run_time);
+        mHandler.removeCallbacks(runnable_location);
         mHandler.removeMessages(LOCATIONMESSAGE);
         if (baiduLocationHelper != null) {
             baiduLocationHelper.stopLocation();
@@ -745,12 +746,14 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         super.onHiddenChanged(hidden);
         if (hidden) {
             mHandler.removeCallbacks(run_time);
+            mHandler.removeCallbacks(runnable_location);
             mHandler.removeMessages(LOCATIONMESSAGE);
             if (baiduLocationHelper != null) {
                 baiduLocationHelper.stopLocation();
             }
         } else {
             mHandler.post(run_time);
+            mHandler.post(runnable_location);
             if (latitude != 0 && longitude != 0) {
                 p.startLocations(4);
             }
@@ -830,11 +833,11 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                 if (haslogin()) {
                     if (isNetworkAvailable()) {  //有网络
                         mHandler.removeMessages(LOCATIONMESSAGE);
-                        mHandler.removeCallbacks(run_time);
                         if (baiduLocationHelper != null) {
                             baiduLocationHelper.stopLocation();
                         }
                         getData();
+                        p.startLocations(4);
                         //getDate();
                     } else { //无网络
                         ToastUtils.showLong("没有网络");

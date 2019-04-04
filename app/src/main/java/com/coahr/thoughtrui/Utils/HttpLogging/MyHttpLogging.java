@@ -1,5 +1,6 @@
 package com.coahr.thoughtrui.Utils.HttpLogging;
 
+import com.coahr.thoughtrui.Utils.TimeUtils;
 import com.socks.library.KLog;
 
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -25,7 +26,7 @@ public class MyHttpLogging implements HttpLoggingInterceptor.Logger {
         mMessage.append(message.concat("\n"));
         // 请求或者响应结束，打印整条日志
         if (message.startsWith("<-- END HTTP")) {
-            KLog.d(mMessage.toString());
+            KLog.d(TimeUtils.getStingYMDHM(System.currentTimeMillis())+":"+mMessage.toString());
         }
     }
 

@@ -41,7 +41,7 @@ public class BaiduLocationHelper {
         option.setCoorType("bd09ll"); // 设置返回值的坐标类型。国测局经纬度坐标系:gcj02
         // 百度墨卡托坐标系:bd09 百度经纬度坐标系:bd09ll
         option.setProdName("ThoughtRui"); // 设置产品线名称。
-        option.setScanSpan(UPDATE_TIME); // 设置定时定位的时间间隔。单位毫秒
+        option.setScanSpan(1000*10); // 设置定时定位的时间间隔。单位毫秒
         option.setIsNeedAddress(true);
         option.disableLocCache=true;
         option.setIsNeedAddress(true);

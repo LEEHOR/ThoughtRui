@@ -323,6 +323,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
         super.onPause();
         if (baiduLocationHelper_s != null) {
             baiduLocationHelper_s.stopLocation();
+            mHandker.removeCallbacksAndMessages(null);
         }
     }
 }
