@@ -6,7 +6,7 @@
     android:orientation="vertical">
      <com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar
          android:id="@+id/myTitle"
-         app:tittle="考勤"
+         app:tittle="@string/attence_tittle_1"
          android:layout_width="match_parent"
          android:layout_height="wrap_content">
      </com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar>
@@ -46,7 +46,7 @@
                 android:gravity="center_horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/attence"
+                android:text="@string/attence_tittle_1"
                 app:select_color="@color/material_blue_500"
                 android:textColor="@color/material_grey_700"
                 android:textSize="@dimen/dp_12" />
@@ -77,7 +77,7 @@
                 android:layout_height="wrap_content"
                 app:select_color="@color/material_blue_500"
                 android:textColor="@color/material_grey_700"
-                android:text="@string/history"
+                android:text="@string/attence_history_1"
                 android:textSize="@dimen/dp_12" />
         </LinearLayout>
     </LinearLayout>

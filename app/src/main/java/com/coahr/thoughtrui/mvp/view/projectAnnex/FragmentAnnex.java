@@ -123,7 +123,7 @@ public class FragmentAnnex extends BaseChildFragment<FragmentAnnex_C.Presenter> 
                     DialogFragmentAudioPlay audioPlay = DialogFragmentAudioPlay.newInstance(audioPath, FileIOUtils.getE(audioPath, "/"));
                     audioPlay.show(getChildFragmentManager(), TAG);
                 } else {
-                    ToastUtils.showLong("没有录音文件");
+                    ToastUtils.showLong(getString(R.string.toast_15));
                 }
             }
 

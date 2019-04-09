@@ -151,7 +151,7 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
             intent.putExtra("to", Constants.fragment_search);
             startActivity(intent);
         } else {
-            ToastUtils.showLong("请登录后再操作");
+            ToastUtils.showLong(getString(R.string.toast_10));
         }
     }
 }

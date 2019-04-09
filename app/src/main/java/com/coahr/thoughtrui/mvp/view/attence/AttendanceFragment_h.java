@@ -160,7 +160,7 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
                 } else {
                     final double inLat = attendance.getInLat();
                     final double inLng = attendance.getInLng();
-                    attendance_time_k.setText(attendance.getInType() == 0 ? "次日:" : "当日:" + TimeUtils.getStingHM(attendance.getInTime()));
+                    attendance_time_k.setText(attendance.getInType() == 0 ? getString(R.string.attendance_morrow) : getString(R.string.attendance_the_same_day) + TimeUtils.getStingHM(attendance.getInTime()));
                     if (attendance.getStartTimeStatus() == 1 && attendance.getStartLocationStatus() == 1) {
                         iv_attendance_tag_start.setImageResource(R.mipmap.kaoqinz);
                     } else {
@@ -174,7 +174,7 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
                     }).start();
 
                     if (attendance.getOutTime() != 0) {
-                        attendance_time_e.setText(attendance.getOutType() == 0 ? "次日" : "当日" + TimeUtils.getStingHM(attendance.getOutTime()));
+                        attendance_time_e.setText(attendance.getOutType() == 0 ? getString(R.string.attendance_morrow) : getString(R.string.attendance_the_same_day) + TimeUtils.getStingHM(attendance.getOutTime()));
                         final double outLat = attendance.getOutLat();
                         final double outLng = attendance.getOutLng();
                         if (attendance.getEndLocationStatus() == 1 && attendance.getEndTimeStatus() == 1) {
@@ -203,9 +203,9 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
     }
 
     @Override
-    public void getAttendanceHistoryFailure(String failure,int code) {
+    public void getAttendanceHistoryFailure(String failure, int code) {
         ToastUtils.showLong(failure);
-        if (code !=-1) {
+        if (code != -1) {
 
         } else {
             loginDialog();
@@ -217,7 +217,7 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
         Map<String, Object> map = new HashMap<>();
         map.put("projectId", projectId);
         map.put("sessionId", Constants.sessionId);
-        map.put("token",Constants.devicestoken);
+        map.put("token", Constants.devicestoken);
         map.put("dateTime", TimeUtils.getStingYMD(dateTime));
         p.getAttendanceHistory(map);
     }
@@ -227,14 +227,14 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
         long fourHour = 60 * 60 * 4L * 1000;
         datePickerDialog = new TimePickerDialog.Builder()
                 .setCallBack(this)
-                .setCancelStringId("取消")
-                .setSureStringId("确定")
-                .setTitleStringId("预约日期")
-                .setYearText("年")
-                .setMonthText("月")
-                .setDayText("日")
-                .setHourText("时")
-                .setMinuteText("分")
+                .setCancelStringId(getString(R.string.cancel))
+                .setSureStringId(getString(R.string.resume))
+                .setTitleStringId(getString(R.string.attendance_appointment_date))
+                .setYearText(getString(R.string.phrases_11))
+                .setMonthText(getString(R.string.phrases_12))
+                .setDayText(getString(R.string.phrases_13))
+                .setHourText(getString(R.string.phrases_14))
+                .setMinuteText(getString(R.string.phrases_14))
                 .setCyclic(false)
                 .setMinMillseconds(System.currentTimeMillis() - tenYears)
                 .setMaxMillseconds(System.currentTimeMillis() + tenYears)
@@ -302,11 +302,12 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
                 })
                 .build();
     }
+
     /**
      * 登录Dialog
      */
-    private void loginDialog(){
-        Login_DialogFragment login_dialogFragment=Login_DialogFragment.newInstance(Constants.MyTabFragmentCode);
+    private void loginDialog() {
+        Login_DialogFragment login_dialogFragment = Login_DialogFragment.newInstance(Constants.MyTabFragmentCode);
 
         login_dialogFragment.setLoginListener(new Login_DialogFragment.loginListener() {
             @Override
@@ -315,11 +316,11 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
                 if (haslogin()) {
                     getHistory(Constants.ht_ProjectId, System.currentTimeMillis());
                 } else {
-                    ToastUtils.showLong("请重新登录");
+                    ToastUtils.showLong(getString(R.string.toast_10));
                 }
             }
         });
-        login_dialogFragment.show(getFragmentManager(),TAG);
+        login_dialogFragment.show(getFragmentManager(), TAG);
     }
 
     @Override

@@ -14,7 +14,7 @@
         android:layout_height="wrap_content">
     <com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar
         android:id="@+id/dealer_Tittle"
-        app:tittle="请选择经销商"
+        app:tittle="@string/checking_dealer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content" />
         <TextView
             android:id="@+id/tv_select_address"
-            android:hint="点击选择省市"
+            android:hint="@string/select_Province"
             android:layout_marginLeft="15dp"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -56,11 +56,11 @@
             android:gravity="center"
             android:textSize="@dimen/dp_14"
             android:textColor="#333333"
-            android:text="经销商名称"
+            android:text="@string/dealer_name_1"
             android:layout_width="80dp"
             android:layout_height="wrap_content" />
         <TextView
-            android:hint="点击选择经销商"
+            android:hint="@string/select_dealer"
             android:id="@+id/tv_select_project"
            android:layout_marginLeft="15dp"
             android:layout_width="0dp"
@@ -84,7 +84,7 @@
             android:gravity="center"
             android:textSize="@dimen/dp_14"
             android:textColor="#333333"
-            android:text="经销商代码"
+            android:text="@string/dealer_code_1"
             android:layout_width="80dp"
             android:layout_height="wrap_content" />
         <TextView
@@ -111,7 +111,7 @@
         android:gravity="center"
         android:padding="@dimen/edge_margin"
         android:textColor="@color/colorWhite"
-        android:text="开始检核 "
+        android:text="@string/start_checking_1"
         android:textSize="@dimen/dp_14"
         android:background="@drawable/bg_blue_white_frame_background"
         android:layout_alignParentBottom="true"

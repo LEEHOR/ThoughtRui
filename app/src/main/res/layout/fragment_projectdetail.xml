@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar
         android:id="@+id/naviBar"
-        app:tittle="项目详情"
+        app:tittle="@string/project_detail_tittle"
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -124,7 +124,7 @@
                                     android:textSize="@dimen/sp_12"
                                     android:layout_toRightOf="@+id/iv_5"
                                     android:layout_alignBottom="@+id/iv_5"
-                                    android:text="项目经理"
+                                    android:text="@string/project_detail_manager"
                                     android:textColor="#C4C4C4"
                                     android:layout_marginLeft="@dimen/dp_10"
                                     android:layout_width="wrap_content"
@@ -155,7 +155,7 @@
                                     android:textSize="@dimen/sp_12"
                                     android:layout_toRightOf="@+id/iv_6"
                                     android:layout_alignBottom="@+id/iv_6"
-                                    android:text="检核员"
+                                    android:text="@string/project_detail_auditor"
                                     android:textColor="#C4C4C4"
                                     android:layout_marginLeft="@dimen/dp_10"
                                     android:layout_width="wrap_content"
@@ -183,7 +183,7 @@
                                 <TextView
                                     android:textSize="@dimen/dp_14"
                                     android:textColor="@color/colorWhite"
-                                    android:text="经销商:"
+                                    android:text="@string/project_detail_dealer_name_2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content" />
                                 <TextView
@@ -205,7 +205,7 @@
                                 <TextView
                                     android:textSize="@dimen/dp_14"
                                     android:textColor="@color/colorWhite"
-                                    android:text="经销商代码:"
+                                    android:text="@string/project_detail_dealer_code_2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content" />
                                 <TextView
@@ -227,7 +227,7 @@
                                 <TextView
                                     android:textSize="@dimen/dp_14"
                                     android:textColor="@color/colorWhite"
-                                    android:text="授权级别:"
+                                    android:text="@string/project_detail_authorization_level"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content" />
                                 <TextView
@@ -249,7 +249,7 @@
                                 <TextView
                                     android:textSize="@dimen/dp_14"
                                     android:textColor="@color/colorWhite"
-                                    android:text="地址:"
+                                    android:text="@string/project_detail_address_1"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content" />
                                 <TextView
@@ -277,7 +277,7 @@
                                 <TextView
                                     android:textSize="@dimen/dp_14"
                                     android:textColor="@color/colorWhite"
-                                    android:text="上传时间节点:"
+                                    android:text="@string/project_detail_upload_times"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content" />
                                 <TextView
@@ -299,7 +299,7 @@
                                 <TextView
                                     android:textSize="@dimen/dp_14"
                                     android:textColor="@color/colorWhite"
-                                    android:text="考勤班次:"
+                                    android:text="@string/project_detail_attendance_schedule"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content" />
                                 <TextView
@@ -321,7 +321,7 @@
                                 <TextView
                                     android:textSize="@dimen/dp_14"
                                     android:textColor="@color/colorWhite"
-                                    android:text="访问状态:"
+                                    android:text="@string/project_detail_access_state"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content" />
                                 <TextView
@@ -343,7 +343,7 @@
                                 <TextView
                                     android:textSize="@dimen/dp_14"
                                     android:textColor="@color/colorWhite"
-                                    android:text="上传状态:"
+                                    android:text="@string/project_detail_upload_state"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content" />
                                 <TextView
@@ -386,7 +386,7 @@
                                     android:layout_marginLeft="@dimen/dp_10"
                                     android:textSize="@dimen/dp_14"
                                     android:textColor="#555555"
-                                    android:text="项目说明"
+                                    android:text="@string/project_detail_entry_specification"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content" />
                             </RelativeLayout>
@@ -432,7 +432,7 @@
                     android:scaleType="fitCenter"
                     />
                 <TextView
-                    android:text="考勤打卡"
+                    android:text="@string/project_detail_attendance_card"
                     android:layout_marginTop="@dimen/dp_5"
                     android:textColor="#333333"
                     android:textSize="@dimen/sp_14"
@@ -454,7 +454,7 @@
                     android:scaleType="fitCenter"
                     />
                 <TextView
-                    android:text="开始检核"
+                    android:text="@string/project_detail_start_checking_2"
                     android:layout_marginTop="@dimen/dp_5"
                     android:textColor="#333333"
                     android:textSize="@dimen/sp_14"
@@ -476,7 +476,7 @@
                     android:scaleType="fitCenter"
                     />
                 <TextView
-                    android:text="附件浏览"
+                    android:text="@string/project_detail_browse_attachment"
                     android:layout_marginTop="@dimen/dp_5"
                     android:textColor="#333333"
                     android:textSize="@dimen/sp_14"

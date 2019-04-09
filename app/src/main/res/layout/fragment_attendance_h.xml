@@ -15,7 +15,7 @@
             android:layout_alignParentLeft="true"
             android:textSize="@dimen/dp_14"
             android:textColor="#2D7DFF"
-            android:text="访问进度:"
+            android:text="@string/attendance_access_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
@@ -106,10 +106,9 @@
                        android:textSize="@dimen/dp_14"
                        android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
-                       android:text="进店时间"/>
+                       android:text="@string/attendance_entrance_time"/>
                    <TextView
                        android:id="@+id/tv_date_in"
-                       android:text="dsdsdsdsd"
                        android:layout_centerVertical="true"
                        android:layout_toRightOf="@+id/text1"
                        android:textColor="#999999"
@@ -136,7 +135,7 @@
                         android:layout_alignParentLeft="true"
                         android:textSize="@dimen/dp_14"
                         android:textColor="#999999"
-                        android:text="离店时间"
+                        android:text="@string/attendance_departure_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                     <TextView
@@ -161,7 +160,7 @@
            layout="@layout/layout_attendance_endtime"/>
         <TextView
             android:id="@+id/tv_h_remark"
-            android:hint="备注："
+            android:hint="@string/attendance_notes"
             android:background="#FAFAFA"
             android:textColor="#999999"
             android:gravity="top"

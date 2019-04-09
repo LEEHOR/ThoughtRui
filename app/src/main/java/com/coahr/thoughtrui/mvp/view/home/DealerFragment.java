@@ -146,7 +146,7 @@ public class DealerFragment extends BaseFragment<ProjectDealer_c.Presenter> impl
             if (dealer_list.getDealerList() != null && dealer_list.getDealerList().size() > 0) {
                 showDealerPickerView(dealer_list.getDealerList());
             } else {
-                ToastUtils.showLong("暂无经销商");
+                ToastUtils.showLong(getString(R.string.toast_6));
             }
 
         }
@@ -165,18 +165,18 @@ public class DealerFragment extends BaseFragment<ProjectDealer_c.Presenter> impl
                 break;
             case R.id.tv_select_project:
                 if (TextUtils.isEmpty(tv_select_address.getText()) || tv_select_address.getText().toString().trim().equals("")) {
-                    ToastUtils.showLong("请选择省份");
+                    ToastUtils.showLong(getString(R.string.toast_7));
                     return;
                 }
                 getDealerList(city);
                 break;
             case R.id.tv_submit:
                 if (TextUtils.isEmpty(tv_select_address.getText()) || tv_select_address.getText().equals("")) {
-                    ToastUtils.showLong("请选择省份");
+                    ToastUtils.showLong(getString(R.string.toast_7));
                     return;
                 }
                 if (TextUtils.isEmpty(tv_select_project.getText()) || tv_select_project.getText().toString().trim().equals("")) {
-                    ToastUtils.showLong("请选择经销商");
+                    ToastUtils.showLong(getString(R.string.toast_8));
                     return;
                 }
                 start(ProjectDetailFragment.newInstance(null, template_id, Dealer_id, 1));
@@ -210,7 +210,7 @@ public class DealerFragment extends BaseFragment<ProjectDealer_c.Presenter> impl
                 tv_project_id.setText("");
             }
         })
-                .setTitleText("城市选择")
+                .setTitleText(getString(R.string.phrases_2))
                 .setDividerColor(Color.BLACK)
                 .setTextColorCenter(Color.BLACK) //设置选中项文字颜色
                 .setContentTextSize(20)
@@ -237,7 +237,7 @@ public class DealerFragment extends BaseFragment<ProjectDealer_c.Presenter> impl
             }
         })
 
-                .setTitleText("经销商列表")
+                .setTitleText(getString(R.string.phrases_3))
                 .setDividerColor(Color.BLACK)
                 .setTextColorCenter(Color.BLACK) //设置选中项文字颜色
                 .setContentTextSize(20)

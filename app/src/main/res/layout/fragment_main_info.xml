@@ -72,7 +72,7 @@
                             android:layout_below="@+id/check_bg"
                             android:layout_centerHorizontal="true"
                             android:layout_marginBottom="@dimen/dp_10"
-                            android:text="开始检核"
+                            android:text="@string/start_checking"
                             android:textColor="@color/colorWhite"
                             android:textSize="@dimen/dp_16" />
                     </RelativeLayout>
@@ -121,7 +121,7 @@
                             android:layout_below="@+id/histore_bg"
                             android:layout_centerHorizontal="true"
                             android:layout_marginBottom="@dimen/dp_10"
-                            android:text="历史项目"
+                            android:text="@string/history_list"
                             android:textColor="@color/colorWhite"
                             android:textSize="@dimen/dp_16" />
                     </RelativeLayout>

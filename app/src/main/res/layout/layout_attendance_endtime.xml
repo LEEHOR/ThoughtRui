@@ -12,7 +12,7 @@
         <TextView
             android:textSize="@dimen/dp_14"
             android:textColor="@color/material_grey_900"
-            android:text="@string/attendance_Time"
+            android:text="@string/attendance_push_card_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
@@ -35,7 +35,7 @@
             android:layout_marginLeft="@dimen/dp_10"
             android:drawableLeft="@mipmap/bianji"
             android:drawablePadding="@dimen/dp_5"
-            android:text="添加备注"
+            android:text="@string/attendance_sky_drop_notes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -71,7 +71,7 @@
             android:drawablePadding="@dimen/dp_5"
             android:textSize="@dimen/dp_14"
             android:textColor="#113D83"
-            android:text="更新打卡"
+            android:text="@string/attendance_update_punck_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>

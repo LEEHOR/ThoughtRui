@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.alibaba.sdk.android.oss.ClientConfiguration;
 import com.alibaba.sdk.android.oss.OSSClient;
 import com.alibaba.sdk.android.oss.common.auth.OSSAuthCredentialsProvider;
+import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
@@ -40,6 +42,7 @@ import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.Utils.FileIoUtils.SaveOrGetAnswers;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.KeyBoardUtils;
+import com.coahr.thoughtrui.Utils.OSS_Aliyun;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
@@ -184,7 +187,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     private OSSClient ossClient;
     private final int GETUPLOADLIST = 1;
     private final int UIPROGRESS = 2;
-    private Handler mHandler = new Handler() {
+    private Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -205,6 +208,8 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             }
         }
     };
+
+
     private ProjectsDB projectsDB;
     private View inflate;
     private TextView tv_tittle;
@@ -369,6 +374,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
     @Override
     public void initData() {
+        oss_thread.start();
         getSubjectDetail();
         //单选监听
         rg_gr.setOnCheckedChangeListener(new RadioGroupListener());
@@ -816,11 +822,15 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
     @Override
     public void showProgress(int currentSize, int totalSize, String info) {
-        if (currentSize > 100) {
+
+        progressBar.setMax(totalSize);
+
+     /*   if (currentSize > 100) {
             currentSize = 100;
         } else if (currentSize < 0) {
             currentSize = 0;
-        }
+        }*/
+
         Message mes = mHandler.obtainMessage(UIPROGRESS, info);
         mes.arg1 = currentSize;
         mes.arg2 = totalSize;
@@ -1309,26 +1319,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
      * OSS对象实例
      */
     private void getSTS_OSS() {
-        /**
-         * 获取密钥
-         */
-        if (ossClient == null) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    OSSAuthCredentialsProvider ossAuthCredentialsProvider = new OSSAuthCredentialsProvider(ApiContact.STSSERVER);
-                    ClientConfiguration conf = new ClientConfiguration();
-                    conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
-                    conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
-                    conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
-                    conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
-                    ossClient = new OSSClient(BaseApplication.mContext, ApiContact.endpoint, ossAuthCredentialsProvider, conf);
-                    mHandler.sendEmptyMessage(GETUPLOADLIST);
-                }
-            }).start();
-        } else {
-            mHandler.sendEmptyMessage(GETUPLOADLIST);
-        }
+        p.UpLoadFileList(projectsDB.getPid(), subjectsDB_now);
     }
 
     /**
@@ -1501,5 +1492,14 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             }
         }
     }
+    /**
+     * 获取阿里云实例
+     */
+    private Thread oss_thread= new Thread(new Runnable() {
+        @Override
+        public void run() {
+            ossClient = OSS_Aliyun.getOss(_mActivity);
+        }
+    });
 }
 

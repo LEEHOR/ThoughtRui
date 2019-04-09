@@ -12,7 +12,7 @@
     <TextView
         android:textSize="@dimen/dp_14"
         android:textColor="@color/material_grey_900"
-        android:text="@string/attendance_Time"
+        android:text="@string/attendance_push_card_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <TextView

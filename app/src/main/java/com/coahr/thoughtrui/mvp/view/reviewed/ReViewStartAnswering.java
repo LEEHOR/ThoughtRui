@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,6 +42,7 @@ import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.Utils.FileIoUtils.SaveOrGetAnswers;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.KeyBoardUtils;
+import com.coahr.thoughtrui.Utils.OSS_Aliyun;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
@@ -180,7 +182,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
     private ProgressBar progressBar;
     private final int GETUPLOADLIST = 1;
     private final int UIPROGRESS = 2;
-    private Handler mHandler = new Handler() {
+    private Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -359,6 +361,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
 
     @Override
     public void initData() {
+        oss_thread.start();
         p.getSubject(dbProjectId, ht_projectId, _mActivity, number, ht_id);
         //单选监听
         rg_gr.setOnCheckedChangeListener(new RadioGroupListener());
@@ -652,11 +655,11 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
 
     @Override
     public void showProgress(int currentSize, int totalSize, String info) {
-        if (currentSize > 100) {
+       /* if (currentSize > 100) {
             currentSize = 100;
         } else if (currentSize < 0) {
             currentSize = 0;
-        }
+        }*/
         Message mes = mHandler.obtainMessage(UIPROGRESS, info);
         mes.arg1 = currentSize;
         mes.arg2 = totalSize;
@@ -1121,7 +1124,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
         /**
          * 获取密钥
          */
-        if (ossClient == null) {
+        /*if (ossClient == null) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -1137,7 +1140,8 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
             }).start();
         } else {
             mHandler.sendEmptyMessage(GETUPLOADLIST);
-        }
+        }*/
+        p.UpLoadFileList(ht_projectId, subjectsDB_now);
     }
 
     /**
@@ -1368,4 +1372,14 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
             }
         }
     }
+
+    /**
+     * 获取Oss实例
+     */
+    private Thread oss_thread= new Thread(new Runnable() {
+        @Override
+        public void run() {
+            ossClient = OSS_Aliyun.getOss(_mActivity);
+        }
+    });
 }

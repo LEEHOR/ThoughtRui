@@ -7,7 +7,7 @@
 <com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar
     android:id="@+id/template_title"
     android:layout_width="match_parent"
-    app:tittle="请选择项目模板"
+    app:tittle="@string/checking_template"
     android:layout_height="wrap_content">
 </com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar>
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

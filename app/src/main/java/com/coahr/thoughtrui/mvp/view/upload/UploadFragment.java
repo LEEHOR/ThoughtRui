@@ -12,6 +12,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.TimeUtils;
 import android.view.LayoutInflater;
 import android.view.TouchDelegate;
 import android.view.View;
@@ -48,6 +49,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimerTask;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -114,13 +120,13 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                 case UPDATE_PROGRESS:
                     progressBar.setMax(msg.arg2);
                     progressBar.setProgress(msg.arg1);
-                    tv_tittle.setText(msg.obj.toString());
+                    tv_tittle.setText(msg.obj.toString()!=null ?msg.obj.toString():"");
                     break;
                 case UPDATE_TITTLE:
                     tv_message_tittle.setText(msg.obj.toString());
                     break;
                 case UPDATE_MESSAGE:
-                    tv_tittle.setText(msg.obj.toString());
+                    tv_tittle.setText(msg.obj.toString() != null ? msg.obj.toString() : "暂无题目上传");
                     break;
             }
         }
@@ -134,7 +140,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     //上传文件的数组
     private int subject_position;
     private TextView tv_message_tittle;
-
+    private ExecutorService fixedThreadPool;
     @Override
     public UploadC.Presenter getPresenter() {
         return p;
@@ -151,6 +157,11 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
 
     @Override
     public void initView() {
+        inflate = LayoutInflater.from(_mActivity).inflate(R.layout.dialog_progress, null);
+        tv_message_tittle = inflate.findViewById(R.id.tv_message_tittle);
+        tv_tittle = inflate.findViewById(R.id.tv_progress_info);
+        progressBar = inflate.findViewById(R.id.progress_bar);
+
         tv_Batch_Management.setOnClickListener(this);
         tv_all_upload.setOnClickListener(this);
         tv_Batch_UpLoad.setOnClickListener(this);
@@ -186,7 +197,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
         if (haslogin()) {
             p.getProjectList(Constants.sessionId);
         }
-
+        oss_thread.start();
         upLoadAdapter.setSelectChangeListener(new UpLoadAdapter.onSelectChangeListener() {
             @Override
             public void onChange() {
@@ -258,6 +269,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
         //获取上传文件列表
         Message mes = mHandler.obtainMessage(UPDATE_TITTLE, projectsDBS.get(project_position).getPname());
         mes.sendToTarget();
+
         p.UpLoadFileList(subjectsDBList, projectsDBS, project_position, 0);
     }
 
@@ -280,6 +292,11 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     public void getUpLoadFileListSuccess(List<String> list, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
         //开始上传
         KLog.d("上传1", subjectsDBList.get(subject_position).getHt_id(), projectsDBS.get(project_position).getPid(), project_position, subject_position);
+
+        if (fixedThreadPool == null) {
+           // fixedThreadPool = Executors.newFixedThreadPool(5);
+        }
+
         p.startUpLoad(ossClient, list, subjectsDBList, projectsDBS, project_position, subject_position);
     }
 
@@ -290,22 +307,23 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
 
     //============进度更新
     @Override
-    public void StartUiProgressSuccess( int currentSize, int totalSize, String info) {
+    public void StartUiProgressSuccess(int currentSize, int totalSize, String info) {
+        /*private int currentSize_progress;
+        private int totalSize_progress;
+        private String info_progress;*/
+        KLog.d("日志_", currentSize, totalSize, info);
+        progressBar.setMax(totalSize);
+         Message mes = mHandler.obtainMessage(UPDATE_PROGRESS, info);
+                     mes.arg1 = currentSize;
+                     mes.arg2 = totalSize;
+                     mes.sendToTarget();
 
 
-           if (currentSize < 0){
-               currentSize=0;
-           }
-            KLog.d(info,currentSize,totalSize);
-            Message mes = mHandler.obtainMessage(UPDATE_PROGRESS, info);
-            mes.arg1 = currentSize;
-            mes.arg2=totalSize;
-            mes.sendToTarget();
     }
 
     //=================OSS上传回调
     @Override
-    public void UploadCallBack(List<String> list, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS,List<String> picList, int project_position, int subject_position, int uploadSuccessSize, int uploadFailSize, int totalSize) {
+    public void UploadCallBack(List<String> list, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, List<String> picList, int project_position, int subject_position, int uploadSuccessSize, int uploadFailSize, int totalSize) {
         KLog.d("上传5", uploadSuccessSize, uploadFailSize, totalSize);
         if (totalSize == (uploadSuccessSize + uploadFailSize)) {
             if (totalSize == uploadSuccessSize) {  //上传成功
@@ -333,8 +351,8 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     public void Pic_Compulsory(List<String> list, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
         uPAudioPath = null;
         textMassage = null;
-        if (list !=null && list.size()>0){
-            for (int i = 0; i <list.size() ; i++) {
+        if (list != null && list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
                 if (list.get(i).endsWith("txt")) {
                     textMassage = SaveOrGetAnswers.readFromFile(list.get(i));
                 }
@@ -455,10 +473,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
      * 上传进度回调
      */
     private void showProgressDialog() {
-        inflate = LayoutInflater.from(_mActivity).inflate(R.layout.dialog_progress, null);
-        tv_message_tittle = inflate.findViewById(R.id.tv_message_tittle);
-        tv_tittle = inflate.findViewById(R.id.tv_progress_info);
-        progressBar = inflate.findViewById(R.id.progress_bar);
+
         new MaterialDialog.Builder(_mActivity)
                 .customView(inflate, false)
                 .cancelable(false)
@@ -519,10 +534,11 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
         /**
          * 获取密钥
          */
-        if (ossClient == null) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
+        getSubjectListByOne();
+     /*   mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (ossClient == null) {
                     OSSCredentialProvider credentialProvider = new OSSAuthCredentialsProvider(ApiContact.STSSERVER);
                     ClientConfiguration conf = new ClientConfiguration();
                     conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
@@ -530,12 +546,12 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                     conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
                     conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
                     ossClient = new OSSClient(_mActivity.getApplicationContext(), ApiContact.endpoint, credentialProvider, conf);
-                    mHandler.sendEmptyMessage(GETSUBJECTLIST);
+                    getSubjectListByOne();
+                } else {
+                    getSubjectListByOne();
                 }
-            }).start();
-        } else {
-            mHandler.sendEmptyMessage(GETSUBJECTLIST);
-        }
+            }
+        });*/
 
     }
 
@@ -556,6 +572,8 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
             if (type == 3) {  //点击单个上传模式
                 p.getSubjectList(click_project, 0);
             }
+        } else {
+
         }
     }
 
@@ -639,7 +657,6 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
         }
         map.put("audioCount", audioPath != null ? 1 : 0);
         map.put("audio", audioPath != null ? getName(audioPath, "/") : "");
-        map.put("pictureCount", picList.size());
         if (picList != null && picList.size() > 0) {
             StringBuffer stringBuffer = new StringBuffer();
             for (int i = 0; i < picList.size(); i++) {
@@ -680,4 +697,22 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
         });
 
     }
+
+  private Thread oss_thread= new Thread(new Runnable() {
+        @Override
+        public void run() {
+            if (ossClient==null){
+                OSSCredentialProvider credentialProvider = new OSSAuthCredentialsProvider(ApiContact.STSSERVER);
+                ClientConfiguration conf = new ClientConfiguration();
+                conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
+                conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
+                conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
+                conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
+                ossClient = new OSSClient(_mActivity, ApiContact.endpoint, credentialProvider, conf);
+            } else {
+
+            }
+
+        }
+    });
 }

@@ -125,11 +125,11 @@ public class Login_DialogFragment extends BaseDialogFragment<LoginFragmentC.Pres
             @Override
             public void onClick(View view) {
                 if (TextUtils.isEmpty(user_account.getText()) || user_account.getText().toString().length() < 4) {
-                    ToastUtils.showLong("请输入4位及以上字符的账户");
+                    ToastUtils.showLong(getString(R.string.toast_1));
                     return;
                 }
                 if (TextUtils.isEmpty(user_password.getText()) || user_password.getText().toString().length() < 4) {
-                    ToastUtils.showLong("请输入4位及以上字符的密码");
+                    ToastUtils.showLong(getString(R.string.toast_1));
                     return;
                 }
                 String prefString = PreferenceUtils.getPrefString(BaseApplication.mContext, Constants.devicestoken_key, "");
@@ -144,7 +144,6 @@ public class Login_DialogFragment extends BaseDialogFragment<LoginFragmentC.Pres
                     token = sb.toString();
                 }
 
-                KLog.d("登录中", user_account.getText().toString(), user_password.getText().toString(), token);
                 Map<String, Object> map = new HashMap<>();
                 map.put("username", user_account.getText().toString());
                 map.put("password", user_password.getText().toString());
@@ -180,7 +179,7 @@ public class Login_DialogFragment extends BaseDialogFragment<LoginFragmentC.Pres
 
     @Override
     public void onLoginSuccess(LoginBean loginBean) {
-        ToastUtils.showLong("登录成功");
+        ToastUtils.showLong(getString(R.string.toast_5));
         List<UsersDB> usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", loginBean.getData().getSessionId());
         if (usersDBS != null && usersDBS.size() > 0) {
             usersDBS.get(0).setType(loginBean.getData().getType());
@@ -218,7 +217,6 @@ public class Login_DialogFragment extends BaseDialogFragment<LoginFragmentC.Pres
 
     @Override
     public void onLoginFailure(String failure) {
-        KLog.d("错误", failure);
         ToastUtils.showLong(failure);
     }
 

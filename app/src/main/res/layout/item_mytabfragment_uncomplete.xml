@@ -185,7 +185,7 @@
             <TextView
                 android:layout_toRightOf="@+id/unComplete_tv_update_time"
                 android:textSize="12dp"
-                android:text="更新"
+                android:text="@string/phrases_6"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_5"
                 android:layout_width="wrap_content"
@@ -193,7 +193,7 @@
             <TextView
                 android:id="@+id/unComplete_item_data"
                 android:textSize="12dp"
-                android:text="暂无数据上传"
+                android:text="@string/phrases_9"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_5"

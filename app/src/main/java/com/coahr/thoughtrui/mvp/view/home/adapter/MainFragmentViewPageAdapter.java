@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.coahr.thoughtrui.R;
+import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.view.home.MyTabFragment;
 
 /**
@@ -14,7 +16,9 @@ import com.coahr.thoughtrui.mvp.view.home.MyTabFragment;
  */
 public class MainFragmentViewPageAdapter extends FragmentPagerAdapter {
     //private String[] title = {"新项目", "已完成","未完成","全部"};
-    private String[] title = { "全部","未完成","已完成"};
+    private String[] title = {BaseApplication.mContext.getString(R.string.project_list_all_1)
+            ,BaseApplication.mContext.getString(R.string.project_list_uncomplete_1)
+            ,BaseApplication.mContext.getString(R.string.project_list_complete_1)};
     public MainFragmentViewPageAdapter(FragmentManager fm) {
         super(fm);
     }

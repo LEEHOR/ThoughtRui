@@ -38,7 +38,7 @@
                     android:id="@+id/annex_pic_count_t"
                     android:textSize="@dimen/dp_14"
                     android:textColor="#333333"
-                    android:text="数量"
+                    android:text="@string/project_annex_count"
                     android:layout_toLeftOf="@+id/iv_zk_t"
                     android:layout_marginRight="@dimen/dp_5"
                     android:layout_width="wrap_content"

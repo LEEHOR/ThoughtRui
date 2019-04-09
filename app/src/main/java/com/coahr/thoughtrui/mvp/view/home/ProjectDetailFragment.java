@@ -140,7 +140,6 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
         });
 
         naviBar.getRightText().setVisibility(View.GONE);
-        naviBar.getRightText().setText("浏览");
         naviBar.getRightText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -201,10 +200,10 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
 
     private void showDialog() {
         new MaterialDialog.Builder(_mActivity)
-                .title("提示")
-                .content("您是否打卡")
-                .negativeText("去打卡")
-                .positiveText("已经打卡")
+                .title(getString(R.string.dialog_tittle_1))
+                .content(getString(R.string.dialog_content_1))
+                .negativeText(getString(R.string.dialog_negativeText_1))
+                .positiveText(getString(R.string.dialog_positiveText_1))
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -229,10 +228,10 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
                 Intent intent = new Intent(_mActivity, AttendanceRootActivity.class);
                 startActivity(intent);
             } else {
-                ToastUtils.showLong("没有网络，无法打卡");
+                ToastUtils.showLong(getString(R.string.toast_3));
             }
         } else {
-            ToastUtils.showLong("当前项目没有数据，请刷新后再试");
+            ToastUtils.showLong(getString(R.string.toast_9));
         }
 
 
@@ -247,10 +246,10 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
                 Intent intent = new Intent(_mActivity, StartProjectActivity.class);
                 startActivity(intent);
             } else {
-                ToastUtils.showLong("没有网络，无法访问");
+                ToastUtils.showLong(getString(R.string.toast_3));
             }
         } else {
-            ToastUtils.showLong("当前项目没有数据，请刷新后再试");
+            ToastUtils.showLong(getString(R.string.toast_9));
         }
     }
 
@@ -277,7 +276,9 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
 
     @Override
     public void getDateSizeSuccess(int subject, int files) {
-        tv_upload_status.setText("数据" + subject + "条，" + "附件" + files + "个未上传");
+        String sAgeFormat1= getResources().getString(R.string.string_1);
+        String sFinal1 = String.format(sAgeFormat1, subject,files);
+        tv_upload_status.setText(sFinal1);
     }
 
     @Override
@@ -326,8 +327,10 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
                     projectsDB.setUser(usersDBS.get(0));
                 }
                 projectsDB.save();
-                tv_upload_status.setText("数据" + 0 + "条，" + "附件" + 0 + "个未上传");
-                tv_fstatus.setText("暂无数据");
+                String sAgeFormat1= getResources().getString(R.string.string_1);
+                String sFinal1 = String.format(sAgeFormat1, 0,0);
+                tv_upload_status.setText(sFinal1);
+                tv_fstatus.setText(getString(R.string.string_2));
             }
             tv_cName.setText(projectDetail.getData().getCname());
             tv_cCode.setText(Constants.user_type == 1 ? projectDetail.getData().getSale_code() : Constants.user_type == 2
@@ -343,7 +346,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
                 project_detail_progress.setMax(Integer.parseInt(split_p[1]));
                 project_detail_progress.setProgress(Integer.parseInt(split_p[0]));
             }
-            project_detail_time.setText("发布于");
+            project_detail_time.setText(getString(R.string.phrases_4));
 
             tv_project_manager.setText(projectDetail.getData().getManager());
             tv_project_user.setText(Constants.user_name);
@@ -372,8 +375,13 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
     @Override
     public void getProjectDetailFailure(String fail) {
         isHaveProject = false;
-        tv_fstatus.setText("未完成" + "(" + 0 + "/" + 0 + ")");
-        tv_upload_status.setText("数据" + 0 + "条，" + "附件" + 0 + "个未上传");
+        String sAgeFormat1= getResources().getString(R.string.string_1);
+        String sFinal1 = String.format(sAgeFormat1, 0,0);
+        tv_upload_status.setText(sFinal1);
+
+        String sAgeFormat2= getResources().getString(R.string.string_3);
+        String sFinal1_2= String.format(sAgeFormat2, 0,0);
+        tv_fstatus.setText(sFinal1_2);
     }
 
     /**
@@ -398,7 +406,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
                 project_detail_progress.setMax(Integer.parseInt(split_p[1]));
                 project_detail_progress.setProgress(Integer.parseInt(split_p[0]));
             }
-            project_detail_time.setText("发布于" + TimeUtils.getStingYMD(projectsDB.getModifyTime()));
+            project_detail_time.setText(getString(R.string.phrases_4) + TimeUtils.getStingYMD(projectsDB.getModifyTime()));
             tv_project_manager.setText(projectsDB.getManager());
             tv_project_user.setText(Constants.user_name);
             tv_project_describe.setText(projectsDB.getNotice());
@@ -421,9 +429,13 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
             }
             p.getSubjectList(projectsDB);
         } else {
-            tv_fstatus.setText("未完成" + "(" + 0 + "/" + 0 + ")");
-            tv_upload_status.setText("数据" + 0 + "条，" + "附件" + 0 + "个未上传");
+            String sAgeFormat1= getResources().getString(R.string.string_1);
+            String sFinal1 = String.format(sAgeFormat1, 0,0);
+            tv_upload_status.setText(sFinal1);
 
+            String sAgeFormat2= getResources().getString(R.string.string_3);
+            String sFinal1_2= String.format(sAgeFormat2, 0,0);
+            tv_fstatus.setText(sFinal1_2);
         }
     }
 
@@ -441,7 +453,6 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
 
                         @Override
                         public void PermissionFail(List<String> permissions) {
-                            ToastUtils.showLong("获取" + permissions.get(0) + "失败");
                             isHaveAudioPermission = false;
                         }
 
@@ -478,7 +489,6 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
 
                         @Override
                         public void PermissionFail(List<String> permissions) {
-                            ToastUtils.showLong("获取" + permissions.get(0) + "失败");
                             isHaveLocationPermission = false;
                         }
 

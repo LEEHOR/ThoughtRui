@@ -7,6 +7,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.TimeUtils;
+import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.model.Bean.Template_list;
 
 
@@ -26,7 +27,7 @@ public class ProjectTemplateAdapter extends BaseQuickAdapter<Template_list.Templ
     @Override
     protected void convert(BaseViewHolder helper,Template_list.TemplateListBean item) {
         helper.setText(R.id.template_name,item.getName())
-                .setText(R.id.template_time,"更新时间:"+ TimeUtils.getStingYMD(item.getModify_time()));
+                .setText(R.id.template_time, BaseApplication.mContext.getString(R.string.phrases_1) + TimeUtils.getStingYMD(item.getModify_time()));
         helper.getConvertView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -58,6 +58,8 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
     private int update;
     private int update1;
     private List<String> picList = new ArrayList<>();
+    private ExecutorService cachedThreadPool;
+    private ExecutorService fixedThreadPool;
 
     @Inject
     public UploadM() {
@@ -142,12 +144,21 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
             }
 
             if (picList != null && picList.size() > 0) {
+                ExecutorService fixedThreadPool = Executors.newFixedThreadPool(3);
                 for (int i = 0; i < picList.size(); i++) {
-                    OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
-                            picList.get(i), CountSize, subjectsDBList, projectsDBS, project_position, subject_position, list, 2, i + 1, picList);
-                    if (ossAsyncTask != null) {
-                        ossAsyncTaskList.add(ossAsyncTask);
-                    }
+                    int finalI = i;
+                    int finalCountSize = CountSize;
+                    fixedThreadPool.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
+                                    picList.get(finalI), finalCountSize, subjectsDBList, projectsDBS, project_position, subject_position, list, 2, finalI + 1, picList);
+                            if (ossAsyncTask != null) {
+                                ossAsyncTaskList.add(ossAsyncTask);
+                            }
+                        }
+                    });
+
                 }
 
             }
@@ -254,11 +265,12 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
             object = projectsDBS.get(project_position).getPid() + "/pictures/" + subjectsDBList.get(subject_position).getNumber() + "/" + picName;
         }
         PutObjectRequest put = new PutObjectRequest(Constants.bucket, object, localFile);
+
         put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
             @Override
             public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
-
-                getPresenter().StartUiProgressSuccess((int) currentSize, (int) totalSize, "第" + subjectsDBList.get(subject_position).getNumber() + "题\n" + fileName);
+                KLog.d("日志_1", currentSize,totalSize,"第" + subjectsDBList.get(subject_position).getNumber() + "题\n" + fileName);
+                        getPresenter().StartUiProgressSuccess((int) currentSize, (int) totalSize, "第" + subjectsDBList.get(subject_position).getNumber() + "题\n" + fileName);
 
             }
         });

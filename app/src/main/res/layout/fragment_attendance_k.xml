@@ -14,12 +14,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/attendance_start_time"
+            android:text="@string/attendance_push_card_time"
             android:textColor="@color/material_grey_850"
             android:textSize="@dimen/dp_14" />
 
         <TextView
-            android:text="dsdsdds"
             android:id="@+id/tv_start_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -44,7 +43,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/attendance_end_time"
+            android:text="@string/attendance_end_push_card"
             android:textColor="@color/material_grey_850"
             android:textSize="@dimen/dp_14" />
 
@@ -109,7 +108,7 @@
                   android:id="@+id/tv_push_text"
                   android:textSize="@dimen/dp_14"
                   android:layout_centerInParent="true"
-                  android:text="@string/attendance_start"
+                  android:text="@string/attendance_start_push_card"
                   android:textColor="@color/colorPrimary"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content" />
@@ -132,7 +131,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
-            android:text="dsdsdsdsds"
             android:gravity="center"
             android:id="@+id/location_message"
             android:textSize="@dimen/dp_12"
@@ -144,7 +142,7 @@
             android:textSize="@dimen/dp_12"
             android:textColor="@color/material_blue_550"
             android:id="@+id/relocation"
-            android:text="@string/relocation"
+            android:text="@string/attendance_relocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>

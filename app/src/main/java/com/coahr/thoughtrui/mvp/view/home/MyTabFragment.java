@@ -207,7 +207,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
 
             @Override
             public void newListLongClick(HomeDataList.DataBean.AllListBean newListBean) {
-                showDialog("新的项目", "无法删除", false);
+                showDialog(getString(R.string.dialog_tittle_2),  getString(R.string.dialog_content_2), false);
             }
 
             @Override
@@ -217,7 +217,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
 
             @Override
             public void completeLongClick(HomeDataList.DataBean.AllListBean completeListBean) {
-                showDialog("已完成的项目", "确定删除", true);
+                showDialog(getString(R.string.dialog_tittle_3), getString(R.string.dialog_content_3), true);
             }
 
             @Override
@@ -227,7 +227,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
 
             @Override
             public void unCompleteLongClick(HomeDataList.DataBean.AllListBean unCompleteListBean) {
-                showDialog("未完成的项目", "无法删除", false);
+                showDialog(getString(R.string.dialog_tittle_4), getString(R.string.dialog_content_2), false);
             }
 
             @Override
@@ -238,7 +238,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
 
             @Override
             public void unDownLoadLongClick(HomeDataList.DataBean.AllListBean newListBean) {
-                showDialog("未下载的项目", "无法删除", false);
+
             }
         });
 
@@ -251,7 +251,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
 
             @Override
             public void newListLongClick(ProjectsDB projectsDB) {
-                showDialog("新的项目", "无法删除", false);
+                showDialog(getString(R.string.dialog_tittle_2), getString(R.string.dialog_content_2), false);
             }
 
             @Override
@@ -261,7 +261,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
 
             @Override
             public void completeLongClick(ProjectsDB projectsDB) {
-                showDialog("已完成的项目", "确定删除", true);
+                showDialog(getString(R.string.dialog_tittle_3), getString(R.string.dialog_content_3), true);
             }
 
             @Override
@@ -271,7 +271,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
 
             @Override
             public void unCompleteLongClick(ProjectsDB projectsDB) {
-                showDialog("未完成的项目", "无法删除", false);
+                showDialog(getString(R.string.dialog_tittle_4), getString(R.string.dialog_content_2), false);
             }
 
             @Override
@@ -282,7 +282,6 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
 
             @Override
             public void unDownLoadLongClick(ProjectsDB projectsDB) {
-                showDialog("未下载的项目", "无法删除", false);
             }
         });
 
@@ -365,7 +364,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
     @Override
     public void getTypeDateFailure(int fail) {
         if (fail == 0) {
-            ToastUtils.showLong("没有更多本地数据");
+            ToastUtils.showLong(getString(R.string.toast_11));
         }
         isLoad = false;
         myTab_swipe.setRefreshing(false);
@@ -378,7 +377,6 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
             ProjectsDB projectsDB = new ProjectsDB();
             projectsDB.setDownloadTime(System.currentTimeMillis());
             projectsDB.setCname(projectsDBS.get(0).getCname());
-            projectsDB.update(projectsDBS.get(0).getId());
         }
         if (isNetworkAvailable()) {
             getDate();
@@ -497,8 +495,8 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
         new MaterialDialog.Builder(_mActivity)
                 .title(title)
                 .content(Content)
-                .negativeText("取消")
-                .positiveText("确认")
+                .negativeText(getString(R.string.cancel))
+                .positiveText(getString(R.string.resume))
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -532,7 +530,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
             intent.putExtra("to", Constants.ProjectDetailFragmentCode);
             startActivity(intent);
         } else {
-            ToastUtils.showLong("请登录后再操作");
+            ToastUtils.showLong(getString(R.string.toast_10));
         }
     }
 
@@ -546,7 +544,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
             map.put("sessionId", Constants.sessionId);
             p.getUnDownLoadProject(map);
         } else {
-            ToastUtils.showLong("请登录后再操作");
+            ToastUtils.showLong(getString(R.string.toast_10));
         }
 
     }
