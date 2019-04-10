@@ -27,7 +27,7 @@ public class OSS_Aliyun {
         return aliyun;
     }
 
-    public static OSSClient getOss(Context context) {
+    public  OSSClient getOss(Context context) {
         if (credentialProvider == null) {
             credentialProvider = new OSSAuthCredentialsProvider(ApiContact.STSSERVER);
             ClientConfiguration conf = new ClientConfiguration();

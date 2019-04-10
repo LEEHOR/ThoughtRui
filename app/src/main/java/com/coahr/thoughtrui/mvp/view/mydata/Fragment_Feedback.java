@@ -155,12 +155,12 @@ public class Fragment_Feedback extends BaseFragment<Feedback_Fragment_C.Presente
                 if (rb_1.isChecked() || rb_2.isChecked() || rb_3.isChecked()) {
 
                 } else {
-                    ToastUtils.showLong("反馈的问题点为必选");
+                    ToastUtils.showLong(getResources().getString(R.string.feed_back_is_required));
                     return;
                 }
 
                 if (ed_input.getText().toString().equals("") && (ed_input.getText().toString().length() < 10 || ed_input.getText().toString().length() > 300)) {
-                    ToastUtils.showLong("长度限制10-300字");
+                    ToastUtils.showLong(getResources().getString(R.string.feed_back_length_limited));
                     return;
                 }
                 getOptions(type, ed_input.getText().toString().trim());

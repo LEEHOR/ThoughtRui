@@ -30,10 +30,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.alibaba.sdk.android.oss.ClientConfiguration;
 import com.alibaba.sdk.android.oss.OSSClient;
-import com.alibaba.sdk.android.oss.common.auth.OSSAuthCredentialsProvider;
-import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
@@ -48,7 +45,6 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.constract.PagerFragment_aC;
-import com.coahr.thoughtrui.mvp.model.ApiContact;
 import com.coahr.thoughtrui.mvp.model.Bean.isCompleteBean;
 import com.coahr.thoughtrui.mvp.presenter.PagerFragment_aP;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
@@ -57,6 +53,7 @@ import com.coahr.thoughtrui.mvp.view.startProject.adapter.PagerFragmentPhotoList
 import com.coahr.thoughtrui.widgets.AltDialog.DialogFragmentAudioPlay;
 import com.coahr.thoughtrui.widgets.AltDialog.EvaluateInputDialogFragment;
 import com.coahr.thoughtrui.widgets.AltDialog.Fill_in_blankDialog;
+import com.coahr.thoughtrui.widgets.AltDialog.PhotoAlbumDialogFragment;
 import com.coahr.thoughtrui.widgets.AltDialog.ProjectSuccessDialog;
 import com.socks.library.KLog;
 
@@ -291,7 +288,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             @Override
             public void onClick(View v) {
                 if (isHaveRecorder) {  //有无录音
-                    showDeleteAudioDialog("当前题目下有录音", "是否删除");
+                    showDeleteAudioDialog(getResources().getString(R.string.dialog_tittle_5), getResources().getString(R.string.dialog_content_3));
                 } else {
                     if (type == 1) { //开始录音
                         setupRecorder();
@@ -337,7 +334,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                         ed_score.setText(text);
                         p.saveAnswers(text, remark, ht_projectId, number, ht_id, 1);
                     } else {
-                        ToastUtils.showLong("请输入正确的分数");
+                        ToastUtils.showLong(getResources().getString(R.string.toast_16));
                     }
                 }
 
@@ -345,7 +342,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
             @Override
             public void setOnClickFailure() {
-                ToastUtils.showLong("请输入正确的数值");
+                ToastUtils.showLong(getResources().getString(R.string.toast_16));
             }
         });
 
@@ -355,14 +352,14 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             public void onClick(View view) {
                 if (tv_Unfold.getTag() == null || tv_Unfold.getTag().equals("1")) { //关闭
                     img_recycler.setVisibility(View.GONE);
-                    tv_Unfold.setText("展开");
+                    tv_Unfold.setText(getResources().getString(R.string.answer_page_spread));
                     tv_Unfold.setTag("2");
                 } else if (tv_Unfold.getTag().equals("2")) {  //关闭
                     img_recycler.setVisibility(View.VISIBLE);
-                    tv_Unfold.setText("关闭");
+                    tv_Unfold.setText(getResources().getString(R.string.answer_page_close));
                     tv_Unfold.setTag("1");
                 } else if (tv_Unfold.getTag().equals("3")) {
-                    tv_Unfold.setText("关闭");
+                    tv_Unfold.setText(getResources().getString(R.string.answer_page_close));
                     tv_Unfold.setTag("1");
                     isDeletePic = false;
                     p.getImage(ht_projectId, _mActivity, number, ht_id);
@@ -374,7 +371,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
     @Override
     public void initData() {
-        oss_thread.start();
+
         getSubjectDetail();
         //单选监听
         rg_gr.setOnCheckedChangeListener(new RadioGroupListener());
@@ -399,10 +396,10 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                             EventBus.getDefault().postSticky(new isCompleteBean(true, number - 1, 1, 1));
                         }
                     } else {
-                        ToastUtils.showLong("已经是第一题");
+                        ToastUtils.showLong(getResources().getString(R.string.toast_17));
                     }
                 } else {
-                    showDeleteAudioDialog("", "确定停止录音");
+                    showDeleteAudioDialog(getResources().getString(R.string.dialog_tittle_6), getResources().getString(R.string.dialog_content_4));
                 }
 
                 break;
@@ -438,13 +435,13 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 //                        }
 
                     } else {
-                        showStopAudioDialog("", "是否停止录音");
+                        showStopAudioDialog(getResources().getString(R.string.dialog_tittle_6), getResources().getString(R.string.dialog_content_4));
                     }
                 } else {
                     if (!isRecorder) {
 
                         if (UpdateDB()) {
-                            ToastUtils.showLong("已经是最后一题");
+                            ToastUtils.showLong(getResources().getString(R.string.toast_18));
                             ProjectSuccessDialog projectSuccessDialog = ProjectSuccessDialog.newInstance(ht_projectId);
                             projectSuccessDialog.show(getChildFragmentManager(), TAG);
                         }
@@ -472,7 +469,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
 
                     } else {
-                        showStopAudioDialog("", "是否停止录音");
+                        showStopAudioDialog(getResources().getString(R.string.dialog_tittle_6), getResources().getString(R.string.dialog_content_4));
                     }
 
                 }
@@ -482,7 +479,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 if (imageSize < 10) {
                     openMulti((10 - imageSize));
                 } else {
-                    ToastUtils.showLong("图片数量已经足够");
+                    ToastUtils.showLong(getResources().getString(R.string.toast_19));
                 }
                 break;
             case R.id.tv_bianji:
@@ -494,10 +491,10 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                         DialogFragmentAudioPlay audioPlay = DialogFragmentAudioPlay.newInstance(audioPath, audioName);
                         audioPlay.show(getChildFragmentManager(), TAG);
                     } else {
-                        ToastUtils.showLong("没有录音文件");
+                        ToastUtils.showLong(getResources().getString(R.string.toast_15));
                     }
                 } else {
-                    ToastUtils.showLong("正在录音");
+                    ToastUtils.showLong(getResources().getString(R.string.toast_20));
 
                 }
 
@@ -508,18 +505,18 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                     return;
                 }
                 if (!isAnswer) {
-                    ToastUtils.showLong("请填写答案");
+                    ToastUtils.showLong(getResources().getString(R.string.toast_21));
                     return;
                 }
                 fr_upload.setEnabled(false);
                 if (Constants.isNetWorkConnect) {
                     if (Constants.NetWorkType != null && Constants.NetWorkType.equals("WIFI")) {
-                        NetWorkDialog("提示", "是否上传", 1);
+                        NetWorkDialog(getResources().getString(R.string.dialog_tittle_7), getResources().getString(R.string.dialog_content_5), 1);
                     } else if (Constants.NetWorkType != null && Constants.NetWorkType.equals("MOBILE")) {
-                        NetWorkDialog("提示", "当前为移动网络是否继续上传", 2);
+                        NetWorkDialog(getResources().getString(R.string.dialog_tittle_7), getResources().getString(R.string.dialog_content_6), 2);
                     }
                 } else {
-                    NetWorkDialog("提示", "当前网络不可用无法上传", 3);
+                    NetWorkDialog(getResources().getString(R.string.dialog_tittle_7), getResources().getString(R.string.dialog_content_7), 3);
                 }
                 break;
 
@@ -558,9 +555,9 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 re_score.setVisibility(View.VISIBLE);
                 rg_gr.setVisibility(View.GONE);
                 standard_score = subjectsDB.getOptions();
-                tv_standard_score.setText("标准分数：" + subjectsDB.getOptions());
+                tv_standard_score.setText(getResources().getString(R.string.phrases_19) + subjectsDB.getOptions());
             }
-            tv_describe.setText("说明：" + subjectsDB.getDescription());
+            tv_describe.setText(getResources().getString(R.string.phrases_20) + subjectsDB.getDescription());
             p.getAnswer(ht_projectId, _mActivity, number, ht_id);
             p.getImage(ht_projectId, _mActivity, number, ht_id);
             p.getAudio(ht_projectId, _mActivity, number, ht_id);
@@ -701,12 +698,12 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
         KeyBoardUtils.hideKeybord(ed_score, _mActivity);
         p.getAnswer(ht_projectId, _mActivity, number, ht_id);
-        ToastUtils.showLong("保存成功");
+        ToastUtils.showLong(getResources().getString(R.string.toast_22));
     }
 
     @Override
     public void saveAnswersFailure(int type) {
-        ToastUtils.showLong("保存失败");
+        ToastUtils.showLong(getResources().getString(R.string.toast_23));
         if (type == 1) {
             isAnswer = false;
         } else {
@@ -717,12 +714,12 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     @Override
     public void SaveImagesSuccess() {
         p.getImage(ht_projectId, _mActivity, number, ht_id);
-        ToastUtils.showShort("图片保存成功");
+        ToastUtils.showShort(getResources().getString(R.string.toast_22));
     }
 
     @Override
     public void SaveImagesFailure() {
-        ToastUtils.showShort("图片保存失败");
+        ToastUtils.showShort(getResources().getString(R.string.toast_23));
     }
 
     @Override
@@ -744,7 +741,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         isHaveRecorder = false;
         if (!isRecorder) {
             updateUi(1); //开始录音
-            tv_recorder_name.setText("暂无录音");
+            tv_recorder_name.setText(getResources().getString(R.string.phrases_17));
             tv_recorder_name.setTextColor(getResources().getColor(R.color.material_grey_200));
         }
     }
@@ -760,7 +757,6 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
      */
     @Override
     public void getUpLoadFileListSuccess(List<String> list, String projectsDB_id, SubjectsDB subjectsDB) {
-        ToastUtils.showLong("阿里云上传获取题目列表成功");
         showProgressDialog();
         p.startUpload(ossClient, list, projectsDB, subjectsDB);
     }
@@ -792,7 +788,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 }
                 callbackForServer(projectsDB, subjectsDB, uPAudioPath, fileList_Call, textMassage);
             } else {
-                ToastUtils.showLong("上传失败");
+                ToastUtils.showLong(getResources().getString(R.string.toast_24));
                 fr_upload.setEnabled(true);
             }
         }
@@ -811,7 +807,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             }
             callbackForServer(projectsDB, subjectsDB, uPAudioPath, fileList_Call, textMassage);
         } else {
-            ToastUtils.showLong("暂无数据上传");
+            ToastUtils.showLong(getResources().getString(R.string.toast_25));
         }
     }
 
@@ -850,7 +846,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
 
     @Override
     public void UpDataDbSuccess() {
-        ToastUtils.showLong("上传成功");
+        ToastUtils.showLong(getResources().getString(R.string.toast_22));
         fr_upload.setEnabled(true);
         iv_upload_tag.setImageResource(R.mipmap.uploaded);
     }
@@ -927,7 +923,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             adapter.setIsDel(true);
             adapter.setImageList(imageList);
             adapter.notifyDataSetChanged();
-            tv_Unfold.setText("取消");
+            tv_Unfold.setText(getResources().getString(R.string.answer_page_cancel));
             tv_Unfold.setTag("3");
         }
 
@@ -954,7 +950,6 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             if (rb_no.isChecked()) {
                 answers = rb_no.getText().toString();
             }
-            KLog.d("选择", answers);
             p.saveAnswers(answers, remark, ht_projectId, number, ht_id, 1);
         }
     }
@@ -978,17 +973,17 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
      */
     private void updateUi(final int types) {
         if (types == 1) {
-            this.tv_recorderBtn.setText("开始录音");
+            this.tv_recorderBtn.setText(getResources().getString(R.string.phrases_21));
             imgs[0].setBounds(0, 0, DensityUtils.dp2px(BaseApplication.mContext, 15), DensityUtils.dp2px(BaseApplication.mContext, 15));
             this.tv_recorderBtn.setCompoundDrawables(imgs[0], null, null, null);
         }
         if (types == 2) {
-            this.tv_recorderBtn.setText("正在录音");
+            this.tv_recorderBtn.setText(getResources().getString(R.string.phrases_22));
             imgs[1].setBounds(0, 0, DensityUtils.dp2px(BaseApplication.mContext, 15), DensityUtils.dp2px(BaseApplication.mContext, 15));
             this.tv_recorderBtn.setCompoundDrawables(imgs[1], null, null, null);
         }
         if (types == 4) {
-            this.tv_recorderBtn.setText("播放录音");
+            this.tv_recorderBtn.setText(getResources().getString(R.string.phrases_23));
             imgs[2].setBounds(0, 0, DensityUtils.dp2px(BaseApplication.mContext, 15), DensityUtils.dp2px(BaseApplication.mContext, 15));
             this.tv_recorderBtn.setCompoundDrawables(imgs[2], null, null, null);
         }
@@ -1055,7 +1050,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         if (!file.exists()) {
             file.mkdirs();
         }
-        return new File(file, "录音" + number + ".wav");
+        return new File(file, "audio" + number + ".wav");
     }
 
     /**
@@ -1111,8 +1106,8 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         new MaterialDialog.Builder(_mActivity)
                 .title(title)
                 .content(Content)
-                .negativeText("取消")
-                .positiveText("确认")
+                .negativeText(getResources().getString(R.string.cancel))
+                .positiveText(getResources().getString(R.string.resume))
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -1140,8 +1135,8 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         new MaterialDialog.Builder(_mActivity)
                 .title(title)
                 .content(Content)
-                .negativeText("取消")
-                .positiveText("删除")
+                .negativeText(getResources().getString(R.string.cancel))
+                .positiveText(getResources().getString(R.string.resume))
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -1236,13 +1231,13 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             map.put("pictureCount", 0);
         }
 
-        mHandler.post(new Runnable() {
+      /*  mHandler.post(new Runnable() {
             @Override
             public void run() {
-                p.CallBack(map, projectsDB, subjectsDB);
-            }
-        });
 
+            }
+        });*/
+        p.CallBack(map, projectsDB, subjectsDB);
     }
 
 
@@ -1254,8 +1249,8 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 .customView(inflate, false)
                 .cancelable(false)
                 .canceledOnTouchOutside(false)
-                .negativeText("取消")
-                .positiveText("确认")
+                .negativeText(getResources().getString(R.string.cancel))
+                .positiveText(getResources().getString(R.string.resume))
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -1282,8 +1277,8 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
         new MaterialDialog.Builder(_mActivity)
                 .title(title)
                 .content(Content)
-                .negativeText("取消")
-                .positiveText("确认")
+                .negativeText(getResources().getString(R.string.cancel))
+                .positiveText(getResources().getString(R.string.resume))
                 .cancelable(false)
                 .canceledOnTouchOutside(false)
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
@@ -1319,6 +1314,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
      * OSS对象实例
      */
     private void getSTS_OSS() {
+        oss_thread.start();
         p.UpLoadFileList(projectsDB.getPid(), subjectsDB_now);
     }
 
@@ -1336,16 +1332,16 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 return true;
             } else {
                 if (!isAnswer) {
-                    ToastUtils.showLong("请填写答案");
+                    ToastUtils.showLong(getResources().getString(R.string.toast_26));
                 }
                 if (!isDescribe) {
-                    ToastUtils.showLong("请填写备注");
+                    ToastUtils.showLong(getResources().getString(R.string.toast_27));
                 }
                 if (!isPhotos) {
-                    ToastUtils.showLong("请拍摄照片");
+                    ToastUtils.showLong(getResources().getString(R.string.toast_28));
                 }
                 if (!isHaveRecorder) {
-                    ToastUtils.showLong("请开启录音");
+                    ToastUtils.showLong(getResources().getString(R.string.toast_29));
                 }
                 return false;
             }
@@ -1360,13 +1356,13 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 return true;
             } else {
                 if (!isAnswer) {
-                    ToastUtils.showLong("请填写答案");
+                    ToastUtils.showLong(getResources().getString(R.string.toast_26));
                 }
                 if (!isDescribe) {
-                    ToastUtils.showLong("请填写备注");
+                    ToastUtils.showLong(getResources().getString(R.string.toast_27));
                 }
                 if (!isHaveRecorder) {
-                    ToastUtils.showLong("请开启录音");
+                    ToastUtils.showLong(getResources().getString(R.string.toast_29));
                 }
                 return false;
             }
@@ -1381,13 +1377,13 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 return true;
             } else {
                 if (!isAnswer) {
-                    ToastUtils.showLong("请填写答案");
+                    ToastUtils.showLong(getResources().getString(R.string.toast_26));
                 }
                 if (!isPhotos) {
-                    ToastUtils.showLong("请拍摄照片");
+                    ToastUtils.showLong(getResources().getString(R.string.toast_28));
                 }
                 if (!isHaveRecorder) {
-                    ToastUtils.showLong("请开启录音");
+                    ToastUtils.showLong(getResources().getString(R.string.toast_29));
                 }
                 return false;
             }
@@ -1401,13 +1397,13 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 return true;
             } else {
                 if (!isAnswer) {
-                    ToastUtils.showLong("请填写答案");
+                    ToastUtils.showLong(getResources().getString(R.string.toast_26));
                 }
                 if (!isPhotos) {
-                    ToastUtils.showLong("请拍摄照片");
+                    ToastUtils.showLong(getResources().getString(R.string.toast_28));
                 }
                 if (!isDescribe) {
-                    ToastUtils.showLong("请填写备注");
+                    ToastUtils.showLong(getResources().getString(R.string.toast_27));
                 }
                 return false;
             }
@@ -1421,10 +1417,10 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 return true;
             } else {
                 if (!isAnswer) {
-                    ToastUtils.showLong("请填写答案");
+                    ToastUtils.showLong(getResources().getString(R.string.toast_26));
                 }
                 if (!isPhotos) {
-                    ToastUtils.showLong("请拍摄图片");
+                    ToastUtils.showLong(getResources().getString(R.string.toast_28));
                 }
 
                 return false;
@@ -1439,10 +1435,10 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 return true;
             } else {
                 if (!isAnswer) {
-                    ToastUtils.showLong("请填写答案");
+                    ToastUtils.showLong(getResources().getString(R.string.toast_26));
                 }
                 if (!isHaveRecorder) {
-                    ToastUtils.showLong("请开启录音");
+                    ToastUtils.showLong(getResources().getString(R.string.toast_29));
                 }
                 return false;
             }
@@ -1457,10 +1453,10 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 return true;
             } else {
                 if (!isAnswer) {
-                    ToastUtils.showLong("请填写答案");
+                    ToastUtils.showLong(getResources().getString(R.string.toast_26));
                 }
                 if (!isDescribe) {
-                    ToastUtils.showLong("请填写备注");
+                    ToastUtils.showLong(getResources().getString(R.string.toast_27));
                 }
                 return false;
             }
@@ -1474,7 +1470,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 return true;
             } else {
                 if (!isAnswer) {
-                    ToastUtils.showLong("请填写答案");
+                    ToastUtils.showLong(getResources().getString(R.string.toast_26));
                 }
                 return false;
             }
@@ -1486,7 +1482,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 return true;
             } else {
                 if (!isAnswer) {
-                    ToastUtils.showLong("请填写答案");
+                    ToastUtils.showLong(getString(R.string.toast_26));
                 }
                 return false;
             }
@@ -1498,7 +1494,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     private Thread oss_thread= new Thread(new Runnable() {
         @Override
         public void run() {
-            ossClient = OSS_Aliyun.getOss(_mActivity);
+            ossClient = OSS_Aliyun.newInstance().getOss(_mActivity);
         }
     });
 }

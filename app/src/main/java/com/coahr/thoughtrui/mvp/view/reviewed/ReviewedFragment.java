@@ -84,7 +84,7 @@ public class ReviewedFragment extends BaseFragment {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     if (TextUtils.isEmpty(v.getText()) && v.getText().toString().equals("")) {
-                        ToastUtils.showLong("不能为空");
+                        ToastUtils.showLong(getResources().getString(R.string.review_fragment_not_null));
                     } else {
                         KeyBoardUtils.hideKeybord(v, _mActivity);
                         EventBus.getDefault().postSticky(new EvenBus_censor(v.getText().toString().trim(), censor_viewpager.getCurrentItem()));

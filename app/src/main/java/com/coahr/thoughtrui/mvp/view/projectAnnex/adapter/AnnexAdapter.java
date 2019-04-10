@@ -68,7 +68,7 @@ public class AnnexAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         if (viewHolder instanceof MyAdapter_q) {
             String audioPath = null;
             if (listList != null && listList.size() > 0) {
-                ((MyAdapter_q) viewHolder).annex_tv_tittle_q.setText(BaseApplication.mContext.getString(R.string.phrases_16) + String.valueOf(i + 1));
+                ((MyAdapter_q) viewHolder).annex_tv_tittle_q.setText(BaseApplication.mContext.getResources().getString(R.string.phrases_16) + String.valueOf(i + 1));
                 final List<String> listPath = listList.get(i);
                 if (listPath != null && listPath.size() > 0) {
                     listPic = new ArrayList<>();
@@ -91,7 +91,7 @@ public class AnnexAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 if (audioPath != null) {
                     ((MyAdapter_q) viewHolder).audio_name.setText(FileIOUtils.getE(audioPath, "/"));
                 } else {
-                    ((MyAdapter_q) viewHolder).audio_name.setText(BaseApplication.mContext.getString(R.string.phrases_17));
+                    ((MyAdapter_q) viewHolder).audio_name.setText(BaseApplication.mContext.getResources().getString(R.string.phrases_17));
                 }
 
                 final String finalAudioPath = audioPath;
@@ -145,7 +145,7 @@ public class AnnexAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     adapter.setNewData(listPic);
                     ((MyAdapter_q) viewHolder).annex_child_recycler.setLayoutManager(gridLayoutManager);
                     ((MyAdapter_q) viewHolder).annex_child_recycler.setAdapter(adapter);
-                    ((MyAdapter_q) viewHolder).pic_count.setText(BaseApplication.mContext.getString(R.string.phrases_18));
+                    ((MyAdapter_q) viewHolder).pic_count.setText(BaseApplication.mContext.getResources().getString(R.string.phrases_18));
                 }
                 //   ((MyAdapter_q) viewHolder).iv_zk.setTag(String.valueOf(i));
                 ((MyAdapter_q) viewHolder).iv_zk.setOnClickListener(new View.OnClickListener() {
@@ -183,7 +183,7 @@ public class AnnexAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         if (viewHolder instanceof MyAdapter_t) {
             if (listList != null && listList.size() > 0) {
 
-                ((MyAdapter_t) viewHolder).annex_tv_tittle_t.setText(BaseApplication.mContext.getString(R.string.phrases_16) + String.valueOf(i + 1));
+                ((MyAdapter_t) viewHolder).annex_tv_tittle_t.setText(BaseApplication.mContext.getResources().getString(R.string.phrases_16) + String.valueOf(i + 1));
                 final List<String> listPath = listList.get(i);
                 if (listPath != null && listPath.size() > 0) {
                     listPic = new ArrayList<>();
@@ -236,7 +236,7 @@ public class AnnexAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     adapter.setImageList(listPic);
                     ((MyAdapter_t) viewHolder).annex_child_recycler_t.setLayoutManager(gridLayoutManager);
                     ((MyAdapter_t) viewHolder).annex_child_recycler_t.setAdapter(adapter);
-                    ((MyAdapter_t) viewHolder).annex_pic_count_t.setText(BaseApplication.mContext.getString(R.string.phrases_18));
+                    ((MyAdapter_t) viewHolder).annex_pic_count_t.setText(BaseApplication.mContext.getResources().getString(R.string.phrases_18));
                 }
                 ((MyAdapter_t) viewHolder).iv_zk_t.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -270,7 +270,7 @@ public class AnnexAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         if (viewHolder instanceof MyAdapter_l) {
             if (listList != null && listList.size() > 0) {
-                ((MyAdapter_l) viewHolder).annex_tv_tittle_l.setText(BaseApplication.mContext.getString(R.string.phrases_16) + String.valueOf(i + 1));
+                ((MyAdapter_l) viewHolder).annex_tv_tittle_l.setText(BaseApplication.mContext.getResources().getString(R.string.phrases_16) + String.valueOf(i + 1));
                 final List<String> listPath = listList.get(i);
                 String audioPath = null;
                 if (listPath != null && listPath.size() > 0) {
@@ -286,7 +286,7 @@ public class AnnexAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 if (audioPath != null) {
                     ((MyAdapter_l) viewHolder).annex_audio_name_l.setText(FileIOUtils.getE(audioPath, "/"));
                 } else {
-                    ((MyAdapter_l) viewHolder).annex_audio_name_l.setText(BaseApplication.mContext.getString(R.string.phrases_17));
+                    ((MyAdapter_l) viewHolder).annex_audio_name_l.setText(BaseApplication.mContext.getResources().getString(R.string.phrases_17));
                 }
 
                 final String finalAudioPath = audioPath;

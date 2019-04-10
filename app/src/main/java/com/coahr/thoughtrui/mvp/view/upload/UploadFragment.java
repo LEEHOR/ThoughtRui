@@ -688,13 +688,13 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
             map.put("picture", "");
             map.put("pictureCount", 0);
         }
-
-        mHandler.post(new Runnable() {
+        p.CallBackServer(map, subjectsDB, projectsDB, project_position, subject_position);
+      /*  mHandler.post(new Runnable() {
             @Override
             public void run() {
-                p.CallBackServer(map, subjectsDB, projectsDB, project_position, subject_position);
+
             }
-        });
+        });*/
 
     }
 

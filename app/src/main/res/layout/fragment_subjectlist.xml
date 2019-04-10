@@ -5,7 +5,7 @@
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar
-        app:tittle="题目列表"
+        app:tittle="@string/subject_list_tittle"
         android:id="@+id/subject_tittle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

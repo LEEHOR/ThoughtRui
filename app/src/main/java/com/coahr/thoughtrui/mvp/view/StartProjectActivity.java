@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.baidu.location.BDLocation;
@@ -74,6 +75,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     };
     private BaiduLocationHelper baiduLocationHelper_s;
     private Login_DialogFragment login_dialogFragment;
+    private String format;
 
     @Override
     public StartProjectActivity_C.Presenter getPresenter() {
@@ -99,7 +101,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                 ScreenUtils.getStatusBarHeight(BaseApplication.mContext),
                 p_mytitle.getPaddingRight(), p_mytitle.getPaddingBottom());
         p_mytitle.getRightText().setVisibility(View.VISIBLE);
-        p_mytitle.getRightText().setText("检核项");
+        p_mytitle.getRightText().setText(getString(R.string.start_activity_checklist));
         p_mytitle.getRightText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,10 +113,12 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         p_mytitle.getLeftIcon().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showDialog("提示", "退出检核");
+                showDialog(getResources().getString(R.string.dialog_tittle_7), getResources().getString(R.string.dialog_content_8));
             }
         });
-        p_mytitle.getTvTittle().setText("检核中(" + 1 + ")");
+        format = getResources().getString(R.string.start_activity_tittle);
+        String format1 = String.format(format, 1);
+        p_mytitle.getTvTittle().setText(format1);
     }
 
     @Override
@@ -124,12 +128,12 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
             if (haslogin()) {
                 getData();
             } else {
-                ToastUtils.showLong("请登录后再试");
+                ToastUtils.showLong(getResources().getString(R.string.toast_10));
                 loginDialog();
             }
 
         } else {
-            ToastUtils.showLong("请开启网络以定位");
+            ToastUtils.showLong(getResources().getString(R.string.toast_13));
 
         }
     }
@@ -235,7 +239,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
             }
             p.getOfflineDate(Constants.ht_ProjectId);
         } else {
-            ToastUtils.showLong("当前项目不存在");
+            ToastUtils.showLong(getResources().getString(R.string.toast_30));
         }
     }
 
@@ -256,7 +260,6 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         this.subject_size = size;
         htId_List.clear();
         this.htId_List = ht_list;
-        KLog.d("项目Id2", ht_projectId);
         startProjectAdapter = new StartProjectAdapter(getSupportFragmentManager(), size, ht_projectId, Constants.name_Project, ht_list);
 
         project_viewPage.setAdapter(startProjectAdapter);
@@ -266,7 +269,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
 
     @Override
     public void getOfflineFailure(int failure) {
-        ToastUtils.showLong("当前题目不存在");
+        ToastUtils.showLong(getResources().getString(R.string.toast_30));
     }
 
     @Override
@@ -313,15 +316,15 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
 
     @Override
     public void onBackPressedSupport() {
-        showDialog("提示", "退出检核");
+        showDialog(getResources().getString(R.string.dialog_tittle_7), getResources().getString(R.string.dialog_content_8));
     }
 
     private void showDialog(String title, String Content) {
         new MaterialDialog.Builder(this)
                 .title(title)
                 .content(Content)
-                .negativeText("取消")
-                .positiveText("确认")
+                .negativeText(getResources().getString(R.string.cancel))
+                .positiveText(getResources().getString(R.string.resume))
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -368,18 +371,20 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                     KLog.d("上翻页" + isposition);
                     if (isposition > 0) {
                         project_viewPage.setCurrentItem(project_viewPage.getCurrentItem() - 1);
-                        p_mytitle.getTvTittle().setText("检核中(" + (isposition) + ")");
+                        String format1 = String.format(format, isposition);
+                        p_mytitle.getTvTittle().setText(format1);
                     }
 
                 }
                 if (isupOrDown == 2) {
                     KLog.d("下翻页" + isposition);
                     project_viewPage.setCurrentItem(project_viewPage.getCurrentItem() + 1);
-                    p_mytitle.getTvTittle().setText("检核中(" + (isposition) + ")");
+                    String format1 = String.format(format, isposition);
+                    p_mytitle.getTvTittle().setText(format1);
 
                 }
             } else {
-                ToastUtils.showLong("当前题目未完成");
+                ToastUtils.showLong(getResources().getString(R.string.toast_31));
             }
         }
     }
@@ -394,8 +399,8 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         if (subjectList_id != null) {
             List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectByTogether_Where(SubjectsDB.class, "ht_id=?", subjectList_id.getSub_id());
             if (subjectsDBS != null && subjectsDBS.size() > 0) {
-                KLog.d("跳转", subjectList_id.getSub_id(), subjectsDBS.get(0).getNumber());
-                p_mytitle.getTvTittle().setText("第" + (subjectsDBS.get(0).getNumber()) + "题");
+                String format1 = String.format(format, subjectsDBS.get(0).getNumber());
+                p_mytitle.getTvTittle().setText(format1);
                 project_viewPage.setCurrentItem(subjectsDBS.get(0).getNumber() - 1);
             }
         }
@@ -441,7 +446,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
         super.onResume();
         if (baiduLocationHelper_s != null) {
             baiduLocationHelper_s.stopLocation();
-            p.getLocation(2 );
+            p.getLocation(2);
         }
 
     }

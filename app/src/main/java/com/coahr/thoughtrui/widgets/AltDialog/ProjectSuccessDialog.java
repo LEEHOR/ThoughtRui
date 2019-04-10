@@ -108,25 +108,29 @@ public class ProjectSuccessDialog extends BaseDialogFragment<ProjectSuccessDialo
 
     @Override
     public void getSubjectListSuccess(List<SubjectsDB> subjectsDBList,ProjectsDB projectsDB,int totalSize) {
-        tv_project_prograss.setText("检核完成("+subjectsDBList.size()+"/"+totalSize+")");
+        String format_checking = getResources().getString(R.string.success_dialog_checking);
+        String format = String.format(format_checking, subjectsDBList.size(), totalSize);
+        tv_project_prograss.setText(format);
             p.getDateSize(subjectsDBList,projectsDB);
     }
 
 
     @Override
     public void getSubjectListFailure(String failure) {
-         tv_project_prograss.setText("暂无数据");
-        tv_upload_status.setText("暂无数据");
+         tv_project_prograss.setText(getResources().getString(R.string.success_dialog_date));
+        tv_upload_status.setText(getResources().getString(R.string.success_dialog_date));
     }
 
     @Override
     public void getDateSizeSuccess(int subject, int files) {
-        tv_upload_status.setText(subject+"条数据，"+files+"个附件未上传");
+        String format_checking = getResources().getString(R.string.success_dialog_date_size);
+        String format = String.format(format_checking, subject, files);
+        tv_upload_status.setText(format);
     }
 
     @Override
     public void getDateSizeFailure(String failure) {
-        tv_upload_status.setText("暂无数据");
+        tv_upload_status.setText(getString(R.string.success_dialog_date));
     }
 
     private  void getSubjectList(){
@@ -136,7 +140,9 @@ public class ProjectSuccessDialog extends BaseDialogFragment<ProjectSuccessDialo
           //  tv_start_time.setText("始于"+stingYMDHM);
 
             String stingYMDHM1 = TimeUtils.getStingYMDHM(System.currentTimeMillis());
-            tv_end_time.setText("终于"+stingYMDHM1);
+            String format = getResources().getString(R.string.success_dialog_end);
+            String format1 = String.format(format, stingYMDHM1);
+            tv_end_time.setText(format1);
         }
             p.getSubjectList(projectsDBS.get(0));
 

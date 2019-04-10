@@ -204,7 +204,7 @@ public class ReviewMainPager extends BaseChildFragment<ReviewMainPagerFragment_C
                 if (haslogin()) {
                     getDataList(null);
                 } else {
-                    ToastUtils.showLong("请重新登录");
+                    ToastUtils.showLong(getResources().getString(R.string.toast_10));
                 }
             }
         });

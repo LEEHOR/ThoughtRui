@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
-                android:text="在WIFI连接时自动上传"
+                android:text="@string/upload_options_1"
                 android:textSize="@dimen/dp_14"
                 android:textColor="#333333"
                 android:layout_centerVertical="true"
@@ -48,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:text="图片上传质量"
+            android:text="@string/upload_options_2"
             android:textSize="@dimen/dp_14"
             android:textColor="#333333"
             android:layout_centerVertical="true"
@@ -66,7 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
-                android:text="高"
+                android:text="@string/upload_options_3"
                 android:textSize="@dimen/dp_14"
                 android:textColor="#333333"
                 android:layout_centerVertical="true"
@@ -84,7 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
-                android:text="低"
+                android:text="@string/upload_options_4"
                 android:textSize="@dimen/dp_14"
                 android:textColor="#333333"
                 android:layout_centerVertical="true"

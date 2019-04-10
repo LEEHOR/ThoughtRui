@@ -50,6 +50,7 @@ public class ReviewStartViewPager extends BaseFragment {
     private static final int MSG_1 = 1;
     private ArrayList<String> ht_id_list;
     private int position;
+    private String format;
 
     public static ReviewStartViewPager newInstance(ArrayList<String> ht_id_List, int position, String ht_projectId) {
         ReviewStartViewPager reviewStartViewPager = new ReviewStartViewPager();
@@ -94,19 +95,22 @@ public class ReviewStartViewPager extends BaseFragment {
         myTittleBar.getLeftIcon().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDialog("提示", "确定退出当前访问？");
+                showDialog(getResources().getString(R.string.dialog_tittle_7), getResources().getString(R.string.dialog_content_8));
             }
         });
     }
 
     @Override
     public void initData() {
+        format = getResources().getString(R.string.start_activity_tittle);
         if (getArguments() != null) {
             ht_id_list = getArguments().getStringArrayList("ht_id_list");
             position = getArguments().getInt("position");
             ht_projectId = getArguments().getString("ht_projectId");
             setViewPager();
         }
+        String format1 = String.format(format, 1);
+        myTittleBar.getTvTittle().setText(format1);
     }
 
     /**
@@ -123,20 +127,20 @@ public class ReviewStartViewPager extends BaseFragment {
         if (type == 2) {  //审核页面
             if (complete) {
                 if (isupOrDown == 1) {  //上翻页
-                    KLog.d("上翻页" + isposition);
                     if (isposition > 0) {
                         review_start_viewpager.setCurrentItem(review_start_viewpager.getCurrentItem() - 1, true);
-                        myTittleBar.getTvTittle().setText("第" + (isposition) + "题");
+                        String format = String.format(this.format, isposition);
+                        myTittleBar.getTvTittle().setText(format);
                     }
                 }
                 if (isupOrDown == 2) {
-                    KLog.d("下翻页" + isposition);
                     review_start_viewpager.setCurrentItem(review_start_viewpager.getCurrentItem() + 1);
-                    myTittleBar.getTvTittle().setText("第" + (isposition) + "题");
+                    String format = String.format(this.format, isposition);
+                    myTittleBar.getTvTittle().setText(format);
 
                 }
             } else {
-                ToastUtils.showLong("当前题目未完成");
+                ToastUtils.showLong(getResources().getString(R.string.toast_31));
             }
         }
     }
@@ -152,21 +156,20 @@ public class ReviewStartViewPager extends BaseFragment {
     }
 
     private void setViewPager() {
-        KLog.d("项目Id",ht_projectId);
         List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", ht_projectId);
         if (projectsDBS != null && projectsDBS.size() > 0) {
             List<SubjectsDB> subjectsDBS = projectsDBS.get(0).getSubjectsDBList();
             if (subjectsDBS != null && subjectsDBS.size() > 0) {
-                myTittleBar.getTvTittle().setText("第" + subjectsDBS.get(0).getNumber() + "题");
+                String format = String.format(this.format, subjectsDBS.get(0).getNumber());
+                myTittleBar.getTvTittle().setText(format);
             }
             List<SubjectsDB> subjectsDBList = projectsDBS.get(0).getSubjectsDBList();
-            KLog.d("大小", ht_id_list.size(), "db", String.valueOf(projectsDBS.get(0).getId()), "ht", ht_projectId);
             if (subjectsDBList != null && subjectsDBList.size() > 0) {
                 adapter = new ReviewStartPagerAdapter(getChildFragmentManager(), String.valueOf(projectsDBS.get(0).getId()), ht_projectId, ht_id_list, ht_id_list.size());
                 review_start_viewpager.setAdapter(adapter);
                 review_start_viewpager.setCurrentItem(position);
             } else {
-                ToastUtils.showLong("当前项目下没有题目");
+                ToastUtils.showLong(getResources().getString(R.string.phrases_9));
             }
         }
 
@@ -184,8 +187,8 @@ public class ReviewStartViewPager extends BaseFragment {
         new MaterialDialog.Builder(_mActivity)
                 .title(title)
                 .content(Content)
-                .negativeText("取消")
-                .positiveText("确认")
+                .negativeText(getResources().getString(R.string.cancel))
+                .positiveText(getResources().getString(R.string.resume))
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {

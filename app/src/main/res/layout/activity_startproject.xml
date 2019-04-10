@@ -6,7 +6,7 @@
     android:orientation="vertical">
     <com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar
         android:id="@+id/p_mytitle"
-        app:tittle="题号"
+        app:tittle="@string/start_activity_tittle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar>

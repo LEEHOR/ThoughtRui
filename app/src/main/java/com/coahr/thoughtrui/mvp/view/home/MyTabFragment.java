@@ -207,7 +207,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
 
             @Override
             public void newListLongClick(HomeDataList.DataBean.AllListBean newListBean) {
-                showDialog(getString(R.string.dialog_tittle_2),  getString(R.string.dialog_content_2), false);
+                showDialog(getResources().getString(R.string.dialog_tittle_2),  getResources().getString(R.string.dialog_content_2), false);
             }
 
             @Override
@@ -217,7 +217,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
 
             @Override
             public void completeLongClick(HomeDataList.DataBean.AllListBean completeListBean) {
-                showDialog(getString(R.string.dialog_tittle_3), getString(R.string.dialog_content_3), true);
+                showDialog(getResources().getString(R.string.dialog_tittle_3), getResources().getString(R.string.dialog_content_3), true);
             }
 
             @Override
@@ -227,7 +227,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
 
             @Override
             public void unCompleteLongClick(HomeDataList.DataBean.AllListBean unCompleteListBean) {
-                showDialog(getString(R.string.dialog_tittle_4), getString(R.string.dialog_content_2), false);
+                showDialog(getResources().getString(R.string.dialog_tittle_4), getResources().getString(R.string.dialog_content_2), false);
             }
 
             @Override
@@ -251,7 +251,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
 
             @Override
             public void newListLongClick(ProjectsDB projectsDB) {
-                showDialog(getString(R.string.dialog_tittle_2), getString(R.string.dialog_content_2), false);
+                showDialog(getResources().getString(R.string.dialog_tittle_2), getResources().getString(R.string.dialog_content_2), false);
             }
 
             @Override
@@ -261,7 +261,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
 
             @Override
             public void completeLongClick(ProjectsDB projectsDB) {
-                showDialog(getString(R.string.dialog_tittle_3), getString(R.string.dialog_content_3), true);
+                showDialog(getResources().getString(R.string.dialog_tittle_3), getResources().getString(R.string.dialog_content_3), true);
             }
 
             @Override
@@ -271,7 +271,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
 
             @Override
             public void unCompleteLongClick(ProjectsDB projectsDB) {
-                showDialog(getString(R.string.dialog_tittle_4), getString(R.string.dialog_content_2), false);
+                showDialog(getResources().getString(R.string.dialog_tittle_4), getResources().getString(R.string.dialog_content_2), false);
             }
 
             @Override
@@ -364,7 +364,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
     @Override
     public void getTypeDateFailure(int fail) {
         if (fail == 0) {
-            ToastUtils.showLong(getString(R.string.toast_11));
+            ToastUtils.showLong(getResources().getString(R.string.toast_11));
         }
         isLoad = false;
         myTab_swipe.setRefreshing(false);
@@ -495,8 +495,8 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
         new MaterialDialog.Builder(_mActivity)
                 .title(title)
                 .content(Content)
-                .negativeText(getString(R.string.cancel))
-                .positiveText(getString(R.string.resume))
+                .negativeText(getResources().getString(R.string.cancel))
+                .positiveText(getResources().getString(R.string.resume))
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -530,7 +530,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
             intent.putExtra("to", Constants.ProjectDetailFragmentCode);
             startActivity(intent);
         } else {
-            ToastUtils.showLong(getString(R.string.toast_10));
+            ToastUtils.showLong(getResources().getString(R.string.toast_10));
         }
     }
 
@@ -544,7 +544,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
             map.put("sessionId", Constants.sessionId);
             p.getUnDownLoadProject(map);
         } else {
-            ToastUtils.showLong(getString(R.string.toast_10));
+            ToastUtils.showLong(getResources().getString(R.string.toast_10));
         }
 
     }

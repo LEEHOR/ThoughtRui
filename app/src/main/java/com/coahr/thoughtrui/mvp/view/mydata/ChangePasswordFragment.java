@@ -66,20 +66,20 @@ public class ChangePasswordFragment extends BaseFragment<ChangePassWord_C.Presen
             }
         });
         change_title.getRightText().setVisibility(View.VISIBLE);
-        change_title.getRightText().setText("完成");
+        change_title.getRightText().setText(getResources().getString(R.string.change_password_fragment_change_complete));
         change_title.getRightText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (TextUtils.isEmpty(ed_old_pass.getText()) || ed_old_pass.getText().toString().equals("")){
-                    ToastUtils.showLong("请输入正确的原始密码");
+                    ToastUtils.showLong(getResources().getString(R.string.change_password_fragment_old_pass_toast));
                     return;
                 }
                 if (TextUtils.isEmpty(ed_new_pass1.getText()) || ed_new_pass1.getText().toString().equals("") || ed_new_pass1.getText().toString().length()<4){
-                    ToastUtils.showLong("请输入大于4位字符的新密码");
+                    ToastUtils.showLong(getResources().getString(R.string.change_password_fragment_new_pass_toast));
                     return;
                 }
                 if (TextUtils.isEmpty(ed_new_pass2.getText()) || !ed_new_pass1.getText().toString().equals(ed_new_pass1.getText().toString())){
-                    ToastUtils.showLong("两次密码不相同");
+                    ToastUtils.showLong(getResources().getString(R.string.change_password_fragment_two_password_different));
                     return;
                 }
                 changePass(change_title.getRightText());

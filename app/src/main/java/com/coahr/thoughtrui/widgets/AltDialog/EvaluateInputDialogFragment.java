@@ -122,11 +122,11 @@ public class EvaluateInputDialogFragment extends AppCompatDialogFragment {
         switch (view.getId()) {
             case R.id.tv_send:
                 if (TextUtils.isEmpty(etInput.getText())) {
-                    Toast.makeText(getActivity(), "请输入内容", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), getString(R.string.toast_34), Toast.LENGTH_LONG).show();
                     return;
                 }
                 if (etInput.getText().length() > 50 || etInput.getText().length() <0) {
-                    Toast.makeText(getActivity(), "请输入50字之内的内容", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), getString(R.string.toast_35), Toast.LENGTH_LONG).show();
                     return;
                 }
                 inputCallback.onInputSend(etInput.getText().toString(), this);

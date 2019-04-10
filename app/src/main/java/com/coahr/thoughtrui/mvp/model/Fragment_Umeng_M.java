@@ -4,8 +4,10 @@ import android.app.Notification;
 
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.UsersDB;
+import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.commom.Constants;
+import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.Fragment_Umeng_C;
 import com.coahr.thoughtrui.mvp.constract.MyFragment_C;
@@ -62,16 +64,16 @@ public class Fragment_Umeng_M extends BaseModel<Fragment_Umeng_C.Presenter> impl
                     if (projectsDBSList.get(i).getIsComplete() == 1 && projectsDBSList.get(i).getpUploadStatus() == 0) {
                         NotificationBean.Notification notification = new NotificationBean.Notification();
                         notification.setType(1);
-                        notification.setNotificationTittle("[任务上传]");
-                        notification.setNotificationContent("你有项目未上传，经销商代码为：" + (projectsDBSList.get(i).getSale_code() !=null?projectsDBSList.get(i).getSale_code():projectsDBSList.get(i).getService_code()));
+                        notification.setNotificationTittle(BaseApplication.mContext.getResources().getString(R.string.umeng_fragment_upload));
+                        notification.setNotificationContent(BaseApplication.mContext.getResources().getString(R.string.umeng_fragment_upload_detail) + (projectsDBSList.get(i).getSale_code() !=null?projectsDBSList.get(i).getSale_code():projectsDBSList.get(i).getService_code()));
                         notification.setNotificationTime(System.currentTimeMillis());
                         notificationList.add(notification);
                     }
                     if (projectsDBSList.get(i).getModifyTime()<=System.currentTimeMillis()){
                         NotificationBean.Notification notification = new NotificationBean.Notification();
                         notification.setType(2);
-                        notification.setNotificationTittle("[超期提醒]");
-                        notification.setNotificationContent("你有项目已超期，经销商代码为：" + (projectsDBSList.get(i).getSale_code() !=null?projectsDBSList.get(i).getSale_code():projectsDBSList.get(i).getService_code()));
+                        notification.setNotificationTittle(BaseApplication.mContext.getResources().getString(R.string.umeng_fragment_overdue_reminder));
+                        notification.setNotificationContent(BaseApplication.mContext.getResources().getString(R.string.umeng_fragment_overdue_reminder_detail)+ (projectsDBSList.get(i).getSale_code() !=null?projectsDBSList.get(i).getSale_code():projectsDBSList.get(i).getService_code()));
                         notification.setNotificationTime(System.currentTimeMillis());
                         notificationList.add(notification);
                     }
@@ -82,7 +84,7 @@ public class Fragment_Umeng_M extends BaseModel<Fragment_Umeng_C.Presenter> impl
                 }
             } else {
                 if (getPresenter() != null) {
-                    getPresenter().getNotification_DbFailure("暂无消息");
+                    getPresenter().getNotification_DbFailure(BaseApplication.mContext.getString(R.string.toast_36));
                 }
             }
         }

@@ -111,10 +111,10 @@ public class Fragment_Umeng extends BaseFragment<Fragment_UmengP> implements Fra
             @Override
             public void itemClickLong(NotificationBean.Notification item) {
                 new MaterialDialog.Builder(_mActivity)
-                        .title("提醒")
-                        .content("确认删除")
-                        .negativeText("取消")
-                        .positiveText("确认")
+                        .title(getResources().getString(R.string.dialog_tittle_7))
+                        .content(getResources().getString(R.string.dialog_content_3))
+                        .negativeText(getResources().getString(R.string.cancel))
+                        .positiveText(getResources().getString(R.string.resume))
                         .onNegative(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -163,8 +163,8 @@ public class Fragment_Umeng extends BaseFragment<Fragment_UmengP> implements Fra
             for (int i = 0; i < censorBean.getData().getList().size(); i++) {
                 NotificationBean.Notification notification = new NotificationBean.Notification();
                 notification.setType(3);
-                notification.setNotificationTittle("[审核未通过]");
-                notification.setNotificationContent("你有项目审核未通过，经销商代码为：" + (censorBean.getData().getList().get(i).getSale_code() != null ? censorBean.getData().getList().get(i).getSale_code() : censorBean.getData().getList().get(i).getService_code()));
+                notification.setNotificationTittle(getResources().getString(R.string.umeng_fragment_not_pass));
+                notification.setNotificationContent(getResources().getString(R.string.umeng_fragment_not_pass_detail) + (censorBean.getData().getList().get(i).getSale_code() != null ? censorBean.getData().getList().get(i).getSale_code() : censorBean.getData().getList().get(i).getService_code()));
                 notification.setNotificationTime(System.currentTimeMillis());
                 notificationList.add(notification);
             }

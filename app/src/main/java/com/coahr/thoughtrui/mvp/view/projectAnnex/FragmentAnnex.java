@@ -20,7 +20,7 @@ import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.constract.FragmentAnnex_C;
 import com.coahr.thoughtrui.mvp.presenter.FragmentAnnex_P;
 import com.coahr.thoughtrui.mvp.view.projectAnnex.adapter.AnnexAdapter;
-import com.coahr.thoughtrui.mvp.view.startProject.PhotoAlbumDialogFragment;
+import com.coahr.thoughtrui.widgets.AltDialog.PhotoAlbumDialogFragment;
 import com.coahr.thoughtrui.widgets.AltDialog.DialogFragmentAudioPlay;
 
 import java.util.List;
@@ -123,7 +123,7 @@ public class FragmentAnnex extends BaseChildFragment<FragmentAnnex_C.Presenter> 
                     DialogFragmentAudioPlay audioPlay = DialogFragmentAudioPlay.newInstance(audioPath, FileIOUtils.getE(audioPath, "/"));
                     audioPlay.show(getChildFragmentManager(), TAG);
                 } else {
-                    ToastUtils.showLong(getString(R.string.toast_15));
+                    ToastUtils.showLong(getResources().getString(R.string.toast_15));
                 }
             }
 

@@ -21,6 +21,7 @@ import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
+import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.Utils.FileIoUtils.SaveOrGetAnswers;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
@@ -108,9 +109,9 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
 
         boolean b = FileIOUtils.deleteFilePic(deleteImagePath);
         if (b) {
-            getPresenter().DeleteImageSuccess("删除图片成功");
+            getPresenter().DeleteImageSuccess(BaseApplication.mContext.getResources().getString(R.string.phrases_24));
         } else {
-            getPresenter().DeleteImageFailure("删除图片失败");
+            getPresenter().DeleteImageFailure(BaseApplication.mContext.getResources().getString(R.string.phrases_25));
         }
     }
 
@@ -126,14 +127,17 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
 
     @Override
     public void SaveImages(final List<MediaBean> mediaBeanList, final String ht_ProjectId, final int number, final String ht_id) {
+
+       int count=0;
         for (int i = 0; i < mediaBeanList.size(); i++) {
             String originalPath = mediaBeanList.get(i).getOriginalPath();
             boolean b = FileIOUtils.copyFile(originalPath, Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id + "/", FileIOUtils.getE(originalPath, "/"));
-            if (b) {
-                getPresenter().SaveImagesSuccess();
-            } else {
-                getPresenter().SaveImagesFailure();
-            }
+            count++;
+        }
+        if (count==mediaBeanList.size()) {
+            getPresenter().SaveImagesSuccess();
+        } else {
+            getPresenter().SaveImagesFailure();
         }
     }
 
@@ -145,7 +149,7 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
         if (audiosList != null && audiosList.size() > 0) {
             getPresenter().getAudioSuccess(audiosList);
         } else {
-            getPresenter().getAudioFailure("没有录音");
+            getPresenter().getAudioFailure(BaseApplication.mContext.getResources().getString(R.string.toast_15));
         }
     }
 
@@ -155,7 +159,7 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
         if (fileList != null && fileList.size() > 0) {
             getPresenter().getUpLoadFileListSuccess(fileList, projectsDB_id, subjectsDB);
         } else {
-            getPresenter().getUpLoadFileListFailure("当前题目下没有可以上传的数据");
+            getPresenter().getUpLoadFileListFailure(BaseApplication.mContext.getResources().getString(R.string.phrases_9));
         }
     }
 
@@ -247,7 +251,7 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
             }
         } else {
             if (getPresenter() != null) {
-                getPresenter().UpDataDbFailure("修改数据库失败");
+                getPresenter().UpDataDbFailure(BaseApplication.mContext.getResources().getString(R.string.toast_32));
             }
         }
 

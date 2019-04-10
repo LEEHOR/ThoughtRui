@@ -94,7 +94,7 @@ public class ProjectTemplate extends BaseFragment<ProjectTemplate_c.Presenter> i
             if (Constants.isNetWorkConnect) {
                 getList();
             } else {
-                ToastUtils.showLong(getString(R.string.toast_3));
+                ToastUtils.showLong(getResources().getString(R.string.toast_3));
             }
         } else {
             loginDialog();
@@ -122,7 +122,7 @@ public class ProjectTemplate extends BaseFragment<ProjectTemplate_c.Presenter> i
                             getList();
                         } else {
                             template_swipe.setRefreshing(false);
-                            ToastUtils.showLong(getString(R.string.toast_3));
+                            ToastUtils.showLong(getResources().getString(R.string.toast_3));
                         }
                     } else {
                         isLoad = false;
@@ -165,7 +165,7 @@ public class ProjectTemplate extends BaseFragment<ProjectTemplate_c.Presenter> i
 
     @Override
     public void getProjectTemplateFailure(String fail) {
-        ToastUtils.showLong(getString(R.string.toast_4));
+        ToastUtils.showLong(getResources().getString(R.string.toast_4));
         isLoad = false;
         template_swipe.setRefreshing(false);
     }
@@ -196,8 +196,8 @@ public class ProjectTemplate extends BaseFragment<ProjectTemplate_c.Presenter> i
         new MaterialDialog.Builder(_mActivity)
                 .title(title)
                 .content(Content)
-                .negativeText(getString(R.string.cancel))
-                .positiveText(getString(R.string.resume))
+                .negativeText(getResources().getString(R.string.cancel))
+                .positiveText(getResources().getString(R.string.resume))
                 .cancelable(false)
                 .canceledOnTouchOutside(false)
                 .onNegative(new MaterialDialog.SingleButtonCallback() {

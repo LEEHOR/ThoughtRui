@@ -15,10 +15,12 @@ import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
+import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.Utils.FileIoUtils.SaveOrGetAnswers;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.commom.Constants;
+import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.ReViewStartAnswering_C;
 import com.coahr.thoughtrui.mvp.model.Bean.UpLoadCallBack;
@@ -97,9 +99,9 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
     public void DeleteImage(String deleteImagePath) {
         boolean b = FileIOUtils.deleteFilePic(deleteImagePath);
         if (b) {
-            getPresenter().DeleteImageSuccess("删除图片成功");
+            getPresenter().DeleteImageSuccess(BaseApplication.mContext.getString(R.string.phrases_24));
         } else {
-            getPresenter().DeleteImageFailure("删除图片失败");
+            getPresenter().DeleteImageFailure(BaseApplication.mContext.getString(R.string.phrases_25));
         }
     }
 
@@ -133,7 +135,7 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
         if (audiosList != null) {
             getPresenter().getAudioSuccess(audiosList);
         } else {
-            getPresenter().getAudioFailure("没有录音");
+            getPresenter().getAudioFailure(BaseApplication.mContext.getString(R.string.phrases_17));
         }
     }
 
@@ -143,7 +145,7 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
         if (fileList != null && fileList.size() > 0) {
             getPresenter().getUpLoadFileListSuccess(fileList, projectsDB_id, subjectsDB);
         } else {
-            getPresenter().getUpLoadFileListFailure("当前题目下没有可以上传的数据");
+            getPresenter().getUpLoadFileListFailure(BaseApplication.mContext.getString(R.string.toast_25));
         }
     }
 
@@ -232,7 +234,7 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
             }
         } else {
             if (getPresenter() != null) {
-                getPresenter().UpDataDbFailure("修改数据库失败");
+                getPresenter().UpDataDbFailure(BaseApplication.mContext.getString(R.string.toast_32));
             }
         }
     }

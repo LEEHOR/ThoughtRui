@@ -35,7 +35,7 @@
             android:textColor="@color/material_blue_700"
             android:layout_gravity="center"
             android:textSize="@dimen/dp_12"
-            android:text="选择"
+            android:text="@string/subject_list_select"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>

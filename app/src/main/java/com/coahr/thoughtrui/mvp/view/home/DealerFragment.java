@@ -8,6 +8,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
+
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
@@ -23,12 +24,16 @@ import com.coahr.thoughtrui.mvp.model.Bean.Dealer_List;
 import com.coahr.thoughtrui.mvp.presenter.ProjectDealer_P;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
 import com.google.gson.Gson;
+
 import org.json.JSONArray;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.inject.Inject;
+
 import butterknife.BindView;
 
 /**
@@ -146,7 +151,7 @@ public class DealerFragment extends BaseFragment<ProjectDealer_c.Presenter> impl
             if (dealer_list.getDealerList() != null && dealer_list.getDealerList().size() > 0) {
                 showDealerPickerView(dealer_list.getDealerList());
             } else {
-                ToastUtils.showLong(getString(R.string.toast_6));
+                ToastUtils.showLong(getResources().getString(R.string.toast_6));
             }
 
         }
@@ -165,18 +170,18 @@ public class DealerFragment extends BaseFragment<ProjectDealer_c.Presenter> impl
                 break;
             case R.id.tv_select_project:
                 if (TextUtils.isEmpty(tv_select_address.getText()) || tv_select_address.getText().toString().trim().equals("")) {
-                    ToastUtils.showLong(getString(R.string.toast_7));
+                    ToastUtils.showLong(getResources().getString(R.string.toast_7));
                     return;
                 }
                 getDealerList(city);
                 break;
             case R.id.tv_submit:
                 if (TextUtils.isEmpty(tv_select_address.getText()) || tv_select_address.getText().equals("")) {
-                    ToastUtils.showLong(getString(R.string.toast_7));
+                    ToastUtils.showLong(getResources().getString(R.string.toast_7));
                     return;
                 }
                 if (TextUtils.isEmpty(tv_select_project.getText()) || tv_select_project.getText().toString().trim().equals("")) {
-                    ToastUtils.showLong(getString(R.string.toast_8));
+                    ToastUtils.showLong(getResources().getString(R.string.toast_8));
                     return;
                 }
                 start(ProjectDetailFragment.newInstance(null, template_id, Dealer_id, 1));
@@ -210,7 +215,7 @@ public class DealerFragment extends BaseFragment<ProjectDealer_c.Presenter> impl
                 tv_project_id.setText("");
             }
         })
-                .setTitleText(getString(R.string.phrases_2))
+                .setTitleText(getResources().getString(R.string.phrases_2))
                 .setDividerColor(Color.BLACK)
                 .setTextColorCenter(Color.BLACK) //设置选中项文字颜色
                 .setContentTextSize(20)
@@ -232,12 +237,12 @@ public class DealerFragment extends BaseFragment<ProjectDealer_c.Presenter> impl
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
                 //返回的分别是三个级别的选中位置
                 tv_select_project.setText(list.get(options1).getName());
-                tv_project_id.setText(Constants.user_type==1?list.get(options1).getSale_code():Constants.user_type==2?list.get(options1).getService_code():list.get(options1).getSale_code());
-                Dealer_id=list.get(options1).getId();
+                tv_project_id.setText(Constants.user_type == 1 ? list.get(options1).getSale_code() : Constants.user_type == 2 ? list.get(options1).getService_code() : list.get(options1).getSale_code());
+                Dealer_id = list.get(options1).getId();
             }
         })
 
-                .setTitleText(getString(R.string.phrases_3))
+                .setTitleText(getResources().getString(R.string.phrases_3))
                 .setDividerColor(Color.BLACK)
                 .setTextColorCenter(Color.BLACK) //设置选中项文字颜色
                 .setContentTextSize(20)

@@ -18,6 +18,7 @@ import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.TimeUtils;
 import com.coahr.thoughtrui.commom.Constants;
+import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 
 import java.util.List;
 
@@ -356,7 +357,8 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
      * 获取题目的数据
      */
     private String getItemDate(String id) {
-        String massage = "暂无数据上传";
+        ;
+        String massage = BaseApplication.mContext.getResources().getString(R.string.toast_25);
         int CountAll = 0;
         int dataSize = 0;
         List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", id);
@@ -376,7 +378,9 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
                         }
                     }
                 }
-                massage = "共有" + CountAll + "题," + dataSize + "数据未上传";
+                String format = BaseApplication.mContext.getResources().getString(R.string.project_list_date_size);
+                String format1 = String.format(format, CountAll, dataSize);
+                massage = format1;
             } else {
 
             }

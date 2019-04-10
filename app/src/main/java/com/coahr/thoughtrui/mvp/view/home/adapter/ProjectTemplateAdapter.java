@@ -27,7 +27,7 @@ public class ProjectTemplateAdapter extends BaseQuickAdapter<Template_list.Templ
     @Override
     protected void convert(BaseViewHolder helper,Template_list.TemplateListBean item) {
         helper.setText(R.id.template_name,item.getName())
-                .setText(R.id.template_time, BaseApplication.mContext.getString(R.string.phrases_1) + TimeUtils.getStingYMD(item.getModify_time()));
+                .setText(R.id.template_time, BaseApplication.mContext.getResources().getString(R.string.phrases_1) + TimeUtils.getStingYMD(item.getModify_time()));
         helper.getConvertView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

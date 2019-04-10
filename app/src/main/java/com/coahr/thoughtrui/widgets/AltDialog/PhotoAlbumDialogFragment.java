@@ -1,8 +1,7 @@
-package com.coahr.thoughtrui.mvp.view.startProject;
+package com.coahr.thoughtrui.widgets.AltDialog;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

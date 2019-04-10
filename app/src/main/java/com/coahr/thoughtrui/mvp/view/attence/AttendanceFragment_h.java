@@ -160,7 +160,7 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
                 } else {
                     final double inLat = attendance.getInLat();
                     final double inLng = attendance.getInLng();
-                    attendance_time_k.setText(attendance.getInType() == 0 ? getString(R.string.attendance_morrow) : getString(R.string.attendance_the_same_day) + TimeUtils.getStingHM(attendance.getInTime()));
+                    attendance_time_k.setText(attendance.getInType() == 0 ? getResources().getString(R.string.attendance_morrow) : getResources().getString(R.string.attendance_the_same_day) + TimeUtils.getStingHM(attendance.getInTime()));
                     if (attendance.getStartTimeStatus() == 1 && attendance.getStartLocationStatus() == 1) {
                         iv_attendance_tag_start.setImageResource(R.mipmap.kaoqinz);
                     } else {
@@ -174,7 +174,7 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
                     }).start();
 
                     if (attendance.getOutTime() != 0) {
-                        attendance_time_e.setText(attendance.getOutType() == 0 ? getString(R.string.attendance_morrow) : getString(R.string.attendance_the_same_day) + TimeUtils.getStingHM(attendance.getOutTime()));
+                        attendance_time_e.setText(attendance.getOutType() == 0 ? getResources().getString(R.string.attendance_morrow) : getResources().getString(R.string.attendance_the_same_day) + TimeUtils.getStingHM(attendance.getOutTime()));
                         final double outLat = attendance.getOutLat();
                         final double outLng = attendance.getOutLng();
                         if (attendance.getEndLocationStatus() == 1 && attendance.getEndTimeStatus() == 1) {

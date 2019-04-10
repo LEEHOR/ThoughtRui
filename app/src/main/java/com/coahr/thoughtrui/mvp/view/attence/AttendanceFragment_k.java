@@ -173,18 +173,18 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                         //定位状态
                         //早班卡
                         location_message_in.setTextColor(getResources().getColor(R.color.material_red_A700));
-                        location_message_in.setText(getString(R.string.no_attendance));
+                        location_message_in.setText(getResources().getString(R.string.no_attendance));
                         //晚班卡
                         location_message_out.setTextColor(getResources().getColor(R.color.material_red_A700));
-                        location_message_out.setText(getString(R.string.no_attendance));
+                        location_message_out.setText(getResources().getString(R.string.no_attendance));
                     } else {
                         isOnCircle = true;
                         //早班卡
                         location_message_in.setTextColor(Color.rgb(153, 153, 153));
-                        location_message_in.setText(getString(R.string.attendance_limits));
+                        location_message_in.setText(getResources().getString(R.string.attendance_limits));
                         //晚班卡
                         location_message_out.setTextColor(Color.rgb(153, 153, 153));
-                        location_message_out.setText(getString(R.string.attendance_limits));
+                        location_message_out.setText(getResources().getString(R.string.attendance_limits));
                     }
                     break;
                 case zao_daka:
@@ -281,7 +281,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                 //连续定位
                 p.startLocations(4);
                 if (continueStla == 0 || continueStlo == 0) {
-                    ToastUtils.showLong(getString(R.string.toast_12));
+                    ToastUtils.showLong(getResources().getString(R.string.toast_12));
                     return;
                 }
                 PushCard();
@@ -324,18 +324,18 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
             @Override
             public void onClick(View view) {
                 if (continueStla == 0 || continueStlo == 0) {
-                    ToastUtils.showLong(getString(R.string.toast_12));
+                    ToastUtils.showLong(getResources().getString(R.string.toast_12));
                     return;
                 }
                 if (isOnCircle) {
                     PushCard();
                 } else {
                     new MaterialDialog.Builder(_mActivity)
-                            .title(getString(R.string.title))
-                            .content(getString(R.string.attendance_dialog_content))
-                            .positiveText(getString(R.string.resume))
+                            .title(getResources().getString(R.string.title))
+                            .content(getResources().getString(R.string.attendance_dialog_content))
+                            .positiveText(getResources().getString(R.string.resume))
                             .positiveColor(getResources().getColor(R.color.material_red_A700))
-                            .negativeText(getString(R.string.cancel))
+                            .negativeText(getResources().getString(R.string.cancel))
                             .negativeColor(getResources().getColor(R.color.material_blue_800))
                             .onPositive(new MaterialDialog.SingleButtonCallback() {
                                 @Override
@@ -361,18 +361,18 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
             @Override
             public void onClick(View view) {
                 if (continueStla == 0 || continueStlo == 0) {
-                    ToastUtils.showLong(getString(R.string.toast_12));
+                    ToastUtils.showLong(getResources().getString(R.string.toast_12));
                     return;
                 }
                 if (isOnCircle) {
                     PushCard();
                 } else {
                     new MaterialDialog.Builder(_mActivity)
-                            .title(getString(R.string.title))
-                            .content(getString(R.string.attendance_dialog_content))
-                            .positiveText(getString(R.string.resume))
+                            .title(getResources().getString(R.string.title))
+                            .content(getResources().getString(R.string.attendance_dialog_content))
+                            .positiveText(getResources().getString(R.string.resume))
                             .positiveColor(getResources().getColor(R.color.material_red_A700))
-                            .negativeText(getString(R.string.cancel))
+                            .negativeText(getResources().getString(R.string.cancel))
                             .negativeColor(getResources().getColor(R.color.material_blue_800))
                             .onPositive(new MaterialDialog.SingleButtonCallback() {
                                 @Override
@@ -636,7 +636,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
     public void LocationContinuouslyFailure(int failure, BaiduLocationHelper baiduLocationHelper) {
         this.baiduLocationHelper = baiduLocationHelper;
         baiduLocationHelper.stopLocation();
-        ToastUtils.showLong(getString(R.string.toast_13));
+        ToastUtils.showLong(getResources().getString(R.string.toast_13));
         p.startLocations(4);
     }
 
@@ -652,7 +652,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
 
     @Override
     public void getPushFail(String failure, int code) {
-        ToastUtils.showLong(failure +getString(R.string.toast_14));
+        ToastUtils.showLong(failure +getResources().getString(R.string.toast_14));
         if (code != -1) {
 
         } else {
@@ -840,10 +840,10 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                         p.startLocations(4);
                         //getDate();
                     } else { //无网络
-                        ToastUtils.showLong(getString(R.string.toast_3));
+                        ToastUtils.showLong(getResources().getString(R.string.toast_3));
                     }
                 } else {
-                    ToastUtils.showLong(getString(R.string.toast_10));
+                    ToastUtils.showLong(getResources().getString(R.string.toast_10));
                 }
             }
         });

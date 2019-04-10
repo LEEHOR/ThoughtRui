@@ -42,7 +42,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_alignParentLeft="true"
-                    android:text="用户名"
+                    android:text="@string/my_fragment_1"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/dp_16" />
             </RelativeLayout>
@@ -82,7 +82,7 @@
                                 android:drawableTop="@mipmap/ico_dxz"
                                 android:drawablePadding="@dimen/dp_5"
                                 android:gravity="center_horizontal"
-                                android:text="下载任务"
+                                android:text="@string/my_fragment_4"
                                 android:textColor="#4D4D4D"
                                 android:textSize="@dimen/dp_14" />
 
@@ -93,7 +93,7 @@
                                 android:drawableTop="@mipmap/ico_dsc"
                                 android:drawablePadding="@dimen/dp_5"
                                 android:gravity="center_horizontal"
-                                android:text="待上传"
+                                android:text="@string/my_fragment_2"
                                 android:textSize="@dimen/dp_14" />
 
                             <TextView
@@ -104,7 +104,7 @@
                                 android:drawableTop="@mipmap/ico_dks"
                                 android:drawablePadding="@dimen/dp_5"
                                 android:gravity="center_horizontal"
-                                android:text="待开始"
+                                android:text="@string/my_fragment_3"
                                 android:textColor="#4D4D4D"
                                 android:textSize="@dimen/dp_14" />
 
@@ -116,7 +116,7 @@
                                 android:drawableTop="@mipmap/ico_wwc"
                                 android:drawablePadding="@dimen/dp_5"
                                 android:gravity="center_horizontal"
-                                android:text="未完成"
+                                android:text="@string/my_fragment_5"
                                 android:textColor="#4D4D4D"
                                 android:textSize="@dimen/dp_14" />
                         </LinearLayout>
@@ -214,7 +214,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/dp_10"
                     android:layout_toRightOf="@+id/iv_xxzx"
-                    android:text="消息中心"
+                    android:text="@string/my_fragment_6"
                     android:textColor="#333333"
                     android:textSize="@dimen/dp_14" />
 
@@ -265,7 +265,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/dp_10"
                     android:layout_toRightOf="@+id/iv_sjsc"
-                    android:text="数据上传设置"
+                    android:text="@string/my_fragment_12"
                     android:textColor="#333333"
                     android:textSize="@dimen/dp_14" />
 
@@ -304,7 +304,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/dp_10"
                     android:layout_toRightOf="@+id/iv_cc"
-                    android:text="存储空间"
+                    android:text="@string/my_fragment_7"
                     android:textColor="#333333"
                     android:textSize="@dimen/dp_14" />
 
@@ -342,7 +342,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/dp_10"
                     android:layout_toRightOf="@+id/iv_qc"
-                    android:text="清除缓存"
+                    android:text="@string/my_fragment_8"
                     android:textColor="#333333"
                     android:textSize="@dimen/dp_14" />
 
@@ -389,7 +389,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/dp_10"
                     android:layout_toRightOf="@+id/iv_xg"
-                    android:text="修改密码"
+                    android:text="@string/my_fragment_9"
                     android:textColor="#333333"
                     android:textSize="@dimen/dp_14" />
 
@@ -424,7 +424,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/dp_10"
                     android:layout_toRightOf="@+id/iv_bz"
-                    android:text="帮助与反馈"
+                    android:text="@string/my_fragment_10"
                     android:textColor="#333333"
                     android:textSize="@dimen/dp_14" />
                 <ImageView
@@ -449,7 +449,7 @@
                 android:textSize="@dimen/dp_14"
                 android:background="@drawable/bg_blue_white_frame_background"
                 android:textColor="@color/colorWhite"
-                android:text="退出登录"
+                android:text="@string/my_fragment_11"
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

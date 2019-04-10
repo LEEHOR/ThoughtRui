@@ -187,7 +187,7 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
                 if (haslogin()) {
                     getHttp();
                 } else {
-                    ToastUtils.showLong("请重新登录");
+                    ToastUtils.showLong(getResources().getString(R.string.toast_10));
                 }
 
                 //    EventBus.getDefault().postSticky(new Event_Main(1, "登陆成功", page));

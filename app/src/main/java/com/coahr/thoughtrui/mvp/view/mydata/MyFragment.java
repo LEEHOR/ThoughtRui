@@ -139,7 +139,7 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
                 goOtherPage(ConstantsActivity.class, Constants.fragment_myFragment, Constants.fragment_uploadOptions);
                 break;
             case R.id.re_clear_cache: //清除缓存
-                ClearDataDialog("提示","清除图片缓存");
+                ClearDataDialog(getResources().getString(R.string.dialog_tittle_7),getResources().getString(R.string.dialog_content_9));
                 break;
             case R.id.re_change_pass: //修改密码
                 goOtherPage(ConstantsActivity.class, Constants.fragment_myFragment, Constants.fragment_ChangePass);
@@ -151,7 +151,7 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
                 if (haslogin()) {
                     showDialog();
                 } else {
-                    ToastUtils.showLong("当前没有账户登录");
+                    ToastUtils.showLong(getResources().getString(R.string.toast_10));
                 }
                 break;
         }
@@ -186,7 +186,7 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
             storageSize = freeSize + "GB" + "/" + TotalSize + "GB";
             return storageSize;
         }
-        return "获取存储大小失败";
+        return getResources().getString(R.string.phrases_25);
     }
 
     /**
@@ -219,8 +219,7 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
 
                         @Override
                         public void PermissionFail(List<String> permissions) {
-                            tv_cckj.setText("没有读取权限");
-                            Toast.makeText(_mActivity, "获取权限失败", Toast.LENGTH_LONG).show();
+                            tv_cckj.setText(getResources().getString(R.string.phrases_27));
                         }
 
                         @Override
@@ -326,10 +325,10 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
      */
     private void showDialog() {
         new MaterialDialog.Builder(_mActivity)
-                .title("提示")
-                .content("是否退出登录")
-                .negativeText("取消")
-                .positiveText("确定")
+                .title(getResources().getString(R.string.dialog_tittle_7))
+                .content(getResources().getString(R.string.dialog_content_10))
+                .negativeText(getResources().getString(R.string.cancel))
+                .positiveText(getResources().getString(R.string.resume))
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -376,8 +375,8 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
         new MaterialDialog.Builder(_mActivity)
                 .title(title)
                 .content(Content)
-                .negativeText("取消")
-                .positiveText("确认")
+                .negativeText(getResources().getString(R.string.cancel))
+                .positiveText(getResources().getString(R.string.resume))
                 .cancelable(false)
                 .canceledOnTouchOutside(false)
                 .onNegative(new MaterialDialog.SingleButtonCallback() {

@@ -123,7 +123,7 @@ public class ReviewSubjectList extends BaseFragment<ReviewSubjectList_C.Presente
                 _mActivity.onBackPressed();
             }
         });
-        review_title.getTvTittle().setText(statues == 0 ? "审核未通过" : statues == 1 ? "审核通过" : "审核未通过");
+        review_title.getTvTittle().setText(statues == 0 ? getResources().getString(R.string.ReviewSubjectList_not_pass) : statues == 1 ? getResources().getString(R.string.ReviewSubjectList_pass) : getResources().getString(R.string.ReviewSubjectList_not_pass));
         pagerInfoList_swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -199,7 +199,6 @@ public class ReviewSubjectList extends BaseFragment<ReviewSubjectList_C.Presente
 
                         @Override
                         public void PermissionFail(List<String> permissions) {
-                            ToastUtils.showLong("获取" + permissions.get(0) + "失败");
                             isHavePermission = false;
                         }
 

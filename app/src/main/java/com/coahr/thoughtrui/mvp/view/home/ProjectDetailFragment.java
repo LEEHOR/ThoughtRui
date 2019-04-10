@@ -200,10 +200,10 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
 
     private void showDialog() {
         new MaterialDialog.Builder(_mActivity)
-                .title(getString(R.string.dialog_tittle_1))
-                .content(getString(R.string.dialog_content_1))
-                .negativeText(getString(R.string.dialog_negativeText_1))
-                .positiveText(getString(R.string.dialog_positiveText_1))
+                .title(getResources().getString(R.string.dialog_tittle_1))
+                .content(getResources().getString(R.string.dialog_content_1))
+                .negativeText(getResources().getString(R.string.dialog_negativeText_1))
+                .positiveText(getResources().getString(R.string.dialog_positiveText_1))
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -228,10 +228,10 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
                 Intent intent = new Intent(_mActivity, AttendanceRootActivity.class);
                 startActivity(intent);
             } else {
-                ToastUtils.showLong(getString(R.string.toast_3));
+                ToastUtils.showLong(getResources().getString(R.string.toast_3));
             }
         } else {
-            ToastUtils.showLong(getString(R.string.toast_9));
+            ToastUtils.showLong(getResources().getString(R.string.toast_9));
         }
 
 
@@ -246,10 +246,10 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
                 Intent intent = new Intent(_mActivity, StartProjectActivity.class);
                 startActivity(intent);
             } else {
-                ToastUtils.showLong(getString(R.string.toast_3));
+                ToastUtils.showLong(getResources().getString(R.string.toast_3));
             }
         } else {
-            ToastUtils.showLong(getString(R.string.toast_9));
+            ToastUtils.showLong(getResources().getString(R.string.toast_9));
         }
     }
 
@@ -330,7 +330,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
                 String sAgeFormat1= getResources().getString(R.string.string_1);
                 String sFinal1 = String.format(sAgeFormat1, 0,0);
                 tv_upload_status.setText(sFinal1);
-                tv_fstatus.setText(getString(R.string.string_2));
+                tv_fstatus.setText(getResources().getString(R.string.string_2));
             }
             tv_cName.setText(projectDetail.getData().getCname());
             tv_cCode.setText(Constants.user_type == 1 ? projectDetail.getData().getSale_code() : Constants.user_type == 2
@@ -346,7 +346,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
                 project_detail_progress.setMax(Integer.parseInt(split_p[1]));
                 project_detail_progress.setProgress(Integer.parseInt(split_p[0]));
             }
-            project_detail_time.setText(getString(R.string.phrases_4));
+            project_detail_time.setText(getResources().getString(R.string.phrases_4));
 
             tv_project_manager.setText(projectDetail.getData().getManager());
             tv_project_user.setText(Constants.user_name);
@@ -406,7 +406,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
                 project_detail_progress.setMax(Integer.parseInt(split_p[1]));
                 project_detail_progress.setProgress(Integer.parseInt(split_p[0]));
             }
-            project_detail_time.setText(getString(R.string.phrases_4) + TimeUtils.getStingYMD(projectsDB.getModifyTime()));
+            project_detail_time.setText(getResources().getString(R.string.phrases_4) + TimeUtils.getStingYMD(projectsDB.getModifyTime()));
             tv_project_manager.setText(projectsDB.getManager());
             tv_project_user.setText(Constants.user_name);
             tv_project_describe.setText(projectsDB.getNotice());
