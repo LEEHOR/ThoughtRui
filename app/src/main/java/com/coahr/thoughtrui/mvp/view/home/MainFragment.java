@@ -8,6 +8,8 @@ import android.os.Message;
 import androidx.annotation.Nullable;
 
 import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
+import com.coahr.thoughtrui.mvp.view.UMPush.Fragment_Umeng;
+import com.coahr.thoughtrui.mvp.view.search.SearchFragment;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.viewpager.widget.ViewPager;
@@ -115,7 +117,7 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
 
     @Override
     public void initData() {
-        pageAdapter = new MainFragmentViewPageAdapter(getFragmentManager());
+        pageAdapter = new MainFragmentViewPageAdapter(getChildFragmentManager());
         viewPager.setAdapter(pageAdapter);
         home_tab.setupWithViewPager(viewPager);
         viewPager.setOffscreenPageLimit(1);
@@ -132,11 +134,15 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
         super.onDestroy();
     }
 
+    /**
+     * 跳转到消息中心
+     */
     private void JumpToMassage(){
-        Intent intent=new Intent(_mActivity, ConstantsActivity.class);
-        intent.putExtra("from", Constants.fragment_main);
-        intent.putExtra("to", Constants.fragment_umeng);
-        startActivity(intent);
+        start(Fragment_Umeng.newInstance());
+       // Intent intent=new Intent(_mActivity, ConstantsActivity.class);
+       // intent.putExtra("from", Constants.fragment_main);
+       // intent.putExtra("to", Constants.fragment_umeng);
+       // startActivity(intent);
     }
 
     /**
@@ -145,13 +151,19 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
      */
     private void JumpToProject() {
         if (haslogin()) {
-            Intent intent = new Intent(getActivity(), ConstantsActivity.class);
-            intent.putExtra("from", Constants.MyTabFragmentCode);
-            intent.putExtra("type", 1);
-            intent.putExtra("to", Constants.fragment_search);
-            startActivity(intent);
+            start(SearchFragment.instance(1));
+          //  Intent intent = new Intent(getActivity(), ConstantsActivity.class);
+           // intent.putExtra("from", Constants.MyTabFragmentCode);
+            //intent.putExtra("type", 1);
+           // intent.putExtra("to", Constants.fragment_search);
+           // startActivity(intent);
         } else {
             ToastUtils.showLong(getResources().getString(R.string.toast_10));
         }
+    }
+
+    @Override
+    public boolean onBackPressedSupport() {
+        return super.onBackPressedSupport();
     }
 }

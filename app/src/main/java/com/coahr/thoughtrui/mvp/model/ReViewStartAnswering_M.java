@@ -30,6 +30,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 
@@ -48,6 +50,7 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
     private int update;
     private int update1;
     private List<String> picList = new ArrayList<>();
+    private ExecutorService fixedThreadPool;
 
     @Inject
     public ReViewStartAnswering_M() {
@@ -106,7 +109,7 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
     }
 
     @Override
-    public void saveAnswers(String answers, String remark, String ht_ProjectId, int number, String ht_id,int type) {
+    public void saveAnswers(String answers, String remark, String ht_ProjectId, int number, String ht_id, int type) {
         boolean b = SaveOrGetAnswers.saveToFile(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id + "/", "AnswerAndRemark.txt", "1答案:" + answers + "&2备注:" + remark, false);
         if (b) {
             getPresenter().saveAnswersSuccess(type);
@@ -155,6 +158,9 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
         String audioPath = null;
         int CountSize = 0;
         if (list != null && list.size() > 0) {
+            if (fixedThreadPool == null) {
+                fixedThreadPool = Executors.newFixedThreadPool(3);
+            }
             for (int i = 0; i < list.size(); i++) {
                 if (list.get(i).toLowerCase().endsWith("png") || list.get(i).toLowerCase().endsWith("jpeg")
                         || list.get(i).toLowerCase().endsWith("jpg") || list.get(i).toLowerCase().endsWith("gif")) {
@@ -167,24 +173,20 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
                 }
             }
 
-            if (audioPath != null)
-            {
+            if (audioPath != null) {
                 OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
                         audioPath, CountSize, projectsDB, subjectsDB, list, 1, 0);
             }
 
-            if (picList != null && picList.size() > 0)
-            {
-                for (int i = 0; i < picList.size(); i++)
-                {
+            if (picList != null && picList.size() > 0) {
+                for (int i = 0; i < picList.size(); i++) {
                     OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
                             picList.get(i), CountSize, projectsDB, subjectsDB, list, 2, i + 1);
                 }
             }
 
-            if (audioPath == null  && (picList ==null || picList.size()==0))
-            {
-                getPresenter().Up_Pic_Compulsory(projectsDB, subjectsDB,list);
+            if (audioPath == null && (picList == null || picList.size() == 0)) {
+                getPresenter().Up_Pic_Compulsory(projectsDB, subjectsDB, list);
             }
 
         }
@@ -254,65 +256,69 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
         if (!file.exists()) {
             return null;
         }
-        String name = getName(localFile, "/");
-        String object = null;
-        if (type == 1) {
-            String audioName = getName(localFile, "/");
-            object = projectsDB.getPid() + "/audios/" + audioName;
-        } else {
-            String PicName = getName(localFile, ".").toLowerCase().equals("png") ? subjectsDB.getNumber() + "_" + pcPosition + ".png"
-                    : getName(localFile, ".").toLowerCase().equals("jpeg") ? subjectsDB.getNumber() + "_" + pcPosition + ".jpeg"
-                    : getName(localFile, ".").toLowerCase().equals("jpg") ? subjectsDB.getNumber() + "_" + pcPosition + ".jpg"
-                    : getName(localFile, ".").toLowerCase().equals("gif") ? subjectsDB.getNumber() + "_" + pcPosition + ".gif"
-                    : subjectsDB.getNumber() + "_" + pcPosition + ".png";
-            object = projectsDB.getPid() + "/pictures/" + subjectsDB.getNumber() + "/" + PicName;
-        }
-        PutObjectRequest put = new PutObjectRequest(Constants.bucket, object, localFile);
-        put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
+        fixedThreadPool.execute(new Runnable() {
             @Override
-            public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
-                if (getPresenter() != null) {
-                    getPresenter().showProgress((int) currentSize, (int) totalSize, projectsDB.getPname() + "\n第" + subjectsDB.getNumber() + "题\n" + name);
+            public void run() {
+                String name = getName(localFile, "/");
+                String object = null;
+                if (type == 1) {
+                    String audioName = getName(localFile, "/");
+                    object = projectsDB.getPid() + "/audios/" + audioName;
+                } else {
+                    String PicName = getName(localFile, ".").toLowerCase().equals("png") ? subjectsDB.getNumber() + "_" + pcPosition + ".png"
+                            : getName(localFile, ".").toLowerCase().equals("jpeg") ? subjectsDB.getNumber() + "_" + pcPosition + ".jpeg"
+                            : getName(localFile, ".").toLowerCase().equals("jpg") ? subjectsDB.getNumber() + "_" + pcPosition + ".jpg"
+                            : getName(localFile, ".").toLowerCase().equals("gif") ? subjectsDB.getNumber() + "_" + pcPosition + ".gif"
+                            : subjectsDB.getNumber() + "_" + pcPosition + ".png";
+                    object = projectsDB.getPid() + "/pictures/" + subjectsDB.getNumber() + "/" + PicName;
                 }
-            }
-        });
-        put.setCRC64(OSSRequest.CRC64Config.YES);
-        OSSAsyncTask task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
-            @Override
-            public void onSuccess(PutObjectRequest request, PutObjectResult result) {
-                uploadSuccess++;
-                //每题的回调
-                if (getPresenter() != null) {
-                    getPresenter().startUploadCallBack(list, uploadSuccess, uploadFailure, count, projectsDB, subjectsDB);
-                }
-            }
+                PutObjectRequest put = new PutObjectRequest(Constants.bucket, object, localFile);
+                put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
+                    @Override
+                    public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
+                        if (getPresenter() != null) {
+                            getPresenter().showProgress((int) currentSize, (int) totalSize, projectsDB.getPname() + "\n第" + subjectsDB.getNumber() + "题\n" + name);
+                        }
+                    }
+                });
+                put.setCRC64(OSSRequest.CRC64Config.YES);
+                OSSAsyncTask task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
+                    @Override
+                    public void onSuccess(PutObjectRequest request, PutObjectResult result) {
+                        uploadSuccess++;
+                        //每题的回调
+                        if (getPresenter() != null) {
+                            getPresenter().startUploadCallBack(list, uploadSuccess, uploadFailure, count, projectsDB, subjectsDB);
+                        }
+                    }
 
-            @Override
-            public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
-                String info = "";
-                // 请求异常
-                if (clientExcepion != null) {
-                    // 本地异常如网络异常等
-                    clientExcepion.printStackTrace();
-                    info = clientExcepion.toString();
-                }
-                if (serviceException != null) {
-                    // 服务异常
-                    Log.e("ErrorCode", serviceException.getErrorCode());
-                    Log.e("RequestId", serviceException.getRequestId());
-                    Log.e("HostId", serviceException.getHostId());
-                    Log.e("RawMessage", serviceException.getRawMessage());
-                    info = serviceException.toString();
-                }
-                uploadFailure++;
-                if (getPresenter() != null) {
-                    getPresenter().startUploadCallBack(list, uploadSuccess, uploadFailure, count, projectsDB, subjectsDB);
-                }
+                    @Override
+                    public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
+                        String info = "";
+                        // 请求异常
+                        if (clientExcepion != null) {
+                            // 本地异常如网络异常等
+                            clientExcepion.printStackTrace();
+                            info = clientExcepion.toString();
+                        }
+                        if (serviceException != null) {
+                            // 服务异常
+                            Log.e("ErrorCode", serviceException.getErrorCode());
+                            Log.e("RequestId", serviceException.getRequestId());
+                            Log.e("HostId", serviceException.getHostId());
+                            Log.e("RawMessage", serviceException.getRawMessage());
+                            info = serviceException.toString();
+                        }
+                        uploadFailure++;
+                        if (getPresenter() != null) {
+                            getPresenter().startUploadCallBack(list, uploadSuccess, uploadFailure, count, projectsDB, subjectsDB);
+                        }
+                    }
+                });
+
             }
         });
-        if (task != null) {
-            return task;
-        }
+
         return null;
     }
 

@@ -38,6 +38,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 
@@ -56,6 +58,7 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
     private int update1;
     private int update;
     private List<String> picList = new ArrayList<>();
+    private ExecutorService fixedThreadPool;
 
     @Inject
     public PagerFragment_aM() {
@@ -128,13 +131,13 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
     @Override
     public void SaveImages(final List<MediaBean> mediaBeanList, final String ht_ProjectId, final int number, final String ht_id) {
 
-       int count=0;
+        int count = 0;
         for (int i = 0; i < mediaBeanList.size(); i++) {
             String originalPath = mediaBeanList.get(i).getOriginalPath();
             boolean b = FileIOUtils.copyFile(originalPath, Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id + "/", FileIOUtils.getE(originalPath, "/"));
             count++;
         }
-        if (count==mediaBeanList.size()) {
+        if (count == mediaBeanList.size()) {
             getPresenter().SaveImagesSuccess();
         } else {
             getPresenter().SaveImagesFailure();
@@ -169,6 +172,11 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
         String audioPath = null;
         int CountSize = 0;
         if (list != null && list.size() > 0) {
+            if (fixedThreadPool == null) {
+                fixedThreadPool = Executors.newFixedThreadPool(3);
+            }
+            uploadSuccess = 0;
+            uploadFailure = 0;
             for (int i = 0; i < list.size(); i++) {
                 if (list.get(i).toLowerCase().endsWith("png") || list.get(i).toLowerCase().endsWith("jpeg")
                         || list.get(i).toLowerCase().endsWith("jpg") || list.get(i).toLowerCase().endsWith("gif")) {
@@ -272,66 +280,71 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
         if (!file.exists()) {
             return null;
         }
-        String name = getName(localFile, "/");
-        String object = null;
-        if (type == 1) {
-            String audioName = getName(localFile, "/");
-            object = projectsDB.getPid() + "/audios/" + audioName;
-        } else {
-            String picName = getName(localFile, ".").toLowerCase().equals("png") ? subjectsDB.getNumber() + "_" + picPosition + ".png"
-                    : getName(localFile, ".").toLowerCase().equals("jpeg") ? subjectsDB.getNumber() + "_" + picPosition + ".jpeg"
-                    : getName(localFile, ".").toLowerCase().equals("jpg") ? subjectsDB.getNumber() + "_" + picPosition + ".jpg"
-                    : getName(localFile, ".").toLowerCase().equals("gif") ? subjectsDB.getNumber() + "_" + picPosition + ".gif"
-                    : subjectsDB.getNumber() + "_" + picPosition + ".png";
-            object = projectsDB.getPid() + "/pictures/" + subjectsDB.getNumber() + "/" + picName;
-        }
-        PutObjectRequest put = new PutObjectRequest(Constants.bucket, object, localFile);
-        put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
+        fixedThreadPool.execute(new Runnable() {
             @Override
-            public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
-                if (getPresenter() != null) {
-                    getPresenter().showProgress((int) currentSize, (int) totalSize, projectsDB.getPname() + "\n第" + subjectsDB.getNumber() + "题\n" + name);
+            public void run() {
+                String name = getName(localFile, "/");
+                String object = null;
+                if (type == 1) {
+                    String audioName = getName(localFile, "/");
+                    object = projectsDB.getPid() + "/audios/" + audioName;
+                } else {
+                    String picName = getName(localFile, ".").toLowerCase().equals("png") ? subjectsDB.getNumber() + "_" + picPosition + ".png"
+                            : getName(localFile, ".").toLowerCase().equals("jpeg") ? subjectsDB.getNumber() + "_" + picPosition + ".jpeg"
+                            : getName(localFile, ".").toLowerCase().equals("jpg") ? subjectsDB.getNumber() + "_" + picPosition + ".jpg"
+                            : getName(localFile, ".").toLowerCase().equals("gif") ? subjectsDB.getNumber() + "_" + picPosition + ".gif"
+                            : subjectsDB.getNumber() + "_" + picPosition + ".png";
+                    object = projectsDB.getPid() + "/pictures/" + subjectsDB.getNumber() + "/" + picName;
                 }
-            }
-        });
-        put.setCRC64(OSSRequest.CRC64Config.YES);
-        OSSAsyncTask task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
-            @Override
-            public void onSuccess(PutObjectRequest request, PutObjectResult result) {
-                uploadSuccess++;
-                //每题的回调
-                if (getPresenter() != null) {
-                    getPresenter().startUploadCallBack(list, uploadSuccess, uploadFailure, count, projectsDB, subjectsDB);
-                }
-            }
+                PutObjectRequest put = new PutObjectRequest(Constants.bucket, object, localFile);
 
-            @Override
-            public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
-                String info = "";
-                // 请求异常
-                if (clientExcepion != null) {
-                    // 本地异常如网络异常等
-                    clientExcepion.printStackTrace();
-                    info = clientExcepion.toString();
-                }
-                if (serviceException != null) {
-                    // 服务异常
-                    Log.e("ErrorCode", serviceException.getErrorCode());
-                    Log.e("RequestId", serviceException.getRequestId());
-                    Log.e("HostId", serviceException.getHostId());
-                    Log.e("RawMessage", serviceException.getRawMessage());
-                    info = serviceException.toString();
-                }
-                KLog.d("上传异常", info);
-                uploadFailure++;
-                if (getPresenter() != null) {
-                    getPresenter().startUploadCallBack(list, uploadSuccess, uploadFailure, count, projectsDB, subjectsDB);
-                }
+                put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
+                    @Override
+                    public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
+                        if (getPresenter() != null) {
+                            getPresenter().showProgress((int) currentSize, (int) totalSize, projectsDB.getPname() + "\n第" + subjectsDB.getNumber() + "题\n" + name);
+                        }
+                    }
+                });
+                put.setCRC64(OSSRequest.CRC64Config.YES);
+                OSSAsyncTask task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
+                    @Override
+                    public void onSuccess(PutObjectRequest request, PutObjectResult result) {
+                        uploadSuccess++;
+                        //每题的回调
+                        if (getPresenter() != null) {
+                            getPresenter().startUploadCallBack(list, uploadSuccess, uploadFailure, count, projectsDB, subjectsDB);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
+                        String info = "";
+                        // 请求异常
+                        if (clientExcepion != null) {
+                            // 本地异常如网络异常等
+                            clientExcepion.printStackTrace();
+                            info = clientExcepion.toString();
+                        }
+                        if (serviceException != null) {
+                            // 服务异常
+                            Log.e("ErrorCode", serviceException.getErrorCode());
+                            Log.e("RequestId", serviceException.getRequestId());
+                            Log.e("HostId", serviceException.getHostId());
+                            Log.e("RawMessage", serviceException.getRawMessage());
+                            info = serviceException.toString();
+                        }
+                        KLog.d("上传异常", info);
+                        uploadFailure++;
+                        if (getPresenter() != null) {
+                            getPresenter().startUploadCallBack(list, uploadSuccess, uploadFailure, count, projectsDB, subjectsDB);
+                        }
+                    }
+                });
+
             }
         });
-        if (task != null) {
-            return task;
-        }
+
         return null;
     }
 

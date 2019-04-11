@@ -34,6 +34,7 @@ import com.coahr.thoughtrui.mvp.presenter.ProjectDetailFragment_P;
 import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
 import com.coahr.thoughtrui.mvp.view.StartProjectActivity;
 import com.coahr.thoughtrui.mvp.view.attence.AttendanceRootActivity;
+import com.coahr.thoughtrui.mvp.view.projectAnnex.FragmentAnnexViewPager;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
 import com.socks.library.KLog;
 
@@ -257,10 +258,11 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
      * 跳转到项目附件
      */
     private void JumpToProjectAnnex() {
-        Intent intent = new Intent(_mActivity, ConstantsActivity.class);
-        intent.putExtra("from", Constants.MainActivityCode);
-        intent.putExtra("to", Constants.fragment_AnnexViewPager);
-        startActivity(intent);
+        start(FragmentAnnexViewPager.newInstance());
+       // Intent intent = new Intent(_mActivity, ConstantsActivity.class);
+       // intent.putExtra("from", Constants.MainActivityCode);
+       // intent.putExtra("to", Constants.fragment_AnnexViewPager);
+       // startActivity(intent);
     }
 
     @Override

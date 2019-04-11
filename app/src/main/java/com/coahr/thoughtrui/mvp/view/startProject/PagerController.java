@@ -4,6 +4,8 @@ import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
+import com.coahr.thoughtrui.mvp.Base.BaseFragment;
+import com.coahr.thoughtrui.mvp.Base.BaseFragment_not_padding;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,7 +20,7 @@ import java.util.Map;
  */
 public class PagerController {
     Map map=new HashMap();
-    ArrayList<BaseChildFragment> fragmentArrayList = new ArrayList<>();
+    ArrayList<BaseFragment_not_padding> fragmentArrayList = new ArrayList<>();
     //题目序号
     String projectId;
 
@@ -30,7 +32,7 @@ public class PagerController {
         this.type = type;
     }
 
-    public ArrayList<BaseChildFragment> getFragmentArrayList() {
+    public ArrayList<BaseFragment_not_padding> getFragmentArrayList() {
         fragmentArrayList.clear();
         switch (type) {
             case 0: //单选题

@@ -434,20 +434,21 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
 
     @Override
     protected void onPause() {
-        super.onPause();
+
         if (baiduLocationHelper_s != null) {
             baiduLocationHelper_s.stopLocation();
             mHandler.removeCallbacksAndMessages(null);
         }
+        super.onPause();
     }
 
     @Override
     protected void onResume() {
-        super.onResume();
+
         if (baiduLocationHelper_s != null) {
             baiduLocationHelper_s.stopLocation();
             p.getLocation(2);
         }
-
+        super.onResume();
     }
 }

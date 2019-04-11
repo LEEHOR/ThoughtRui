@@ -51,6 +51,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import me.yokeyword.fragmentation.SupportFragment;
 
 /**
  * Created by Leehor
@@ -207,7 +208,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
 
             @Override
             public void newListLongClick(HomeDataList.DataBean.AllListBean newListBean) {
-                showDialog(getResources().getString(R.string.dialog_tittle_2),  getResources().getString(R.string.dialog_content_2), false);
+                showDialog(getResources().getString(R.string.dialog_tittle_2), getResources().getString(R.string.dialog_content_2), false);
             }
 
             @Override
@@ -303,11 +304,11 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
                     if (type == 0) {  //全部
                         allListBeanList.add(homeDataList.getData().getAllList().get(i));
 
-                    } else if (type==1){ //未完成
+                    } else if (type == 1) { //未完成
                         if (homeDataList.getData().getAllList().get(i).getCompleteStatus() == 2) {
                             allListBeanList.add(homeDataList.getData().getAllList().get(i));
                         }
-                    } else if (type==2){ //已完成
+                    } else if (type == 2) { //已完成
                         if (homeDataList.getData().getAllList().get(i).getCompleteStatus() == 3) {
                             allListBeanList.add(homeDataList.getData().getAllList().get(i));
                         }
@@ -521,14 +522,20 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
      */
     private void JumpToProject(String projectId) {
         if (haslogin()) {
-            Intent intent = new Intent(getActivity(), ConstantsActivity.class);
+            //((SupportFragment)getParentFragment())
+            /*((SupportFragment)getParentFragment()).*/
+            KLog.d("跳转1","详情页");
+            ((SupportFragment)getParentFragment()).start(ProjectDetailFragment.newInstance(
+                    projectId, "", "", 2));
+            KLog.d("跳转1","详情页");
+           /* Intent intent = new Intent(getActivity(), ConstantsActivity.class);
             intent.putExtra("from", Constants.MyTabFragmentCode);
             intent.putExtra("templateId", "");
             intent.putExtra("dealerId", "");
             intent.putExtra("type", 2);
             intent.putExtra("projectId", projectId);
             intent.putExtra("to", Constants.ProjectDetailFragmentCode);
-            startActivity(intent);
+            startActivity(intent);*/
         } else {
             ToastUtils.showLong(getResources().getString(R.string.toast_10));
         }

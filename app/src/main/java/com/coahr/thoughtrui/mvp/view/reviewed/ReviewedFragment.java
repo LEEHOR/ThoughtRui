@@ -24,7 +24,7 @@ import org.greenrobot.eventbus.EventBus;
 import butterknife.BindView;
 
 /**
- * 审核的首页
+ * 审核的Viewpager首页
  */
 public class ReviewedFragment extends BaseFragment {
     @BindView(R.id.re_search)

@@ -301,7 +301,20 @@
     <string name="dialog_tittle_2">新的项目</string>
     <string name="dialog_tittle_3">已完成的项目</string>
     <string name="dialog_tittle_4">未完成的项目</string>
-    <string name="dialog_tittle_5">当前题目下有录音</string>
+    <string name
+
+
+
+
+
+
+
+
+
+
+
+
+        ="dialog_tittle_5">当前题目下有录音</string>
     <string name="dialog_tittle_6">当前正在录音</string>
     <string name="dialog_tittle_7">提示</string>
     <string name="dialog_content_2">无法删除</string>

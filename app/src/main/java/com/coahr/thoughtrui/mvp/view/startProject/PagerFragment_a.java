@@ -30,7 +30,9 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.alibaba.sdk.android.oss.ClientConfiguration;
 import com.alibaba.sdk.android.oss.OSSClient;
+import com.alibaba.sdk.android.oss.common.auth.OSSAuthCredentialsProvider;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
@@ -44,7 +46,10 @@ import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
+import com.coahr.thoughtrui.mvp.Base.BaseFragment;
+import com.coahr.thoughtrui.mvp.Base.BaseFragment_not_padding;
 import com.coahr.thoughtrui.mvp.constract.PagerFragment_aC;
+import com.coahr.thoughtrui.mvp.model.ApiContact;
 import com.coahr.thoughtrui.mvp.model.Bean.isCompleteBean;
 import com.coahr.thoughtrui.mvp.presenter.PagerFragment_aP;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
@@ -90,7 +95,7 @@ import omrecorder.WriteAction;
  * on 18:31
  * 单选题类型
  */
-public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presenter> implements PagerFragment_aC.View, View.OnClickListener {
+public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.Presenter> implements PagerFragment_aC.View, View.OnClickListener {
 
     @Inject
     PagerFragment_aP p;
@@ -216,6 +221,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
     private String textMassage;
     private String uPAudioPath;
     private Fill_in_blankDialog fill_in_blankDialog;
+    private OSSAuthCredentialsProvider credentialProvider;
 
     public static PagerFragment_a newInstance(int position, String ht_ProjectId, int countSize, String name_project, String ht_id) {
         PagerFragment_a pagerFragment_a = new PagerFragment_a();
@@ -510,6 +516,7 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
                 }
                 fr_upload.setEnabled(false);
                 if (Constants.isNetWorkConnect) {
+
                     if (Constants.NetWorkType != null && Constants.NetWorkType.equals("WIFI")) {
                         NetWorkDialog(getResources().getString(R.string.dialog_tittle_7), getResources().getString(R.string.dialog_content_5), 1);
                     } else if (Constants.NetWorkType != null && Constants.NetWorkType.equals("MOBILE")) {
@@ -1203,24 +1210,24 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             StringBuffer stringBuffer = new StringBuffer();
             for (int i = 0; i < picList.size(); i++) {
                 if (picList.size() == 1) {
-                    stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg") ? picList.get(i) + "_" + i + ".jpg"
-                            : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png") ? picList.get(i) + "_" + i + ".png"
-                            : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif") ? picList.get(i) + "_" + i + ".gif"
-                            : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg") ? picList.get(i) + "_" + i + ".jpeg"
-                            : picList.get(i) + "_" + i + ".png");
+                    stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB.getNumber() + "_" + (i+1) + ".jpg"
+                            : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB.getNumber() + "_" + (i+1) + ".png"
+                            : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB.getNumber() + "_" + (i+1) + ".gif"
+                            : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB.getNumber() + "_" + (i+1) + ".jpeg"
+                            : subjectsDB.getNumber() + "_" + (i+1) + ".png");
                 } else {
                     if (i == (picList.size() - 1)) {
-                        stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg") ? picList.get(i) + "_" + i + ".jpg"
-                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png") ? picList.get(i) + "_" + i + ".png"
-                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif") ? picList.get(i) + "_" + i + ".gif"
-                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg") ? picList.get(i) + "_" + i + ".jpeg"
-                                : picList.get(i) + "_" + i + ".png");
+                        stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB.getNumber() + "_" + (i+1) + ".jpg"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB.getNumber() + "_" + (i+1) + ".png"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB.getNumber() + "_" + (i+1) + ".gif"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB.getNumber() + "_" + (i+1) + ".jpeg"
+                                : subjectsDB.getNumber() + "_" + (i+1) + ".png");
                     } else {
-                        stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg") ? picList.get(i) + "_" + i + ".jpg" + ";"
-                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png") ? picList.get(i) + "_" + i + ".png" + ";"
-                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif") ? picList.get(i) + "_" + i + ".gif" + ";"
-                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg") ? picList.get(i) + "_" + i + ".jpeg" + ";"
-                                : picList.get(i) + "_" + i + ".png" + ";");
+                        stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB.getNumber() + "_" + (i+1) + ".jpg" + ";"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB.getNumber() + "_" + (i+1) + ".png" + ";"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB.getNumber() + "_" + (i+1) + ".gif" + ";"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB.getNumber() + "_" + (i+1) + ".jpeg" + ";"
+                                : subjectsDB.getNumber() + "_" + (i+1) + ".png" + ";");
                     }
                 }
             }
@@ -1231,13 +1238,13 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             map.put("pictureCount", 0);
         }
 
-      /*  mHandler.post(new Runnable() {
+
+        mHandler.post(new Runnable() {
             @Override
             public void run() {
-
+                p.CallBack(map, projectsDB, subjectsDB);
             }
-        });*/
-        p.CallBack(map, projectsDB, subjectsDB);
+        });
     }
 
 
@@ -1314,7 +1321,22 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
      * OSS对象实例
      */
     private void getSTS_OSS() {
-        oss_thread.start();
+
+        if (credentialProvider == null) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    credentialProvider = new OSSAuthCredentialsProvider(ApiContact.STSSERVER);
+                    ClientConfiguration conf = new ClientConfiguration();
+                    conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
+                    conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
+                    conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
+                    conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
+                    ossClient = new OSSClient(_mActivity, ApiContact.endpoint, credentialProvider, conf);
+                }
+            }).start();
+
+        }
         p.UpLoadFileList(projectsDB.getPid(), subjectsDB_now);
     }
 
@@ -1488,14 +1510,6 @@ public class PagerFragment_a extends BaseChildFragment<PagerFragment_aC.Presente
             }
         }
     }
-    /**
-     * 获取阿里云实例
-     */
-    private Thread oss_thread= new Thread(new Runnable() {
-        @Override
-        public void run() {
-            ossClient = OSS_Aliyun.newInstance().getOss(_mActivity);
-        }
-    });
+
 }
 

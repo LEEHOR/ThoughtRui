@@ -141,6 +141,8 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     private int subject_position;
     private TextView tv_message_tittle;
     private ExecutorService fixedThreadPool;
+    private OSSAuthCredentialsProvider credentialProvider;
+
     @Override
     public UploadC.Presenter getPresenter() {
         return p;
@@ -197,7 +199,6 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
         if (haslogin()) {
             p.getProjectList(Constants.sessionId);
         }
-        oss_thread.start();
         upLoadAdapter.setSelectChangeListener(new UpLoadAdapter.onSelectChangeListener() {
             @Override
             public void onChange() {
@@ -311,7 +312,6 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
         /*private int currentSize_progress;
         private int totalSize_progress;
         private String info_progress;*/
-        KLog.d("日志_", currentSize, totalSize, info);
         progressBar.setMax(totalSize);
          Message mes = mHandler.obtainMessage(UPDATE_PROGRESS, info);
                      mes.arg1 = currentSize;
@@ -534,6 +534,22 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
         /**
          * 获取密钥
          */
+        if (credentialProvider == null) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    credentialProvider = new OSSAuthCredentialsProvider(ApiContact.STSSERVER);
+                    ClientConfiguration conf = new ClientConfiguration();
+                    conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
+                    conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
+                    conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
+                    conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
+                    ossClient = new OSSClient(_mActivity, ApiContact.endpoint, credentialProvider, conf);
+                }
+            }).start();
+
+        }
+
         getSubjectListByOne();
      /*   mHandler.post(new Runnable() {
             @Override
@@ -661,24 +677,24 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
             StringBuffer stringBuffer = new StringBuffer();
             for (int i = 0; i < picList.size(); i++) {
                 if (picList.size() == 1) {
-                    stringBuffer.append(getName(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB.get(subject_position).getNumber() + "_" + i + ".jpg"
-                            : getName(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB.get(subject_position).getNumber() + "_" + i + ".png"
-                            : getName(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB.get(subject_position).getNumber() + "_" + i + ".gif"
-                            : getName(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB.get(subject_position).getNumber() + "_" + i + ".jpeg"
-                            : subjectsDB.get(subject_position).getNumber() + "_" + i + ".png");
+                    stringBuffer.append(getName(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB.get(subject_position).getNumber() + "_" + (i+1) + ".jpg"
+                            : getName(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB.get(subject_position).getNumber() + "_" + (i+1) + ".png"
+                            : getName(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB.get(subject_position).getNumber() + "_" + (i+1) + ".gif"
+                            : getName(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB.get(subject_position).getNumber() + "_" + (i+1) + ".jpeg"
+                            : subjectsDB.get(subject_position).getNumber() + "_" + (i+1) + ".png");
                 } else {
                     if (i == (picList.size() - 1)) {
-                        stringBuffer.append(getName(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB.get(subject_position).getNumber() + "_" + i + ".jpg"
-                                : getName(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB.get(subject_position).getNumber() + "_" + i + ".png"
-                                : getName(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB.get(subject_position).getNumber() + "_" + i + ".gif"
-                                : getName(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB.get(subject_position).getNumber() + "_" + i + ".jpeg"
-                                : subjectsDB.get(subject_position) + "_" + i + ".png");
+                        stringBuffer.append(getName(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB.get(subject_position).getNumber() + "_" + (i+1) + ".jpg"
+                                : getName(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB.get(subject_position).getNumber() + "_" + (i+1) + ".png"
+                                : getName(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB.get(subject_position).getNumber() + "_" + (i+1) + ".gif"
+                                : getName(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB.get(subject_position).getNumber() + "_" + (i+1) + ".jpeg"
+                                : subjectsDB.get(subject_position) + "_" + (i+1) + ".png");
                     } else {
-                        stringBuffer.append(getName(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB.get(subject_position).getNumber() + "_" + i + ".jpg" + ";"
-                                : getName(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB.get(subject_position).getNumber() + "_" + i + ".png" + ";"
-                                : getName(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB.get(subject_position).getNumber() + "_" + i + ".gif" + ";"
-                                : getName(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB.get(subject_position).getNumber() + "_" + i + ".jpeg" + ";"
-                                : subjectsDB.get(subject_position).getNumber() + "_" + i + ".png" + ";");
+                        stringBuffer.append(getName(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB.get(subject_position).getNumber() + "_" + (i+1) + ".jpg" + ";"
+                                : getName(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB.get(subject_position).getNumber() + "_" + (i+1) + ".png" + ";"
+                                : getName(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB.get(subject_position).getNumber() + "_" + (i+1) + ".gif" + ";"
+                                : getName(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB.get(subject_position).getNumber() + "_" + (i+1) + ".jpeg" + ";"
+                                : subjectsDB.get(subject_position).getNumber() + "_" + (i+1) + ".png" + ";");
                     }
                 }
                 map.put("picture", stringBuffer.toString());
@@ -688,31 +704,13 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
             map.put("picture", "");
             map.put("pictureCount", 0);
         }
-        p.CallBackServer(map, subjectsDB, projectsDB, project_position, subject_position);
-      /*  mHandler.post(new Runnable() {
+
+        mHandler.post(new Runnable() {
             @Override
             public void run() {
-
+                p.CallBackServer(map, subjectsDB, projectsDB, project_position, subject_position);
             }
-        });*/
+        });
 
     }
-
-  private Thread oss_thread= new Thread(new Runnable() {
-        @Override
-        public void run() {
-            if (ossClient==null){
-                OSSCredentialProvider credentialProvider = new OSSAuthCredentialsProvider(ApiContact.STSSERVER);
-                ClientConfiguration conf = new ClientConfiguration();
-                conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
-                conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
-                conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
-                conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
-                ossClient = new OSSClient(_mActivity, ApiContact.endpoint, credentialProvider, conf);
-            } else {
-
-            }
-
-        }
-    });
 }

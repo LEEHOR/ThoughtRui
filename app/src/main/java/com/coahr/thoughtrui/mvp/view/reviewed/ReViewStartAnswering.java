@@ -30,7 +30,9 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.alibaba.sdk.android.oss.ClientConfiguration;
 import com.alibaba.sdk.android.oss.OSSClient;
+import com.alibaba.sdk.android.oss.common.auth.OSSAuthCredentialsProvider;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
@@ -44,7 +46,10 @@ import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
+import com.coahr.thoughtrui.mvp.Base.BaseFragment;
+import com.coahr.thoughtrui.mvp.Base.BaseFragment_not_padding;
 import com.coahr.thoughtrui.mvp.constract.ReViewStartAnswering_C;
+import com.coahr.thoughtrui.mvp.model.ApiContact;
 import com.coahr.thoughtrui.mvp.model.Bean.isCompleteBean;
 import com.coahr.thoughtrui.mvp.presenter.ReViewStartAnswering_P;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
@@ -89,7 +94,7 @@ import omrecorder.WriteAction;
  * 创建日期：2019/1/10
  * 描述：审核开始答题
  */
-public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering_C.Presenter> implements ReViewStartAnswering_C.View, View.OnClickListener {
+public class ReViewStartAnswering extends BaseFragment_not_padding<ReViewStartAnswering_C.Presenter> implements ReViewStartAnswering_C.View, View.OnClickListener {
     @Inject
     ReViewStartAnswering_P p;
     @BindView(R.id.project_detail_titlle)
@@ -204,6 +209,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
     private String textMassage;
     private String standard_score;
     private Fill_in_blankDialog fill_in_blankDialog;
+    private OSSAuthCredentialsProvider credentialProvider;
 
     public static ReViewStartAnswering newInstance(int position, String DbProjectId, String ht_ProjectId, int countSize, String ht_id) {
         ReViewStartAnswering reViewStartAnswering = new ReViewStartAnswering();
@@ -376,7 +382,7 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
             project_detail_titlle.setText(subjectsDB.getTitle());
 
             int i = subjectsDB.getsUploadStatus();
-            if (i==1){
+            if (i == 1) {
                 iv_upload_tag.setImageResource(R.mipmap.uploaded);
             } else {
                 iv_upload_tag.setImageResource(R.mipmap.not_uploaded);
@@ -735,24 +741,24 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
             StringBuffer stringBuffer = new StringBuffer();
             for (int i = 0; i < picList.size(); i++) {
                 if (picList.size() == 1) {
-                    stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB_now.getNumber() + "_" + i + ".jpg"
-                            : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB_now.getNumber() + "_" + i + ".png"
-                            : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB_now.getNumber() + "_" + i + ".gif"
-                            : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB_now.getNumber() + "_" + i + ".jpeg"
-                            : subjectsDB_now.getNumber() + "_" + i + ".png");
+                    stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB_now.getNumber() + "_" + (i + 1) + ".jpg"
+                            : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB_now.getNumber() + "_" + (i + 1) + ".png"
+                            : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB_now.getNumber() + "_" + (i + 1) + ".gif"
+                            : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB_now.getNumber() + "_" + (i + 1) + ".jpeg"
+                            : subjectsDB_now.getNumber() + "_" + (i + 1) + ".png");
                 } else {
                     if (i == (picList.size() - 1)) {
-                        stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB_now.getNumber() + "_" + i + ".jpg"
-                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB_now.getNumber() + "_" + i + ".png"
-                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB_now.getNumber() + "_" + i + ".gif"
-                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB_now.getNumber() + "_" + i + ".jpeg"
-                                : subjectsDB_now.getNumber() + "_" + i + ".png");
+                        stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB_now.getNumber() + "_" + (i + 1) + ".jpg"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB_now.getNumber() + "_" + (i + 1) + ".png"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB_now.getNumber() + "_" + (i + 1) + ".gif"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB_now.getNumber() + "_" + (i + 1) + ".jpeg"
+                                : subjectsDB_now.getNumber() + "_" + (i + 1) + ".png");
                     } else {
-                        stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB_now.getNumber() + "_" + i + ".jpg" + ";"
-                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB_now.getNumber() + "_" + i + ".png" + ";"
-                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB_now.getNumber() + "_" + i + ".gif" + ";"
-                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB_now.getNumber() + "_" + i + ".jpeg" + ";"
-                                : subjectsDB_now.getNumber() + "_" + i + ".png" + ";");
+                        stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB_now.getNumber() + "_" + (i + 1) + ".jpg" + ";"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB_now.getNumber() + "_" + (i + 1) + ".png" + ";"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB_now.getNumber() + "_" + (i + 1) + ".gif" + ";"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB_now.getNumber() + "_" + (i + 1) + ".jpeg" + ";"
+                                : subjectsDB_now.getNumber() + "_" + (i + 1) + ".png" + ";");
                     }
                 }
             }
@@ -762,13 +768,13 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
             map.put("pictureCount", 0);
             map.put("picture", "");
         }
-        p.CallBack(map, projectsDB, subjectsDB);
-      /*  mHandler.post(new Runnable() {
+
+        mHandler.post(new Runnable() {
             @Override
             public void run() {
-
+                p.CallBack(map, projectsDB, subjectsDB);
             }
-        });*/
+        });
 
     }
 //=========================================录音=====================================================
@@ -1133,7 +1139,21 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
         } else {
             mHandler.sendEmptyMessage(GETUPLOADLIST);
         }*/
-        oss_thread.start();
+        if (credentialProvider == null) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    credentialProvider = new OSSAuthCredentialsProvider(ApiContact.STSSERVER);
+                    ClientConfiguration conf = new ClientConfiguration();
+                    conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
+                    conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
+                    conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
+                    conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
+                    ossClient = new OSSClient(_mActivity, ApiContact.endpoint, credentialProvider, conf);
+                }
+            }).start();
+
+        }
         p.UpLoadFileList(ht_projectId, subjectsDB_now);
     }
 
@@ -1366,13 +1386,5 @@ public class ReViewStartAnswering extends BaseChildFragment<ReViewStartAnswering
         }
     }
 
-    /**
-     * 获取Oss实例
-     */
-    private Thread oss_thread= new Thread(new Runnable() {
-        @Override
-        public void run() {
-            ossClient = OSS_Aliyun.newInstance().getOss(_mActivity);
-        }
-    });
+
 }
