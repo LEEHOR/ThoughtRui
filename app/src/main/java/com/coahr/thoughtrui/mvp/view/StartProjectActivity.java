@@ -189,6 +189,15 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                             subjectsDB.setNumber(questionList.get(i).getNumber());
                             subjectsDB.setCensor(questionList.get(i).getCensor());
                             subjectsDB.setRecordStatus(questionList.get(i).getRecordStatus());
+                            if (questionList.get(i).getQuota1() != null) {
+                                subjectsDB.setQuota1(questionList.get(i).getQuota1());
+                            }
+                            if (questionList.get(i).getQuota2() != null) {
+                                subjectsDB.setQuota2(questionList.get(i).getQuota2());
+                            }
+                            if (questionList.get(i).getQuota3() != null) {
+                                subjectsDB.setQuota3(questionList.get(i).getQuota3());
+                            }
                             subjectsDB.update(subjectsDBS.get(0).getId());
                         }
                     } else {
@@ -214,22 +223,12 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                         subjectsDB.setsUploadStatus(0);
                         if (questionList.get(i).getQuota1() != null) {
                             subjectsDB.setQuota1(questionList.get(i).getQuota1());
-                            if (questionList.get(i).getQuota2() != null) {
-                                subjectsDB.setQuota2(questionList.get(i).getQuota2());
-                                if (questionList.get(i).getQuota3() != null) {
-                                    subjectsDB.setQuota3(questionList.get(i).getQuota3());
-                                } else {
-                                    subjectsDB.setQuota3(null);
-                                }
-                            } else {
-                                subjectsDB.setQuota2(null);
-                                subjectsDB.setQuota3(null);
-                            }
-
-                        } else {
-                            subjectsDB.setQuota1(null);
-                            subjectsDB.setQuota2(null);
-                            subjectsDB.setQuota3(null);
+                        }
+                        if (questionList.get(i).getQuota2() != null) {
+                            subjectsDB.setQuota2(questionList.get(i).getQuota2());
+                        }
+                        if (questionList.get(i).getQuota3() != null) {
+                            subjectsDB.setQuota3(questionList.get(i).getQuota3());
                         }
                         subjectsDB.setProjectsDB(projectsDBS.get(0));
                         subjectsDB.save();

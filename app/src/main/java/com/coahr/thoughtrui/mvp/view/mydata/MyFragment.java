@@ -5,16 +5,9 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
-
-import androidx.annotation.NonNull;
-
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -31,20 +24,19 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
-import com.coahr.thoughtrui.mvp.model.Bean.NotificationBean;
 import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
 import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
 import com.coahr.thoughtrui.widgets.CircularImageView;
-import com.gyf.barlibrary.ImmersionBar;
-import com.socks.library.KLog;
 
 import java.io.File;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * @author Leehor
@@ -67,6 +59,9 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
     TextView tv_wwc;//未完成
     @BindView(R.id.re_mytop)
     RelativeLayout re_mytop;
+
+    @BindView(R.id.re_action_plan) //行动报表
+    RelativeLayout reActionPlan;
 
     @BindView(R.id.re_message_center)
     RelativeLayout re_message_center;  //消息中心
@@ -92,7 +87,9 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
 
     @BindView(R.id.tv_quit_account)
     TextView tv_quit_account; //退出登录
-    private int unLoad , unStart , unUpload , unComplete;
+
+    private int unLoad, unStart, unUpload, unComplete;
+
     public static MyFragment newInstance() {
         return new MyFragment();
     }
@@ -116,6 +113,7 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
         re_change_pass.setOnClickListener(this);
         re_feed_back.setOnClickListener(this);
         tv_quit_account.setOnClickListener(this);
+        reActionPlan.setOnClickListener(this);
         getAudioPermission();
     }
 
@@ -132,6 +130,9 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.re_action_plan: //行动报表
+                goOtherPage(ConstantsActivity.class, Constants.fragment_myFragment, Constants.fragment_action_pan);
+                break;
             case R.id.re_message_center: //消息中心
                 goOtherPage(ConstantsActivity.class, Constants.fragment_myFragment, Constants.fragment_umeng);
                 break;
@@ -139,7 +140,7 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
                 goOtherPage(ConstantsActivity.class, Constants.fragment_myFragment, Constants.fragment_uploadOptions);
                 break;
             case R.id.re_clear_cache: //清除缓存
-                ClearDataDialog(getResources().getString(R.string.dialog_tittle_7),getResources().getString(R.string.dialog_content_9));
+                ClearDataDialog(getResources().getString(R.string.dialog_tittle_7), getResources().getString(R.string.dialog_content_9));
                 break;
             case R.id.re_change_pass: //修改密码
                 goOtherPage(ConstantsActivity.class, Constants.fragment_myFragment, Constants.fragment_ChangePass);
@@ -244,10 +245,10 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
      * @param complete
      */
     public void featchProjectInfo(TextView star, TextView download, TextView upload, TextView complete) {
-         unLoad = 0;
-         unStart = 0;
-         unUpload = 0;
-         unComplete = 0;
+        unLoad = 0;
+        unStart = 0;
+        unUpload = 0;
+        unComplete = 0;
         if (haslogin()) {
             List<UsersDB> usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", Constants.sessionId);
             if (usersDBS != null && usersDBS.size() > 0) {
@@ -258,7 +259,7 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
                             if (projectsDBSList.get(i).getDownloadTime() == -1) {
                                 unLoad++;
                             }
-                            if (projectsDBSList.get(i).getCompleteStatus()==1 && projectsDBSList.get(i).getpUploadStatus() == 0) {
+                            if (projectsDBSList.get(i).getCompleteStatus() == 1 && projectsDBSList.get(i).getpUploadStatus() == 0) {
                                 unUpload++;
                             }
                             if (projectsDBSList.get(i).getIsComplete() == 0) {
@@ -278,9 +279,9 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
         upload.setText(String.valueOf(unUpload));
         complete.setText(String.valueOf(unComplete));
         star.setText(String.valueOf(unStart));
-        if (Constants.message>0) {
+        if (Constants.message > 0) {
             tv_xx_count.setVisibility(View.VISIBLE);
-            tv_xx_count.setText((Constants.message)+"");
+            tv_xx_count.setText((Constants.message) + "");
         } else {
             tv_xx_count.setVisibility(View.INVISIBLE);
         }
@@ -397,11 +398,12 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
     @Override
     public void onResume() {
         super.onResume();
-        if (Constants.message>0) {
+        if (Constants.message > 0) {
             tv_xx_count.setVisibility(View.VISIBLE);
-            tv_xx_count.setText((Constants.message)+"");
+            tv_xx_count.setText((Constants.message) + "");
         } else {
             tv_xx_count.setVisibility(View.INVISIBLE);
         }
     }
+
 }

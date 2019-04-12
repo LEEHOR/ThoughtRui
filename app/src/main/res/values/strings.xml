@@ -195,6 +195,7 @@
     <string name="my_fragment_10">帮助与反馈</string>
     <string name="my_fragment_11">退出登录</string>
     <string name="my_fragment_12">数据上传设置</string>
+    <string name="my_fragment_13">行动报表</string>
 
     <!--EvaluateInputDialog-->
     <string name="input_send_comments">评论</string>
@@ -209,11 +210,28 @@
     <string name="success_dialog_date_size">%1$d条数据,%2$d个附件未上传</string>
     <string name="success_dialog_end">终于%1$s</string>
     
-    <!--subjectList-->
+    <!--com.coahr.thoughtrui.mvp.view.subjectList.Fragment_Topics-->
     <string name="subject_list_tittle">题目列表</string>
     <string name="subject_list_select">选择</string>
-    
-    
+
+    <!--com.coahr.thoughtrui.mvp.view.action_plan.Fragment_action_projectsstring -->
+    <string name="plan_tittle">行动计划提报</string>
+    <string name="plan_submit_action_plan_presentation">提交报表</string>
+
+    <!--com.coahr.thoughtrui.mvp.view.action_plan.Fragment_Action_plan_presentation_1-->
+    <string name="plan_1_tittle">提报中</string>
+    <string name="plan_1_1">提报日期:</string>
+    <string name="plan_1_2">监督人:</string>
+    <string name="plan_1_3">省份</string>
+    <string name="plan_1_4">经销商名称</string>
+    <string name="plan_1_5">所属检核模板</string>
+    <string name="plan_1_6">一级指标</string>
+    <string name="plan_1_7">二级指标</string>
+    <string name="plan_1_8">改善前图片</string>
+    <string name="plan_1_9">图片</string>
+    <string name="plan_1_10">收回</string>
+    <string name="plan_1_11">下一步</string>
+
     <!--语言选择-->
     <string name="language_cn">中文</string>
     <string name="language_en">ENGLISH</string>
@@ -297,24 +315,10 @@
     <string name="phrases_27">没有读取权限</string>
 
     <!--dialog_text-->
-    <!--项目列表-->
     <string name="dialog_tittle_2">新的项目</string>
     <string name="dialog_tittle_3">已完成的项目</string>
     <string name="dialog_tittle_4">未完成的项目</string>
-    <string name
-
-
-
-
-
-
-
-
-
-
-
-
-        ="dialog_tittle_5">当前题目下有录音</string>
+    <string name="dialog_tittle_5">当前题目下有录音</string>
     <string name="dialog_tittle_6">当前正在录音</string>
     <string name="dialog_tittle_7">提示</string>
     <string name="dialog_content_2">无法删除</string>

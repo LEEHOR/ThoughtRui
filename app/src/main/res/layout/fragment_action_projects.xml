@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:landptf="http://schemas.android.com/tools">
+    <com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar
+        android:layout_alignParentTop="true"
+        android:id="@+id/plan_tittle"
+        app:tittle="@string/plan_tittle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/plan_recycler"
+        android:layout_below="@+id/plan_tittle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/plan_bottom_parts">
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <RelativeLayout
+        android:layout_alignParentBottom="true"
+        android:id="@+id/plan_bottom_parts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <View
+            android:id="@+id/plan_top_line"
+            android:layout_alignParentTop="true"
+            android:layout_width="match_parent"
+            android:layout_height="1sp"
+            android:background="#999999"/>
+
+            <com.landptf.view.ButtonM
+                android:id="@+id/plan_action_pre"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_below="@+id/plan_top_line"
+                android:layout_marginBottom="15dp"
+                android:layout_width="@dimen/dp_60"
+                android:layout_height="@dimen/dp_60"
+                android:padding="@dimen/dp_10"
+                android:gravity="center"
+                landptf:backColor="@color/material_blue_900"
+                landptf:targetApi="P"
+                landptf:fillet="true"
+                landptf:shape="oval"
+                landptf:textColor="@color/colorWhite"
+                landptf:textSize="@dimen/dp_14"
+                android:text="@string/plan_submit_action_plan_presentation"
+                />
+    </RelativeLayout>
+</RelativeLayout>

@@ -111,19 +111,20 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
     public void getSubjectListSuccess(SubjectListBean subjectListBean) {
         if (subjectListBean != null) {
             SubjectListBean.DataBean data = subjectListBean.getData();
-            List<SubjectListBean.DataBean.QuestionListBean> questionLists = data.getQuestionList();
-            if (questionLists != null && questionLists.size() > 0) {
+            List<SubjectListBean.DataBean.QuestionListRoot> questionListRootList = data.getQuestionList();
+            if (questionListRootList != null && questionListRootList.size() > 0) {
                 baseNodeList.clear();
-                for (int i = 0; i < questionLists.size(); i++) {
-                    SubjectListBean.DataBean.QuestionListBean questionListBean = questionLists.get(i);
+                for (int i = 0; i < questionListRootList.size(); i++) {
+                    SubjectListBean.DataBean.QuestionListRoot questionListRoot = questionListRootList.get(i);
                     //根节点
-                    ThreeNode root = new ThreeNode(questionListBean.getId(), "", questionListBean.getName());
+                    ThreeNode root = new ThreeNode(questionListRoot.getId(), "", questionListRoot.getName());
                     baseNodeList.add(root);
                     //子节点1
-                    if (questionListBean.getQuesList() != null && questionListBean.getQuesList().size() > 0) {
-                        for (int j = 0; j < questionListBean.getQuesList().size(); j++) {
-                            SubjectListBean.DataBean.QuestionListBean.QuesListBean quesListBean_ch = questionListBean.getQuesList().get(j);
-                            ThreeNode rootChild_1 = new ThreeNode(quesListBean_ch.getId(), questionListBean.getId(), quesListBean_ch.getTitle());
+                    if (questionListRoot.getQuesList_1() != null && questionListRoot.getQuesList_1().size() > 0) {
+                        for (int j = 0; j < questionListRoot.getQuesList_1().size(); j++) {
+
+                            SubjectListBean.DataBean.QuestionListRoot.QuesListBean_1 quesListBean_1 = questionListRoot.getQuesList_1().get(j);
+                            ThreeNode rootChild_1 = new ThreeNode(quesListBean_1.getId(), questionListRoot.getId(), quesListBean_1.getTitle());
                             baseNodeList.add(rootChild_1);
                         }
                     } else {  //子节点2
@@ -161,7 +162,6 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
     private void getHttp() {
         Map map = new HashMap();
         map.put("projectId", Constants.ht_ProjectId);
-        KLog.d("项目Id", Constants.ht_ProjectId);
         map.put("token", Constants.devicestoken);
         map.put("sessionid", Constants.sessionId);
         p.getSubjectList(map);

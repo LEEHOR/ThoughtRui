@@ -8,6 +8,7 @@ import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseSupportActivity;
 import com.coahr.thoughtrui.mvp.view.UMPush.Fragment_Umeng;
 import com.coahr.thoughtrui.mvp.view.WebView.Fragment_WebView;
+import com.coahr.thoughtrui.mvp.view.action_plan.Fragment_action_projects;
 import com.coahr.thoughtrui.mvp.view.home.DealerFragment;
 import com.coahr.thoughtrui.mvp.view.home.MainFragment;
 import com.coahr.thoughtrui.mvp.view.home.ProjectDetailFragment;
@@ -20,8 +21,6 @@ import com.coahr.thoughtrui.mvp.view.search.SearchFragment;
 import com.coahr.thoughtrui.mvp.view.subjectList.Fragment_Topics;
 import com.coahr.thoughtrui.mvp.view.projectAnnex.FragmentAnnexViewPager;
 import com.coahr.thoughtrui.mvp.view.reviewed.ReviewSubjectList;
-
-import androidx.annotation.Nullable;
 
 /**
  * Created by Leehor
@@ -45,7 +44,7 @@ public class ConstantsActivity extends BaseSupportActivity {
                 break;
             case Constants.ProjectDetailFragmentCode://项目详情页
                 loadRootFragment(R.id.Constants_Fragment, ProjectDetailFragment.newInstance(
-                          getIntent().getStringExtra("projectId")
+                        getIntent().getStringExtra("projectId")
                         , getIntent().getStringExtra("templateId")
                         , getIntent().getStringExtra("dealerId")
                         , getIntent().getIntExtra("type", 0)));
@@ -69,7 +68,7 @@ public class ConstantsActivity extends BaseSupportActivity {
                 loadRootFragment(R.id.Constants_Fragment, Fragment_Feedback.newInstance());
                 break;
             case Constants.fragment_main: //项目列表
-                loadRootFragment(R.id.Constants_Fragment, MainFragment.newInstance(0,1));
+                loadRootFragment(R.id.Constants_Fragment, MainFragment.newInstance(0, 1));
                 break;
             case Constants.fragment_template: //项目模板
                 loadRootFragment(R.id.Constants_Fragment, ProjectTemplate.newInstance());
@@ -81,13 +80,16 @@ public class ConstantsActivity extends BaseSupportActivity {
                 loadRootFragment(R.id.Constants_Fragment, Fragment_WebView.Instance(getIntent().getStringExtra("url")));
                 break;
             case Constants.fragment_search: //搜索页
-                loadRootFragment(R.id.Constants_Fragment, SearchFragment.instance(getIntent().getIntExtra("type",0)));
+                loadRootFragment(R.id.Constants_Fragment, SearchFragment.instance(getIntent().getIntExtra("type", 0)));
                 break;
             case Constants.fragment_umeng: //消息页
                 loadRootFragment(R.id.Constants_Fragment, Fragment_Umeng.newInstance());
                 break;
             case Constants.fragment_uploadOptions: //上传设置
                 loadRootFragment(R.id.Constants_Fragment, UploadOptions.newInstance());
+                break;
+            case Constants.fragment_action_pan: //行动报表
+                loadRootFragment(R.id.Constants_Fragment, Fragment_action_projects.newInstance());
                 break;
 
         }

@@ -11,15 +11,14 @@ public interface ExpandListClickListener {
     /**
      * 展开子Item
      *
-     * @param entity
+     *
      */
-    void onExpandChildren(SubjectListBean.DataBean.QuestionListBean entity);
+    void onExpandChildren(SubjectListBean.DataBean.QuestionListRoot questionListRoot);
 
     /**
      * 隐藏子Item
      *
-     * @param entity
      */
-    void onHideChildren(SubjectListBean.DataBean.QuestionListBean entity);
+    void onHideChildren(SubjectListBean.DataBean.QuestionListRoot questionListRoot);
 
 }

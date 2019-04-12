@@ -3,6 +3,7 @@ package com.coahr.thoughtrui.dagger.modules;
 import com.coahr.thoughtrui.dagger.components.BaseFragmentComponents;
 import com.coahr.thoughtrui.mvp.view.UMPush.Fragment_Umeng;
 import com.coahr.thoughtrui.mvp.view.WebView.Fragment_WebView;
+import com.coahr.thoughtrui.mvp.view.action_plan.Fragment_Action_plan_presentation_1;
 import com.coahr.thoughtrui.mvp.view.attence.AttendanceFragment_h;
 import com.coahr.thoughtrui.mvp.view.attence.AttendanceFragment_k;
 import com.coahr.thoughtrui.mvp.view.home.DealerFragment;
@@ -12,6 +13,7 @@ import com.coahr.thoughtrui.mvp.view.home.MyTabFragment;
 import com.coahr.thoughtrui.mvp.view.home.ProjectDetailFragment;
 import com.coahr.thoughtrui.mvp.view.home.ProjectTemplate;
 import com.coahr.thoughtrui.mvp.view.mydata.ChangePasswordFragment;
+import com.coahr.thoughtrui.mvp.view.action_plan.Fragment_action_projects;
 import com.coahr.thoughtrui.mvp.view.mydata.Fragment_Feedback;
 import com.coahr.thoughtrui.mvp.view.mydata.LoginFragment;
 import com.coahr.thoughtrui.mvp.view.mydata.UploadOptions;
@@ -86,7 +88,7 @@ public abstract class AllFragmentModule {
     @ContributesAndroidInjector()
     abstract Fragment_Topics Fragment_TopicsInjector();
 
-    @ContributesAndroidInjector(modules = ReviewFragment_Module.class)
+    @ContributesAndroidInjector()
     abstract ReviewedFragment ReviewFragmentInjector();
 
     @ContributesAndroidInjector()
@@ -133,4 +135,10 @@ public abstract class AllFragmentModule {
 
     @ContributesAndroidInjector()
     abstract UploadOptions uploadOptions();
+
+    @ContributesAndroidInjector()
+    abstract Fragment_action_projects fragmentActionProjects();
+
+    @ContributesAndroidInjector()
+    abstract Fragment_Action_plan_presentation_1 fragment_action_plan_presentation_1();
 }

@@ -136,6 +136,8 @@ public class Constants {
 
     public static final int BaseApp=21; //App
 
+    public static final int fragment_action_pan=22; //行动报表
+
     /**
      * PreferenceUtils键
      */
