@@ -1,5 +1,7 @@
 package com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter;
 
+import com.contrarywind.interfaces.IPickerViewData;
+
 import java.util.List;
 
 /**
@@ -54,7 +56,7 @@ public class SubjectListBean {
             this.questionList = questionList;
         }
 
-        public static class QuestionListRoot {
+        public static class QuestionListRoot implements IPickerViewData {
             /**
              * id : 5301df6a0f5f451a93a03a705a6280a3
              * name : 网络营销
@@ -99,7 +101,12 @@ public class SubjectListBean {
                 this.value = value;
             }
 
-            public static class QuesListBean_1 {
+            @Override
+            public String getPickerViewText() {
+                return name;
+            }
+
+            public static class QuesListBean_1  {
                 /**
                  * id : 257896794cc04aacba7babd317dd3b6b
                  * title : 是否开通微信公众号，并每周至少转发5条华晨雷诺金杯官方微信
@@ -123,9 +130,11 @@ public class SubjectListBean {
                 public void setTitle(String title) {
                     this.title = title;
                 }
+
+
             }
 
-            public static class valueBean {
+            public static class valueBean implements IPickerViewData {
                 private String id;
                 private String name;
                 private List<QuesListBean_2> quesList;
@@ -152,6 +161,11 @@ public class SubjectListBean {
 
                 public void setQuesList_2(List<QuesListBean_2> quesList_2) {
                     this.quesList = quesList_2;
+                }
+
+                @Override
+                public String getPickerViewText() {
+                    return name;
                 }
 
                 public static class QuesListBean_2 {

@@ -12,13 +12,30 @@
         android:layout_height="wrap_content">
 
     </com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar>
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/plan_recycler"
+    <View
+        android:id="@+id/v_1"
         android:layout_below="@+id/plan_tittle"
         android:layout_width="match_parent"
+        android:layout_height="1sp"
+        android:background="@color/material_grey_100"/>
+    <LinearLayout
+        android:background="@color/colorWhite"
+        android:layout_below="@+id/v_1"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:layout_above="@+id/plan_bottom_parts">
-    </androidx.recyclerview.widget.RecyclerView>
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/plan_tab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </com.google.android.material.tabs.TabLayout>
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/plan_viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </androidx.viewpager.widget.ViewPager>
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_alignParentBottom="true"

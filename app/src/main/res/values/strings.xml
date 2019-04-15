@@ -214,9 +214,12 @@
     <string name="subject_list_tittle">题目列表</string>
     <string name="subject_list_select">选择</string>
 
-    <!--com.coahr.thoughtrui.mvp.view.action_plan.Fragment_action_projectsstring -->
+    <!--com.coahr.thoughtrui.mvp.view.action_plan.Fragment_action_projects-->
     <string name="plan_tittle">行动计划提报</string>
     <string name="plan_submit_action_plan_presentation">提交报表</string>
+    <string name="plan_viewpager_tittle_1">未完成</string>
+    <string name="plan_viewpager_tittle_2">已完成</string>
+    <string name="plan_viewpager_tittle_3">全部</string>
 
     <!--com.coahr.thoughtrui.mvp.view.action_plan.Fragment_Action_plan_presentation_1-->
     <string name="plan_1_tittle">提报中</string>
@@ -274,6 +277,7 @@
     <string name="toast_34">请输入有效内容</string>
     <string name="toast_35">请输入50字之内的内容</string>
     <string name="toast_36">暂无消息</string>
+    <string name="toast_37">请先选择经销商名称</string>
 
    
     
@@ -313,6 +317,7 @@
     <string name="phrases_25">删除图片失败</string>
     <string name="phrases_26">获取存储大小失败</string>
     <string name="phrases_27">没有读取权限</string>
+    <string name="phrases_28">指标列表</string>
 
     <!--dialog_text-->
     <string name="dialog_tittle_2">新的项目</string>

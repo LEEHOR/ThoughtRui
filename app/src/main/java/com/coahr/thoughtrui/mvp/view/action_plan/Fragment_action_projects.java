@@ -7,10 +7,12 @@ import android.widget.RelativeLayout;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
+import com.coahr.thoughtrui.mvp.view.action_plan.Adapter.plan_ViewPagerAdapter;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
+import com.google.android.material.tabs.TabLayout;
 import com.landptf.view.ButtonM;
 
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -23,14 +25,17 @@ import butterknife.OnClick;
 public class Fragment_action_projects extends BaseFragment {
     @BindView(R.id.plan_tittle)
     MyTittleBar planTittle;
-    @BindView(R.id.plan_recycler)
-    RecyclerView planRecycler;
     @BindView(R.id.plan_top_line)
     View planTopLine;
     @BindView(R.id.plan_action_pre)
     ButtonM planActionPre;
     @BindView(R.id.plan_bottom_parts)
     RelativeLayout planBottomParts;
+    @BindView(R.id.plan_tab)
+    TabLayout planTab;
+    @BindView(R.id.plan_viewPager)
+    ViewPager planViewPager;
+    private plan_ViewPagerAdapter plan_viewPagerAdapter;
 
     @Override
     public BaseContract.Presenter getPresenter() {
@@ -59,6 +64,11 @@ public class Fragment_action_projects extends BaseFragment {
                 _mActivity.onBackPressed();
             }
         });
+        plan_viewPagerAdapter = new plan_ViewPagerAdapter(getChildFragmentManager());
+        planViewPager.setAdapter(plan_viewPagerAdapter);
+        planTab.setupWithViewPager(planViewPager);
+        planViewPager.setCurrentItem(0);
+
     }
 
     @Override

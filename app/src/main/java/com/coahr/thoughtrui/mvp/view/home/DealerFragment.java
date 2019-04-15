@@ -252,7 +252,7 @@ public class DealerFragment extends BaseFragment<ProjectDealer_c.Presenter> impl
     }
 
     /**
-     * 将json解析
+     * 将城市json解析
      *
      * @param result
      * @return

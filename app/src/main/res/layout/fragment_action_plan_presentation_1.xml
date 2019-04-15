@@ -232,7 +232,6 @@
 
                 <TextView
                     android:padding="@dimen/dp_10"
-                    android:drawableRight="@mipmap/down"
                     android:id="@+id/plan_quota_2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
