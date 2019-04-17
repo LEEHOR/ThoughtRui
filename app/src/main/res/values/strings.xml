@@ -128,7 +128,7 @@
     <string name="re_start_spread">展开</string>
     <string name="re_start_close">关闭</string>
     <string name="re_start_cancel">取消</string>
-    
+
     <!--ReviewedFragment-->
     <string name="review_fragment_not_null">不能为空</string>
     <string name="review_fragment_tittle">第%1$d项</string>
@@ -167,7 +167,7 @@
     <string name="change_password_fragment_new_pass_toast">请输入大于4位字符的新密码</string>
     <string name="change_password_fragment_two_password_different">两次密码不相同</string>
 
-<!--com.coahr.thoughtrui.mvp.view.mydata.Fragment_Feedback-->
+    <!--com.coahr.thoughtrui.mvp.view.mydata.Fragment_Feedback-->
     <string name="feed_back_help_and_feedback">帮助与反馈</string>
     <string name="feed_back_help_and_feedback_select">（必选）请选择你想反馈的问题</string>
     <string name="feed_back_question_details">请补充详细问题和意见</string>
@@ -195,10 +195,10 @@
     <string name="my_fragment_10">帮助与反馈</string>
     <string name="my_fragment_11">退出登录</string>
     <string name="my_fragment_12">数据上传设置</string>
-    <string name="my_fragment_13">行动报表</string>
+    <string name="my_fragment_13">行动提报计划</string>
 
     <!--EvaluateInputDialog-->
-    <string name="input_send_comments">评论</string>
+    <string name="input_send_comments">完成</string>
 
     <!--Fill_in_blankDialog-->
     <string name="fill_in_score">输入评分</string>
@@ -209,10 +209,14 @@
     <string name="success_dialog_date">暂无数据</string>
     <string name="success_dialog_date_size">%1$d条数据,%2$d个附件未上传</string>
     <string name="success_dialog_end">终于%1$s</string>
-    
+
     <!--com.coahr.thoughtrui.mvp.view.subjectList.Fragment_Topics-->
     <string name="subject_list_tittle">题目列表</string>
     <string name="subject_list_select">选择</string>
+
+    <!--com.coahr.thoughtrui.mvp.view.action_plan.Fragment_action_plan_viewPager-->
+    <string name="plan_viewpager_1_1">计划完成日期:</string>
+    <string name="plan_viewpager_1_2">提报时间:</string>
 
     <!--com.coahr.thoughtrui.mvp.view.action_plan.Fragment_action_projects-->
     <string name="plan_tittle">行动计划提报</string>
@@ -234,6 +238,30 @@
     <string name="plan_1_9">图片</string>
     <string name="plan_1_10">收回</string>
     <string name="plan_1_11">下一步</string>
+    <string name="plan_1_12">report/%1$s/%2$s/before</string>
+
+    <!--com.coahr.thoughtrui.mvp.view.action_plan.Fragment_Action_plan_presentation_2-->
+    <string name="plan_2_1">提报中</string>
+    <string name="plan_2_2">原因诊断</string>
+    <string name="plan_2_3">具体改善措施</string>
+    <string name="plan_2_4">计划完成日期</string>
+    <string name="plan_2_5">计划持续时间</string>
+    <string name="plan_2_6">执行人</string>
+    <string name="plan_2_7">是否完成</string>
+    <string name="plan_2_8">提交</string>
+    <string name="plan_2_9">·%1$s%2$s</string>
+    <string-array name="select_plan">
+        <item>是</item>
+        <item>否 </item>
+    </string-array>
+    <string name="plan_2_10">未完成原因</string>
+    <string name="plan_2_11">%1$d天</string>
+    <string name="plan_2_12">report/%1$s/%2$s/after</string>
+    <string name="plan_2_13">原因诊断不能为空</string>
+    <string name="plan_2_14">具体改善措施不能为空</string>
+    <string name="plan_2_15">计划时间不能为空</string>
+
+
 
     <!--语言选择-->
     <string name="language_cn">中文</string>
@@ -275,12 +303,11 @@
     <string name="toast_32">修改数据库失败</string>
     <string name="toast_33">上传成功</string>
     <string name="toast_34">请输入有效内容</string>
-    <string name="toast_35">请输入50字之内的内容</string>
+    <string name="toast_35">请输入%1$d字之内的内容</string>
     <string name="toast_36">暂无消息</string>
     <string name="toast_37">请先选择经销商名称</string>
-
-   
-    
+    <string name="toast_38">请选择指标</string>
+    <string name="toast_39">上传成功</string>
 
     <!--控件_按钮-->
     <string name="btn_1">登录</string>
@@ -318,6 +345,11 @@
     <string name="phrases_26">获取存储大小失败</string>
     <string name="phrases_27">没有读取权限</string>
     <string name="phrases_28">指标列表</string>
+    <string name="phrases_29">数据为空,点击重新加载</string>
+    <string name="phrases_30">数据加载出错,点击重新加载</string>
+    <string name="phrases_31">请输入100字以内</string>
+    <string name="phrases_32">请输入300字以内</string>
+    <string name="phrases_33">拍照</string>
 
     <!--dialog_text-->
     <string name="dialog_tittle_2">新的项目</string>

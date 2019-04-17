@@ -2,40 +2,52 @@ package com.coahr.thoughtrui.mvp.view.action_plan;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
+import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.sdk.android.oss.ClientConfiguration;
+import com.alibaba.sdk.android.oss.OSSClient;
+import com.alibaba.sdk.android.oss.common.auth.OSSAuthCredentialsProvider;
+import com.alibaba.sdk.android.oss.model.OSSObjectSummary;
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.R;
+import com.coahr.thoughtrui.Utils.DensityUtils;
+import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.Utils.LoadCity.JsonBean;
 import com.coahr.thoughtrui.Utils.LoadCity.JsonFileReader;
+import com.coahr.thoughtrui.Utils.TimeUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.Fragment_action_plan_pre_1_c;
+import com.coahr.thoughtrui.mvp.model.ApiContact;
+import com.coahr.thoughtrui.mvp.model.Bean.ReportList;
 import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
 import com.coahr.thoughtrui.mvp.presenter.Fragment_action_plan_pre_1_P;
+import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
 import com.coahr.thoughtrui.mvp.view.startProject.adapter.PagerFragmentPhotoAdapter;
 import com.coahr.thoughtrui.mvp.view.startProject.adapter.PagerFragmentPhotoListener;
 import com.coahr.thoughtrui.widgets.AltDialog.PhotoAlbumDialogFragment;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
 import com.google.gson.Gson;
-import com.landptf.view.ButtonM;
 import com.socks.library.KLog;
 
 import org.json.JSONArray;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,22 +92,22 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
     @BindView(R.id.plan_quota_2)
     TextView planQuota2;
     @BindView(R.id.plan_take_photo)
-    ImageView planTakePhoto;
-    @BindView(R.id.plan_recyclerView)
+    TextView planTakePhoto;
+    @BindView(R.id.plan_photo_recyclerView)
     RecyclerView planRecyclerView;
     @BindView(R.id.plan_1_next)
-    ButtonM plan1Next;
+    TextView plan1Next;
+    @BindView(R.id.plan_photo_view)
+    LinearLayout planPhotoView;
     /**
      * 经销商名称
      */
     private ArrayList<String> project_name = new ArrayList<>();
-    private String select_projectId;
     /**
      * 指标联动
      */
     private ArrayList<SubjectListBean.DataBean.QuestionListRoot> quotaList_1 = new ArrayList<>();
     private ArrayList<ArrayList<SubjectListBean.DataBean.QuestionListRoot.valueBean>> quotaList_2 = new ArrayList<>();
-    private String quota_1_id,getQuota_2_id;
     /*
      省市区三级列表联动数据结构
       */
@@ -108,9 +120,11 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
     private static final int MSG_LOAD_DATA = 0x0001;
     private static final int MSG_LOAD_SUCCESS = 0x0002;
     private static final int MSG_LOAD_FAILED = 0x0003;
+    private static final int MSG_LOAD_OSS = 0x0004;
+    private static final int MSG_LOAD_PIC = 0x0005;
     private boolean isLoaded;
     @SuppressLint("HandlerLeak")
-    private Handler mHandler = new Handler() {
+    private Handler mHandler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_LOAD_DATA:
@@ -135,6 +149,9 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
                 case MSG_LOAD_FAILED:
                     isLoaded = false;
                     break;
+                case MSG_LOAD_OSS:
+                    p.getBeforePic(ossClient, projectId, levelId);
+                    break;
             }
         }
     };
@@ -143,16 +160,36 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
      */
     private GridLayoutManager gridLayoutManager;
     private PagerFragmentPhotoAdapter adapter;
-    private ArrayList<String> imageList=new ArrayList<>();
+    private ArrayList<String> Before_imageList_oss = new ArrayList<>();
+    private ArrayList<String> select_pic=new ArrayList<>();
+    private ArrayList<String> resultList = new ArrayList<>();
     private PhotoAlbumDialogFragment photoAlbumDialogFragment;
+    private ReportList.DataBean.AllListBean reportList;
+    private OSSClient ossClient;
+    private OSSAuthCredentialsProvider credentialProvider;
+    private String projectId;  //项目Id
+    private String levelId;
+    private int type;  //判断是否为更新操作 1.首次 2.更新
+    private String executor;  //监督人
+    private String address; //省份
+    private String name;   //模板
+    private String dname;  //经销商名称
+    private String quota1;
+    private String quota2;
+    private String targetDate;
 
     @Override
     public Fragment_action_plan_pre_1_c.Presenter getPresenter() {
         return p;
     }
 
-    public static Fragment_Action_plan_presentation_1 newInstance() {
-        return new Fragment_Action_plan_presentation_1();
+    public static Fragment_Action_plan_presentation_1 newInstance(ReportList.DataBean.AllListBean allListBean, int type) {
+        Fragment_Action_plan_presentation_1 fragmentActionPlanPresentation1 = new Fragment_Action_plan_presentation_1();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("ReportList", allListBean);
+        bundle.putInt("type", type);
+        fragmentActionPlanPresentation1.setArguments(bundle);
+        return fragmentActionPlanPresentation1;
     }
 
     @Override
@@ -162,11 +199,37 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
 
     @Override
     public void initView() {
-        plan1Next.setFillet(true);
-        plan1Next.setRadius(5);
-        plan1Next.setBackColor(getResources().getColor(R.color.material_blue_900));
-        plan1Next.setTextColor(getResources().getColor(R.color.colorWhite));
-        plan1Next.setShape(GradientDrawable.RECTANGLE);
+        planPhotoView.setVisibility(View.VISIBLE);
+        if (getArguments() != null) {
+            reportList = (ReportList.DataBean.AllListBean) getArguments().getParcelable("ReportList");
+            type = getArguments().getInt("type");
+        }
+        if (reportList != null) {
+            targetDate = reportList.getTargetDate();
+            executor = reportList.getExecutor();
+            address = reportList.getAddress();
+            select_city = FileIOUtils.getE(address, "省");
+            projectId = reportList.getProjectId();
+            levelId = reportList.getLevelId();
+
+            name = reportList.getName();
+            dname = reportList.getDname();
+            quota1 = reportList.getQuota1();
+            quota2 = reportList.getQuota2();
+
+
+            planPlanTime.setText(targetDate);
+            planPlaner.setText(executor);
+            planProvince.setText(address);
+            planDealerName.setText(dname);
+            planTemplet.setText(name);
+            planQuota1.setText(quota1);
+            planQuota2.setText(quota2 != null ? quota2 : "");
+        } else {
+            planPlanTime.setText(TimeUtils.getStingYMD(System.currentTimeMillis()));
+            planPlaner.setText(Constants.user_name);
+        }
+
         plan1Tittle.getLeftIcon().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -177,12 +240,13 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
         gridLayoutManager = new GridLayoutManager(BaseApplication.mContext, 3);
         planRecyclerView.setLayoutManager(gridLayoutManager);
         planRecyclerView.setAdapter(adapter);
+        planRecyclerView.addItemDecoration(new SpacesItemDecoration(DensityUtils.dp2px(BaseApplication.mContext, 5), DensityUtils.dp2px(BaseApplication.mContext, 5)), getResources().getColor(R.color.colorWhite));
         adapter.setIsDel(true);
         adapter.setListener(new PagerFragmentPhotoListener() {
             @Override
             public void onClick(List<String> imagePathList, int position) {
                 photoAlbumDialogFragment = PhotoAlbumDialogFragment.newInstance();
-                photoAlbumDialogFragment.setImgList(imageList);
+                photoAlbumDialogFragment.setImgList(adapter.getData());
                 photoAlbumDialogFragment.setFirstSeePosition(position);
                 FragmentManager fragmentManager = getFragmentManager();
                 photoAlbumDialogFragment.show(fragmentManager, TAG);
@@ -190,20 +254,31 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
 
             @Override
             public void onLongClick(List<String> imagePathList, int position) {
-
             }
 
             @Override
             public void onDel(List<String> imagePathList, int position) {
-                imageList.remove(position);
+                imagePathList.remove(position);
+                adapter.setImageList(imagePathList);
                 adapter.notifyItemRemoved(position);
-                adapter.setImageList(imageList);
             }
         });
     }
 
     @Override
     public void initData() {
+        getSTS_OSS();
+        if (reportList != null) {
+            planPlanTime.setText(reportList.getTargetDate());
+            planPlaner.setText(reportList.getUname());
+            planProvince.setText(reportList.getAddress());
+            planDealerName.setText(reportList.getDname());
+            planTemplet.setText(reportList.getName());
+            planQuota1.setText(reportList.getQuota1());
+            planQuota2.setText(reportList.getQuota2() != null ? reportList.getQuota2() : "");
+            projectId = reportList.getProjectId();
+            levelId = reportList.getLevelId();
+        }
 
     }
 
@@ -219,7 +294,7 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
             case R.id.plan_templet:
                 break;
             case R.id.plan_quota_1:
-                if (select_projectId != null) {
+                if (projectId != null) {
                     getQuota();
                 } else {
                     ToastUtils.showLong(getResources().getString(R.string.toast_37));
@@ -228,13 +303,23 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
             case R.id.plan_quota_2:
                 break;
             case R.id.plan_take_photo:
-                openMulti(10);
+                openMulti(10 - adapter.getData().size());
                 break;
             case R.id.plan_1_next:
+                if (select_city == null) {
+                    ToastUtils.showLong(getResources().getString(R.string.toast_7));
+                } else if (projectId == null) {
+                    ToastUtils.showLong(getResources().getString(R.string.toast_37));
+                } else if (levelId == null) {
+                    ToastUtils.showLong(getResources().getString(R.string.toast_38));
+                } else if (adapter.getData().size()<=0) {
+                    ToastUtils.showLong(getResources().getString(R.string.toast_28));
+                } else {
+                    start(Fragment_Action_plan_presentation_2.newInstance(reportList, projectId, levelId, (ArrayList<String>) adapter.getData()));
+                }
                 break;
         }
     }
-
 
     @Override
     public void getProjectNameSuccess(List<ProjectsDB> projectsDBList) {
@@ -260,6 +345,70 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
         ToastUtils.showLong(failure);
     }
 
+    @Override
+    public void getBeforePicSuccess(List<OSSObjectSummary> ossObjectSummaries) {
+        if (ossObjectSummaries != null && ossObjectSummaries.size() > 0) {
+            resultList.clear();
+            Collections.sort(ossObjectSummaries, new Comparator<OSSObjectSummary>() {
+                @Override
+                public int compare(OSSObjectSummary ossObjectSummary, OSSObjectSummary t1) {
+                    int i = ossObjectSummary.getLastModified().compareTo(t1.getLastModified());
+                    if (i > 0) {
+                        return 1;
+                    } else if (i < 0) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                }
+            });
+            if (ossObjectSummaries.size() >= 10) {
+                for (int i = 0; i < 10; i++) {
+                    if (ossObjectSummaries.get(i).getSize() > 0) {
+                        resultList.add(ossObjectSummaries.get(i).getKey());
+                    }
+                }
+            } else {
+                for (int i = 0; i < ossObjectSummaries.size(); i++) {
+                    if (ossObjectSummaries.get(i).getSize() > 0) {
+                        resultList.add(ossObjectSummaries.get(i).getKey());
+                    }
+                }
+            }
+
+            p.getBeforePicUrl(ossClient, resultList);
+        }
+    }
+
+    @Override
+    public void getBeforePicFailure(String failure) {
+
+    }
+
+    @Override
+    public void getBeforePicUrlSuccess(List<String> picUrlList) {
+        Before_imageList_oss.clear();
+        Before_imageList_oss.addAll(picUrlList);
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                adapter.setNewData(picUrlList);
+                adapter.setImageList(picUrlList);
+            }
+        });
+
+    }
+
+    @Override
+    public void getBeforePicUrlFailure(String failure) {
+
+    }
+
+    @Override
+    public void putBeforeUploadCallBack(int TotalSize, int successSize, int failureSize) {
+
+    }
+
     //====================================================经销商名称==========================================
     private void showProjectName(List<ProjectsDB> projectsDBList) {
         project_name.clear();
@@ -269,7 +418,7 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
         OptionsPickerView pvOption_project = new OptionsPickerBuilder(_mActivity, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
-                select_projectId = projectsDBList.get(options1).getPid();
+                projectId = projectsDBList.get(options1).getPid();
                 planDealerName.setText(project_name.get(options1));
             }
         })
@@ -289,7 +438,7 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
      */
     private void getQuota() {
         Map map = new HashMap();
-        map.put("projectId", select_projectId);
+        map.put("projectId", projectId);
         map.put("sessionid", Constants.sessionId);
         p.getSubjectList(map);
     }
@@ -311,10 +460,10 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
                 planQuota1.setText(quotaList_1.get(options1).getPickerViewText());
-                quota_1_id=quotaList_1.get(options1).getId();
+                levelId = quotaList_1.get(options1).getId();
                 if (quotaList_2 != null && quotaList_2.size() > 0) {
                     planQuota2.setText(quotaList_2.get(options1).get(options2).getPickerViewText());
-                    quota_1_id=quotaList_2.get(options1).get(options2).getId();
+                    levelId = quotaList_2.get(options1).get(options2).getId();
                 }
             }
         })
@@ -328,7 +477,7 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
 
         } else {
             pvOption_quota.setPicker(quotaList_1);
-       }
+        }
         pvOption_quota.show();
     }
 //==================================================城市列表选择器=============================================
@@ -449,7 +598,7 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
     private void openMulti(int count) {
         setPath();
         RxGalleryFinal rxGalleryFinal = RxGalleryFinal
-                .with(_mActivity)
+                .with(getActivity())
                 .image()
                 .multiple();
         rxGalleryFinal.maxSize(count)
@@ -457,15 +606,17 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
                 .subscribe(new RxBusResultDisposable<ImageMultipleResultEvent>() {
                     @Override
                     protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
-                        List<MediaBean> mediaBeanList = imageMultipleResultEvent.getResult();
-                        if (mediaBeanList != null && mediaBeanList.size() > 0) {
-                            imageList.clear();
-                            for (int i = 0; i <mediaBeanList.size() ; i++) {
-                                imageList.add(mediaBeanList.get(i).getOriginalPath());
-                            }
-                            adapter.setNewData(imageList);
-                            adapter.setImageList(imageList);
-                        }
+                        select_pic.clear();
+                                List<MediaBean> mediaBeanList = imageMultipleResultEvent.getResult();
+                                if (mediaBeanList != null && mediaBeanList.size() > 0) {
+                                    for (int i = 0; i < mediaBeanList.size(); i++) {
+                                        select_pic.add(mediaBeanList.get(i).getOriginalPath());
+                                    }
+                                    List<String> data = adapter.getData();
+                                     data.addAll(select_pic);
+                                    adapter.setImageList(data);
+                                    adapter.setNewData(data);
+                                }
 
                     }
 
@@ -477,6 +628,7 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
                 })
                 .openGallery();
     }
+
     /**
      * 设置 照片路径 和 裁剪路径
      */
@@ -486,10 +638,27 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
     }
 
     /**
-     * 设置视频保存路径
+     * OSS对象实例
      */
-  /*  private void setPath() {
-        RxGalleryFinalApi.setImgSaveRxDir(new File(Constants.SAVE_DIR_TAKE_PHOTO));
-        RxGalleryFinalApi.setImgSaveRxCropDir(new File(Constants.SAVE_DIR_ZIP_PHOTO));//裁剪会自动生成路径；也可以手动设置裁剪的路径；
-    }*/
+    private void getSTS_OSS() {
+        if (credentialProvider == null) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    credentialProvider = new OSSAuthCredentialsProvider(ApiContact.STSSERVER);
+                    ClientConfiguration conf = new ClientConfiguration();
+                    conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
+                    conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
+                    conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
+                    conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
+                    ossClient = new OSSClient(_mActivity, ApiContact.endpoint, credentialProvider, conf);
+                    p.getBeforePic(ossClient, projectId, levelId);
+                }
+            }).start();
+        } else {
+            p.getBeforePic(ossClient, projectId, levelId);
+
+        }
+
+    }
 }

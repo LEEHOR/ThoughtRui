@@ -120,7 +120,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                 case UPDATE_PROGRESS:
                     progressBar.setMax(msg.arg2);
                     progressBar.setProgress(msg.arg1);
-                    tv_tittle.setText(msg.obj.toString()!=null ?msg.obj.toString():"");
+                    tv_tittle.setText(msg.obj!=null ?msg.obj.toString():"");
                     break;
                 case UPDATE_TITTLE:
                     tv_message_tittle.setText(msg.obj.toString());
@@ -312,7 +312,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
         /*private int currentSize_progress;
         private int totalSize_progress;
         private String info_progress;*/
-        progressBar.setMax(totalSize);
+       // progressBar.setMax(totalSize);
          Message mes = mHandler.obtainMessage(UPDATE_PROGRESS, info);
                      mes.arg1 = currentSize;
                      mes.arg2 = totalSize;

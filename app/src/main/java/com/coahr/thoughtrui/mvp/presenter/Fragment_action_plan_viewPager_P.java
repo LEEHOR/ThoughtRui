@@ -30,16 +30,22 @@ public class Fragment_action_plan_viewPager_P extends BasePresenter<Fragment_act
 
     @Override
     public void getPlanList(Map<String, Object> map) {
-
+        if (mModle != null) {
+            mModle.getPlanList(map);
+        }
     }
 
     @Override
     public void getPlanListSuccess(ReportList reportList) {
-
+        if (getView() != null) {
+            getView().getPlanListSuccess(reportList);
+        }
     }
 
     @Override
     public void getPlanListFailure(String failure) {
-
+        if (getView() != null) {
+            getView().getPlanListFailure(failure);
+        }
     }
 }

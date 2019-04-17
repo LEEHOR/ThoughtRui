@@ -1,17 +1,25 @@
 package com.coahr.thoughtrui.mvp.view.action_plan;
 
 import android.graphics.drawable.GradientDrawable;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
+import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_report;
+import com.coahr.thoughtrui.mvp.model.Bean.isCompleteBean;
 import com.coahr.thoughtrui.mvp.view.action_plan.Adapter.plan_ViewPagerAdapter;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
 import com.google.android.material.tabs.TabLayout;
 import com.landptf.view.ButtonM;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -36,6 +44,7 @@ public class Fragment_action_projects extends BaseFragment {
     @BindView(R.id.plan_viewPager)
     ViewPager planViewPager;
     private plan_ViewPagerAdapter plan_viewPagerAdapter;
+    private boolean canReport;
 
     @Override
     public BaseContract.Presenter getPresenter() {
@@ -75,9 +84,29 @@ public class Fragment_action_projects extends BaseFragment {
     public void initData() {
 
     }
-
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
     @OnClick(R.id.plan_action_pre)  //填写行动计划报表
     public void onViewClicked() {
-        start(Fragment_Action_plan_presentation_1.newInstance());
+        if (canReport) {
+            start(Fragment_Action_plan_presentation_1.newInstance(null,1));
+        }
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void Event_report(EvenBus_report report) {
+        canReport = report.isCanReport();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 }

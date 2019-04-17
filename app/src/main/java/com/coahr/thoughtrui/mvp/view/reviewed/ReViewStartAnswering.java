@@ -155,7 +155,7 @@ public class ReViewStartAnswering extends BaseFragment_not_padding<ReViewStartAn
     private String remark;
     private PhotoAlbumDialogFragment photoAlbumDialogFragment;
     //评论输入窗口
-    EvaluateInputDialogFragment dialogFragment = EvaluateInputDialogFragment.newInstance();
+    EvaluateInputDialogFragment dialogFragment = EvaluateInputDialogFragment.newInstance(30);
     //是否处于删除
     private boolean isDeletePic;
     private boolean isPhotos;

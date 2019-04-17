@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/item_frame"
+    app:cardCornerRadius="@dimen/dp_5"
+    android:elevation="0dp"
     android:layout_width="match_parent"
     android:layout_height="80dp">
-    <ImageView
-        android:layout_gravity="center"
-        android:id="@+id/photo_image"
-        android:scaleType="centerCrop"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-    <ImageView
-        android:id="@+id/photo_image_de"
-        android:visibility="gone"
-        android:scaleType="centerCrop"
-        android:src="@mipmap/shanchu"
-        android:layout_gravity="end|top"
-        android:layout_width="@dimen/dp_20"
-        android:layout_height="@dimen/dp_20" />
-</FrameLayout>
+  <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
+      <ImageView
+          android:layout_gravity="center"
+          android:id="@+id/photo_image"
+          android:scaleType="centerCrop"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent" />
+      <ImageView
+          android:id="@+id/photo_image_de"
+          android:visibility="gone"
+          android:scaleType="centerCrop"
+          android:src="@mipmap/shanchu"
+          android:layout_gravity="end|top"
+          android:layout_width="@dimen/dp_20"
+          android:layout_height="@dimen/dp_20" />
+  </FrameLayout>
+
+</androidx.cardview.widget.CardView>

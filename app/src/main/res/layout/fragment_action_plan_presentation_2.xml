@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar
+        android:id="@+id/plan_2_tittle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tittle="@string/plan_2_1" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/material_grey_100"
+                android:padding="@dimen/edge_margin"
+                android:text="@string/plan_2_2"
+                android:textColor="#333333"
+                android:textSize="@dimen/dp_14" />
+
+            <TextView
+                android:id="@+id/plan_2_tv_cause_diagnosis"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorWhite"
+                android:gravity="top"
+                android:hint="@string/phrases_31"
+                android:minLines="5"
+                android:padding="@dimen/dp_5"
+                android:textColor="#333333" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/material_grey_100"
+                android:padding="@dimen/edge_margin"
+                android:text="@string/plan_2_3"
+                android:textColor="#333333"
+                android:textSize="@dimen/dp_14" />
+
+            <TextView
+                android:id="@+id/plan_2_tv_corrective_actions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorWhite"
+                android:gravity="top"
+                android:hint="@string/phrases_32"
+                android:minLines="5"
+                android:padding="@dimen/dp_5"
+                android:textColor="#333333" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/material_grey_100"
+                android:padding="@dimen/edge_margin"
+                android:text="@string/plan_2_4"
+                android:textColor="#333333"
+                android:textSize="@dimen/dp_14" />
+
+            <TextView
+                android:id="@+id/plan_2_tv_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorWhite"
+                android:drawableRight="@mipmap/down"
+                android:padding="@dimen/edge_margin" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/material_grey_100"
+                android:padding="@dimen/edge_margin"
+                android:text="@string/plan_2_5"
+                android:textColor="#333333"
+                android:textSize="@dimen/dp_14" />
+
+            <TextView
+                android:id="@+id/plan_2_tv_time_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorWhite"
+                android:padding="@dimen/edge_margin" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/material_grey_100"
+                android:padding="@dimen/edge_margin"
+                android:text="@string/plan_2_6"
+                android:textColor="#333333"
+                android:textSize="@dimen/dp_14" />
+
+            <TextView
+                android:id="@+id/plan_2_tv_executor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorWhite"
+                android:padding="@dimen/edge_margin" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/material_grey_100"
+                android:padding="@dimen/edge_margin"
+                android:text="@string/plan_2_7"
+                android:textColor="#333333"
+                android:textSize="@dimen/dp_14" />
+
+            <Spinner
+                android:id="@+id/plan_2_sp_finished"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorWhite"
+                android:entries="@array/select_plan"
+                android:padding="@dimen/edge_margin" />
+
+            <include layout="@layout/layout_plan_presentation_photo" />
+
+            <include layout="@layout/layout_plan_presentation_recycler" />
+
+            <TextView
+                android:id="@+id/plan_2_tv_submit"
+                android:layout_marginBottom="@dimen/dp_20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_60"
+                android:layout_marginTop="@dimen/dp_20"
+                android:layout_marginRight="@dimen/dp_60"
+                android:background="@drawable/bg_blue_white_frame_background"
+                android:gravity="center"
+                android:padding="@dimen/dp_10"
+                android:text="@string/plan_2_8"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/dp_14" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

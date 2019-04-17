@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="@dimen/edge_margin"
+    android:visibility="visible"
+    android:id="@+id/plan_photo_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.cardview.widget.CardView
+       app:cardCornerRadius="@dimen/dp_5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/edge_margin">
+
+            <TextView
+                android:id="@+id/plan_tv_6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:gravity="center"
+                android:text="@string/plan_1_8"
+                android:textColor="#333333" />
+
+            <TextView
+                android:paddingLeft="100dp"
+                android:paddingRight="100dp"
+                android:paddingTop="@dimen/dp_10"
+                android:paddingBottom="@dimen/dp_10"
+                android:gravity="center"
+                android:background="@drawable/bg_gray_2_white_frame_background"
+                android:drawableLeft="@mipmap/takephotos"
+                android:drawablePadding="@dimen/dp_10"
+                android:text="@string/phrases_33"
+                android:textColor="@color/colorWhite"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/plan_tv_6"
+                android:id="@+id/plan_take_photo"
+                android:layout_marginTop="@dimen/dp_20"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:drawableLeft="@mipmap/images"
+                android:drawablePadding="@dimen/dp_5"
+                android:id="@+id/plan_tv_7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/plan_take_photo"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="@dimen/dp_10"
+                android:gravity="center"
+                android:text="@string/plan_1_9"
+                android:textColor="#333333"
+                android:textSize="@dimen/dp_14" />
+
+            <TextView
+                android:id="@+id/plan_tv_8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/plan_take_photo"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="@dimen/dp_10"
+                android:gravity="center"
+                android:text="@string/plan_1_10"
+                android:textColor="@color/material_blue_500"
+                android:textSize="@dimen/dp_14" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/plan_photo_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/plan_tv_7"
+                android:layout_marginTop="@dimen/dp_5"
+                android:minHeight="100dp">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+</LinearLayout>

@@ -27,6 +27,8 @@
         android:layout_above="@+id/plan_bottom_parts">
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/plan_tab"
+            app:tabIndicatorColor="#333333"
+            app:tabTextAppearance="@style/TextAppearance.Design.Tab.Custom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </com.google.android.material.tabs.TabLayout>

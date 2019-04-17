@@ -1,16 +1,35 @@
 package com.coahr.thoughtrui.mvp.view.action_plan;
 
+import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.coahr.thoughtrui.R;
+import com.coahr.thoughtrui.Utils.ToastUtils;
+import com.coahr.thoughtrui.commom.Constants;
+import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.constract.Fragment_action_plan_viewPager_c;
+import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_report;
 import com.coahr.thoughtrui.mvp.model.Bean.ReportList;
 import com.coahr.thoughtrui.mvp.presenter.Fragment_action_plan_viewPager_P;
+import com.coahr.thoughtrui.mvp.view.action_plan.Adapter.item_plan_viewpager_adapter;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
+import me.yokeyword.fragmentation.SupportFragment;
 
 /**
  * @author Leehor
@@ -23,10 +42,25 @@ public class Fragment_action_plan_viewPager extends BaseChildFragment<Fragment_a
     Fragment_action_plan_viewPager_P p;
     @BindView(R.id.plan_viewpager_recycler)
     RecyclerView planViewpagerRecycler;
+    private int position;
+    private ArrayList<ReportList.DataBean.AllListBean> reportList_s = new ArrayList<>();
+    private item_plan_viewpager_adapter adapter;
+    private LinearLayoutManager linearLayoutManager;
+    private View empty;
+    private View error;
+    private boolean submitStatus;
 
     @Override
     public BaseContract.Presenter getPresenter() {
-        return null;
+        return p;
+    }
+
+    public static Fragment_action_plan_viewPager newInstance(int position) {
+        Fragment_action_plan_viewPager plan_viewPager = new Fragment_action_plan_viewPager();
+        Bundle bundle = new Bundle();
+        bundle.putInt("position", position);
+        plan_viewPager.setArguments(bundle);
+        return plan_viewPager;
     }
 
     @Override
@@ -37,20 +71,103 @@ public class Fragment_action_plan_viewPager extends BaseChildFragment<Fragment_a
     @Override
     public void initView() {
 
+        getReportList();
     }
 
     @Override
     public void initData() {
+        if (getArguments() != null) {
+            position = getArguments().getInt("position");
+        }
+        adapter = new item_plan_viewpager_adapter(reportList_s);
+        linearLayoutManager = new LinearLayoutManager(BaseApplication.mContext);
+        planViewpagerRecycler.setAdapter(adapter);
+        planViewpagerRecycler.setLayoutManager(linearLayoutManager);
+        empty = getLayoutInflater().inflate(R.layout.recycler_empty_view, (ViewGroup) planViewpagerRecycler.getParent(), false);
+        error = getLayoutInflater().inflate(R.layout.recycler_error_view, (ViewGroup) planViewpagerRecycler.getParent(), false);
+        empty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getReportList();
+            }
+        });
+        error.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getReportList();
+            }
+        });
 
+        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                ReportList.DataBean.AllListBean allListBean = (ReportList.DataBean.AllListBean) adapter.getItem(position);
+                ((SupportFragment) getParentFragment()).start(Fragment_Action_plan_presentation_1.newInstance(allListBean,2));
+            }
+        });
     }
 
     @Override
     public void getPlanListSuccess(ReportList reportList) {
+        if (reportList.getData() != null) {
+            submitStatus = reportList.getData().isSubmitStatus();
+            EventBus.getDefault().postSticky(new EvenBus_report(submitStatus));
+        }
+        reportList_s.clear();
+        if (position == 0) {  //已完成
+            if (reportList != null) {
+                if (reportList.getData() != null) {
+                    if (reportList.getData().getAllList() != null && reportList.getData().getAllList().size() > 0) {
+                        for (int i = 0; i < reportList.getData().getAllList().size(); i++) {
+                            if (reportList.getData().getAllList().get(i).getCompleteStatus() == 1) {
+                                reportList_s.add(reportList.getData().getAllList().get(i));
+                            }
+                        }
+                    }
+                }
+            }
+        } else if (position == 1) { //未完成
+            if (reportList != null) {
+                if (reportList.getData() != null) {
+                    if (reportList.getData().getAllList() != null && reportList.getData().getAllList().size() > 0) {
+                        for (int i = 0; i < reportList.getData().getAllList().size(); i++) {
+                            if (reportList.getData().getAllList().get(i).getCompleteStatus() == -1) {
+                                reportList_s.add(reportList.getData().getAllList().get(i));
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            if (reportList != null) {
+                if (reportList.getData() != null) {
+                    if (reportList.getData().getAllList() != null && reportList.getData().getAllList().size() > 0) {
+                        reportList_s.addAll(reportList.getData().getAllList());
+                    }
+                }
+            }
+        }
+        if (reportList_s.size() > 0) {
+            adapter.setNewData(reportList_s);
+        } else {
+            adapter.setEmptyView(empty);
+        }
 
     }
 
     @Override
     public void getPlanListFailure(String failure) {
-
+        ToastUtils.showLong(failure);
+        adapter.setEmptyView(error);
     }
+
+    /**
+     * 获取提报列表
+     */
+    private void getReportList() {
+        Map map = new HashMap();
+        map.put("sessionId", Constants.sessionId);
+        p.getPlanList(map);
+    }
+
 }

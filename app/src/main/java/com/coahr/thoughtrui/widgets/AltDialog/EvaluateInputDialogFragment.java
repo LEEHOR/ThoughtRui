@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.KeyBoardUtils;
+import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.widgets.Keyboard.SoftKeyboardStateHelper;
 import com.socks.library.KLog;
@@ -49,10 +50,16 @@ public class EvaluateInputDialogFragment extends AppCompatDialogFragment {
     private InputCallback inputCallback;
     private SoftKeyboardStateHelper softKeyboardStateHelper;
     private View view;
+    private int number_characters;
+    private String format_s;
 
 
-    public static EvaluateInputDialogFragment newInstance() {
-        return new EvaluateInputDialogFragment();
+    public static EvaluateInputDialogFragment newInstance(int Number_characters) {
+        EvaluateInputDialogFragment inputDialogFragment = new EvaluateInputDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("Number_characters", Number_characters);
+        inputDialogFragment.setArguments(bundle);
+        return inputDialogFragment;
     }
 
     @Nullable
@@ -68,6 +75,11 @@ public class EvaluateInputDialogFragment extends AppCompatDialogFragment {
 
 
     private void init() {
+        if (getArguments() != null) {
+            number_characters = getArguments().getInt("Number_characters", 30);
+        }
+        format_s = String.format(getResources().getString(R.string.toast_35), number_characters);
+        etInput.setHint(format_s);
         KeyBoardUtils.showKeybord(etInput, getActivity());
         softKeyboardStateHelper = new SoftKeyboardStateHelper(view);
         softKeyboardStateHelper.addSoftKeyboardStateListener(new SoftKeyboardStateHelper.SoftKeyboardStateListener() {
@@ -125,8 +137,9 @@ public class EvaluateInputDialogFragment extends AppCompatDialogFragment {
                     Toast.makeText(getActivity(), getString(R.string.toast_34), Toast.LENGTH_LONG).show();
                     return;
                 }
-                if (etInput.getText().length() > 50 || etInput.getText().length() <0) {
-                    Toast.makeText(getActivity(), getString(R.string.toast_35), Toast.LENGTH_LONG).show();
+                if (etInput.getText().length() > number_characters || etInput.getText().length() < 0) {
+
+                    ToastUtils.showLong(format_s);
                     return;
                 }
                 inputCallback.onInputSend(etInput.getText().toString(), this);

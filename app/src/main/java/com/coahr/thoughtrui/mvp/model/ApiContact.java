@@ -60,5 +60,9 @@ public class ApiContact {
     public static final String Rtsl="app/rta/send.htm";
     //通知
     public static final String notification="app/censor/list.htm";
+    //提报列表
+    public static final String plan_report_list="app/report/list.htm";
+    //提报提交
+    public static final String plan_report_submit="app/report/submit.htm";
 
 }

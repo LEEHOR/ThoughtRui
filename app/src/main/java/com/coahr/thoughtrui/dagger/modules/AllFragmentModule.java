@@ -4,6 +4,7 @@ import com.coahr.thoughtrui.dagger.components.BaseFragmentComponents;
 import com.coahr.thoughtrui.mvp.view.UMPush.Fragment_Umeng;
 import com.coahr.thoughtrui.mvp.view.WebView.Fragment_WebView;
 import com.coahr.thoughtrui.mvp.view.action_plan.Fragment_Action_plan_presentation_1;
+import com.coahr.thoughtrui.mvp.view.action_plan.Fragment_Action_plan_presentation_2;
 import com.coahr.thoughtrui.mvp.view.action_plan.Fragment_action_plan_viewPager;
 import com.coahr.thoughtrui.mvp.view.attence.AttendanceFragment_h;
 import com.coahr.thoughtrui.mvp.view.attence.AttendanceFragment_k;
@@ -145,4 +146,7 @@ public abstract class AllFragmentModule {
 
     @ContributesAndroidInjector()
     abstract Fragment_action_plan_viewPager fragmentActionPlanViewPager();
+
+    @ContributesAndroidInjector()
+    abstract Fragment_Action_plan_presentation_2 fragment_action_plan_presentation_2();
 }

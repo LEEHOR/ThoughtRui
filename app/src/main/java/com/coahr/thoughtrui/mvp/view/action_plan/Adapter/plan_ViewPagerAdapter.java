@@ -4,6 +4,7 @@ import android.view.View;
 
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
+import com.coahr.thoughtrui.mvp.view.action_plan.Fragment_action_plan_viewPager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,7 +34,7 @@ public class plan_ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return null;
+        return Fragment_action_plan_viewPager.newInstance(position);
     }
 
     @Nullable

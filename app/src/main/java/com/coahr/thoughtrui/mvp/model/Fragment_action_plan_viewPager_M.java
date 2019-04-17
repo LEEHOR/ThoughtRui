@@ -8,6 +8,8 @@ import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.Fragment_action_plan_pre_1_c;
 import com.coahr.thoughtrui.mvp.constract.Fragment_action_plan_viewPager_c;
+import com.coahr.thoughtrui.mvp.model.Bean.CensorBean;
+import com.coahr.thoughtrui.mvp.model.Bean.ReportList;
 import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
 
 import java.util.List;
@@ -29,25 +31,19 @@ public class Fragment_action_plan_viewPager_M extends BaseModel<Fragment_action_
 
     @Override
     public void getPlanList(Map<String, Object> map) {
-
-    }
-
-
-
- /*   @Override
-    public void getSubjectList(Map<String, Object> map) {
-        mRxManager.add(createFlowable(new SimpleFlowableOnSubscribe<SubjectListBean>(getApiService().getSubjectList(map)))
-                .subscribeWith(new SimpleDisposableSubscriber<SubjectListBean>() {
+        mRxManager.add(createFlowable(new SimpleFlowableOnSubscribe<ReportList>(getApiService().getReportList(map)))
+                .subscribeWith(new SimpleDisposableSubscriber<ReportList>() {
                     @Override
-                    public void _onNext(SubjectListBean SubjectListBean) {
+                    public void _onNext(ReportList reportList) {
                         if (getPresenter() != null) {
-                            if (SubjectListBean.getResult() == 1) {
-                                getPresenter().getSubjectListSuccess(SubjectListBean);
+                            if (reportList.getResult() == 1) {
+                                getPresenter().getPlanListSuccess(reportList);
                             } else {
-                                getPresenter().getSubjectListFailure(SubjectListBean.getMsg(), SubjectListBean.getResult());
+                                getPresenter().getPlanListFailure(reportList.getMsg());
                             }
                         }
                     }
-                }));*/
+                }));
+    }
 
 }

@@ -177,7 +177,7 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
     private String standard_score;
     private PhotoAlbumDialogFragment photoAlbumDialogFragment;
     //评论输入窗口
-    EvaluateInputDialogFragment dialogFragment = EvaluateInputDialogFragment.newInstance();
+    EvaluateInputDialogFragment dialogFragment = EvaluateInputDialogFragment.newInstance(30);
     //录音播放按钮Ui
     private Drawable imgs[] = {BaseApplication.mContext.getResources().getDrawable(R.mipmap.ico_recorder, null)
             , BaseApplication.mContext.getResources().getDrawable(R.mipmap.recordering, null)

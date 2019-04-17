@@ -1,5 +1,10 @@
 package com.coahr.thoughtrui.mvp.model.Bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.chad.library.adapter.base.entity.MultiItemEntity;
+
 import java.util.List;
 
 /**
@@ -96,6 +101,7 @@ public class ReportList {
              * quota2 : 组织架构
              * firstTime : 1555311372409
              * address : 湖北省武汉市蔡甸区
+             * targetDate:  2019-04-18
              * count : 2
              * diagnosis : 不行的
              * reasonList : [{"submitTime":1555311609518,"incompleteReason":"2222"},{"submitTime":1555311372409,"incompleteReason":"11111"}]
@@ -109,11 +115,12 @@ public class ReportList {
              * Dname : 湖北三环盛通汽车有限公司
              */
 
-            private Object quota1;
+            private String quota1;
             private String Uname;
             private String quota2;
             private String firstTime;
             private String address;
+            private String targetDate;
             private int count;
             private String diagnosis;
             private String measures;
@@ -126,11 +133,11 @@ public class ReportList {
             private String Dname;
             private List<ReasonListBean> reasonList;
 
-            public Object getQuota1() {
+            public String getQuota1() {
                 return quota1;
             }
 
-            public void setQuota1(Object quota1) {
+            public void setQuota1(String quota1) {
                 this.quota1 = quota1;
             }
 
@@ -164,6 +171,14 @@ public class ReportList {
 
             public void setAddress(String address) {
                 this.address = address;
+            }
+
+            public String getTargetDate() {
+                return targetDate;
+            }
+
+            public void setTargetDate(String targetDate) {
+                this.targetDate = targetDate;
             }
 
             public int getCount() {
@@ -281,13 +296,14 @@ public class ReportList {
             }
         }
 
-        public static class AllListBean {
+        public static class AllListBean implements MultiItemEntity, Parcelable {
             /**
              * quota1 : null
              * Uname : liuc
              * quota2 : 组织架构
              * firstTime : 1555311372409
              * address : 湖北省武汉市蔡甸区
+             * targetDate:  2019-04-18
              * count : 2
              * diagnosis : 不行的
              * reasonList : [{"submitTime":1555311609518,"incompleteReason":"2222"},{"submitTime":1555311372409,"incompleteReason":"11111"}]
@@ -300,12 +316,14 @@ public class ReportList {
              * projectId : 6a59a7206bae499b80e527207d1c5f5e
              * Dname : 湖北三环盛通汽车有限公司
              */
-
-            private Object quota1;
+            public static final int FINISH = 1;
+            public static final int UN_FINISH = -1;
+            private String quota1;
             private String Uname;
             private String quota2;
             private String firstTime;
             private String address;
+            private String targetDate;
             private int count;
             private String diagnosis;
             private String measures;
@@ -318,11 +336,42 @@ public class ReportList {
             private String Dname;
             private List<ReasonListBeanX> reasonList;
 
-            public Object getQuota1() {
+            protected AllListBean(Parcel in) {
+                quota1=in.readString();
+                Uname = in.readString();
+                quota2 = in.readString();
+                firstTime = in.readString();
+                address = in.readString();
+                targetDate = in.readString();
+                count = in.readInt();
+                diagnosis = in.readString();
+                measures = in.readString();
+                executor = in.readString();
+                levelId = in.readString();
+                name = in.readString();
+                completeStatus = in.readInt();
+                newestTime = in.readLong();
+                projectId = in.readString();
+                Dname = in.readString();
+            }
+
+            public static final Creator<AllListBean> CREATOR = new Creator<AllListBean>() {
+                @Override
+                public AllListBean createFromParcel(Parcel in) {
+                    return new AllListBean(in);
+                }
+
+                @Override
+                public AllListBean[] newArray(int size) {
+                    return new AllListBean[size];
+                }
+            };
+
+            public String getQuota1() {
                 return quota1;
             }
 
-            public void setQuota1(Object quota1) {
+            public void setQuota1(String quota1) {
                 this.quota1 = quota1;
             }
 
@@ -356,6 +405,14 @@ public class ReportList {
 
             public void setAddress(String address) {
                 this.address = address;
+            }
+
+            public String getTargetDate() {
+                return targetDate;
+            }
+
+            public void setTargetDate(String targetDate) {
+                this.targetDate = targetDate;
             }
 
             public int getCount() {
@@ -446,6 +503,36 @@ public class ReportList {
                 this.reasonList = reasonList;
             }
 
+            @Override
+            public int getItemType() {
+                return completeStatus;
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel parcel, int i) {
+                parcel.writeString(quota1);
+                parcel.writeString(Uname);
+                parcel.writeString(quota2);
+                parcel.writeString(firstTime);
+                parcel.writeString(address);
+                parcel.writeString(targetDate);
+                parcel.writeInt(count);
+                parcel.writeString(diagnosis);
+                parcel.writeString(measures);
+                parcel.writeString(executor);
+                parcel.writeString(levelId);
+                parcel.writeString(name);
+                parcel.writeInt(completeStatus);
+                parcel.writeLong(newestTime);
+                parcel.writeString(projectId);
+                parcel.writeString(Dname);
+            }
+
             public static class ReasonListBeanX {
                 /**
                  * submitTime : 1555311609518
@@ -480,6 +567,7 @@ public class ReportList {
              * quota2 : 组织架构
              * firstTime : 1555311372409
              * address : 湖北省武汉市蔡甸区
+             * targetDate:  2019-04-18
              * count : 2
              * diagnosis : 不行的
              * reasonList : [{"submitTime":1555311609518,"incompleteReason":"2222"},{"submitTime":1555311372409,"incompleteReason":"11111"}]
@@ -493,11 +581,12 @@ public class ReportList {
              * Dname : 湖北三环盛通汽车有限公司
              */
 
-            private Object quota1;
+            private String quota1;
             private String Uname;
             private String quota2;
             private String firstTime;
             private String address;
+            private String targetDate;
             private int count;
             private String diagnosis;
             private String measures;
@@ -510,11 +599,11 @@ public class ReportList {
             private String Dname;
             private List<ReasonListBeanX> reasonList;
 
-            public Object getQuota1() {
+            public String getQuota1() {
                 return quota1;
             }
 
-            public void setQuota1(Object quota1) {
+            public void setQuota1(String quota1) {
                 this.quota1 = quota1;
             }
 
@@ -548,6 +637,14 @@ public class ReportList {
 
             public void setAddress(String address) {
                 this.address = address;
+            }
+
+            public String getTargetDate() {
+                return targetDate;
+            }
+
+            public void setTargetDate(String targetDate) {
+                this.targetDate = targetDate;
             }
 
             public int getCount() {

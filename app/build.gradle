@@ -102,7 +102,7 @@ dependencies {
     //annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
 
     //简洁的Adapter
-    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.7.8'
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
 
     //方法超过极限，多打包
     implementation 'androidx.multidex:multidex:2.0.0'

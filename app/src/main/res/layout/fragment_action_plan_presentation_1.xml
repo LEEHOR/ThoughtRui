@@ -3,18 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:landptf="http://schemas.android.com/tools"
-    android:background="@color/colorWhite"
+    android:background="@color/material_grey_100"
     android:orientation="vertical">
+
     <com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar
         android:id="@+id/plan_1_tittle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tittle="@string/plan_1_tittle" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1sp"
-        android:background="@color/material_grey_100"/>
+        android:background="@color/material_grey_100" />
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -22,86 +24,86 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/edge_margin"
-            android:paddingRight="@dimen/edge_margin">
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/material_blue_500"
                 android:padding="@dimen/edge_margin">
 
                 <TextView
-                    android:gravity="center"
                     android:id="@+id/plan_plan_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
+                    android:gravity="center"
                     android:text="@string/plan_1_1"
-                    android:textColor="#333333"
+                    android:textColor="#ffffff"
                     android:textSize="@dimen/dp_14" />
 
                 <TextView
-                    android:gravity="center"
                     android:id="@+id/plan_plan_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/dp_10"
                     android:layout_toRightOf="@+id/plan_plan_1"
-                    android:textColor="#333333"
+                    android:gravity="center"
+                    android:textColor="#ffffff"
                     android:textSize="@dimen/dp_14" />
 
                 <TextView
-                    android:gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="@dimen/dp_10"
                     android:layout_toLeftOf="@+id/plan_planer"
+                    android:gravity="center"
                     android:text="@string/plan_1_2"
-                    android:textColor="#333333"
+                    android:textColor="#ffffff"
                     android:textSize="@dimen/dp_14" />
 
                 <TextView
-                    android:gravity="center"
                     android:id="@+id/plan_planer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:textColor="#333333"
+                    android:gravity="center"
+                    android:textColor="#ffffff"
                     android:textSize="@dimen/dp_14" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/edge_margin">
+                android:layout_height="wrap_content">
 
                 <TextView
-                    android:gravity="center"
                     android:id="@+id/plan_tv_1"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
+                    android:background="@color/material_grey_100"
+                    android:padding="@dimen/edge_margin"
                     android:text="@string/plan_1_3"
                     android:textColor="#333333"
                     android:textSize="@dimen/dp_14" />
 
                 <TextView
-                    android:drawableRight="@mipmap/down"
-                    android:padding="@dimen/dp_10"
                     android:id="@+id/plan_province"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/plan_tv_1"
                     android:layout_alignParentLeft="true"
-                    android:layout_marginTop="@dimen/dp_10"
+                    android:background="@color/colorWhite"
+                    android:drawableRight="@mipmap/down"
+                    android:padding="@dimen/dp_10"
                     android:textColor="#333333"
                     android:textSize="@dimen/dp_14" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1sp"
@@ -111,29 +113,29 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/edge_margin">
+                android:layout_height="wrap_content">
 
                 <TextView
-                    android:gravity="center"
                     android:id="@+id/plan_tv_2"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
+                    android:background="@color/material_grey_100"
+                    android:padding="@dimen/edge_margin"
                     android:text="@string/plan_1_4"
                     android:textColor="#333333"
                     android:textSize="@dimen/dp_14" />
 
                 <TextView
-                    android:drawableRight="@mipmap/down"
-                    android:padding="@dimen/dp_10"
                     android:id="@+id/plan_dealer_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/plan_tv_2"
                     android:layout_alignParentLeft="true"
-                    android:layout_marginTop="@dimen/dp_10"
+                    android:background="@color/colorWhite"
+                    android:drawableRight="@mipmap/down"
+                    android:padding="@dimen/dp_10"
                     android:textColor="#333333"
                     android:textSize="@dimen/dp_14" />
 
@@ -146,29 +148,30 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/edge_margin">
+                android:layout_height="wrap_content">
 
                 <TextView
-                    android:gravity="center"
                     android:id="@+id/plan_tv_3"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
+                    android:background="@color/material_grey_100"
+                    android:padding="@dimen/edge_margin"
                     android:text="@string/plan_1_5"
                     android:textColor="#333333"
                     android:textSize="@dimen/dp_14" />
 
                 <TextView
-                    android:drawableRight="@mipmap/down"
-                    android:padding="@dimen/dp_10"
                     android:id="@+id/plan_templet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/plan_tv_3"
                     android:layout_alignParentLeft="true"
-                    android:layout_marginTop="@dimen/dp_10"
+                    android:background="@color/colorWhite"
+                    android:drawableRight="@mipmap/down"
+                    android:padding="@dimen/dp_10"
+
                     android:textColor="#333333"
                     android:textSize="@dimen/dp_14" />
 
@@ -181,29 +184,30 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/edge_margin">
+                android:layout_height="wrap_content">
 
                 <TextView
-                    android:gravity="center"
                     android:id="@+id/plan_tv_4"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
+                    android:background="@color/material_grey_100"
+                    android:padding="@dimen/edge_margin"
                     android:text="@string/plan_1_6"
                     android:textColor="#333333"
                     android:textSize="@dimen/dp_14" />
 
                 <TextView
-                    android:padding="@dimen/dp_10"
                     android:id="@+id/plan_quota_1"
-                    android:drawableRight="@mipmap/down"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/plan_tv_4"
                     android:layout_alignParentLeft="true"
-                    android:layout_marginTop="@dimen/dp_10"
+                    android:background="@color/colorWhite"
+                    android:drawableRight="@mipmap/down"
+                    android:padding="@dimen/dp_10"
+
                     android:textColor="#333333"
                     android:textSize="@dimen/dp_14" />
 
@@ -216,30 +220,31 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/edge_margin">
+                android:layout_height="wrap_content">
 
                 <TextView
-                    android:gravity="center"
                     android:id="@+id/plan_tv_5"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
+                    android:background="@color/material_grey_100"
+                    android:padding="@dimen/edge_margin"
                     android:text="@string/plan_1_7"
                     android:textColor="#333333"
                     android:textSize="@dimen/dp_14" />
 
                 <TextView
-                    android:padding="@dimen/dp_10"
                     android:id="@+id/plan_quota_2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/plan_tv_5"
                     android:layout_alignParentLeft="true"
-                    android:layout_marginTop="@dimen/dp_10"
+                    android:background="@color/colorWhite"
+                    android:padding="@dimen/dp_10"
                     android:textColor="#333333"
                     android:textSize="@dimen/dp_14" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1sp"
@@ -248,90 +253,87 @@
                     android:background="#999999" />
             </RelativeLayout>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/edge_margin">
+            <include layout="@layout/layout_plan_presentation_photo" />
 
-                <TextView
-                    android:gravity="center"
-                    android:id="@+id/plan_tv_6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
-                    android:text="@string/plan_1_8"
-                    android:textColor="#333333" />
-
-                <ImageView
-                    android:id="@+id/plan_take_photo"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_below="@+id/plan_tv_6"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/dp_10"
-                    android:scaleType="centerCrop"
-                    android:src="@mipmap/takephotos" />
-
-                <TextView
-                    android:gravity="center"
-                    android:id="@+id/plan_tv_7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/plan_take_photo"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginTop="@dimen/dp_10"
-                    android:text="@string/plan_1_9"
-                    android:textColor="#333333"
-                    android:textSize="@dimen/dp_14" />
-
-                <TextView
-                    android:gravity="center"
-                    android:id="@+id/plan_tv_8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/plan_take_photo"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginTop="@dimen/dp_10"
-                    android:text="@string/plan_1_10"
-                    android:textColor="#333333"
-                    android:textSize="@dimen/dp_14" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/plan_recyclerView"
+            <!--    <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/plan_tv_7"
-                    android:layout_marginLeft="@dimen/dp_5"
-                    android:layout_marginTop="@dimen/dp_5"
-                    android:layout_marginRight="@dimen/dp_5"
-                    android:minHeight="100dp"
-                    android:layout_toLeftOf="@+id/plan_tv_8"
-                    android:layout_toRightOf="@+id/plan_tv_7">
+                    android:padding="@dimen/edge_margin">
 
-                </androidx.recyclerview.widget.RecyclerView>
+                    <TextView
+                        android:gravity="center"
+                        android:id="@+id/plan_tv_6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:text="@string/plan_1_8"
+                        android:textColor="#333333" />
 
-            </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/plan_take_photo"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_below="@+id/plan_tv_6"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/takephotos" />
 
-            <com.landptf.view.ButtonM
+                    <TextView
+                        android:gravity="center"
+                        android:id="@+id/plan_tv_7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/plan_take_photo"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:text="@string/plan_1_9"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/dp_14" />
+
+                    <TextView
+                        android:gravity="center"
+                        android:id="@+id/plan_tv_8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/plan_take_photo"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:text="@string/plan_1_10"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/dp_14" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/plan_recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/plan_tv_7"
+                        android:layout_marginLeft="@dimen/dp_5"
+                        android:layout_marginTop="@dimen/dp_5"
+                        android:layout_marginRight="@dimen/dp_5"
+                        android:minHeight="100dp"
+                        android:layout_toLeftOf="@+id/plan_tv_8"
+                        android:layout_toRightOf="@+id/plan_tv_7">
+
+                    </androidx.recyclerview.widget.RecyclerView>
+
+                </RelativeLayout>-->
+
+            <TextView
                 android:id="@+id/plan_1_next"
-                android:layout_marginBottom="15dp"
-                android:text="@string/plan_1_11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_60"
                 android:layout_marginTop="@dimen/dp_20"
-                android:layout_gravity="center"
+                android:layout_marginRight="@dimen/dp_60"
+                android:layout_marginBottom="@dimen/dp_20"
+                android:background="@drawable/bg_blue_white_frame_background"
                 android:gravity="center"
-                landptf:backColor="@color/material_blue_900"
-                landptf:fillet="true"
-                landptf:shape="rectangle"
-                landptf:targetApi="P"
-                landptf:textColor="@android:color/white"
-                landptf:textSize="@dimen/dp_14"
-                android:paddingLeft="@dimen/dp_30"
-                android:paddingRight="@dimen/dp_30"
-                android:paddingTop="@dimen/dp_10"
-                android:paddingBottom="@dimen/dp_10"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:padding="@dimen/dp_10"
+                android:text="@string/plan_1_11"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/dp_14" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

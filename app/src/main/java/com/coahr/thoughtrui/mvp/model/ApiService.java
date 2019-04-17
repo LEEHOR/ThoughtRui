@@ -14,7 +14,9 @@ import com.coahr.thoughtrui.mvp.model.Bean.ProjectDetail;
 import com.coahr.thoughtrui.mvp.model.Bean.PushAttendanceCard;
 import com.coahr.thoughtrui.mvp.model.Bean.QuestionBean;
 import com.coahr.thoughtrui.mvp.model.Bean.RTSL;
+import com.coahr.thoughtrui.mvp.model.Bean.ReportList;
 import com.coahr.thoughtrui.mvp.model.Bean.SearchBeans;
+import com.coahr.thoughtrui.mvp.model.Bean.SubmitReport;
 import com.coahr.thoughtrui.mvp.model.Bean.Template_list;
 import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
 import com.coahr.thoughtrui.mvp.model.Bean.UnDownLoad;
@@ -205,4 +207,17 @@ public interface ApiService {
     @POST(ApiContact.notification)
     Call<CensorBean>Notification (@FieldMap Map<String,Object> para);
 
+    /**
+     * 提报列表
+     */
+    @FormUrlEncoded
+    @POST(ApiContact.plan_report_list)
+    Call<ReportList> getReportList(@FieldMap Map<String,Object> para);
+
+    /**
+     * 提交报表
+     */
+    @FormUrlEncoded
+    @POST(ApiContact.plan_report_submit)
+    Call<SubmitReport> submitReport(@FieldMap Map<String,Object> para);
 }
