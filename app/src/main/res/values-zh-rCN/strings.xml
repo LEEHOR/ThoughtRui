@@ -105,6 +105,9 @@
 	<string name="re_start_cancel">取消</string>
 	<string name="review_fragment_not_null">不能为空</string>
 	<string name="review_fragment_tittle">第%1$d项</string>
+	<string name="review_fragment_1">已通过</string>
+	<string name="review_fragment_2">未通过</string>
+	<string name="review_fragment_3">共有%1$d题打回</string>
 	<string name="ReviewSubjectList_not_pass">审核未通过</string>
 	<string name="ReviewSubjectList_pass">审核通过</string>
 	<string name="ReviewSubjectList_reviewer_comment">评审意见:</string>

@@ -268,6 +268,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     //======获取上传题目
     @Override
     public void getSubjectListSuccess(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position) {
+        showProgressDialog();
         //获取上传文件列表
         Message mes = mHandler.obtainMessage(UPDATE_TITTLE, projectsDBS.get(project_position).getPname());
         mes.sendToTarget();
@@ -367,13 +368,10 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     @Override
     public void CallBackServerSuccess(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
         KLog.d("上传文件_","上传成功");
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                Message mes = mHandler.obtainMessage(UPDATE_PROGRESS, String.format(getResources().getString(R.string.upload_fragment_6),subject_position+1,subjectsDBList.size()));
-                mes.sendToTarget();
-            }
-        });
+
+       // Message mes = mHandler.obtainMessage(UPDATE_PROGRESS, String.format(getResources().getString(R.string.upload_fragment_6),subject_position+1,subjectsDBList.size()));
+       // mes.sendToTarget();
+        tv_progress_info.setText(String.format(getResources().getString(R.string.upload_fragment_6),subject_position+1,subjectsDBList.size()));
         p.UpDataDb(subjectsDBList, projectsDBS, project_position, subject_position, true);
     }
 
@@ -395,6 +393,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                 p.getSubjectList(projectsDBS, project_position += 1);
             } else {
                 ToastUtils.showLong(getResources().getString(R.string.toast_39));
+                p.getProjectList(Constants.sessionId);
             }
         }
     }
@@ -433,7 +432,6 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                 }
                 break;
             case R.id.tv_all_upload:
-                showProgressDialog();
                 type = 1;
                 if (Constants.isNetWorkConnect) {
                     if (Constants.NetWorkType != null && Constants.NetWorkType.equals("WIFI")) {
@@ -447,7 +445,6 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
 
                 break;
             case R.id.tv_Batch_UpLoad:
-                showProgressDialog();
                 type = 2;
                 if (ck_listProjectDb != null && ck_listProjectDb.size() > 0) {
                     if (Constants.isNetWorkConnect) {

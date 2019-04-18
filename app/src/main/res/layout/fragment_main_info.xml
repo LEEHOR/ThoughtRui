@@ -64,7 +64,7 @@
                             android:layout_centerHorizontal="true"
                             android:paddingTop="25dp"
                             android:paddingBottom="@dimen/dp_20"
-                            android:src="@mipmap/check" />
+                            android:src="@mipmap/s_check" />
 
                         <TextView
                             android:layout_width="wrap_content"

@@ -186,19 +186,24 @@
                 android:layout_toRightOf="@+id/unComplete_tv_update_time"
                 android:textSize="12dp"
                 android:text="@string/phrases_6"
+                android:id="@+id/unComplete_tv_1"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
+                android:ellipsize="end"
+                android:layout_toRightOf="@+id/unComplete_tv_1"
                 android:id="@+id/unComplete_item_data"
                 android:textSize="12dp"
                 android:text="@string/phrases_9"
+                android:gravity="end"
+                android:lines="1"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_5"
                 android:textColor="@color/origin_2"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </RelativeLayout>
     </RelativeLayout>

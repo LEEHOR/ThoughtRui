@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.coahr.thoughtrui.R;
+import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.view.reviewed.ReviewMainPager;
 
 /**
@@ -14,7 +16,7 @@ import com.coahr.thoughtrui.mvp.view.reviewed.ReviewMainPager;
  * 描述：
  */
 public class censor_viewPager_Adapter extends FragmentPagerAdapter {
-    private String[] title = {"未通过", "已通过"};
+    private String[] title = {BaseApplication.mContext.getResources().getString(R.string.review_fragment_2), BaseApplication.mContext.getResources().getString(R.string.review_fragment_1)};
 
     public censor_viewPager_Adapter(FragmentManager fm) {
         super(fm);

@@ -179,6 +179,7 @@ public class ReviewStartViewPager extends BaseFragment {
     public void onDestroy() {
         super.onDestroy();
         if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().removeStickyEvent(isCompleteBean.class);
             EventBus.getDefault().unregister(this);
         }
     }

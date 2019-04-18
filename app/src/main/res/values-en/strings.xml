@@ -104,6 +104,9 @@
 	<string name="re_start_cancel">cancel</string>
 	<string name="review_fragment_not_null">Can not be empty</string>
 	<string name="review_fragment_tittle">Item%1$d</string>
+	<string name="review_fragment_1">Passed</string>
+	<string name="review_fragment_2">Not Pass</string>
+	<string name="review_fragment_3">共有%1$d题打回</string>
 	<string name="ReviewSubjectList_not_pass">Audit failed</string>
 	<string name="ReviewSubjectList_pass">Audit pass</string>
 	<string name="ReviewSubjectList_reviewer_comment">Review opinion:</string>
@@ -168,9 +171,9 @@
 	<string name="plan_viewpager_1_3">Many times unfinished</string>
 	<string name="plan_tittle">Action Plan Presentation</string>
 	<string name="plan_submit_action_plan_presentation">Submit report</string>
-	<string name="plan_viewpager_tittle_1">Hang in the air</string>
-	<string name="plan_viewpager_tittle_2">Completed</string>
-	<string name="plan_viewpager_tittle_3">whole</string>
+	<string name="plan_viewpager_tittle_1">Unfinished</string>
+	<string name="plan_viewpager_tittle_2">Finished</string>
+	<string name="plan_viewpager_tittle_3">All</string>
 	<string name="plan_1_tittle">Presentation of newspapers</string>
 	<string name="plan_1_1">Date of submission:</string>
 	<string name="plan_1_2">Supervisor:</string>
@@ -191,7 +194,7 @@
 	<string name="plan_2_5">Plan duration</string>
 	<string name="plan_2_6">Executor</string>
 	<string name="plan_2_7">Is it finished?</string>
-	<string name="plan_2_8">Submission</string>
+	<string name="plan_2_8">Submit</string>
 	<string name="plan_2_9">·%1$s%2$s</string>
 	<string name="plan_2_10">Reasons for incompleteness</string>
 	<string name="plan_2_11">%1$d days</string>

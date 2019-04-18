@@ -7,6 +7,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.TimeUtils;
 import com.coahr.thoughtrui.commom.Constants;
+import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.model.Bean.CensorBean;
 
 
@@ -35,7 +36,7 @@ public class pageAdapter extends BaseQuickAdapter<CensorBean.DataBean.ListBean,B
                     .setText(R.id.tv_project_company,item.getDname())
                     .setText(R.id.tv_project_address,item.getAreaAddress())
                     .setText(R.id.tv_update_time,TimeUtils.getStingYMDHM(item.getModifyTime()))
-                    .setText(R.id.item_data,"共有"+item.getNumber()+"道题打回");
+                    .setText(R.id.item_data,String.format(BaseApplication.mContext.getResources().getString(R.string.review_fragment_3),item.getNumber()));
 
             View view = helper.getView(R.id.pager_cardView);
             view.setOnClickListener(new View.OnClickListener() {

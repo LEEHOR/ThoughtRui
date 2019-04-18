@@ -117,7 +117,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
             }
         });
         format = getResources().getString(R.string.start_activity_tittle);
-        String format1 = String.format(format, 0);
+        String format1 = String.format(format, 1);
         p_mytitle.getTvTittle().setText(format1);
     }
 
@@ -346,11 +346,14 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
 
     @Override
     public void onDestroy() {
+        super.onDestroy();
         if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().removeStickyEvent(isCompleteBean.class);
+            EventBus.getDefault().removeStickyEvent(EvenBus_SubjectList_id.class);
             EventBus.getDefault().unregister(this);
         }
         mHandler.removeCallbacksAndMessages(null);
-        super.onDestroy();
+
     }
 
     /**
