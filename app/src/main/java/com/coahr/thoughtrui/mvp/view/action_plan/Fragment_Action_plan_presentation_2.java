@@ -23,6 +23,7 @@ import com.alibaba.sdk.android.oss.common.auth.OSSAuthCredentialsProvider;
 import com.alibaba.sdk.android.oss.model.OSSObjectSummary;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.DensityUtils;
+import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.Utils.TimeUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
@@ -148,7 +149,7 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
     private LinearLayoutManager reason_manager;
     private String select_sp;   //选择spinner
     private int count;   //持续天数
-    private int completeStatus,status;  //是否完成
+    private int completeStatus, status;  //是否完成
     private String targetDate;  //计划完成时间
     private String diagnosis;  //原因诊断
     private String measures; //具体改善措施
@@ -205,7 +206,7 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
                 plan2TvCauseDiagnosis.setText(diagnosis);
                 plan2TvCorrectiveActions.setText(measures);
                 plan2TvTime.setText(targetDate);
-                plan2TvTimeCount.setText(count);
+                plan2TvTimeCount.setText(String.format(getResources().getString(R.string.plan_2_11), count));
                 plan2TvExecutor.setText(executor);
 
             } else {
@@ -213,10 +214,10 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
             }
         }
 
-        if (completeStatus==0 || completeStatus==1){
-            status=1;
-        } else if (completeStatus==-1){
-            status=-1;
+        if (completeStatus == 0 || completeStatus == 1) {
+            status = 1;
+        } else if (completeStatus == -1) {
+            status = -1;
         }
         if (status == 1) {
             planPhotoView.setVisibility(View.VISIBLE);
@@ -307,9 +308,9 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
                 public int compare(OSSObjectSummary ossObjectSummary, OSSObjectSummary t1) {
                     int i = ossObjectSummary.getLastModified().compareTo(t1.getLastModified());
                     if (i > 0) {
-                        return 1;
-                    } else if (i < 0) {
                         return -1;
+                    } else if (i < 0) {
+                        return 1;
                     } else {
                         return 0;
                     }
@@ -511,7 +512,7 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
                     ToastUtils.showLong(getResources().getString(R.string.plan_2_14));
                 } else if (TextUtils.isEmpty(plan2TvTime.getText())) {
                     ToastUtils.showLong(getResources().getString(R.string.plan_2_15));
-                } else if (after_data.size() <=0) {
+                } else if (after_data.size() <= 0) {
                     ToastUtils.showLong(getResources().getString(R.string.toast_28));
                 } else {
                     showProgressDialog();
@@ -573,27 +574,27 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
         StringBuffer before_buffer = new StringBuffer();
         StringBuffer after_buffer = new StringBuffer();
         for (int i = 0; i < beforeImage.size(); i++) {
-            KLog.d("beforeImage_1", beforeImage.get(i));
+            KLog.d("beforeImage_1", FileIOUtils.getE(beforeImage.get(i),"/"));
             if (beforeImage.size() == 1) {
-                before_buffer.append(beforeImage.get(i));
+                before_buffer.append(FileIOUtils.getE(beforeImage.get(i),"/"));
             } else {
                 if (i == beforeImage.size() - 1) {
-                    before_buffer.append(beforeImage.get(i));
+                    before_buffer.append(FileIOUtils.getE(beforeImage.get(i),"/"));
                 } else {
-                    before_buffer.append(beforeImage.get(i) + ";");
+                    before_buffer.append(FileIOUtils.getE(beforeImage.get(i),"/")+";");
                 }
             }
         }
 
         for (int i = 0; i < after_data.size(); i++) {
-            KLog.d("afterImage_1", after_data.get(i));
+            KLog.d("afterImage_1", FileIOUtils.getE(after_data.get(i),"/"));
             if (after_data.size() == 1) {
-                after_buffer.append(after_data.get(i));
+                after_buffer.append(FileIOUtils.getE(after_data.get(i),"/"));
             } else {
                 if (i == after_data.size() - 1) {
-                    after_buffer.append(after_data.get(i));
+                    after_buffer.append(FileIOUtils.getE(after_data.get(i),"/"));
                 } else {
-                    after_buffer.append(after_data.get(i) + ";");
+                    after_buffer.append(FileIOUtils.getE(after_data.get(i),"/") + ";");
                 }
             }
         }
@@ -603,17 +604,17 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
         map.put("diagnosis", plan2TvCauseDiagnosis.getText().toString().trim());
         map.put("measures", plan2TvCorrectiveActions.getText().toString().trim());
         map.put("targetDate", plan2TvTime.getText().toString().trim());
-        map.put("completeStatus", status);
-        map.put("incompleteReason", plan2TvReason.getText().toString().trim());
+        map.put("completeStatus", String.valueOf(status));
+        map.put("incompleteReason", status == 1 ? "" : status == -1 ? plan2TvReason.getText().toString().trim() : "");
         map.put("beforePicture", before_buffer.toString().trim());
         map.put("afterPicture", after_buffer.toString().trim());
         map.put("executor", plan2TvExecutor.getText().toString().trim());
         map.put("sessionId", Constants.sessionId);
-        map.put("duration", days);
+        map.put("duration", String.valueOf(days));
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                p.SubmitReport(map);
+               // p.SubmitReport(map);
             }
         });
 

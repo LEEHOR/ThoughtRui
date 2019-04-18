@@ -1119,15 +1119,13 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-
                         dialog.dismiss();
-
                     }
                 }).onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                dialog.dismiss();
                 StopAudio();
+                dialog.dismiss();
             }
         }).build().show();
     }

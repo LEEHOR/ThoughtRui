@@ -193,7 +193,7 @@
                             android:id="@+id/audio_images"
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
-                            android:src="@drawable/audio"
+                            android:src="@mipmap/audio"
                             android:layout_width="@dimen/dp_20"
                             android:layout_height="@dimen/dp_20" />
                         <TextView

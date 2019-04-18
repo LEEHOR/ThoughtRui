@@ -119,6 +119,11 @@ public class Fragment_Action_plan_pre_2_M extends BaseModel<Fragment_action_plan
                 KLog.d("after", afterImage.get(i));
             }
         }
+        if (beforeImage.size()+afterImage.size()==0){
+            if (getPresenter() != null) {
+                getPresenter().putUploadProgress(0, 0, "");
+            }
+        }
     }
 
     @Override

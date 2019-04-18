@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:background="@drawable/template_project" />
+        android:background="@mipmap/template_project" />
 
     <RelativeLayout
         android:id="@+id/root_re"

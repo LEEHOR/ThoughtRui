@@ -4,6 +4,8 @@ import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.TimeUtils;
+import com.coahr.thoughtrui.mvp.Base.BaseActivity;
+import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.model.Bean.ReportList;
 
 import java.util.List;
@@ -34,6 +36,7 @@ public class item_plan_viewpager_adapter extends BaseMultiItemQuickAdapter<Repor
                         .setText(R.id.plan_viewpager_un_dealer_name,item.getName())
                         .setText(R.id.plan_viewpager_un_address,item.getDname())
                         .setText(R.id.plan_viewpager_un_action_time, TimeUtils.getStingYMDHM(item.getNewestTime()))
+                        .setText(R.id.plan_viewpager_un_tips,item.getCount()>1? BaseApplication.mContext.getResources().getString(R.string.plan_viewpager_1_3):"")
                         .addOnClickListener(R.id.item_plan_unfinish);
 
             } else {

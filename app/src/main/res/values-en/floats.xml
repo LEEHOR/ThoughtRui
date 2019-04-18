@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--float-->
+    <item name="float_1" format="float" type="dimen" >5</item>
+</resources>

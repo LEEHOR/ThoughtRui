@@ -25,7 +25,6 @@
            android:gravity="center"
            android:textSize="@dimen/dp_14"
            android:textColor="#333333"
-           android:text="hsdsasdjadadsasda"
            android:id="@+id/play_music_name"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content" />

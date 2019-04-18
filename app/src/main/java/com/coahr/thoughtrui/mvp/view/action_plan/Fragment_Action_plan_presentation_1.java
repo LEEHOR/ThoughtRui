@@ -160,9 +160,9 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
      */
     private GridLayoutManager gridLayoutManager;
     private PagerFragmentPhotoAdapter adapter;
-    private ArrayList<String> Before_imageList_oss = new ArrayList<>();
-    private ArrayList<String> select_pic=new ArrayList<>();
-    private ArrayList<String> resultList = new ArrayList<>();
+    private ArrayList<String> Before_imageList_oss = new ArrayList<>(); //OssUrl
+    private ArrayList<String> select_pic=new ArrayList<>();  //相册选择
+    private ArrayList<String> resultList = new ArrayList<>();  //Osskey
     private PhotoAlbumDialogFragment photoAlbumDialogFragment;
     private ReportList.DataBean.AllListBean reportList;
     private OSSClient ossClient;
@@ -177,6 +177,7 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
     private String quota1;
     private String quota2;
     private String targetDate;
+    private List<String> before_date;
 
     @Override
     public Fragment_action_plan_pre_1_c.Presenter getPresenter() {
@@ -251,7 +252,6 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
                 FragmentManager fragmentManager = getFragmentManager();
                 photoAlbumDialogFragment.show(fragmentManager, TAG);
             }
-
             @Override
             public void onLongClick(List<String> imagePathList, int position) {
             }
@@ -267,7 +267,6 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
 
     @Override
     public void initData() {
-        getSTS_OSS();
         if (reportList != null) {
             planPlanTime.setText(reportList.getTargetDate());
             planPlaner.setText(reportList.getUname());
@@ -279,7 +278,7 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
             projectId = reportList.getProjectId();
             levelId = reportList.getLevelId();
         }
-
+        getSTS_OSS();
     }
 
     @OnClick({R.id.plan_province, R.id.plan_dealer_name, R.id.plan_templet, R.id.plan_quota_1, R.id.plan_quota_2, R.id.plan_take_photo, R.id.plan_1_next})
@@ -306,15 +305,17 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
                 openMulti(10 - adapter.getData().size());
                 break;
             case R.id.plan_1_next:
+                before_date = adapter.getData();
                 if (select_city == null) {
                     ToastUtils.showLong(getResources().getString(R.string.toast_7));
                 } else if (projectId == null) {
                     ToastUtils.showLong(getResources().getString(R.string.toast_37));
                 } else if (levelId == null) {
                     ToastUtils.showLong(getResources().getString(R.string.toast_38));
-                } else if (adapter.getData().size()<=0) {
+                } else if (before_date.size()<=0) {
                     ToastUtils.showLong(getResources().getString(R.string.toast_28));
                 } else {
+                   
                     start(Fragment_Action_plan_presentation_2.newInstance(reportList, projectId, levelId, (ArrayList<String>) adapter.getData()));
                 }
                 break;
@@ -354,9 +355,9 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
                 public int compare(OSSObjectSummary ossObjectSummary, OSSObjectSummary t1) {
                     int i = ossObjectSummary.getLastModified().compareTo(t1.getLastModified());
                     if (i > 0) {
-                        return 1;
-                    } else if (i < 0) {
                         return -1;
+                    } else if (i < 0) {
+                        return 1;
                     } else {
                         return 0;
                     }
@@ -375,7 +376,9 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
                     }
                 }
             }
-
+            for (int i = 0; i <resultList.size() ; i++) {
+                KLog.d("图片排序",resultList.get(i));
+            }
             p.getBeforePicUrl(ossClient, resultList);
         }
     }

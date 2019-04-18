@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.coahr.thoughtrui.R;
@@ -148,7 +149,7 @@ public class AnnexAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     ((MyAdapter_q) viewHolder).pic_count.setText(BaseApplication.mContext.getResources().getString(R.string.phrases_18));
                 }
                 //   ((MyAdapter_q) viewHolder).iv_zk.setTag(String.valueOf(i));
-                ((MyAdapter_q) viewHolder).iv_zk.setOnClickListener(new View.OnClickListener() {
+                ((MyAdapter_q) viewHolder).image_re.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         //展开
@@ -238,7 +239,7 @@ public class AnnexAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     ((MyAdapter_t) viewHolder).annex_child_recycler_t.setAdapter(adapter);
                     ((MyAdapter_t) viewHolder).annex_pic_count_t.setText(BaseApplication.mContext.getResources().getString(R.string.phrases_18));
                 }
-                ((MyAdapter_t) viewHolder).iv_zk_t.setOnClickListener(new View.OnClickListener() {
+                ((MyAdapter_t) viewHolder).annex_pic_re_image.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         //展开
@@ -319,7 +320,7 @@ public class AnnexAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         private final TextView pic_count;
         private TextView audio_paly;
         private TextView audio_name;
-
+        private RelativeLayout image_re;
         private final TextView annex_tv_tittle_q;
 
         public MyAdapter_q(View itemView) {
@@ -328,6 +329,7 @@ public class AnnexAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             audio_name = itemView.findViewById(R.id.annex_audio_name);
             audio_paly = itemView.findViewById(R.id.annex_audio_play);
             iv_zk = itemView.findViewById(R.id.iv_zk);
+            image_re = itemView.findViewById(R.id.image_re);
             pic_count = itemView.findViewById(R.id.annex_pic_count);
             annex_child_recycler = itemView.findViewById(R.id.annex_child_recycler);
 
@@ -339,11 +341,13 @@ public class AnnexAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         private final RecyclerView annex_child_recycler_t;
         private final TextView annex_pic_count_t;
         private final TextView annex_tv_tittle_t;
+        private final RelativeLayout annex_pic_re_image;
 
         public MyAdapter_t(View itemView) {
             super(itemView);
             annex_tv_tittle_t = itemView.findViewById(R.id.annex_tv_tittle_t);
             iv_zk_t = itemView.findViewById(R.id.iv_zk_t);
+            annex_pic_re_image= itemView.findViewById(R.id.annex_pic_re_image);
             annex_pic_count_t = itemView.findViewById(R.id.annex_pic_count_t);
             annex_child_recycler_t = itemView.findViewById(R.id.annex_child_recycler_t);
         }

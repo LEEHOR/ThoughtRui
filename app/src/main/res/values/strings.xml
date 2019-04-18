@@ -23,7 +23,7 @@
 
     <!--首页选择页-->
     <string name="start_checking">开始检核</string>
-    <string name="history_list">接触历史</string>
+    <string name="history_list">历史项目</string>
 
     <!--经销商模板选择页-->
     <string name="checking_template">请选择项目模板</string>
@@ -69,6 +69,7 @@
 
     <!--考勤页-->
     <string name="attence_tittle_1">考勤</string>
+    <string name="attence_attence_1">考勤</string>
     <string name="attence_history_1">接触历史</string>
     <string name="attendance_limits">已进入考勤范围</string>
     <string name="no_attendance">不在考勤范围</string>
@@ -217,6 +218,7 @@
     <!--com.coahr.thoughtrui.mvp.view.action_plan.Fragment_action_plan_viewPager-->
     <string name="plan_viewpager_1_1">计划完成日期:</string>
     <string name="plan_viewpager_1_2">提报时间:</string>
+    <string name="plan_viewpager_1_3">多次未完成</string>
 
     <!--com.coahr.thoughtrui.mvp.view.action_plan.Fragment_action_projects-->
     <string name="plan_tittle">行动计划提报</string>
@@ -238,7 +240,7 @@
     <string name="plan_1_9">图片</string>
     <string name="plan_1_10">收回</string>
     <string name="plan_1_11">下一步</string>
-    <string name="plan_1_12">report/%1$s/%2$s/before</string>
+    <string name="plan_1_12">report/%1$s/%2$s/before/</string>
 
     <!--com.coahr.thoughtrui.mvp.view.action_plan.Fragment_Action_plan_presentation_2-->
     <string name="plan_2_1">提报中</string>
@@ -256,12 +258,19 @@
     </string-array>
     <string name="plan_2_10">未完成原因</string>
     <string name="plan_2_11">%1$d天</string>
-    <string name="plan_2_12">report/%1$s/%2$s/after</string>
+    <string name="plan_2_12">report/%1$s/%2$s/after/</string>
     <string name="plan_2_13">原因诊断不能为空</string>
     <string name="plan_2_14">具体改善措施不能为空</string>
     <string name="plan_2_15">计划时间不能为空</string>
 
 
+<!--com.coahr.thoughtrui.mvp.view.upload.UploadFragment-->
+    <string name="upload_fragment_1">取消</string>
+    <string name="upload_fragment_2">批量管理</string>
+    <string name="upload_fragment_3">全部上传</string>
+    <string name="upload_fragment_4">全选</string>
+    <string name="upload_fragment_5">批量上传</string>
+    <string name="upload_fragment_6">正在上传(%1$d/%2$d)</string>
 
     <!--语言选择-->
     <string name="language_cn">中文</string>
@@ -308,6 +317,7 @@
     <string name="toast_37">请先选择经销商名称</string>
     <string name="toast_38">请选择指标</string>
     <string name="toast_39">上传成功</string>
+    <string name="toast_40">请选择要上传的项目</string>
 
     <!--控件_按钮-->
     <string name="btn_1">登录</string>

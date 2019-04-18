@@ -130,14 +130,17 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
                         || list.get(i).toLowerCase().endsWith("jpg") || list.get(i).toLowerCase().endsWith("gif")) {
                     CountSize++;
                     picList.add(list.get(i));
+                    KLog.d("上传文件_图片_1",list.get(i).toLowerCase());
                 } else if (list.get(i).toLowerCase().endsWith("wav") || list.get(i).toLowerCase().endsWith("amr")
                         || list.get(i).toLowerCase().endsWith("aac")) {
                     CountSize++;
                     audioPath = list.get(i);
+                    KLog.d("上传文件_录音_1",list.get(i).toLowerCase());
                 }
             }
 
             if (audioPath != null) {
+                KLog.d("上传文件_录音_2",audioPath);
                 OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
                         audioPath, CountSize, subjectsDBList, projectsDBS, project_position, subject_position, list, 1, 0, null);
                 if (ossAsyncTask != null) {
@@ -147,7 +150,7 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
 
             if (picList != null && picList.size() > 0) {
                 for (int i = 0; i < picList.size(); i++) {
-
+                    KLog.d("上传文件_图片_2",picList.get(i));
                     OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
                             picList.get(i), CountSize, subjectsDBList, projectsDBS, project_position, subject_position, list, 2, i + 1, picList);
                     if (ossAsyncTask != null) {
@@ -156,7 +159,8 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
                 }
             }
 
-            if (audioPath == null && (picList == null || picList.size() == 0)) {
+            if (audioPath == null &&  picList.size() == 0) {
+
                 getPresenter().Pic_Compulsory(list, subjectsDBList, projectsDBS, project_position, subject_position);
             }
 
@@ -261,12 +265,13 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
                             : subjectsDBList.get(subject_position).getNumber() + "_" + upPic + ".png";
                     object = projectsDBS.get(project_position).getPid() + "/pictures/" + subjectsDBList.get(subject_position).getNumber() + "/" + picName;
                 }
+                KLog.d("上传文件_up",object);
                 PutObjectRequest put = new PutObjectRequest(Constants.bucket, object, localFile);
 
                 put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
                     @Override
                     public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
-                        getPresenter().StartUiProgressSuccess((int) currentSize, (int) totalSize, "第" + subjectsDBList.get(subject_position).getNumber() + "题\n" + fileName);
+                       // getPresenter().StartUiProgressSuccess((int) currentSize, (int) totalSize, "第" + subjectsDBList.get(subject_position).getNumber() + "题\n" + fileName);
                     }
                 });
                 put.setCRC64(OSSRequest.CRC64Config.YES);

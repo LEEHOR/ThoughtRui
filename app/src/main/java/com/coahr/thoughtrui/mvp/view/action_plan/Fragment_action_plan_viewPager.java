@@ -26,6 +26,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
@@ -98,9 +99,9 @@ public class Fragment_action_plan_viewPager extends BaseChildFragment<Fragment_a
             }
         });
 
-        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 ReportList.DataBean.AllListBean allListBean = (ReportList.DataBean.AllListBean) adapter.getItem(position);
                 ((SupportFragment) getParentFragment()).start(Fragment_Action_plan_presentation_1.newInstance(allListBean,2));
             }
@@ -114,24 +115,24 @@ public class Fragment_action_plan_viewPager extends BaseChildFragment<Fragment_a
             EventBus.getDefault().postSticky(new EvenBus_report(submitStatus));
         }
         reportList_s.clear();
-        if (position == 0) {  //已完成
+        if (position == 0) {  //未完成
             if (reportList != null) {
                 if (reportList.getData() != null) {
                     if (reportList.getData().getAllList() != null && reportList.getData().getAllList().size() > 0) {
                         for (int i = 0; i < reportList.getData().getAllList().size(); i++) {
-                            if (reportList.getData().getAllList().get(i).getCompleteStatus() == 1) {
+                            if (reportList.getData().getAllList().get(i).getCompleteStatus() == -1) {
                                 reportList_s.add(reportList.getData().getAllList().get(i));
                             }
                         }
                     }
                 }
             }
-        } else if (position == 1) { //未完成
+        } else if (position == 1) { //已完成
             if (reportList != null) {
                 if (reportList.getData() != null) {
                     if (reportList.getData().getAllList() != null && reportList.getData().getAllList().size() > 0) {
                         for (int i = 0; i < reportList.getData().getAllList().size(); i++) {
-                            if (reportList.getData().getAllList().get(i).getCompleteStatus() == -1) {
+                            if (reportList.getData().getAllList().get(i).getCompleteStatus() == 1) {
                                 reportList_s.add(reportList.getData().getAllList().get(i));
                             }
                         }
@@ -170,4 +171,9 @@ public class Fragment_action_plan_viewPager extends BaseChildFragment<Fragment_a
         p.getPlanList(map);
     }
 
+    @Override
+    public void showError(@Nullable Throwable e) {
+        super.showError(e);
+        adapter.setEmptyView(error);
+    }
 }

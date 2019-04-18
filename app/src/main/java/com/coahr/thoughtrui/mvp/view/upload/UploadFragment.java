@@ -102,7 +102,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     private LinearLayoutManager manager;
     private boolean isLoading;
     private View inflate;
-    private TextView tv_tittle;
+    private TextView tv_progress_info;
     private ProgressBar progressBar;
     private OSSClient ossClient;
     private final int GETSUBJECTLIST = 1;
@@ -120,13 +120,13 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                 case UPDATE_PROGRESS:
                     progressBar.setMax(msg.arg2);
                     progressBar.setProgress(msg.arg1);
-                    tv_tittle.setText(msg.obj!=null ?msg.obj.toString():"");
+                    tv_progress_info.setText(msg.obj!=null ?msg.obj.toString():"");
                     break;
                 case UPDATE_TITTLE:
                     tv_message_tittle.setText(msg.obj.toString());
                     break;
                 case UPDATE_MESSAGE:
-                    tv_tittle.setText(msg.obj.toString() != null ? msg.obj.toString() : "暂无题目上传");
+                    tv_progress_info.setText(msg.obj.toString() != null ? msg.obj.toString() : getResources().getString(R.string.phrases_7));
                     break;
             }
         }
@@ -161,7 +161,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     public void initView() {
         inflate = LayoutInflater.from(_mActivity).inflate(R.layout.dialog_progress, null);
         tv_message_tittle = inflate.findViewById(R.id.tv_message_tittle);
-        tv_tittle = inflate.findViewById(R.id.tv_progress_info);
+        tv_progress_info = inflate.findViewById(R.id.tv_progress_info);
         progressBar = inflate.findViewById(R.id.progress_bar);
 
         tv_Batch_Management.setOnClickListener(this);
@@ -219,12 +219,12 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                 type = 3;
                 if (Constants.isNetWorkConnect) {
                     if (Constants.NetWorkType != null && Constants.NetWorkType.equals("WIFI")) {
-                        NetWorkDialog("提示", "是否上传", 1);
+                        NetWorkDialog(getResources().getString(R.string.dialog_tittle_7), getResources().getString(R.string.dialog_content_5), 1);
                     } else if (Constants.NetWorkType != null && Constants.NetWorkType.equals("MOBILE")) {
-                        NetWorkDialog("提示", "当前为移动网络是否继续上传", 2);
+                        NetWorkDialog(getResources().getString(R.string.dialog_tittle_7), getResources().getString(R.string.dialog_content_6), 2);
                     }
                 } else {
-                    NetWorkDialog("提示", "当前网络不可用无法上传", 3);
+                    NetWorkDialog(getResources().getString(R.string.dialog_tittle_7), getResources().getString(R.string.dialog_content_7), 3);
                 }
             }
         });
@@ -276,12 +276,11 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
 
     @Override
     public void getSubjectListFailure(String failure, List<ProjectsDB> projectsDBS, int project_position) {
-        Message mes = mHandler.obtainMessage(UPDATE_MESSAGE, "当前题目下没有可以上传的文件");
+        Message mes = mHandler.obtainMessage(UPDATE_MESSAGE, getResources().getString(R.string.phrases_7));
         mes.sendToTarget();
         ToastUtils.showLong(failure);
         //开始查询下一个项目下的题目
         if (project_position < projectsDBS.size() - 1) {
-            KLog.d("上传6", "切换下一个项目");
             p.getSubjectList(projectsDBS, project_position += 1);
         } else {
 
@@ -292,7 +291,6 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     @Override
     public void getUpLoadFileListSuccess(List<String> list, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
         //开始上传
-        KLog.d("上传1", subjectsDBList.get(subject_position).getHt_id(), projectsDBS.get(project_position).getPid(), project_position, subject_position);
 
         if (fixedThreadPool == null) {
            // fixedThreadPool = Executors.newFixedThreadPool(5);
@@ -313,10 +311,10 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
         private int totalSize_progress;
         private String info_progress;*/
        // progressBar.setMax(totalSize);
-         Message mes = mHandler.obtainMessage(UPDATE_PROGRESS, info);
-                     mes.arg1 = currentSize;
-                     mes.arg2 = totalSize;
-                     mes.sendToTarget();
+//         Message mes = mHandler.obtainMessage(UPDATE_PROGRESS, info);
+//                     mes.arg1 = currentSize;
+//                     mes.arg2 = totalSize;
+//                     mes.sendToTarget();
 
 
     }
@@ -367,6 +365,14 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
 
     @Override
     public void CallBackServerSuccess(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
+        KLog.d("上传文件_","上传成功");
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Message mes = mHandler.obtainMessage(UPDATE_PROGRESS, String.format(getResources().getString(R.string.upload_fragment_6),subject_position+1,subjectsDBList.size()));
+                mes.sendToTarget();
+            }
+        });
         p.UpDataDb(subjectsDBList, projectsDBS, project_position, subject_position, true);
     }
 
@@ -378,17 +384,16 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     @Override
     public void UpDataDbSuccess(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
         //如果当前项目下的题目数据上传完毕，则开始传下一个项目
-        KLog.d("上传4", project_position, projectsDBS.size(), subject_position, subjectsDBList.size());
         if (subject_position < subjectsDBList.size() - 1) { //项目下还有题目没传，开始下一题
-            KLog.d("上传2", "切换下一个题目");
+            KLog.d("上传文件_","切换下一题");
             p.UpLoadFileList(subjectsDBList, projectsDBS, project_position, subject_position += 1);
         } else {   //上一个项目传完了，开始下一个项目
             //1.查询下一个项目
             if (project_position < projectsDBS.size() - 1) {
-                KLog.d("上传3", "切换下一个项目");
+                KLog.d("上传文件_","切换下一项目");
                 p.getSubjectList(projectsDBS, project_position += 1);
             } else {
-                ToastUtils.showLong("上传完成");
+                ToastUtils.showLong(getResources().getString(R.string.toast_39));
             }
         }
     }
@@ -396,17 +401,14 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     @Override
     public void UpDataDbFailure(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
         //如果当前项目下的题目数据上传完毕，则开始传下一个项目
-        KLog.d("上传5", project_position, projectsDBS.size(), subject_position, subjectsDBList.size());
         if (subject_position < subjectsDBList.size() - 1) { //项目下还有题目没传，开始下一题
-            KLog.d("上传5", "切换下一个题目");
             p.UpLoadFileList(subjectsDBList, projectsDBS, project_position, subject_position += 1);
         } else {   //上一个项目传完了，开始下一个项目
             //1.查询下一个项目
             if (project_position < projectsDBS.size() - 1) {
-                KLog.d("上传5", "切换下一个项目");
                 p.getSubjectList(projectsDBS, project_position += 1);
             } else {
-                ToastUtils.showLong("上传完成");
+                ToastUtils.showLong(getResources().getString(R.string.toast_39));
             }
         }
     }
@@ -418,44 +420,46 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                 if (tv_Batch_Management.getTag() == null || tv_Batch_Management.getTag().equals("1")) {
                     card_bottom.setVisibility(View.VISIBLE);
                     tv_all_upload.setVisibility(View.INVISIBLE);
-                    tv_Batch_Management.setText("取消");
+                    tv_Batch_Management.setText(getResources().getString(R.string.upload_fragment_1));
                     upLoadAdapter.setCheckViewVisible(true);
                     tv_Batch_Management.setTag("2");
                 } else {
                     card_bottom.setVisibility(View.GONE);
                     tv_all_upload.setVisibility(View.VISIBLE);
                     upLoadAdapter.setCheckViewVisible(false);
-                    tv_Batch_Management.setText("批量管理");
+                    tv_Batch_Management.setText(getResources().getString(R.string.upload_fragment_2));
                     tv_Batch_Management.setTag("1");
                 }
                 break;
             case R.id.tv_all_upload:
+                showProgressDialog();
                 type = 1;
                 if (Constants.isNetWorkConnect) {
                     if (Constants.NetWorkType != null && Constants.NetWorkType.equals("WIFI")) {
-                        NetWorkDialog("提示", "是否上传", 1);
+                        NetWorkDialog(getResources().getString(R.string.dialog_tittle_7), getResources().getString(R.string.dialog_content_5), 1);
                     } else if (Constants.NetWorkType != null && Constants.NetWorkType.equals("MOBILE")) {
-                        NetWorkDialog("提示", "当前为移动网络是否继续上传", 2);
+                        NetWorkDialog(getResources().getString(R.string.dialog_tittle_7), getResources().getString(R.string.dialog_content_6), 2);
                     }
                 } else {
-                    NetWorkDialog("提示", "当前网络不可用无法上传", 3);
+                    NetWorkDialog(getResources().getString(R.string.dialog_tittle_7), getResources().getString(R.string.dialog_content_7), 3);
                 }
 
                 break;
             case R.id.tv_Batch_UpLoad:
+                showProgressDialog();
                 type = 2;
                 if (ck_listProjectDb != null && ck_listProjectDb.size() > 0) {
                     if (Constants.isNetWorkConnect) {
                         if (Constants.NetWorkType != null && Constants.NetWorkType.equals("WIFI")) {
-                            NetWorkDialog("提示", "是否上传", 1);
+                            NetWorkDialog(getResources().getString(R.string.dialog_tittle_7), getResources().getString(R.string.dialog_content_5), 1);
                         } else if (Constants.NetWorkType != null && Constants.NetWorkType.equals("MOBILE")) {
-                            NetWorkDialog("提示", "当前为移动网络是否继续上传", 2);
+                            NetWorkDialog(getResources().getString(R.string.dialog_tittle_7), getResources().getString(R.string.dialog_content_6), 2);
                         }
                     } else {
-                        NetWorkDialog("提示", "当前网络不可用无法上传", 3);
+                        NetWorkDialog(getResources().getString(R.string.dialog_tittle_7), getResources().getString(R.string.dialog_content_7), 3);
                     }
                 } else {
-                    ToastUtils.showLong("请选择要上传的项目");
+                    ToastUtils.showLong(getResources().getString(R.string.toast_40));
                 }
                 break;
             case R.id.ck_bottom:
@@ -476,10 +480,9 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
 
         new MaterialDialog.Builder(_mActivity)
                 .customView(inflate, false)
-                .cancelable(false)
                 .canceledOnTouchOutside(false)
-                .negativeText("取消")
-                .positiveText("确认")
+                .negativeText(getResources().getString(R.string.cancel))
+                .positiveText(getResources().getString(R.string.resume))
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -506,8 +509,8 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
         new MaterialDialog.Builder(_mActivity)
                 .title(title)
                 .content(Content)
-                .negativeText("取消")
-                .positiveText("确认")
+                .negativeText(getResources().getString(R.string.cancel))
+                .positiveText(getResources().getString(R.string.resume))
                 .cancelable(false)
                 .canceledOnTouchOutside(false)
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
@@ -545,29 +548,13 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                     conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
                     conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
                     ossClient = new OSSClient(_mActivity, ApiContact.endpoint, credentialProvider, conf);
+                    getSubjectListByOne();
                 }
             }).start();
 
+        } else {
+            getSubjectListByOne();
         }
-
-        getSubjectListByOne();
-     /*   mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (ossClient == null) {
-                    OSSCredentialProvider credentialProvider = new OSSAuthCredentialsProvider(ApiContact.STSSERVER);
-                    ClientConfiguration conf = new ClientConfiguration();
-                    conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
-                    conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
-                    conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
-                    conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
-                    ossClient = new OSSClient(_mActivity.getApplicationContext(), ApiContact.endpoint, credentialProvider, conf);
-                    getSubjectListByOne();
-                } else {
-                    getSubjectListByOne();
-                }
-            }
-        });*/
 
     }
 
@@ -577,7 +564,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     private void getSubjectListByOne() {
         //获取第一各项目的题目
         if (ossClient != null) {
-            showProgressDialog();
+
             //获取题目下可上传的题目
             if (type == 1) {  //全部上传模式
                 p.getSubjectList(allProjectList, 0);
@@ -697,6 +684,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                                 : subjectsDB.get(subject_position).getNumber() + "_" + (i+1) + ".png" + ";");
                     }
                 }
+                KLog.d("上传文件_",stringBuffer.toString());
                 map.put("picture", stringBuffer.toString());
                 map.put("pictureCount", picList.size());
             }
