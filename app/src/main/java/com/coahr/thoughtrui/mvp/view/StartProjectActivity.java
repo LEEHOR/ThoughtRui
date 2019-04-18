@@ -117,7 +117,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
             }
         });
         format = getResources().getString(R.string.start_activity_tittle);
-        String format1 = String.format(format, 1);
+        String format1 = String.format(format, 0);
         p_mytitle.getTvTittle().setText(format1);
     }
 

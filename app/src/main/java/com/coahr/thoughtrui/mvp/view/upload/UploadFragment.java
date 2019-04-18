@@ -118,8 +118,8 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                     getSubjectListByOne();
                     break;
                 case UPDATE_PROGRESS:
-                    progressBar.setMax(msg.arg2);
-                    progressBar.setProgress(msg.arg1);
+                    //progressBar.setMax(msg.arg2);
+                   // progressBar.setProgress(msg.arg1);
                     tv_progress_info.setText(msg.obj!=null ?msg.obj.toString():"");
                     break;
                 case UPDATE_TITTLE:
@@ -159,6 +159,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
 
     @Override
     public void initView() {
+        getOSS();
         inflate = LayoutInflater.from(_mActivity).inflate(R.layout.dialog_progress, null);
         tv_message_tittle = inflate.findViewById(R.id.tv_message_tittle);
         tv_progress_info = inflate.findViewById(R.id.tv_progress_info);
@@ -523,7 +524,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         if (types == 1 || types == 2) {
-                            getOSS();
+                            getSubjectListByOne();
                         }
                         dialog.dismiss();
                     }
@@ -548,12 +549,12 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                     conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
                     conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
                     ossClient = new OSSClient(_mActivity, ApiContact.endpoint, credentialProvider, conf);
-                    getSubjectListByOne();
+
                 }
             }).start();
 
         } else {
-            getSubjectListByOne();
+
         }
 
     }

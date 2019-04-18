@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -335,8 +336,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
                 tv_fstatus.setText(getResources().getString(R.string.string_2));
             }
             tv_cName.setText(projectDetail.getData().getCname());
-            tv_cCode.setText(Constants.user_type == 1 ? projectDetail.getData().getSale_code() : Constants.user_type == 2
-                    ? projectDetail.getData().getService_code() : projectDetail.getData().getSale_code());
+            tv_cCode.setText(projectDetail.getData().getSale_code()!=null?projectDetail.getData().getSale_code() : projectDetail.getData().getService_code() !=null? projectDetail.getData().getSale_code():"");
             tv_cLevel.setText(projectDetail.getData().getGrade());
             tv_cAddress.setText(projectDetail.getData().getAreaAddress() + projectDetail.getData().getLocation());
             tv_time_cycle.setText(TimeUtils.getStingYMDHM(projectDetail.getData().getUploadTime()));
@@ -395,7 +395,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
         List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", projectId);
         if (projectsDBS != null && projectsDBS.size() > 0) {
             ProjectsDB projectsDB = projectsDBS.get(0);
-            tv_cCode.setText(projectsDB.getSale_code() != null ? projectsDB.getSale_code() : projectsDB.getService_code());
+            tv_cCode.setText(TextUtils.isEmpty(projectsDB.getSale_code()) ?  projectsDB.getService_code() : projectsDB.getSale_code());
             tv_cLevel.setText(projectsDB.getGrade());
             tv_cAddress.setText(projectsDB.getAddress() + projectsDB.getLocation());
             tv_time_cycle.setText(TimeUtils.getStingYMDHM(projectsDB.getUploadTime()));
