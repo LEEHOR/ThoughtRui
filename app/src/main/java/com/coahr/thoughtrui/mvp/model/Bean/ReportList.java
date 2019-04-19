@@ -123,6 +123,7 @@ public class ReportList {
             private String targetDate;
             private int count;
             private String diagnosis;
+            private int duration;
             private String measures;
             private String executor;
             private String levelId;
@@ -195,6 +196,14 @@ public class ReportList {
 
             public void setDiagnosis(String diagnosis) {
                 this.diagnosis = diagnosis;
+            }
+
+            public int getDuration() {
+                return duration;
+            }
+
+            public void setDuration(int duration) {
+                this.duration = duration;
             }
 
             public String getMeasures() {
@@ -326,6 +335,7 @@ public class ReportList {
             private String targetDate;
             private int count;
             private String diagnosis;
+            private int duration;
             private String measures;
             private String executor;
             private String levelId;
@@ -345,6 +355,7 @@ public class ReportList {
                 targetDate = in.readString();
                 count = in.readInt();
                 diagnosis = in.readString();
+                duration=in.readInt();
                 measures = in.readString();
                 executor = in.readString();
                 levelId = in.readString();
@@ -429,6 +440,14 @@ public class ReportList {
 
             public void setDiagnosis(String diagnosis) {
                 this.diagnosis = diagnosis;
+            }
+
+            public int getDuration() {
+                return duration;
+            }
+
+            public void setDuration(int duration) {
+                this.duration = duration;
             }
 
             public String getMeasures() {
@@ -523,6 +542,7 @@ public class ReportList {
                 parcel.writeString(targetDate);
                 parcel.writeInt(count);
                 parcel.writeString(diagnosis);
+                parcel.writeInt(duration);
                 parcel.writeString(measures);
                 parcel.writeString(executor);
                 parcel.writeString(levelId);
@@ -589,6 +609,7 @@ public class ReportList {
             private String targetDate;
             private int count;
             private String diagnosis;
+            private int duration;
             private String measures;
             private String executor;
             private String levelId;
@@ -661,6 +682,14 @@ public class ReportList {
 
             public void setDiagnosis(String diagnosis) {
                 this.diagnosis = diagnosis;
+            }
+
+            public int getDuration() {
+                return duration;
+            }
+
+            public void setDuration(int duration) {
+                this.duration = duration;
             }
 
             public String getMeasures() {

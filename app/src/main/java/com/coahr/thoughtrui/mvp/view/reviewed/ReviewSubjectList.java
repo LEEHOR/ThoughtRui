@@ -157,7 +157,7 @@ public class ReviewSubjectList extends BaseFragment<ReviewSubjectList_C.Presente
                     ProjectsDB projectsDB=new ProjectsDB();
                     projectsDB.setToDefault("isComplete");
                     projectsDB.setToDefault("pUploadStatus");
-                    projectsDB.setStage("2");
+                    projectsDB.setStage("1");
                     projectsDB.update(projectsDBS.get(0).getId());
                 }
                 adapter.setTag(statues);

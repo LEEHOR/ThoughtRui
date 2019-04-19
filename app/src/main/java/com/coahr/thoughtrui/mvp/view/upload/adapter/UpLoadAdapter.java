@@ -1,5 +1,6 @@
 package com.coahr.thoughtrui.mvp.view.upload.adapter;
 
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -45,7 +46,7 @@ public class UpLoadAdapter extends BaseQuickAdapter<ProjectsDB, BaseViewHolder> 
     protected void convert(BaseViewHolder helper, final ProjectsDB item) {
         if (item != null) {
             helper.setText(R.id.up_tv_schedule, item.getProgress())
-                    .setText(R.id.f_type, item.getSale_code() !=null?"["+item.getSale_code()+"]":"["+item.getService_code()+"]")
+                    .setText(R.id.f_type, TextUtils.isEmpty(item.getSale_code())?"["+item.getService_code()+"]":"["+item.getSale_code()+"]")
                     .setText(R.id.up_tv_time, item.getPname())
                     .setText(R.id.up_tv_project_code, item.getCode())
                     .setText(R.id.up_tv_project_name, item.getPname())

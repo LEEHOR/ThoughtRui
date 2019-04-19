@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -163,6 +164,7 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
     private ArrayList<String> Before_imageList_oss = new ArrayList<>(); //OssUrl
     private ArrayList<String> select_pic=new ArrayList<>();  //相册选择
     private ArrayList<String> resultList = new ArrayList<>();  //Osskey
+    private ArrayList<String> before_up=new ArrayList<>();  //改善前上传图片
     private PhotoAlbumDialogFragment photoAlbumDialogFragment;
     private ReportList.DataBean.AllListBean reportList;
     private OSSClient ossClient;
@@ -305,18 +307,28 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
                 openMulti(10 - adapter.getData().size());
                 break;
             case R.id.plan_1_next:
-                before_date = adapter.getData();
+                before_up.addAll(adapter.getData());
                 if (select_city == null) {
                     ToastUtils.showLong(getResources().getString(R.string.toast_7));
                 } else if (projectId == null) {
                     ToastUtils.showLong(getResources().getString(R.string.toast_37));
                 } else if (levelId == null) {
                     ToastUtils.showLong(getResources().getString(R.string.toast_38));
-                } else if (before_date.size()<=0) {
+                } else if (before_up.size()<=0) {
                     ToastUtils.showLong(getResources().getString(R.string.toast_28));
                 } else {
-                   
-                    start(Fragment_Action_plan_presentation_2.newInstance(reportList, projectId, levelId, (ArrayList<String>) adapter.getData()));
+                    Iterator<String> before_it = before_up.iterator();
+                    while (before_it.hasNext()) {
+                        String x = before_it.next();
+                        if (x.startsWith("http")) {
+                            before_it.remove();
+                        }
+                    }
+                    if (before_up.size()>0){
+                        start(Fragment_Action_plan_presentation_2.newInstance(reportList, projectId, levelId, before_up));
+                    } else {
+                        ToastUtils.showLong(getResources().getString(R.string.toast_28));
+                    }
                 }
                 break;
         }

@@ -51,7 +51,7 @@ public interface Fragment_action_plan_pre_2_c {
 
         void getAfterPicUrlFailure(String failure);
 
-        void putImagesUpload(OSS oss, List<String> beforeImage,List<String> afterImage,String projectId, String levelId);
+        void putImagesUpload(OSS oss, List<String> beforeImage,List<String> afterImage,String projectId, String levelId,int type);
 
         void putUploadImagesCallBack(int TotalSize, int successSize, int failureSize);
 
@@ -71,7 +71,8 @@ public interface Fragment_action_plan_pre_2_c {
 
         void getAfterPicUrl(OSS oss, List<String> picKeyList);
 
-        void putImagesUpload(OSS oss, List<String> beforeImage,List<String> afterImage,String projectId, String levelId);
+        void putImagesUpload(OSS oss, List<String> beforeImage,List<String> afterImage,String projectId, String levelId,int type);
+
 
         void SubmitReport(Map<String,Object> map);
 
