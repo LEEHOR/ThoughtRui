@@ -73,7 +73,7 @@ public class CensorBean {
             private String Pname;
             private String areaAddress;
             private String code;
-            private int endTime;
+            private long endTime;
             private String id;
             private int inspect;
             private String location;
@@ -117,11 +117,11 @@ public class CensorBean {
                 this.code = code;
             }
 
-            public int getEndTime() {
+            public long getEndTime() {
                 return endTime;
             }
 
-            public void setEndTime(int endTime) {
+            public void setEndTime(long endTime) {
                 this.endTime = endTime;
             }
 

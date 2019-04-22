@@ -206,7 +206,7 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
                         progressBar.setProgress(msg.arg1);
                     }
                     //   progressBar.setProgress(msg.arg1);
-                    tv_tittle.setText(msg.obj.toString());
+                   // tv_tittle.setText(msg.obj.toString());
                     break;
             }
         }
@@ -223,6 +223,7 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
     private String uPAudioPath;
     private Fill_in_blankDialog fill_in_blankDialog;
     private OSSAuthCredentialsProvider credentialProvider;
+    private ProgressBar progressBar_1;
 
     public static PagerFragment_a newInstance(int position, String ht_ProjectId, int countSize, String name_project, String ht_id) {
         PagerFragment_a pagerFragment_a = new PagerFragment_a();
@@ -259,6 +260,7 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
         inflate = LayoutInflater.from(_mActivity).inflate(R.layout.dialog_progress, null);
         tv_tittle = inflate.findViewById(R.id.tv_progress_info);
         progressBar = inflate.findViewById(R.id.progress_bar);
+        progressBar_1 = inflate.findViewById(R.id.pro_1);
 
         if (getArguments() != null) {
             ht_projectId = getArguments().getString("ht_ProjectId");
@@ -406,7 +408,7 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
                         ToastUtils.showLong(getResources().getString(R.string.toast_17));
                     }
                 } else {
-                    showDeleteAudioDialog(getResources().getString(R.string.dialog_tittle_6), getResources().getString(R.string.dialog_content_4));
+                    showStopAudioDialog(getResources().getString(R.string.dialog_tittle_6), getResources().getString(R.string.dialog_content_4));
                 }
 
                 break;
@@ -766,6 +768,8 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
     @Override
     public void getUpLoadFileListSuccess(List<String> list, String projectsDB_id, SubjectsDB subjectsDB) {
         showProgressDialog();
+        tv_tittle.setText(String.format(getResources().getString(R.string.upload_fragment_6), 0, 1));
+
         p.startUpload(ossClient, list, projectsDB, subjectsDB);
     }
 
@@ -835,14 +839,17 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
             currentSize = 0;
         }*/
 
-        Message mes = mHandler.obtainMessage(UIPROGRESS, info);
+      /*  Message mes = mHandler.obtainMessage(UIPROGRESS, info);
         mes.arg1 = currentSize;
         mes.arg2 = totalSize;
-        mes.sendToTarget();
+        mes.sendToTarget();*/
     }
 
     @Override
     public void CallBackSuccess(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
+        tv_tittle.setText(String.format(getResources().getString(R.string.upload_fragment_6), 1, 1));
+        tv_tittle.setText(getResources().getString(R.string.toast_39));
+        progressBar_1.setVisibility(View.INVISIBLE);
         p.UpDataDb(projectsDB, subjectsDB);
     }
 
@@ -854,6 +861,7 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
 
     @Override
     public void UpDataDbSuccess() {
+
         ToastUtils.showLong(getResources().getString(R.string.toast_22));
         fr_upload.setEnabled(true);
         iv_upload_tag.setImageResource(R.mipmap.uploaded);
@@ -1251,6 +1259,7 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
      * 上传进度回调
      */
     private void showProgressDialog() {
+        progressBar_1.setVisibility(View.VISIBLE);
         new MaterialDialog.Builder(_mActivity)
                 .customView(inflate, false)
                 .cancelable(false)
@@ -1332,11 +1341,14 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
                     conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
                     conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
                     ossClient = new OSSClient(_mActivity, ApiContact.endpoint, credentialProvider, conf);
+                    mHandler.sendEmptyMessage(GETUPLOADLIST);
                 }
             }).start();
 
+        } else {
+            p.UpLoadFileList(projectsDB.getPid(), subjectsDB_now);
         }
-        p.UpLoadFileList(projectsDB.getPid(), subjectsDB_now);
+
     }
 
     /**

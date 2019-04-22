@@ -116,6 +116,7 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
     private ArrayList<String> resultList = new ArrayList<>();  //oss回调的key
     private ArrayList<String> afterImage_0ss = new ArrayList<>(); //改善后Oss上的图片
     private ArrayList<String> select_after = new ArrayList<>();   //相册选择的图片
+    private ArrayList<String> after_Up=new ArrayList<>();   //改善后要上传的图片
     private OSSAuthCredentialsProvider credentialProvider;
     private OSSClient ossClient;
     private static final int MSG_LOAD_OSS = 0x0001;
@@ -129,7 +130,7 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
             super.handleMessage(msg);
             switch (msg.what) {
                 case MSG_LOAD_PIC:
-                    // p.getAfterPic(ossClient,projectId,levelId);
+                    p.getAfterPic(ossClient, projectId, levelId);
                     break;
                 case UPDATE_PROGRESS:
                     progressBar.setMax(msg.arg2);
@@ -148,7 +149,7 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
     private com.coahr.thoughtrui.mvp.view.action_plan.Adapter.item_plan_2_history_reason item_plan_2_history_reason;
     private LinearLayoutManager reason_manager;
     private String select_sp;   //选择spinner
-    private int count;   //持续天数
+    private int duration;   //持续天数
     private int completeStatus, status;  //是否完成
     private String targetDate;  //计划完成时间
     private String diagnosis;  //原因诊断
@@ -159,9 +160,6 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
     private ProgressBar progressBar;
     private TextView tv_tittle;
     private TimePickerDialog datePickerDialog;
-    private int days;
-    private List<String> after_data;
-
     @Override
     public Fragment_action_plan_pre_2_c.Presenter getPresenter() {
         return p;
@@ -191,12 +189,9 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
             projectId = getArguments().getString("projectId");
             levelId = getArguments().getString("levelId");
             beforeImage = getArguments().getStringArrayList("beforeImage");
-            for (int i = 0; i < beforeImage.size(); i++) {
-                KLog.d("图片", beforeImage.get(i));
-            }
             if (report != null) {
                 projectId = report.getProjectId();
-                count = report.getCount();
+                duration = report.getDuration();
                 completeStatus = report.getCompleteStatus();
                 targetDate = report.getTargetDate();
                 diagnosis = report.getDiagnosis();
@@ -206,7 +201,7 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
                 plan2TvCauseDiagnosis.setText(diagnosis);
                 plan2TvCorrectiveActions.setText(measures);
                 plan2TvTime.setText(targetDate);
-                plan2TvTimeCount.setText(String.format(getResources().getString(R.string.plan_2_11), count));
+                plan2TvTimeCount.setText(String.format(getResources().getString(R.string.plan_2_11), duration));
                 plan2TvExecutor.setText(executor);
 
             } else {
@@ -355,15 +350,20 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
 
     @Override
     public void putUploadImagesCallBack(int TotalSize, int successSize, int failureSize) {
-        if (TotalSize == (successSize + failureSize)) {
-            if (TotalSize == successSize) {
-                Message mes = mHandler.obtainMessage(UPDATE_PROGRESS, getResources().getString(R.string.toast_39));
-                mes.sendToTarget();
-                sendReport();
-            } else {
-                Message mes = mHandler.obtainMessage(UPDATE_PROGRESS, getResources().getString(R.string.toast_24));
-                mes.sendToTarget();
+        if (TotalSize != 0) {
+            if (TotalSize == (successSize + failureSize)) {
+                if (TotalSize == successSize) {
+                    Message mes = mHandler.obtainMessage(UPDATE_PROGRESS, getResources().getString(R.string.toast_39));
+                    mes.sendToTarget();
+                    sendReport();
+                } else {
+                    Message mes = mHandler.obtainMessage(UPDATE_PROGRESS, getResources().getString(R.string.toast_24));
+                    mes.sendToTarget();
+                }
             }
+
+        } else {
+            sendReport();
         }
     }
 
@@ -401,7 +401,8 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
                     conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
                     conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
                     ossClient = new OSSClient(_mActivity, ApiContact.endpoint, credentialProvider, conf);
-                    p.getAfterPic(ossClient, projectId, levelId);
+                    mHandler.sendEmptyMessage(MSG_LOAD_PIC);
+                    //p.getAfterPic(ossClient, projectId, levelId);
                 }
             }).start();
         } else {
@@ -505,32 +506,30 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
                 openMulti(10 - adapter_photo.getData().size());
                 break;
             case R.id.plan_2_tv_submit:
-                after_data = adapter_photo.getData();
+                after_Up.addAll(adapter_photo.getData());
                 if (TextUtils.isEmpty(plan2TvCauseDiagnosis.getText())) {
                     ToastUtils.showLong(getResources().getString(R.string.plan_2_13));
                 } else if (TextUtils.isEmpty(plan2TvCorrectiveActions.getText())) {
                     ToastUtils.showLong(getResources().getString(R.string.plan_2_14));
                 } else if (TextUtils.isEmpty(plan2TvTime.getText())) {
                     ToastUtils.showLong(getResources().getString(R.string.plan_2_15));
-                } else if (after_data.size() <= 0) {
+                } else if (after_Up.size() <= 0) {
                     ToastUtils.showLong(getResources().getString(R.string.toast_28));
                 } else {
                     showProgressDialog();
-                    Iterator<String> before_it = beforeImage.iterator();
-                    while (before_it.hasNext()) {
-                        String x = before_it.next();
-                        if (x.startsWith("http")) {
-                            before_it.remove();
-                        }
-                    }
-                    Iterator<String> after_it = after_data.iterator();
+                    Iterator<String> after_it = after_Up.iterator();
                     while (after_it.hasNext()) {
                         String x = after_it.next();
                         if (x.startsWith("http")) {
                             after_it.remove();
                         }
                     }
-                    p.putImagesUpload(ossClient, beforeImage, after_data, projectId, levelId);
+                    if (after_Up.size()>0) {
+                        p.putImagesUpload(ossClient, beforeImage, after_Up, projectId, levelId,status);
+                    } else {
+                        ToastUtils.showLong(getResources().getString(R.string.toast_28));
+                    }
+
                 }
 
                 break;
@@ -574,27 +573,27 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
         StringBuffer before_buffer = new StringBuffer();
         StringBuffer after_buffer = new StringBuffer();
         for (int i = 0; i < beforeImage.size(); i++) {
-            KLog.d("beforeImage_1", FileIOUtils.getE(beforeImage.get(i),"/"));
+            KLog.d("beforeImage_1", FileIOUtils.getE(beforeImage.get(i), "/"));
             if (beforeImage.size() == 1) {
-                before_buffer.append(FileIOUtils.getE(beforeImage.get(i),"/"));
+                before_buffer.append(FileIOUtils.getE(beforeImage.get(i), "/"));
             } else {
                 if (i == beforeImage.size() - 1) {
-                    before_buffer.append(FileIOUtils.getE(beforeImage.get(i),"/"));
+                    before_buffer.append(FileIOUtils.getE(beforeImage.get(i), "/"));
                 } else {
-                    before_buffer.append(FileIOUtils.getE(beforeImage.get(i),"/")+";");
+                    before_buffer.append(FileIOUtils.getE(beforeImage.get(i), "/") + ";");
                 }
             }
         }
 
-        for (int i = 0; i < after_data.size(); i++) {
-            KLog.d("afterImage_1", FileIOUtils.getE(after_data.get(i),"/"));
-            if (after_data.size() == 1) {
-                after_buffer.append(FileIOUtils.getE(after_data.get(i),"/"));
+        for (int i = 0; i < after_Up.size(); i++) {
+            KLog.d("afterImage_1", FileIOUtils.getE(after_Up.get(i), "/"));
+            if (after_Up.size() == 1) {
+                after_buffer.append(FileIOUtils.getE(after_Up.get(i), "/"));
             } else {
-                if (i == after_data.size() - 1) {
-                    after_buffer.append(FileIOUtils.getE(after_data.get(i),"/"));
+                if (i == after_Up.size() - 1) {
+                    after_buffer.append(FileIOUtils.getE(after_Up.get(i), "/"));
                 } else {
-                    after_buffer.append(FileIOUtils.getE(after_data.get(i),"/") + ";");
+                    after_buffer.append(FileIOUtils.getE(after_Up.get(i), "/") + ";");
                 }
             }
         }
@@ -610,11 +609,11 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
         map.put("afterPicture", after_buffer.toString().trim());
         map.put("executor", plan2TvExecutor.getText().toString().trim());
         map.put("sessionId", Constants.sessionId);
-        map.put("duration", String.valueOf(days));
+        map.put("duration", String.valueOf(duration));
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-               // p.SubmitReport(map);
+                 p.SubmitReport(map);
             }
         });
 
@@ -652,8 +651,8 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
     public void onDateSet(TimePickerDialog timePickerView, long millseconds) {
         String stingYMD = TimeUtils.getStingYMD(millseconds);
         plan2TvTime.setText(stingYMD);
-        days = differentDaysByMillisecond(millseconds, System.currentTimeMillis());
-        plan2TvTimeCount.setText(String.format(getResources().getString(R.string.plan_2_11), days));
+        duration = differentDaysByMillisecond(millseconds, System.currentTimeMillis());
+        plan2TvTimeCount.setText(String.format(getResources().getString(R.string.plan_2_11), duration));
     }
 
 

@@ -74,9 +74,9 @@ public class Fragment_action_plan_pre_2_P extends BasePresenter<Fragment_action_
     }
 
     @Override
-    public void putImagesUpload(OSS oss, List<String> beforeImage, List<String> afterImage, String projectId, String levelId) {
+    public void putImagesUpload(OSS oss, List<String> beforeImage, List<String> afterImage, String projectId, String levelId,int type) {
         if (mModle != null) {
-            mModle.putImagesUpload(oss, beforeImage, afterImage, projectId, levelId);
+            mModle.putImagesUpload(oss, beforeImage, afterImage, projectId, levelId,type);
         }
     }
 

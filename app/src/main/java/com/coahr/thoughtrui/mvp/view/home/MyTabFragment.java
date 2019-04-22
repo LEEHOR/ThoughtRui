@@ -101,7 +101,6 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
     private String DownLoadProject_Id;
     private List<HomeDataList.DataBean.AllListBean> allListBeanList = new ArrayList<>();
     private List<String> db_list = new ArrayList<>();
-    ;
 
     @Override
     public MyTabFragmentC.Presenter getPresenter() {

@@ -52,7 +52,7 @@ public class Fragment_Action_plan_pre_2_M extends BaseModel<Fragment_action_plan
     @Override
     public void getAfterPic(OSS ossClient, String projectId, String levelId) {
         ListObjectsRequest listObjects = new ListObjectsRequest(Constants.bucket);
-        listObjects.setPrefix(String.format(BaseApplication.mContext.getResources().getString(R.string.plan_2_12),projectId,levelId));
+        listObjects.setPrefix(String.format(BaseApplication.mContext.getResources().getString(R.string.plan_2_12), projectId, levelId));
         ossClient.asyncListObjects(listObjects, new OSSCompletedCallback<ListObjectsRequest, ListObjectsResult>() {
 
             @Override
@@ -103,25 +103,25 @@ public class Fragment_Action_plan_pre_2_M extends BaseModel<Fragment_action_plan
     }
 
     @Override
-    public void putImagesUpload(OSS oss, List<String> beforeImage, List<String> afterImage, String projectId, String levelId) {
+    public void putImagesUpload(OSS oss, List<String> beforeImage, List<String> afterImage, String projectId, String levelId, int type) {
         successCount = 0;
         failureCount = 0;
-        if (beforeImage != null && beforeImage.size() > 0) {
+        if (beforeImage != null && beforeImage.size() > 0 && type == -1) {
             for (int i = 0; i < beforeImage.size(); i++) {
                 putImages(oss, beforeImage.get(i), projectId, levelId, beforeImage.size() + afterImage.size(), 1);
                 KLog.d("before", beforeImage.get(i));
             }
         }
 
-        if (afterImage != null && afterImage.size() > 0) {
+        if (afterImage != null && afterImage.size() > 0 && type == 1) {
             for (int i = 0; i < afterImage.size(); i++) {
                 putImages(oss, afterImage.get(i), projectId, levelId, beforeImage.size() + afterImage.size(), 2);
                 KLog.d("after", afterImage.get(i));
             }
         }
-        if (beforeImage.size()+afterImage.size()==0){
+        if ((beforeImage.size() + afterImage.size()) == 0) {
             if (getPresenter() != null) {
-                getPresenter().putUploadProgress(0, 0, "");
+                getPresenter().putUploadImagesCallBack(0, 0, 0);
             }
         }
     }
@@ -133,9 +133,9 @@ public class Fragment_Action_plan_pre_2_M extends BaseModel<Fragment_action_plan
                     @Override
                     public void _onNext(SubmitReport submitReport) {
                         if (getPresenter() != null) {
-                            if (submitReport.getResult()==1) {
+                            if (submitReport.getResult() == 1) {
                                 getPresenter().SubmitReportSuccess(submitReport);
-                            }else {
+                            } else {
                                 getPresenter().SubmitReportFailure(submitReport.getMsg());
                             }
                         }
@@ -154,7 +154,7 @@ public class Fragment_Action_plan_pre_2_M extends BaseModel<Fragment_action_plan
      */
     private void putImages(OSS oss, String picPath, String projectId, String levelId, int TotalSize, int type) {
 
-        String object = String.format("%1$s/%2$s/%3$s/%4$s/%5$s", "report", projectId, levelId, type==1?"before":type==2?"after":"before", FileIOUtils.getE(picPath, "/"));
+        String object = String.format("%1$s/%2$s/%3$s/%4$s/%5$s", "report", projectId, levelId, type == 1 ? "before" : type == 2 ? "after" : "before", FileIOUtils.getE(picPath, "/"));
         KLog.d("object", object);
         PutObjectRequest put = new PutObjectRequest(Constants.bucket, object, picPath);
         put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {

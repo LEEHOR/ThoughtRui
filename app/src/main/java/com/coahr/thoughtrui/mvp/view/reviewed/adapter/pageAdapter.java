@@ -27,8 +27,8 @@ public class pageAdapter extends BaseQuickAdapter<CensorBean.DataBean.ListBean,B
     protected void convert(final BaseViewHolder helper, final CensorBean.DataBean.ListBean item) {
         if (item != null) {
             helper.setText(R.id.tv_schedule,item.getProgress())
-                    .setText(R.id.tv_explain,Constants.user_type == 1 ? "["+item.getSale_code()+"]"
-                            : Constants.user_type == 2 ? "["+item.getService_code()+"]"
+                    .setText(R.id.tv_explain,item.getSale_code() !=null ? "["+item.getSale_code()+"]"
+                            : item.getService_code() !=null ? "["+item.getService_code()+"]"
                             : "["+item.getSale_code()+"]")
                     .setText(R.id.tv_project_times,item.getPname())
                     .setText(R.id.tv_project_code,item.getCode())

@@ -292,7 +292,7 @@ public class ReViewStartAnswering extends BaseFragment_not_padding<ReViewStartAn
             @Override
             public void onClick(View v) {
                 if (isHaveRecorder) {  //有无录音
-
+                    showDeleteAudioDialog(getResources().getString(R.string.dialog_tittle_5), getResources().getString(R.string.dialog_content_3));
                 } else {
                     if (type == 1) { //开始录音
                         setupRecorder();
@@ -587,13 +587,21 @@ public class ReViewStartAnswering extends BaseFragment_not_padding<ReViewStartAn
 
     @Override
     public void getAudioFailure(String failure) {
+
         isHaveRecorder = false;
-        ToastUtils.showLong(failure + number);
         if (!isRecorder) {
             updateUi(1); //开始录音
             tv_recorder_name.setText(getResources().getString(R.string.phrases_17));
             tv_recorder_name.setTextColor(getResources().getColor(R.color.material_grey_200));
         }
+
+      /*  isHaveRecorder = false;
+        ToastUtils.showLong(failure + number);
+        if (!isRecorder) {
+            updateUi(1); //开始录音
+            tv_recorder_name.setText(getResources().getString(R.string.phrases_17));
+            tv_recorder_name.setTextColor(getResources().getColor(R.color.material_grey_200));
+        }*/
     }
 
     @Override
@@ -1386,5 +1394,42 @@ public class ReViewStartAnswering extends BaseFragment_not_padding<ReViewStartAn
         }
     }
 
+    /**
+     * 录音删除
+     * 弹窗
+     *
+     * @param title
+     * @param Content
+     */
+    private void showDeleteAudioDialog(String title, String Content) {
+        new MaterialDialog.Builder(_mActivity)
+                .title(title)
+                .content(Content)
+                .negativeText(getResources().getString(R.string.cancel))
+                .positiveText(getResources().getString(R.string.resume))
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
+                        dialog.dismiss();
+
+                    }
+                }).onPositive(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                deleteAudio(audioPath);
+                dialog.dismiss();
+            }
+        }).build().show();
+    }
+
+    /**
+     * 删除录音
+     *
+     * @param audioPath
+     */
+    private void deleteAudio(String audioPath) {
+        FileIOUtils.deleteFile(audioPath);
+        p.getSubject(dbProjectId, ht_projectId, _mActivity, number, ht_id);
+    }
 }

@@ -135,7 +135,7 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
     @Override
     public void getAudio(String ht_ProjectId, Activity activity, int number, String ht_id) {
         List<String> audiosList = FileIOUtils.getAudios(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id);
-        if (audiosList != null) {
+        if (audiosList != null && audiosList.size()>0) {
             getPresenter().getAudioSuccess(audiosList);
         } else {
             getPresenter().getAudioFailure(BaseApplication.mContext.getString(R.string.phrases_17));

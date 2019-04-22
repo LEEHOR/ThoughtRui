@@ -184,7 +184,7 @@ public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implemen
             projectsDB.setService_code(listBean.getService_code());
             projectsDB.setSale_code(listBean.getSale_code());
             projectsDB.setIsComplete(0);
-            projectsDB.setStage("1");
+            projectsDB.setStage("0");
             if (usersDBS != null && usersDBS.size() > 0) {
                 projectsDB.setUser(usersDBS.get(0));
             }
