@@ -119,20 +119,37 @@ public class Fragment_Topics extends BaseFragment<FragmentTopicsC.Presenter> imp
                     //根节点
                     ThreeNode root = new ThreeNode(questionListRoot.getId(), "", questionListRoot.getName());
                     baseNodeList.add(root);
-                    //子节点1
+                    //一级指标
                     if (questionListRoot.getQuesList_1() != null && questionListRoot.getQuesList_1().size() > 0) {
+                        //一级指标题目
                         for (int j = 0; j < questionListRoot.getQuesList_1().size(); j++) {
-
                             SubjectListBean.DataBean.QuestionListRoot.QuesListBean_1 quesListBean_1 = questionListRoot.getQuesList_1().get(j);
                             ThreeNode rootChild_1 = new ThreeNode(quesListBean_1.getId(), questionListRoot.getId(), quesListBean_1.getTitle());
                             baseNodeList.add(rootChild_1);
                         }
-                    } else {  //子节点2
-
+                    } else {    //二级指标
+                        if (questionListRoot.getValue() != null && questionListRoot.getValue().size() > 0) {
+                            //二级指标标题
+                            for (int j = 0; j < questionListRoot.getValue().size(); j++) {
+                                SubjectListBean.DataBean.QuestionListRoot.valueBean valueBean = questionListRoot.getValue().get(j);
+                                ThreeNode rootChild_2 = new ThreeNode(valueBean.getId(), questionListRoot.getId(), valueBean.getName());
+                                baseNodeList.add(rootChild_2);
+                                //二级指标题目
+                                List<SubjectListBean.DataBean.QuestionListRoot.valueBean.QuesListBean_2> quesList_2 = valueBean.getQuesList_2();
+                                if (quesList_2 != null && quesList_2.size() > 0) {
+                                    for (int k = 0; k < quesList_2.size(); k++) {
+                                        SubjectListBean.DataBean.QuestionListRoot.valueBean.QuesListBean_2 quesListBean_2 = quesList_2.get(k);
+                                        ThreeNode rootChild_2_1 = new ThreeNode(quesListBean_2.getId(), valueBean.getId(), quesListBean_2.getTitle());
+                                        baseNodeList.add(rootChild_2_1);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
+
         setAdapter(baseNodeList);
 
     }
