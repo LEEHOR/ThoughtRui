@@ -8,7 +8,7 @@ import java.util.List;
 public class CensorBean {
 
     /**
-     * data : {"list":[{"Dname":"东风本田东合店","Pname":"斯锐调查系统132456","areaAddress":"湖北省武汉市蔡甸区","code":"123","endTime":1,"id":"43c4065cc2494634b71bc870ebbd1766","inspect":1,"location":"东合中心B座","modifyTime":1527216075903,"number":1,"progress":"0/100","record":3,"startTime":1527216074020}]}
+     * data : {"list":[{"Dname":"重庆市万州区驰龙汽车服务有限公司","Pname":"测试325","areaAddress":"重庆市重庆市万州区","id":"099469b797f44afda3c73782cd8e6154","location":"重庆市万州区万全五组","modifyTime":1553843665784,"passCount":1,"progress":"1/20","repulseCount":0,"service_code":"F10023A10","type":1}]}
      * msg : 请求成功！
      * result : 1
      */
@@ -54,36 +54,30 @@ public class CensorBean {
 
         public static class ListBean {
             /**
-             * Dname : 东风本田东合店
-             * Pname : 斯锐调查系统132456
-             * areaAddress : 湖北省武汉市蔡甸区
-             * code : 123
-             * endTime : 1
-             * id : 43c4065cc2494634b71bc870ebbd1766
-             * inspect : 1
-             * location : 东合中心B座
-             * modifyTime : 1527216075903
-             * number : 1
-             * progress : 0/100
-             * record : 3
-             * startTime : 1527216074020
+             * Dname : 重庆市万州区驰龙汽车服务有限公司
+             * Pname : 测试325
+             * areaAddress : 重庆市重庆市万州区
+             * id : 099469b797f44afda3c73782cd8e6154
+             * location : 重庆市万州区万全五组
+             * modifyTime : 1553843665784
+             * passCount : 1
+             * progress : 1/20
+             * repulseCount : 0
+             * service_code : F10023A10
+             * type : 1
              */
 
             private String Dname;
             private String Pname;
             private String areaAddress;
-            private String code;
-            private long endTime;
             private String id;
-            private int inspect;
             private String location;
             private long modifyTime;
-            private int number;
+            private int passCount;
             private String progress;
-            private int record;
-            private long startTime;
-            private String sale_code;
+            private int repulseCount;
             private String service_code;
+            private int type;
 
             public String getDname() {
                 return Dname;
@@ -109,36 +103,12 @@ public class CensorBean {
                 this.areaAddress = areaAddress;
             }
 
-            public String getCode() {
-                return code;
-            }
-
-            public void setCode(String code) {
-                this.code = code;
-            }
-
-            public long getEndTime() {
-                return endTime;
-            }
-
-            public void setEndTime(long endTime) {
-                this.endTime = endTime;
-            }
-
             public String getId() {
                 return id;
             }
 
             public void setId(String id) {
                 this.id = id;
-            }
-
-            public int getInspect() {
-                return inspect;
-            }
-
-            public void setInspect(int inspect) {
-                this.inspect = inspect;
             }
 
             public String getLocation() {
@@ -157,12 +127,12 @@ public class CensorBean {
                 this.modifyTime = modifyTime;
             }
 
-            public int getNumber() {
-                return number;
+            public int getPassCount() {
+                return passCount;
             }
 
-            public void setNumber(int number) {
-                this.number = number;
+            public void setPassCount(int passCount) {
+                this.passCount = passCount;
             }
 
             public String getProgress() {
@@ -173,28 +143,12 @@ public class CensorBean {
                 this.progress = progress;
             }
 
-            public int getRecord() {
-                return record;
+            public int getRepulseCount() {
+                return repulseCount;
             }
 
-            public void setRecord(int record) {
-                this.record = record;
-            }
-
-            public long getStartTime() {
-                return startTime;
-            }
-
-            public void setStartTime(long startTime) {
-                this.startTime = startTime;
-            }
-
-            public String getSale_code() {
-                return sale_code;
-            }
-
-            public void setSale_code(String sale_code) {
-                this.sale_code = sale_code;
+            public void setRepulseCount(int repulseCount) {
+                this.repulseCount = repulseCount;
             }
 
             public String getService_code() {
@@ -203,6 +157,14 @@ public class CensorBean {
 
             public void setService_code(String service_code) {
                 this.service_code = service_code;
+            }
+
+            public int getType() {
+                return type;
+            }
+
+            public void setType(int type) {
+                this.type = type;
             }
         }
     }

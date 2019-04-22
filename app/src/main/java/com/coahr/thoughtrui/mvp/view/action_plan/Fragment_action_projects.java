@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.coahr.thoughtrui.R;
+import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_report;
@@ -63,10 +64,10 @@ public class Fragment_action_projects extends BaseFragment {
     @Override
     public void initView() {
         planActionPre.setFillet(true);
-        planActionPre.setRadius(30);
+        planActionPre.setRadius(10);
         planActionPre.setBackColor(getResources().getColor(R.color.material_blue_700));
         planActionPre.setTextColor(getResources().getColor(R.color.colorWhite));
-        planActionPre.setShape(GradientDrawable.OVAL);
+        planActionPre.setShape(GradientDrawable.RECTANGLE);
         planTittle.getLeftIcon().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,6 +94,8 @@ public class Fragment_action_projects extends BaseFragment {
     public void onViewClicked() {
         if (canReport) {
             start(Fragment_Action_plan_presentation_1.newInstance(null,1));
+        } else {
+            ToastUtils.showLong(getResources().getString(R.string.phrases_30));
         }
 
     }

@@ -164,7 +164,7 @@ public class Fragment_Umeng extends BaseFragment<Fragment_UmengP> implements Fra
                 NotificationBean.Notification notification = new NotificationBean.Notification();
                 notification.setType(3);
                 notification.setNotificationTittle(getResources().getString(R.string.umeng_fragment_not_pass));
-                notification.setNotificationContent(getResources().getString(R.string.umeng_fragment_not_pass_detail) + (censorBean.getData().getList().get(i).getSale_code() != null ? censorBean.getData().getList().get(i).getSale_code() : censorBean.getData().getList().get(i).getService_code()));
+                notification.setNotificationContent(getResources().getString(R.string.umeng_fragment_not_pass_detail) + (censorBean.getData().getList().get(i).getService_code()));
                 notification.setNotificationTime(System.currentTimeMillis());
                 notificationList.add(notification);
             }

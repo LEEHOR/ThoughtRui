@@ -146,7 +146,7 @@ public class TimeTaskService extends IntentService {
                                 intent.putExtra("type",2);
                                 intent.putExtra("ContentTittle","[审核未通过]");
                                 intent.putExtra("ContentText","你有项目审核未通过，经销商代码为：");
-                                intent.putExtra("PCode",list.get(i).getSale_code()!=null?list.get(i).getSale_code():list.get(i).getService_code());
+                                intent.putExtra("PCode",list.get(i).getService_code());
                                 intent.setAction("TIMER_ACTION");
                                 sendBroadcast(intent);
                             }

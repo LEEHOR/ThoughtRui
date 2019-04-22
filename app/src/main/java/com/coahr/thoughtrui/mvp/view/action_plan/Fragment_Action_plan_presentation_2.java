@@ -8,6 +8,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -109,6 +110,8 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
     TextView plan2TvReason;
     @BindView(R.id.plan_2_tv_submit)
     TextView plan2TvSubmit;
+    @BindView(R.id.plan_tv_6)
+    TextView planTv6;
     private ReportList.DataBean.AllListBean report;
     private String projectId;
     private String levelId;
@@ -116,7 +119,7 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
     private ArrayList<String> resultList = new ArrayList<>();  //oss回调的key
     private ArrayList<String> afterImage_0ss = new ArrayList<>(); //改善后Oss上的图片
     private ArrayList<String> select_after = new ArrayList<>();   //相册选择的图片
-    private ArrayList<String> after_Up=new ArrayList<>();   //改善后要上传的图片
+    private ArrayList<String> after_Up = new ArrayList<>();   //改善后要上传的图片
     private OSSAuthCredentialsProvider credentialProvider;
     private OSSClient ossClient;
     private static final int MSG_LOAD_OSS = 0x0001;
@@ -160,6 +163,7 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
     private ProgressBar progressBar;
     private TextView tv_tittle;
     private TimePickerDialog datePickerDialog;
+
     @Override
     public Fragment_action_plan_pre_2_c.Presenter getPresenter() {
         return p;
@@ -227,6 +231,13 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
         tv_message_tittle = inflate.findViewById(R.id.tv_message_tittle);
         tv_tittle = inflate.findViewById(R.id.tv_progress_info);
         progressBar = inflate.findViewById(R.id.progress_bar);
+        planTv6.setText(getResources().getString(R.string.plan_1_13));
+        plan2Tittle.getLeftIcon().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                _mActivity.onBackPressed();
+            }
+        });
     }
 
     @Override
@@ -260,13 +271,16 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
             }
         });
         //===================================历史记录=====================================
+        View empty = getLayoutInflater().inflate(R.layout.recycler_empty_view_1, (ViewGroup) plan2RecyclerView.getParent(), false);
         item_plan_2_history_reason = new item_plan_2_history_reason();
         reason_manager = new LinearLayoutManager(BaseApplication.mContext);
-        plan2RecyclerView.setAdapter(item_plan_2_history_reason);
         plan2RecyclerView.setLayoutManager(reason_manager);
+        plan2RecyclerView.setAdapter(item_plan_2_history_reason);
         plan2RecyclerView.addItemDecoration(new SpacesItemDecoration(0, DensityUtils.dp2px(BaseApplication.mContext, 5)), getResources().getColor(R.color.colorWhite));
         if (report != null) {
             item_plan_2_history_reason.setNewData(report.getReasonList());
+        } else {
+            item_plan_2_history_reason.setEmptyView(empty);
         }
         //=======================================Spinner是否完成======================================
         plan2SpFinished.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -513,25 +527,16 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
                     ToastUtils.showLong(getResources().getString(R.string.plan_2_14));
                 } else if (TextUtils.isEmpty(plan2TvTime.getText())) {
                     ToastUtils.showLong(getResources().getString(R.string.plan_2_15));
-                } else if (after_Up.size() <= 0) {
-                    ToastUtils.showLong(getResources().getString(R.string.toast_28));
-                } else {
-                    showProgressDialog();
-                    Iterator<String> after_it = after_Up.iterator();
-                    while (after_it.hasNext()) {
-                        String x = after_it.next();
-                        if (x.startsWith("http")) {
-                            after_it.remove();
-                        }
-                    }
-                    if (after_Up.size()>0) {
-                        p.putImagesUpload(ossClient, beforeImage, after_Up, projectId, levelId,status);
-                    } else {
+                } else if (status == -1) {
+                    uploadImages();
+                } else if (status == 1) {
+                    if (after_Up.size() <= 0) {
                         ToastUtils.showLong(getResources().getString(R.string.toast_28));
+                    } else {
+                        uploadImages();
                     }
 
                 }
-
                 break;
             case R.id.plan_2_tv_time:
                 datePickerDialog.show(getChildFragmentManager(), TAG);
@@ -613,7 +618,7 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                 p.SubmitReport(map);
+                p.SubmitReport(map);
             }
         });
 
@@ -668,4 +673,20 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
         return days + 1;
     }
 
+
+    /**
+     * 上传图片
+     */
+    private void uploadImages() {
+        showProgressDialog();
+        Iterator<String> after_it = after_Up.iterator();
+        while (after_it.hasNext()) {
+            String x = after_it.next();
+            if (x.startsWith("http")) {
+                after_it.remove();
+            }
+        }
+        p.putImagesUpload(ossClient, beforeImage, after_Up, projectId, levelId, status);
+
+    }
 }

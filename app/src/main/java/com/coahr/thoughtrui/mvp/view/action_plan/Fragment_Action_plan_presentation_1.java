@@ -100,6 +100,8 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
     TextView plan1Next;
     @BindView(R.id.plan_photo_view)
     LinearLayout planPhotoView;
+    @BindView(R.id.plan_tv_6)
+    TextView planTv6;
     /**
      * 经销商名称
      */
@@ -162,9 +164,9 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
     private GridLayoutManager gridLayoutManager;
     private PagerFragmentPhotoAdapter adapter;
     private ArrayList<String> Before_imageList_oss = new ArrayList<>(); //OssUrl
-    private ArrayList<String> select_pic=new ArrayList<>();  //相册选择
+    private ArrayList<String> select_pic = new ArrayList<>();  //相册选择
     private ArrayList<String> resultList = new ArrayList<>();  //Osskey
-    private ArrayList<String> before_up=new ArrayList<>();  //改善前上传图片
+    private ArrayList<String> before_up = new ArrayList<>();  //改善前上传图片
     private PhotoAlbumDialogFragment photoAlbumDialogFragment;
     private ReportList.DataBean.AllListBean reportList;
     private OSSClient ossClient;
@@ -179,7 +181,6 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
     private String quota1;
     private String quota2;
     private String targetDate;
-    private List<String> before_date;
 
     @Override
     public Fragment_action_plan_pre_1_c.Presenter getPresenter() {
@@ -202,6 +203,7 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
 
     @Override
     public void initView() {
+        planTv6.setText(getResources().getString(R.string.plan_1_8));
         planPhotoView.setVisibility(View.VISIBLE);
         if (getArguments() != null) {
             reportList = (ReportList.DataBean.AllListBean) getArguments().getParcelable("ReportList");
@@ -254,6 +256,7 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
                 FragmentManager fragmentManager = getFragmentManager();
                 photoAlbumDialogFragment.show(fragmentManager, TAG);
             }
+
             @Override
             public void onLongClick(List<String> imagePathList, int position) {
             }
@@ -314,7 +317,7 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
                     ToastUtils.showLong(getResources().getString(R.string.toast_37));
                 } else if (levelId == null) {
                     ToastUtils.showLong(getResources().getString(R.string.toast_38));
-                } else if (before_up.size()<=0) {
+                } else if (before_up.size() <= 0) {
                     ToastUtils.showLong(getResources().getString(R.string.toast_28));
                 } else {
                     Iterator<String> before_it = before_up.iterator();
@@ -324,7 +327,7 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
                             before_it.remove();
                         }
                     }
-                    if (before_up.size()>0){
+                    if (before_up.size() > 0) {
                         start(Fragment_Action_plan_presentation_2.newInstance(reportList, projectId, levelId, before_up));
                     } else {
                         ToastUtils.showLong(getResources().getString(R.string.toast_28));
@@ -388,8 +391,8 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
                     }
                 }
             }
-            for (int i = 0; i <resultList.size() ; i++) {
-                KLog.d("图片排序",resultList.get(i));
+            for (int i = 0; i < resultList.size(); i++) {
+                KLog.d("图片排序", resultList.get(i));
             }
             p.getBeforePicUrl(ossClient, resultList);
         }
@@ -622,16 +625,16 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
                     @Override
                     protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
                         select_pic.clear();
-                                List<MediaBean> mediaBeanList = imageMultipleResultEvent.getResult();
-                                if (mediaBeanList != null && mediaBeanList.size() > 0) {
-                                    for (int i = 0; i < mediaBeanList.size(); i++) {
-                                        select_pic.add(mediaBeanList.get(i).getOriginalPath());
-                                    }
-                                    List<String> data = adapter.getData();
-                                     data.addAll(select_pic);
-                                    adapter.setImageList(data);
-                                    adapter.setNewData(data);
-                                }
+                        List<MediaBean> mediaBeanList = imageMultipleResultEvent.getResult();
+                        if (mediaBeanList != null && mediaBeanList.size() > 0) {
+                            for (int i = 0; i < mediaBeanList.size(); i++) {
+                                select_pic.add(mediaBeanList.get(i).getOriginalPath());
+                            }
+                            List<String> data = adapter.getData();
+                            data.addAll(select_pic);
+                            adapter.setImageList(data);
+                            adapter.setNewData(data);
+                        }
 
                     }
 

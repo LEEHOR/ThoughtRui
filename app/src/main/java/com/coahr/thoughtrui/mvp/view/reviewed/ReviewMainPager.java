@@ -2,6 +2,7 @@ package com.coahr.thoughtrui.mvp.view.reviewed;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -94,7 +95,7 @@ public class ReviewMainPager extends BaseChildFragment<ReviewMainPagerFragment_C
         manager = new LinearLayoutManager(BaseApplication.mContext);
         pager_recycler.setLayoutManager(manager);
         pager_recycler.setAdapter(adapter);
-         pager_recycler.addItemDecoration(new SpacesItemDecoration(0, DensityUtils.dp2px(BaseApplication.mContext, 5)));
+        pager_recycler.addItemDecoration(new SpacesItemDecoration(0, DensityUtils.dp2px(BaseApplication.mContext, 5)));
         for (int i = 0; i < pager_recycler.getItemDecorationCount(); i++) {
             if (i != 0) {
                 pager_recycler.removeItemDecorationAt(i);
@@ -114,7 +115,7 @@ public class ReviewMainPager extends BaseChildFragment<ReviewMainPagerFragment_C
         adapter.setOnItemClick(new pageAdapter.OnItemClick() {
             @Override
             public void OnClick(CensorBean.DataBean.ListBean bean, int position) {
-                startOtherActivity(ConstantsActivity.class,Constants.fragment_review_pager,Constants.fragment_review_list,bean.getId());
+                startOtherActivity(ConstantsActivity.class, Constants.fragment_review_pager, Constants.fragment_review_list, bean.getId());
                 //start(ReviewSubjectList.newInstance(bean.getId(), Constants.sessionId, type));
             }
         });
@@ -129,16 +130,18 @@ public class ReviewMainPager extends BaseChildFragment<ReviewMainPagerFragment_C
     public void getCensorListSuccess(CensorBean censorBean) {
 
         adapter.setNewData(censorBean.getData().getList());
+        adapter.setType(type);
         isLoading = false;
         pager_swipe.setRefreshing(false);
     }
 
     @Override
-    public void getCensorListFailure(String failure,int code) {
+    public void getCensorListFailure(String failure, int code) {
         isLoading = false;
         pager_swipe.setRefreshing(false);
+
         ToastUtils.showLong(failure);
-        if (code !=-1) {
+        if (code != -1) {
 
         } else {
             loginDialog();
@@ -172,6 +175,7 @@ public class ReviewMainPager extends BaseChildFragment<ReviewMainPagerFragment_C
 
     /**
      * 首页查询时传递的值
+     *
      * @param messageEvent
      */
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
@@ -181,21 +185,21 @@ public class ReviewMainPager extends BaseChildFragment<ReviewMainPagerFragment_C
         }
     }
 
-    private void startOtherActivity(Class c, int from, int to,String projectId){
+    private void startOtherActivity(Class c, int from, int to, String projectId) {
         Intent intent = new Intent(_mActivity, c);
         intent.putExtra("from", from);
         intent.putExtra("to", to);
-        intent.putExtra("type",type);
-        intent.putExtra("projectId",projectId);
-        intent.putExtra("sessionId",Constants.sessionId);
+        intent.putExtra("type", type);
+        intent.putExtra("projectId", projectId);
+        intent.putExtra("sessionId", Constants.sessionId);
         startActivity(intent);
     }
 
     /**
      * 登录Dialog
      */
-    private void loginDialog(){
-        Login_DialogFragment login_dialogFragment=Login_DialogFragment.newInstance(Constants.MyTabFragmentCode);
+    private void loginDialog() {
+        Login_DialogFragment login_dialogFragment = Login_DialogFragment.newInstance(Constants.MyTabFragmentCode);
 
         login_dialogFragment.setLoginListener(new Login_DialogFragment.loginListener() {
             @Override
@@ -208,7 +212,7 @@ public class ReviewMainPager extends BaseChildFragment<ReviewMainPagerFragment_C
                 }
             }
         });
-        login_dialogFragment.show(getFragmentManager(),TAG);
+        login_dialogFragment.show(getFragmentManager(), TAG);
     }
 
 }

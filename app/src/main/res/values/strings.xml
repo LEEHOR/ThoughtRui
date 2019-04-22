@@ -135,7 +135,8 @@
     <string name="review_fragment_tittle">第%1$d项</string>
     <string name="review_fragment_1">已通过</string>
     <string name="review_fragment_2">未通过</string>
-    <string name="review_fragment_3">A total of%1$d questions were called back</string>
+    <string name="review_fragment_3">共有%1$d题打回</string>
+    <string name="review_fragment_4">详情</string>
 
     <!--com.coahr.thoughtrui.mvp.view.reviewed.ReviewSubjectList-->
     <string name="ReviewSubjectList_not_pass">审核未通过</string>
@@ -244,7 +245,7 @@
     <string name="plan_1_10">收回</string>
     <string name="plan_1_11">下一步</string>
     <string name="plan_1_12">report/%1$s/%2$s/before/</string>
-
+    <string name="plan_1_13">改善后图片</string>
     <!--com.coahr.thoughtrui.mvp.view.action_plan.Fragment_Action_plan_presentation_2-->
     <string name="plan_2_1">提报中</string>
     <string name="plan_2_2">原因诊断</string>

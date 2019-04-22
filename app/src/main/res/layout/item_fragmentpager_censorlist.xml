@@ -26,7 +26,7 @@
                 android:background="#0092ff"
                 android:textSize="@dimen/dp_14"
                 android:textColor="@color/colorWhite"
-                android:text="详情"
+                android:text="@string/review_fragment_4"
                 android:id="@+id/iv_tag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

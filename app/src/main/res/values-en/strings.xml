@@ -3,7 +3,7 @@
 
 	<string name="carsuper_exit">Press the exit procedure again</string>
 	<string name="app_name">PROTON</string>
-	<string name="recyclerview_item_foot">Loading...</string>
+	<string name="recyclerview_item_foot">Loading&#8230;</string>
 	<string name="home">Home</string>
 	<string name="upload">Upload</string>
 	<string name="center">Me</string>
@@ -52,7 +52,7 @@
 	<string name="project_list_date_size">Total%1$d questions,%2$d data not uploaded</string>
 	<string name="attence_tittle_1">Attendance System</string>
 	<string name="attence_attence_1">Punch Card</string>
-	<string name="attence_history_1">Attendance Hisrory</string>
+	<string name="attence_history_1">Attendance History</string>
 	<string name="attendance_limits">Has entered the scope of attendance</string>
 	<string name="no_attendance">Not in attendance</string>
 	<string name="attendance_dialog_content">Not within the scope of attendance</string>
@@ -97,16 +97,17 @@
 	<string name="answer_page_last_subject">Last item</string>
 	<string name="answer_page_next_subject">Next item</string>
 	<string name="answer_page_upload_this_topic">Upload this item</string>
-	<string name="Notification_name">notice</string>
+	<string name="Notification_name">Notice</string>
 	<string name="Notification_description">Message push</string>
 	<string name="re_start_spread">Open</string>
 	<string name="re_start_close">Close</string>
-	<string name="re_start_cancel">cancel</string>
+	<string name="re_start_cancel">Cancel</string>
 	<string name="review_fragment_not_null">Can not be empty</string>
 	<string name="review_fragment_tittle">Item%1$d</string>
 	<string name="review_fragment_1">Passed</string>
 	<string name="review_fragment_2">Not Pass</string>
-	<string name="review_fragment_3">共有%1$d题打回</string>
+	<string name="review_fragment_3">A total of%1$d questions were called back</string>
+	<string name="review_fragment_4">details</string>
 	<string name="ReviewSubjectList_not_pass">Audit failed</string>
 	<string name="ReviewSubjectList_pass">Audit pass</string>
 	<string name="ReviewSubjectList_reviewer_comment">Review opinion:</string>
@@ -139,7 +140,7 @@
 	<string name="feed_back_lengh_limited_1">Please enter a description of not less than 10 words.</string>
 	<string name="feed_back_submit">Submission</string>
 	<string name="feed_back_is_required">Feedback questions are mandatory</string>
-	<string name="feed_back_length_limited">Length Limitation 10-300 Words</string>
+	<string name="feed_back_length_limited">Length Limitation 10&#8211;300 Words</string>
 	<string name="upload_options_1">Automatically upload when WIFI is connected</string>
 	<string name="upload_options_2">Picture upload quality</string>
 	<string name="upload_options_3">high</string>
@@ -187,6 +188,7 @@
 	<string name="plan_1_10">Take back</string>
 	<string name="plan_1_11">Next step</string>
 	<string name="plan_1_12">report/%1$s/%2$s/before/</string>
+	<string name="plan_1_13">Picture after improvement</string>
 	<string name="plan_2_1">Presentation of newspapers</string>
 	<string name="plan_2_2">Cause diagnosis</string>
 	<string name="plan_2_3">Specific improvement measures</string>
@@ -207,7 +209,7 @@
 	<string name="upload_fragment_3">Upload all</string>
 	<string name="upload_fragment_4">All election</string>
 	<string name="upload_fragment_5">Batch upload</string>
-	<string name="upload_fragment_6">正在上传(%1$d/%2$d)</string>
+	<string name="upload_fragment_6">Uploading(%1$d/%2$d)</string>
 	<string name="language_cn">Chinese</string>
 	<string name="language_en">ENGLISH</string>
 	<string name="language_auto">automatic</string>
@@ -253,7 +255,7 @@
 	<string name="toast_40">Please select the items to upload.</string>
 	<string name="btn_1">Sign in</string>
 	<string name="resume">Determine</string>
-	<string name="cancel">cancel</string>
+	<string name="cancel">Cancel</string>
 	<string name="setting">Set up</string>
 	<string name="tittle">Tips</string>
 	<string name="phrases_1">Update time</string>

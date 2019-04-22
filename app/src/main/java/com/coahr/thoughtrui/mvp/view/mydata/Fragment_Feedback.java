@@ -153,13 +153,11 @@ public class Fragment_Feedback extends BaseFragment<Feedback_Fragment_C.Presente
                 ed_input.setFocusable(false);
                 ed_input.setFocusableInTouchMode(false);
                 if (rb_1.isChecked() || rb_2.isChecked() || rb_3.isChecked()) {
-
                 } else {
                     ToastUtils.showLong(getResources().getString(R.string.feed_back_is_required));
                     return;
                 }
-
-                if (ed_input.getText().toString().equals("") && (ed_input.getText().toString().length() < 10 || ed_input.getText().toString().length() > 300)) {
+                if (TextUtils.isEmpty(ed_input.getText()) || (ed_input.getText().toString().length() < 10 || ed_input.getText().toString().length() > 300)) {
                     ToastUtils.showLong(getResources().getString(R.string.feed_back_length_limited));
                     return;
                 }
