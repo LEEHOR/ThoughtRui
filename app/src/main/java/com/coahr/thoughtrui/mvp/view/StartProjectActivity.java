@@ -343,7 +343,6 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
             }
         }).build().show();
     }
-
     @Override
     public void onDestroy() {
         super.onDestroy();

@@ -236,7 +236,7 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
 
         String object = null;
         if (type == 1) {
-            String audioName = getName(localFile, "/");
+            String audioName = subjectsDBList.get(subject_position).getNumber() + ".wav";
             object = projectsDBS.get(project_position).getPid() + "/audios/" + audioName;
         } else {
             String picName = getName(localFile, ".").toLowerCase().equals("png") ? subjectsDBList.get(subject_position).getNumber() + "_" + upPic + ".png"
@@ -249,12 +249,6 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
 
         PutObjectRequest put = new PutObjectRequest(Constants.bucket, object, localFile);
 
-       /* put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
-            @Override
-            public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
-                // getPresenter().StartUiProgressSuccess((int) currentSize, (int) totalSize, "第" + subjectsDBList.get(subject_position).getNumber() + "题\n" + fileName);
-            }
-        });*/
         KLog.d("上传文件_up", object);
         put.setCRC64(OSSRequest.CRC64Config.YES);
         OSSAsyncTask task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
@@ -262,7 +256,7 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
             public void onSuccess(PutObjectRequest request, PutObjectResult result) {
                 UpLoadSuccessCount++;
                 if (getPresenter() != null) {
-                    KLog.d("上传文件_成功");
+                    KLog.d("上传文件_成功", count, UpLoadFailureCount, UpLoadSuccessCount);
                     getPresenter().UploadCallBack(list, subjectsDBList, projectsDBS, picList, project_position, subject_position,
                             UpLoadSuccessCount, UpLoadFailureCount, count);
                 }

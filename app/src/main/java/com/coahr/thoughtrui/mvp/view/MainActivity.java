@@ -72,7 +72,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     private static final long INTERVAL_TIME = 2000;
     private String sessionId;
     private int page = 0; //当前显示页面
-    private static int TIMES = 1000*60*5;
+    private static int TIMES = 1000 * 60 * 5;
     private static int SEND_MESSAGE = 1;
     private BaiduLocationHelper baiduLocationHelper_s;
     private Handler mHandker = new Handler() {
@@ -91,6 +91,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+
         if (savedInstanceState != null) {
             mFragments[0] = findFragment(MainInfoFragment.class);
             mFragments[1] = findFragment(UploadFragment.class);
@@ -199,12 +200,11 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
 
                 @Override
                 public void PermissionFail(List<String> permissions) {
-                    Toast.makeText(MainActivity.this, "获取权限失败", Toast.LENGTH_LONG).show();
                     new MaterialDialog.Builder(BaseApplication.mContext)
-                            .title("获取权限失败")
-                            .content("我们需要当前权限")
-                            .negativeText("取消")
-                            .positiveText("确认")
+                            .title(getResources().getString(R.string.message_permission_tittle))
+                            .content(getResources().getString(R.string.message_permission_content))
+                            .negativeText(getResources().getString(R.string.cancel))
+                            .positiveText(getResources().getString(R.string.resume))
                             .cancelable(false)
                             .canceledOnTouchOutside(false)
                             .onNegative(new MaterialDialog.SingleButtonCallback() {
@@ -247,7 +247,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
                 @Override
                 public void loginSuccess(AppCompatDialogFragment dialogFragment) {
                     dialogFragment.dismiss();
-                    login_dialogFragment=null;
+                    login_dialogFragment = null;
                     showFragment(0);
                 }
             });
@@ -258,9 +258,9 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
 
     @Override
     public void getLocationSuccess(BDLocation location, BaiduLocationHelper baiduLocationHelper) {
-        this.baiduLocationHelper_s=baiduLocationHelper;
-        Constants.Longitude=location.getLongitude();
-        Constants.Latitude=location.getLatitude();
+        this.baiduLocationHelper_s = baiduLocationHelper;
+        Constants.Longitude = location.getLongitude();
+        Constants.Latitude = location.getLatitude();
         baiduLocationHelper.stopLocation();
         mHandker.postDelayed(new Runnable() {
             @Override
@@ -273,19 +273,19 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
 
     @Override
     public void getLocationFailure(int failure, BaiduLocationHelper baiduLocationHelper) {
-        this.baiduLocationHelper_s=baiduLocationHelper;
+        this.baiduLocationHelper_s = baiduLocationHelper;
         baiduLocationHelper.stopLocation();
         p.getLocation(1);
     }
 
     @Override
-    public void sendRtslSuccess(String success,int result) {
+    public void sendRtslSuccess(String success, int result) {
 
     }
 
     @Override
-    public void sendRtslFail(String fail,int result) {
-        if (result==-1){
+    public void sendRtslFail(String fail, int result) {
+        if (result == -1) {
             loginDialog();
         }
     }

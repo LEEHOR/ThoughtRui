@@ -743,7 +743,7 @@ public class ReViewStartAnswering extends BaseFragment_not_padding<ReViewStartAn
             map.put("description", "");
         }
         map.put("audioCount", recorderPath != null ? 0 : 1);
-        map.put("audio", recorderPath != null ? FileIOUtils.getE(recorderPath, "/") : "");
+        map.put("audio", recorderPath != null ? subjectsDB_now.getNumber()+".wav" : "");
 
         if (picList != null && picList.size() > 0) {
             StringBuffer stringBuffer = new StringBuffer();

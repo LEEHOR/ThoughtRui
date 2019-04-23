@@ -427,7 +427,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
             dealerId = attendance.getData().getDealerId();
             projectId = attendance.getData().getProjectId();
             String str = attendance.getData().getCname();
-            if (str.equals("自由班次")) {
+            if (str.equals(getResources().getString(R.string.phrases_34))) {
                 tv_in_time.setText(str);
                 tv_out_time.setText(str);
             } else {

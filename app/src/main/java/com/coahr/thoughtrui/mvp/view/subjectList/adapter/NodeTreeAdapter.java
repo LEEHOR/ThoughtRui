@@ -26,7 +26,7 @@ import java.util.List;
  * @description 适配器类，就是listview最常见的适配器写法
  */
 public class NodeTreeAdapter extends BaseAdapter {
-    private  onThreeClick onThreeClick;
+    private onThreeClick onThreeClick;
     //大家经常用ArrayList，但是这里为什么要使用LinkedList
     // ，后面大家会发现因为这个list会随着用户展开、收缩某一项而频繁的进行增加、删除元素操作，
     // 因为ArrayList是数组实现的，频繁的增删性能低下，而LinkedList是链表实现的，对于频繁的增删
@@ -130,7 +130,7 @@ public class NodeTreeAdapter extends BaseAdapter {
             holder.imageView = (ImageView) convertView.findViewById(R.id.id_treenode_icon);
             holder.label = (TextView) convertView.findViewById(R.id.id_treenode_label);
             holder.confirm = (LinearLayout) convertView.findViewById(R.id.id_confirm);
-            holder.relativeLayout=convertView.findViewById(R.id.three_re);
+            holder.relativeLayout = convertView.findViewById(R.id.three_re);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -145,15 +145,7 @@ public class NodeTreeAdapter extends BaseAdapter {
             holder.confirm.setVisibility(View.INVISIBLE);
             holder.imageView.setImageResource(baseNode.get_icon());
         }
-        /*holder.label.setTag(position);
-        holder.label.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (baseNode.get_icon() == -1) {
-                    Toast.makeText(context, "选中:" + v.getTag() + "/" + baseNode.get_id(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });*/
+
         holder.confirm.setTag(position);
         holder.confirm.setOnClickListener(new View.OnClickListener() {
             @Override

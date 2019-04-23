@@ -213,7 +213,7 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
             targetDate = reportList.getTargetDate();
             executor = reportList.getExecutor();
             address = reportList.getAddress();
-            select_city = FileIOUtils.getE(address, "省");
+            select_city = address;
             projectId = reportList.getProjectId();
             levelId = reportList.getLevelId();
 

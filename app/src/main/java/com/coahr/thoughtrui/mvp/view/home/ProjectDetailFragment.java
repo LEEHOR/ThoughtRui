@@ -336,7 +336,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
                 tv_fstatus.setText(getResources().getString(R.string.string_2));
             }
             tv_cName.setText(projectDetail.getData().getCname());
-            tv_cCode.setText(projectDetail.getData().getSale_code()!=null?projectDetail.getData().getSale_code() : projectDetail.getData().getService_code() !=null? projectDetail.getData().getSale_code():"");
+            tv_cCode.setText(TextUtils.isEmpty(projectDetail.getData().getSale_code())?projectDetail.getData().getService_code() : TextUtils.isEmpty(projectDetail.getData().getService_code())? projectDetail.getData().getSale_code():"");
             tv_cLevel.setText(projectDetail.getData().getGrade());
             tv_cAddress.setText(projectDetail.getData().getAreaAddress() + projectDetail.getData().getLocation());
             tv_time_cycle.setText(TimeUtils.getStingYMDHM(projectDetail.getData().getUploadTime()));
@@ -358,7 +358,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
             Constants.name_Project = projectDetail.getData().getPname();
             String s = projectDetail.getData().getCname();
             if (s != null) {
-                if (s.equals("自由班次")) {
+                if (s.equals(getResources().getString(R.string.phrases_34))) {
                     Constants.zao_ka = s;
                     Constants.wan_ka = s;
                 } else {
@@ -418,7 +418,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
             isHaveProject = true;
             String s = projectsDB.getCname();
             if (s != null) {
-                if (s.equals("自由班次")) {
+                if (s.equals(getResources().getString(R.string.phrases_34))) {
                     Constants.zao_ka = s;
                     Constants.wan_ka = s;
                 } else {

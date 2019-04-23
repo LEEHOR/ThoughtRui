@@ -1212,7 +1212,7 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
             map.put("description", "");
         }
         map.put("audioCount", recorderPath != null ? 1 : 0);
-        map.put("audio", recorderPath != null ? FileIOUtils.getE(recorderPath, "/") : "");
+        map.put("audio", recorderPath != null ? subjectsDB.getNumber()+".wav" : "");
         if (picList != null && picList.size() > 0) {
             StringBuffer stringBuffer = new StringBuffer();
             for (int i = 0; i < picList.size(); i++) {

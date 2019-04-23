@@ -383,7 +383,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
             //1.查询下一个项目
             if (project_position < projectsDBS.size() - 1) {
                 KLog.d("上传文件_", "切换下一项目");
-                p.getSubjectList(projectsDBS, project_position += 1);
+                p.getSubjectList(projectsDBS, project_position+= 1);
             } else {
                 tv_progress_info.setText(getResources().getString(R.string.toast_39));
                 pro_1.setVisibility(View.INVISIBLE);
@@ -401,7 +401,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
         } else {   //上一个项目传完了，开始下一个项目
             //1.查询下一个项目
             if (project_position < projectsDBS.size() - 1) {
-                p.getSubjectList(projectsDBS, project_position += 1);
+                p.getSubjectList(projectsDBS, project_position+= 1);
             } else {
                 tv_progress_info.setText(getResources().getString(R.string.toast_39));
                 pro_1.setVisibility(View.INVISIBLE);
@@ -653,7 +653,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
             map.put("description", "");
         }
         map.put("audioCount", audioPath != null ? 1 : 0);
-        map.put("audio", audioPath != null ? getName(audioPath, "/") : "");
+        map.put("audio", audioPath != null ? subjectsDB.get(subject_position).getNumber()+".wav" : "");
         if (picList != null && picList.size() > 0) {
             StringBuffer stringBuffer = new StringBuffer();
             for (int i = 0; i < picList.size(); i++) {

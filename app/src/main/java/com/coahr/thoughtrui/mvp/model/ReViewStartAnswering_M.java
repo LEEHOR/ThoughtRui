@@ -262,7 +262,7 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
                 String name = getName(localFile, "/");
                 String object = null;
                 if (type == 1) {
-                    String audioName = getName(localFile, "/");
+                    String audioName = subjectsDB.getNumber()+".wav";
                     object = projectsDB.getPid() + "/audios/" + audioName;
                 } else {
                     String PicName = getName(localFile, ".").toLowerCase().equals("png") ? subjectsDB.getNumber() + "_" + pcPosition + ".png"
