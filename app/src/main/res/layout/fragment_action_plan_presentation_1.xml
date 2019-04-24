@@ -172,8 +172,9 @@
                     android:layout_alignParentLeft="true"
                     android:background="@color/colorWhite"
                     android:drawableRight="@mipmap/down"
+                    android:lines="1"
+                    android:ellipsize="end"
                     android:padding="@dimen/dp_10"
-
                     android:textColor="#333333"
                     android:textSize="@dimen/dp_14" />
 

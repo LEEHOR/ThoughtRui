@@ -8,6 +8,7 @@ import com.alibaba.sdk.android.oss.model.OSSObjectSummary;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.model.Bean.Dealer_List;
+import com.coahr.thoughtrui.mvp.model.Bean.Template_list;
 import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
 
 import java.util.List;
@@ -37,7 +38,11 @@ public interface Fragment_action_plan_pre_1_c {
 
         void getBeforePicUrlFailure(String failure);
 
-        void putBeforeUploadCallBack(int TotalSize,int successSize,int failureSize);
+        void getProjectTemplatesSuccess(Template_list template_list);
+
+        void getProjectTemplateFailure(String fail);
+
+        void putBeforeUploadCallBack(int TotalSize, int successSize, int failureSize);
     }
 
     interface Presenter extends BaseContract.Presenter {
@@ -53,21 +58,27 @@ public interface Fragment_action_plan_pre_1_c {
 
         void getSubjectListFailure(String failure, int code);
 
+        void getProjectTemplates(Map<String, Object> map);
+
+        void getProjectTemplatesSuccess(Template_list template_list);
+
+        void getProjectTemplateFailure(String fail);
+
         void getBeforePic(OSS ossClient, String projectId, String levelId);
 
         void getBeforePicSuccess(List<OSSObjectSummary> ossObjectSummaries);
 
         void getBeforePicFailure(String failure);
 
-        void getBeforePicUrl(OSS oss,List<String> picKeyList);
+        void getBeforePicUrl(OSS oss, List<String> picKeyList);
 
         void getBeforePicUrlSuccess(List<String> picUrlList);
 
         void getBeforePicUrlFailure(String failure);
 
-        void putBeforeUpload(OSS oss,List<String> picUpload,String projectId,String levelId);
+        void putBeforeUpload(OSS oss, List<String> picUpload, String projectId, String levelId);
 
-        void putBeforeUploadCallBack(int TotalSize,int successSize,int failureSize);
+        void putBeforeUploadCallBack(int TotalSize, int successSize, int failureSize);
     }
 
     interface Model extends BaseContract.Model {
@@ -76,11 +87,13 @@ public interface Fragment_action_plan_pre_1_c {
 
         void getSubjectList(Map<String, Object> map);
 
+        void getProjectTemplates(Map<String, Object> map);
+
         void getBeforePic(OSS oss, String projectId, String levelId);
 
-        void getBeforePicUrl(OSS oss,List<String> picKeyList);
+        void getBeforePicUrl(OSS oss, List<String> picKeyList);
 
-        void putBeforeUpload(OSS oss,List<String> picUpload,String projectId,String levelId);
+        void putBeforeUpload(OSS oss, List<String> picUpload, String projectId, String levelId);
 
     }
 }

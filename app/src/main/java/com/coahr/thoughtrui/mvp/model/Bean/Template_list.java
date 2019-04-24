@@ -1,5 +1,7 @@
 package com.coahr.thoughtrui.mvp.model.Bean;
 
+import com.contrarywind.interfaces.IPickerViewData;
+
 import java.util.List;
 
 /**
@@ -35,7 +37,7 @@ public class Template_list {
         this.template_list = template_list;
     }
 
-    public static class TemplateListBean {
+    public static class TemplateListBean implements IPickerViewData {
         /**
          * modify_time : 1550823360000
          * name : rrtret
@@ -68,6 +70,11 @@ public class Template_list {
 
         public void setId(String id) {
             this.id = id;
+        }
+
+        @Override
+        public String getPickerViewText() {
+            return name;
         }
     }
 }

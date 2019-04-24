@@ -46,7 +46,7 @@ import dagger.android.support.HasSupportFragmentInjector;
  * on 11:45
  */
 public class BaseApplication extends MultiDexApplication implements HasActivityInjector, HasSupportFragmentInjector {
-    private final static String TAG="TH_BaseApplication";
+    private final static String TAG = "TH_BaseApplication";
     public static Context mContext;
     //内部封装map管理众多activity的component
     @Inject
@@ -61,7 +61,7 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
     public void onCreate() {
         super.onCreate();
         DaggerApplicationComponents.create().inject(this);
-        mContext=getApplicationContext();
+        mContext = getApplicationContext();
         MultiDex.install(mContext);
         LitePal.initialize(getApplicationContext());
         SDKInitializer.initialize(getApplicationContext());
@@ -75,19 +75,20 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
         //包括BD09LL和GCJ02两种坐标，默认是BD09LL坐标。
         SDKInitializer.setCoordType(CoordType.BD09LL);
         if (PreferenceUtils.contains(mContext, Constants.user_key)) {
-           Constants.user_name= PreferenceUtils.getPrefString(mContext, Constants.user_key, "");
+            Constants.user_name = PreferenceUtils.getPrefString(mContext, Constants.user_key, "");
         }
         if (PreferenceUtils.contains(mContext, Constants.sessionId_key)) {
-           Constants.sessionId= PreferenceUtils.getPrefString(mContext, Constants.sessionId_key, "");
+            Constants.sessionId = PreferenceUtils.getPrefString(mContext, Constants.sessionId_key, "");
         }
-        if (PreferenceUtils.contains(mContext,Constants.devicestoken_key)){
-            Constants.devicestoken=PreferenceUtils.getPrefString(mContext,Constants.devicestoken_key,"");
-            KLog.d(TAG,Constants.devicestoken);
+        if (PreferenceUtils.contains(mContext, Constants.devicestoken_key)) {
+            Constants.devicestoken = PreferenceUtils.getPrefString(mContext, Constants.devicestoken_key, "");
+            KLog.d(TAG, Constants.devicestoken);
         }
-        if (PreferenceUtils.contains(mContext,Constants.user_type_key)){
-            Constants.user_type=PreferenceUtils.getPrefInt(mContext,Constants.user_type_key,1);
+        if (PreferenceUtils.contains(mContext, Constants.user_type_key)) {
+            Constants.user_type = PreferenceUtils.getPrefInt(mContext, Constants.user_type_key, 1);
         }
         OSSLog.enableLog();
+
     }
 
     @Override
@@ -119,20 +120,20 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
                 Map<String, String> extra = msg.extra;
                 String pushType = extra.get("pushType");
                 String pushId = extra.get("pushId");
-                KLog.d(TAG,pushId,pushType);
+                KLog.d(TAG, pushId, pushType);
                 JumpToProjectList();
                 //super.launchApp(context, msg);
             }
 
             @Override
             public void openUrl(Context context, UMessage msg) {
-                KLog.d(TAG,2);
+                KLog.d(TAG, 2);
                 super.openUrl(context, msg);
             }
 
             @Override
             public void openActivity(Context context, UMessage msg) {
-                KLog.d(TAG,3);
+                KLog.d(TAG, 3);
                 super.openActivity(context, msg);
             }
 
@@ -141,7 +142,7 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
                 Map<String, String> extra = msg.extra;
                 String pushType = extra.get("pushType");
                 String pushId = extra.get("pushId");
-                if (pushType !=null && pushType.equals("1")) {
+                if (pushType != null && pushType.equals("1")) {
                     JumpToProjectList();
                 }
             }
@@ -153,15 +154,15 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
             @Override
             public void onSuccess(String deviceToken) {
                 Log.i(TAG, "device token: " + deviceToken);
-                PreferenceUtils.setPrefString(BaseApplication.mContext,Constants.devicestoken_key,deviceToken);
-                Constants.devicestoken=deviceToken;
+                PreferenceUtils.setPrefString(BaseApplication.mContext, Constants.devicestoken_key, deviceToken);
+                Constants.devicestoken = deviceToken;
                 //sendBroadcast(new Intent(UPDATE_STATUS_ACTION));
             }
 
             @Override
             public void onFailure(String s, String s1) {
                 Log.i(TAG, "register failed: " + s + " " + s1);
-              //  sendBroadcast(new Intent(UPDATE_STATUS_ACTION));
+                //  sendBroadcast(new Intent(UPDATE_STATUS_ACTION));
             }
         });
     }
@@ -169,8 +170,8 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
     /**
      * 跳转到历史项目
      */
-    private void JumpToProjectList(){
-        Intent intent=new Intent(this, ConstantsActivity.class);
+    private void JumpToProjectList() {
+        Intent intent = new Intent(this, ConstantsActivity.class);
         intent.putExtra("from", Constants.fragment_mainInfo);
         intent.putExtra("to", Constants.fragment_umeng);
         startActivity(intent);
@@ -179,7 +180,7 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
     /**
      * 初始化X5Web
      */
-    private void initX5WebView(){
+    private void initX5WebView() {
         //x5内核初始化接口
         QbSdk.initX5Environment(getApplicationContext(), new QbSdk.PreInitCallback() {
             @Override

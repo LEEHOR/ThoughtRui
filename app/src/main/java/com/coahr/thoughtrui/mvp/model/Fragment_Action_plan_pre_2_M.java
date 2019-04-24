@@ -22,6 +22,7 @@ import com.coahr.thoughtrui.mvp.constract.Fragment_action_plan_pre_1_c;
 import com.coahr.thoughtrui.mvp.constract.Fragment_action_plan_pre_2_c;
 import com.coahr.thoughtrui.mvp.model.Bean.ChangePassWord;
 import com.coahr.thoughtrui.mvp.model.Bean.SubmitReport;
+import com.coahr.thoughtrui.mvp.model.Bean.Template_list;
 import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
 import com.socks.library.KLog;
 
@@ -102,21 +103,23 @@ public class Fragment_Action_plan_pre_2_M extends BaseModel<Fragment_action_plan
 
     }
 
+
+
     @Override
     public void putImagesUpload(OSS oss, List<String> beforeImage, List<String> afterImage, String projectId, String levelId, int type) {
         successCount = 0;
         failureCount = 0;
         if (beforeImage != null && beforeImage.size() > 0 && type == -1) {
             for (int i = 0; i < beforeImage.size(); i++) {
-                putImages(oss, beforeImage.get(i), projectId, levelId, beforeImage.size() + afterImage.size(), 1);
                 KLog.d("before", beforeImage.get(i));
+                putImages(oss, beforeImage.get(i), projectId, levelId, beforeImage.size() , 1);
             }
         }
-
         if (afterImage != null && afterImage.size() > 0 && type == 1) {
             for (int i = 0; i < afterImage.size(); i++) {
-                putImages(oss, afterImage.get(i), projectId, levelId, beforeImage.size() + afterImage.size(), 2);
                 KLog.d("after", afterImage.get(i));
+                putImages(oss, afterImage.get(i), projectId, levelId,  afterImage.size(), 2);
+
             }
         }
         if ((beforeImage.size() + afterImage.size()) == 0) {

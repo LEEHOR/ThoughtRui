@@ -413,7 +413,7 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
                     conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
                     conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
                     conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
-                    conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
+                    conf.setMaxErrorRetry(10); // 失败后最大重试次数，默认2次
                     ossClient = new OSSClient(_mActivity, ApiContact.endpoint, credentialProvider, conf);
                     mHandler.sendEmptyMessage(MSG_LOAD_PIC);
                     //p.getAfterPic(ossClient, projectId, levelId);
@@ -686,7 +686,19 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
                 after_it.remove();
             }
         }
-        p.putImagesUpload(ossClient, beforeImage, after_Up, projectId, levelId, status);
+        ClientConfiguration conf = new ClientConfiguration();
+        conf.setConnectionTimeout(10 * 1000); // 连接超时，默认10秒
+        conf.setSocketTimeout(10 * 1000); // socket超时，默认10秒
+        conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
+        conf.setMaxErrorRetry(10); // 失败后最大重试次数，默认2次
+        ossClient = new OSSClient(_mActivity, ApiContact.endpoint, credentialProvider, conf);
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                p.putImagesUpload(ossClient, beforeImage, after_Up, projectId, levelId, status);
+            }
+        });
+
 
     }
 }

@@ -49,7 +49,7 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
     private int uploadSuccess;
     private int update;
     private int update1;
-    private List<String> picList = new ArrayList<>();
+    private List<String> upList = new ArrayList<>();
     private ExecutorService fixedThreadPool;
 
     @Inject
@@ -154,8 +154,7 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
 
     @Override
     public void startUpload(OSSClient ossClient, List<String> list, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
-        picList.clear();
-        String audioPath = null;
+        upList.clear();
         int CountSize = 0;
         if (list != null && list.size() > 0) {
             if (fixedThreadPool == null) {
@@ -165,27 +164,22 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
                 if (list.get(i).toLowerCase().endsWith("png") || list.get(i).toLowerCase().endsWith("jpeg")
                         || list.get(i).toLowerCase().endsWith("jpg") || list.get(i).toLowerCase().endsWith("gif")) {
                     CountSize++;
-                    picList.add(list.get(i));
+                    upList.add(list.get(i));
                 } else if (list.get(i).toLowerCase().endsWith("wav") || list.get(i).toLowerCase().endsWith(".amr")
                         || list.get(i).toLowerCase().endsWith(".aac")) {
                     CountSize++;
-                    audioPath = list.get(i);
+                    upList.add(list.get(i));
                 }
             }
 
-            if (audioPath != null) {
-                OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
-                        audioPath, CountSize, projectsDB, subjectsDB, list, 1, 0);
-            }
-
-            if (picList != null && picList.size() > 0) {
-                for (int i = 0; i < picList.size(); i++) {
+            if (upList != null && upList.size() > 0) {
+                for (int i = 0; i < upList.size(); i++) {
                     OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
-                            picList.get(i), CountSize, projectsDB, subjectsDB, list, 2, i + 1);
+                            upList.get(i), CountSize, projectsDB, subjectsDB, list,i + 1);
                 }
             }
 
-            if (audioPath == null && (picList == null || picList.size() == 0)) {
+            if (upList == null && upList.size() == 0) {
                 getPresenter().Up_Pic_Compulsory(projectsDB, subjectsDB, list);
             }
 
@@ -248,7 +242,7 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
      * @param localFile 文件
      * @param count     总大小
      */
-    public OSSAsyncTask asyncPutImage(OSS oss, String localFile, final int count, final ProjectsDB projectsDB, final SubjectsDB subjectsDB, final List<String> list, int type, int pcPosition) {
+    public OSSAsyncTask asyncPutImage(OSS oss, String localFile, final int count, final ProjectsDB projectsDB, final SubjectsDB subjectsDB, final List<String> list, int pcPosition) {
         if (localFile.equals("")) {
             return null;
         }
@@ -261,7 +255,7 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
             public void run() {
                 String name = getName(localFile, "/");
                 String object = null;
-                if (type == 1) {
+                if (getName(localFile, ".").toLowerCase().endsWith("wav")) {
                     String audioName = subjectsDB.getNumber()+".wav";
                     object = projectsDB.getPid() + "/audios/" + audioName;
                 } else {

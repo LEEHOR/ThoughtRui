@@ -9,6 +9,7 @@ import com.coahr.thoughtrui.mvp.Base.BasePresenter;
 import com.coahr.thoughtrui.mvp.constract.Fragment_action_plan_pre_1_c;
 import com.coahr.thoughtrui.mvp.constract.ProjectDealer_c;
 import com.coahr.thoughtrui.mvp.model.Bean.Dealer_List;
+import com.coahr.thoughtrui.mvp.model.Bean.Template_list;
 import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
 import com.coahr.thoughtrui.mvp.model.Fragment_Action_plan_pre_1_M;
 import com.coahr.thoughtrui.mvp.model.ProjectDealer_M;
@@ -71,6 +72,27 @@ public class Fragment_action_plan_pre_1_P extends BasePresenter<Fragment_action_
     public void getSubjectListFailure(String failure, int code) {
         if (getView() != null) {
             getView().getSubjectListFailure(failure,code);
+        }
+    }
+
+    @Override
+    public void getProjectTemplates(Map<String, Object> map) {
+        if (mModle != null) {
+            mModle.getProjectTemplates(map);
+        }
+    }
+
+    @Override
+    public void getProjectTemplatesSuccess(Template_list template_list) {
+        if (getView() != null) {
+            getView().getProjectTemplatesSuccess(template_list);
+        }
+    }
+
+    @Override
+    public void getProjectTemplateFailure(String fail) {
+        if (getView() != null) {
+            getView().getProjectTemplateFailure(fail);
         }
     }
 

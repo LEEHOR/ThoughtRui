@@ -23,6 +23,7 @@ import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.Fragment_action_plan_pre_1_c;
 import com.coahr.thoughtrui.mvp.constract.ProjectDealer_c;
 import com.coahr.thoughtrui.mvp.model.Bean.Dealer_List;
+import com.coahr.thoughtrui.mvp.model.Bean.Template_list;
 import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
 import com.socks.library.KLog;
 
@@ -79,6 +80,23 @@ public class Fragment_Action_plan_pre_1_M extends BaseModel<Fragment_action_plan
                                 getPresenter().getSubjectListSuccess(SubjectListBean);
                             } else {
                                 getPresenter().getSubjectListFailure(SubjectListBean.getMsg(), SubjectListBean.getResult());
+                            }
+                        }
+                    }
+                }));
+    }
+
+    @Override
+    public void getProjectTemplates(Map<String, Object> map) {
+        mRxManager.add(createFlowable(new SimpleFlowableOnSubscribe<Template_list>(getApiService().template(map)))
+                .subscribeWith(new SimpleDisposableSubscriber<Template_list>() {
+                    @Override
+                    public void _onNext(Template_list template_list) {
+                        if (getPresenter() != null) {
+                            if (template_list.getStatus() == 1) {
+                                getPresenter().getProjectTemplatesSuccess(template_list);
+                            } else {
+                                getPresenter().getProjectTemplateFailure(template_list.getStatus()+"");
                             }
                         }
                     }

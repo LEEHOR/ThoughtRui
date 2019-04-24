@@ -57,7 +57,7 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
     private OSSClient ossClient;
     private int update1;
     private int update;
-    private List<String> picList = new ArrayList<>();
+    private List<String> upList = new ArrayList<>();
     private ExecutorService fixedThreadPool;
 
     @Inject
@@ -168,7 +168,7 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
 
     @Override
     public void startUpload(OSSClient ossClient, List<String> list, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
-        picList.clear();
+        upList.clear();
         String audioPath = null;
         int CountSize = 0;
         if (list != null && list.size() > 0) {
@@ -181,34 +181,29 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
                 if (list.get(i).toLowerCase().endsWith("png") || list.get(i).toLowerCase().endsWith("jpeg")
                         || list.get(i).toLowerCase().endsWith("jpg") || list.get(i).toLowerCase().endsWith("gif")) {
                     CountSize++;
-                    picList.add(list.get(i));
-                }
-                if (list.get(i).toLowerCase().endsWith("wav") || list.get(i).toLowerCase().endsWith(".amr")
+                    upList.add(list.get(i));
+                } else if (list.get(i).toLowerCase().endsWith("wav") || list.get(i).toLowerCase().endsWith(".amr")
                         || list.get(i).toLowerCase().endsWith(".aac")) {
                     CountSize++;
-                    audioPath = list.get(i);
+                    upList.add(list.get(i));
                 }
 
             }
 
-            if (audioPath != null) {
-                OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
-                        audioPath, CountSize, projectsDB, subjectsDB, list, 1, 0);
-            }
 
-            if (picList != null && picList.size() > 0) {
-                for (int i = 0; i < picList.size(); i++) {
+
+            if (upList != null && upList.size() > 0) {
+                for (int i = 0; i < upList.size(); i++) {
                     OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
-                            picList.get(i), CountSize, projectsDB, subjectsDB, list, 2, i + 1);
+                            upList.get(i), CountSize, projectsDB, subjectsDB, list,  i + 1);
                 }
             }
 
-            if (audioPath == null && (picList == null || picList.size() == 0)) {
+            if (upList == null && upList.size()==0) {
                 if (getPresenter() != null) {
                     getPresenter().Pic_CompulsoryC(list, projectsDB, subjectsDB);
                 }
             }
-
 
         }
 
@@ -272,7 +267,7 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
      * @param localFile 文件
      * @param count     总大小
      */
-    public OSSAsyncTask asyncPutImage(OSS oss, String localFile, final int count, final ProjectsDB projectsDB, final SubjectsDB subjectsDB, final List<String> list, int type, int picPosition) {
+    public OSSAsyncTask asyncPutImage(OSS oss, String localFile, final int count, final ProjectsDB projectsDB, final SubjectsDB subjectsDB, final List<String> list, int picPosition) {
         if (localFile.equals("")) {
             return null;
         }
@@ -285,8 +280,8 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
             public void run() {
                 String name = getName(localFile, "/");
                 String object = null;
-                if (type == 1) {
-                    String audioName = getName(localFile, "/");
+                if (getName(localFile, ".").toLowerCase().endsWith("wav")) {
+                    String audioName = subjectsDB.getNumber()+".wav";
                     object = projectsDB.getPid() + "/audios/" + audioName;
                 } else {
                     String picName = getName(localFile, ".").toLowerCase().equals("png") ? subjectsDB.getNumber() + "_" + picPosition + ".png"
@@ -298,14 +293,14 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
                 }
                 PutObjectRequest put = new PutObjectRequest(Constants.bucket, object, localFile);
 
-                put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
+            /*    put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
                     @Override
                     public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
                         if (getPresenter() != null) {
                             getPresenter().showProgress((int) currentSize, (int) totalSize, projectsDB.getPname() + "\n第" + subjectsDB.getNumber() + "题\n" + name);
                         }
                     }
-                });
+                });*/
                 put.setCRC64(OSSRequest.CRC64Config.YES);
                 OSSAsyncTask task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
                     @Override

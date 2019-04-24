@@ -30,6 +30,7 @@ import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
+import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.UploadC;
 import com.coahr.thoughtrui.mvp.model.Bean.QuestionBean;
@@ -41,12 +42,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.PrimitiveIterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
+import javax.security.auth.callback.Callback;
 
 /**
  * Created by Leehor
@@ -54,17 +57,16 @@ import javax.inject.Inject;
  * on 17:09
  */
 public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Model {
-    private PutObjectRequest put;
     private int update;
     private int update1;
-    private List<String> picList = new ArrayList<>();
+    private ArrayList<String> upList = new ArrayList<>();
+    private OSS ossClient;
 
     @Inject
     public UploadM() {
         super();
     }
 
-    List<OSSAsyncTask> ossAsyncTaskList = new ArrayList<>();
     //上传成功的个数
     private int UpLoadSuccessCount = 0;
     //上传失败的个数
@@ -108,43 +110,42 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
 
     @Override
     public void startUpLoad(OSSClient ossClient, List<String> list, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
-
-        picList.clear();
-        ossAsyncTaskList.clear();
+        upList.clear();
         UpLoadSuccessCount = 0;
         UpLoadFailureCount = 0;
         int CountSize = 0;
         String audioPath = null;
         if (list != null && list.size() > 0) {
+
+         /*   fixedThreadPool.execute(new Runnable() {
+                @Override
+                public void run() {
+                    getOss();
+                }
+            });*/
             for (int i = 0; i < list.size(); i++) {
                 if (list.get(i).toLowerCase().endsWith("png") || list.get(i).toLowerCase().endsWith("jpeg")
                         || list.get(i).toLowerCase().endsWith("jpg") || list.get(i).toLowerCase().endsWith("gif")) {
                     CountSize++;
-                    picList.add(list.get(i));
+                    upList.add(list.get(i));
                     KLog.d("上传文件_图片_1", list.get(i).toLowerCase());
                 } else if (list.get(i).toLowerCase().endsWith("wav") || list.get(i).toLowerCase().endsWith("amr")
                         || list.get(i).toLowerCase().endsWith("aac")) {
                     CountSize++;
-                    audioPath = list.get(i);
+                    upList.add(list.get(i));
                     KLog.d("上传文件_录音_1", list.get(i).toLowerCase());
                 }
             }
 
-            if (audioPath != null) {
-                KLog.d("上传文件_录音_2", audioPath);
-                OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
-                        audioPath, CountSize, subjectsDBList, projectsDBS, project_position, subject_position, list, 1, 0, null);
-            }
-
-            if (picList != null && picList.size() > 0) {
-                for (int i = 0; i < picList.size(); i++) {
-                    KLog.d("上传文件_图片_2", picList.get(i));
+            if (upList != null && upList.size() > 0) {
+                for (int i = 0; i < upList.size(); i++) {
+                    KLog.d("上传文件_图片_2", upList.get(i));
                     OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
-                            picList.get(i), CountSize, subjectsDBList, projectsDBS, project_position, subject_position, list, 2, i + 1, picList);
+                            upList.get(i), CountSize, subjectsDBList, projectsDBS, project_position, subject_position, list,i+1);
                 }
             }
 
-            if (audioPath == null && picList.size() == 0) {
+            if ( upList.size() == 0) {
                 getPresenter().Pic_Compulsory(list, subjectsDBList, projectsDBS, project_position, subject_position);
             }
 
@@ -222,7 +223,7 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
      * @param localFile 文件
      * @param count     总大小
      */
-    public OSSAsyncTask asyncPutImage(OSSClient oss, String localFile, final int count, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position, final List<String> list, int type, int upPic, List<String> picList) {
+    public OSSAsyncTask asyncPutImage(OSSClient oss, String localFile, final int count, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position, final List<String> list,int i) {
 
 
         if (localFile.equals("")) {
@@ -234,61 +235,66 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
             return null;
         }
 
-        String object = null;
-        if (type == 1) {
-            String audioName = subjectsDBList.get(subject_position).getNumber() + ".wav";
-            object = projectsDBS.get(project_position).getPid() + "/audios/" + audioName;
-        } else {
-            String picName = getName(localFile, ".").toLowerCase().equals("png") ? subjectsDBList.get(subject_position).getNumber() + "_" + upPic + ".png"
-                    : getName(localFile, ".").toLowerCase().equals("jpeg") ? subjectsDBList.get(subject_position).getNumber() + "_" + upPic + ".jpeg"
-                    : getName(localFile, ".").toLowerCase().equals("jpg") ? subjectsDBList.get(subject_position).getNumber() + "_" + upPic + ".jpg"
-                    : getName(localFile, ".").toLowerCase().equals("gif") ? subjectsDBList.get(subject_position).getNumber() + "_" + upPic + ".gif"
-                    : subjectsDBList.get(subject_position).getNumber() + "_" + upPic + ".png";
-            object = projectsDBS.get(project_position).getPid() + "/pictures/" + subjectsDBList.get(subject_position).getNumber() + "/" + picName;
-        }
-
-        PutObjectRequest put = new PutObjectRequest(Constants.bucket, object, localFile);
-
-        KLog.d("上传文件_up", object);
-        put.setCRC64(OSSRequest.CRC64Config.YES);
-        OSSAsyncTask task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
-            @Override
-            public void onSuccess(PutObjectRequest request, PutObjectResult result) {
-                UpLoadSuccessCount++;
-                if (getPresenter() != null) {
-                    KLog.d("上传文件_成功", count, UpLoadFailureCount, UpLoadSuccessCount);
-                    getPresenter().UploadCallBack(list, subjectsDBList, projectsDBS, picList, project_position, subject_position,
-                            UpLoadSuccessCount, UpLoadFailureCount, count);
-                }
-            }
-
-            @Override
-            public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
-                String info = "";
-                // 请求异常
-                if (clientExcepion != null) {
-                    // 本地异常如网络异常等
-                    clientExcepion.printStackTrace();
-                    info = clientExcepion.toString();
-                }
-                if (serviceException != null) {
-                    // 服务异常
-                    Log.e("ErrorCode", serviceException.getErrorCode());
-                    Log.e("RequestId", serviceException.getRequestId());
-                    Log.e("HostId", serviceException.getHostId());
-                    Log.e("RawMessage", serviceException.getRawMessage());
-                    info = serviceException.toString();
-                }
-                KLog.d("上传文件_失败");
-                UpLoadFailureCount++;
-                if (getPresenter() != null) {
-                    getPresenter().UploadCallBack(list, subjectsDBList, projectsDBS, picList, project_position, subject_position,
-                            UpLoadSuccessCount, UpLoadFailureCount, count);
+                String object = null;
+                if (getName(localFile,".").toLowerCase().endsWith("wav")) {
+                    String audioName = subjectsDBList.get(subject_position).getNumber() + ".wav";
+                    object = projectsDBS.get(project_position).getPid() + "/audios/" + audioName;
+                } else {
+                    String picName = getName(localFile, ".").toLowerCase().equals("png") ? subjectsDBList.get(subject_position).getNumber() + "_" + i + ".png"
+                            : getName(localFile, ".").toLowerCase().equals("jpeg") ? subjectsDBList.get(subject_position).getNumber() + "_" + i + ".jpeg"
+                            : getName(localFile, ".").toLowerCase().equals("jpg") ? subjectsDBList.get(subject_position).getNumber() + "_" + i + ".jpg"
+                            : getName(localFile, ".").toLowerCase().equals("gif") ? subjectsDBList.get(subject_position).getNumber() + "_" + i + ".gif"
+                            : subjectsDBList.get(subject_position).getNumber() + "_" + i + ".png";
+                    object = projectsDBS.get(project_position).getPid() + "/pictures/" + subjectsDBList.get(subject_position).getNumber() + "/" + picName;
                 }
 
-            }
-        });
+                PutObjectRequest put = new PutObjectRequest(Constants.bucket, object, localFile);
 
+                KLog.d("上传文件_up", object);
+                //  put.setCRC64(OSSRequest.CRC64Config.YES);
+                OSSAsyncTask task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
+                    @Override
+                    public void onSuccess(PutObjectRequest request, PutObjectResult result) {
+                        UpLoadSuccessCount++;
+                        KLog.d("上传文件_成功", count, UpLoadFailureCount, UpLoadSuccessCount);
+              /*
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                        }
+                    }).start();*/
+
+                        getPresenter().UploadCallBack(list, subjectsDBList, projectsDBS, null, project_position, subject_position,
+                                UpLoadSuccessCount, UpLoadFailureCount, count);
+                    }
+
+                    @Override
+                    public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
+                        String info = "";
+                        // 请求异常
+                        if (clientExcepion != null) {
+                            // 本地异常如网络异常等
+                            clientExcepion.printStackTrace();
+                            info = clientExcepion.toString();
+                        }
+                        if (serviceException != null) {
+                            // 服务异常
+                            Log.e("ErrorCode", serviceException.getErrorCode());
+                            Log.e("RequestId", serviceException.getRequestId());
+                            Log.e("HostId", serviceException.getHostId());
+                            Log.e("RawMessage", serviceException.getRawMessage());
+                            info = serviceException.toString();
+                        }
+                        KLog.d("上传文件_失败");
+                        UpLoadFailureCount++;
+                        if (getPresenter() != null) {
+                            getPresenter().UploadCallBack(list, subjectsDBList, projectsDBS, null, project_position, subject_position,
+                                    UpLoadSuccessCount, UpLoadFailureCount, count);
+                        }
+
+                    }
+                });
         return null;
     }
 
@@ -303,5 +309,15 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
         int i = path.lastIndexOf(flag);
         String substring_name = path.substring(i + 1);
         return substring_name;
+    }
+
+    private void getOss(){
+        OSSAuthCredentialsProvider ossAuthCredentialsProvider = new OSSAuthCredentialsProvider(ApiContact.STSSERVER);
+        ClientConfiguration conf = new ClientConfiguration();
+        conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
+        conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
+        conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
+        conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
+        ossClient = new OSSClient(BaseApplication.mContext, ApiContact.endpoint, ossAuthCredentialsProvider, conf);
     }
 }

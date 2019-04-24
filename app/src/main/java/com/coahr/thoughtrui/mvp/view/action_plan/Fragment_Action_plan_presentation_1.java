@@ -32,6 +32,7 @@ import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.Fragment_action_plan_pre_1_c;
 import com.coahr.thoughtrui.mvp.model.ApiContact;
 import com.coahr.thoughtrui.mvp.model.Bean.ReportList;
+import com.coahr.thoughtrui.mvp.model.Bean.Template_list;
 import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
 import com.coahr.thoughtrui.mvp.presenter.Fragment_action_plan_pre_1_P;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
@@ -58,6 +59,7 @@ import javax.inject.Inject;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
@@ -296,6 +298,7 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
                 p.getProjectName(Constants.sessionId);
                 break;
             case R.id.plan_templet:
+                getTemplateList();
                 break;
             case R.id.plan_quota_1:
                 if (projectId != null) {
@@ -423,6 +426,19 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
     }
 
     @Override
+    public void getProjectTemplatesSuccess(Template_list template_list) {
+        if (template_list != null && template_list.getTemplate_list()!=null) {
+            showTemplateView(template_list.getTemplate_list());
+        }
+
+    }
+
+    @Override
+    public void getProjectTemplateFailure(String fail) {
+
+    }
+
+    @Override
     public void putBeforeUploadCallBack(int TotalSize, int successSize, int failureSize) {
 
     }
@@ -498,6 +514,37 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
         }
         pvOption_quota.show();
     }
+
+    //=============================================模板选择器==================================================
+
+    /**
+     * 联网获取模板
+     */
+    private void getTemplateList() {
+        Map map = new HashMap();
+        map.put("userId", Constants.sessionId);
+        p.getProjectTemplates(map);
+    }
+
+    // 弹出选择器
+    private void showTemplateView(List<Template_list.TemplateListBean> templateListBeanList) {
+        OptionsPickerView pvOptions = new OptionsPickerBuilder(_mActivity, new OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                //返回的分别是三个级别的选中位置
+                planTemplet.setText(templateListBeanList.get(options1).getPickerViewText());
+            }
+        })
+                .setTitleText(getResources().getString(R.string.phrases_2))
+                .setDividerColor(Color.BLACK)
+                .setTextColorCenter(Color.BLACK) //设置选中项文字颜色
+                .setContentTextSize(20)
+                .build();
+        pvOptions.setPicker(templateListBeanList);//一级选择器
+        pvOptions.show();
+    }
+
+
 //==================================================城市列表选择器=============================================
 
     /**
@@ -679,4 +726,7 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
         }
 
     }
+
+
+
 }
