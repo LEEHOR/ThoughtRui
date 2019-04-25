@@ -31,6 +31,7 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.PagerFragment_aC;
+import com.coahr.thoughtrui.mvp.model.Bean.AliyunOss;
 import com.coahr.thoughtrui.mvp.model.Bean.UpLoadCallBack;
 import com.socks.library.KLog;
 
@@ -167,6 +168,23 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
     }
 
     @Override
+    public void getOss(Map<String, Object> map) {
+        mRxManager.add(createFlowable(new SimpleFlowableOnSubscribe<AliyunOss>(getApiService().getAliYunOss(map)))
+                .subscribeWith(new SimpleDisposableSubscriber<AliyunOss>() {
+                    @Override
+                    public void _onNext(AliyunOss aliyunOss) {
+                        if (getPresenter() != null) {
+                            if (aliyunOss.getStatusCode() == 200) {
+                                getPresenter().getOssSuccess(aliyunOss);
+                            } else {
+                                getPresenter().getOssFailure(aliyunOss.getStatusCode());
+                            }
+                        }
+                    }
+                }));
+    }
+
+    @Override
     public void startUpload(OSSClient ossClient, List<String> list, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
         upList.clear();
         String audioPath = null;
@@ -217,9 +235,9 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
                     public void _onNext(UpLoadCallBack upLoadCallBack) {
                         if (getPresenter() != null) {
                             if (upLoadCallBack.getResult() == 1) {
-                                getPresenter().CallBackSuccess(projectsDB, subjectsDB);
+                                getPresenter().CallBackSuccess(projectsDB, subjectsDB,upLoadCallBack);
                             } else {
-                                getPresenter().CallBackFailure(projectsDB, subjectsDB);
+                                getPresenter().CallBackFailure(projectsDB, subjectsDB,upLoadCallBack);
                             }
                         }
                     }
@@ -291,7 +309,7 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
                             : subjectsDB.getNumber() + "_" + picPosition + ".png";
                     object = projectsDB.getPid() + "/pictures/" + subjectsDB.getNumber() + "/" + picName;
                 }
-                PutObjectRequest put = new PutObjectRequest(Constants.bucket, object, localFile);
+                PutObjectRequest put = new PutObjectRequest(Constants.BUCKET, object, localFile);
 
             /*    put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
                     @Override

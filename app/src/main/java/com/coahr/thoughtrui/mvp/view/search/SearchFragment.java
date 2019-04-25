@@ -7,15 +7,23 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.DensityUtils;
+import com.coahr.thoughtrui.Utils.ScreenUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
-import com.coahr.thoughtrui.mvp.Base.BaseFragment;
+import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.constract.FragmentSearch_c;
 import com.coahr.thoughtrui.mvp.model.Bean.SearchBeans;
 import com.coahr.thoughtrui.mvp.presenter.FragmentSearch_P;
@@ -28,9 +36,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 
 /**
@@ -39,7 +44,7 @@ import butterknife.BindView;
  * 创建日期：2019/3/7
  * 描述：搜索页面
  */
-public class SearchFragment extends BaseFragment<FragmentSearch_c.Presenter> implements FragmentSearch_c.View {
+public class SearchFragment extends BaseChildFragment<FragmentSearch_c.Presenter> implements FragmentSearch_c.View {
     @Inject
     FragmentSearch_P p;
     @BindView(R.id.re_search_2)
@@ -50,6 +55,10 @@ public class SearchFragment extends BaseFragment<FragmentSearch_c.Presenter> imp
     TextView search_cancel;
     @BindView(R.id.search_recy)
     RecyclerView search_recy;
+    @BindView(R.id.iv_search_back)
+    ImageView ivSearchBack;
+    @BindView(R.id.search_fr)
+    FrameLayout searchFr;
     private int type;
     private LinearLayoutManager manager;
     private SearchAdapter adapter;
@@ -86,8 +95,15 @@ public class SearchFragment extends BaseFragment<FragmentSearch_c.Presenter> imp
         if (getArguments() != null) {
             type = getArguments().getInt("type");
         }
-
+        searchFr.setPadding(searchFr.getPaddingLeft(), ScreenUtils.getStatusBarHeight(BaseApplication.mContext), searchFr.getPaddingRight(), searchFr.getPaddingBottom());
+        ivSearchBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                _mActivity.onBackPressed();
+            }
+        });
     }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +111,7 @@ public class SearchFragment extends BaseFragment<FragmentSearch_c.Presenter> imp
 
 
     }
+
     @Override
     public void initData() {
         search_cancel.setOnClickListener(new View.OnClickListener() {
@@ -167,8 +184,8 @@ public class SearchFragment extends BaseFragment<FragmentSearch_c.Presenter> imp
         if (searchBeans != null && searchBeans.getData() != null) {
             if (searchBeans.getData().getSearchList() != null && searchBeans.getData().getSearchList().size() > 0) {
                 adapter.setNewData(searchBeans.getData().getSearchList());
-               // ed_search.setFocusable(false);
-               // ed_search.setFocusableInTouchMode(false);
+                // ed_search.setFocusable(false);
+                // ed_search.setFocusableInTouchMode(false);
             }
         }
     }

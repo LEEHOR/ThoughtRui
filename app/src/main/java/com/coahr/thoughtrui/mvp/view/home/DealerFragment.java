@@ -24,6 +24,7 @@ import com.coahr.thoughtrui.mvp.model.Bean.Dealer_List;
 import com.coahr.thoughtrui.mvp.presenter.ProjectDealer_P;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
 import com.google.gson.Gson;
+import com.gyf.barlibrary.ImmersionBar;
 
 import org.json.JSONArray;
 
@@ -131,6 +132,9 @@ public class DealerFragment extends BaseFragment<ProjectDealer_c.Presenter> impl
         tv_select_address.setOnClickListener(this);
         tv_select_project.setOnClickListener(this);
         tv_submit.setOnClickListener(this);
+        dealer_Tittle.getRoot().setBackgroundColor(Color.rgb(58, 128, 255));
+        dealer_Tittle.getTvTittle().setTextColor(Color.rgb(255, 255, 255));
+        dealer_Tittle.getLeftIcon().setImageResource(R.mipmap.mytab_back);
         dealer_Tittle.getLeftIcon().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -237,7 +241,7 @@ public class DealerFragment extends BaseFragment<ProjectDealer_c.Presenter> impl
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
                 //返回的分别是三个级别的选中位置
                 tv_select_project.setText(list.get(options1).getName());
-                tv_project_id.setText(list.get(options1).getSale_code() != null ? list.get(options1).getSale_code() : list.get(options1).getService_code() != null ? list.get(options1).getService_code() : list.get(options1).getSale_code());
+                tv_project_id.setText(TextUtils.isEmpty(list.get(options1).getSale_code()) ? list.get(options1).getService_code() : TextUtils.isEmpty(list.get(options1).getService_code()) ? list.get(options1).getSale_code(): list.get(options1).getSale_code());
                 Dealer_id = list.get(options1).getId();
             }
         })

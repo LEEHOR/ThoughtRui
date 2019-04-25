@@ -14,6 +14,8 @@ import android.widget.Toast;
 import com.alibaba.sdk.android.oss.ClientConfiguration;
 import com.alibaba.sdk.android.oss.OSSClient;
 import com.alibaba.sdk.android.oss.common.auth.OSSAuthCredentialsProvider;
+import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
+import com.alibaba.sdk.android.oss.common.auth.OSSStsTokenCredentialProvider;
 import com.alibaba.sdk.android.oss.model.OSSObjectSummary;
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
@@ -24,6 +26,7 @@ import com.coahr.thoughtrui.Utils.DensityUtils;
 import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.Utils.LoadCity.JsonBean;
 import com.coahr.thoughtrui.Utils.LoadCity.JsonFileReader;
+import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.Utils.TimeUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
@@ -31,6 +34,7 @@ import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.Fragment_action_plan_pre_1_c;
 import com.coahr.thoughtrui.mvp.model.ApiContact;
+import com.coahr.thoughtrui.mvp.model.Bean.AliyunOss;
 import com.coahr.thoughtrui.mvp.model.Bean.ReportList;
 import com.coahr.thoughtrui.mvp.model.Bean.Template_list;
 import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
@@ -155,7 +159,6 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
                     isLoaded = false;
                     break;
                 case MSG_LOAD_OSS:
-                    p.getBeforePic(ossClient, projectId, levelId);
                     break;
             }
         }
@@ -285,7 +288,20 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
             projectId = reportList.getProjectId();
             levelId = reportList.getLevelId();
         }
-        getSTS_OSS();
+
+        //判断令牌有无过期
+        if (Constants.Expiration>System.currentTimeMillis()){
+            getSTS_OSS(Constants.AK,Constants.SK,Constants.STOKEN,Constants.ENDPOINT);
+        } else {
+            getAliyunOss();
+        }
+
+        if (type == 2) {
+            planProvince.setEnabled(false);
+            planDealerName.setEnabled(false);
+            planTemplet.setEnabled(false);
+            planQuota1.setEnabled(false);
+        }
     }
 
     @OnClick({R.id.plan_province, R.id.plan_dealer_name, R.id.plan_templet, R.id.plan_quota_1, R.id.plan_quota_2, R.id.plan_take_photo, R.id.plan_1_next})
@@ -331,7 +347,7 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
                         }
                     }
                     if (before_up.size() > 0) {
-                        start(Fragment_Action_plan_presentation_2.newInstance(reportList, projectId, levelId, before_up));
+                        start(Fragment_Action_plan_presentation_2.newInstance(reportList, projectId, levelId, before_up, type));
                     } else {
                         ToastUtils.showLong(getResources().getString(R.string.toast_28));
                     }
@@ -427,7 +443,7 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
 
     @Override
     public void getProjectTemplatesSuccess(Template_list template_list) {
-        if (template_list != null && template_list.getTemplate_list()!=null) {
+        if (template_list != null && template_list.getTemplate_list() != null) {
             showTemplateView(template_list.getTemplate_list());
         }
 
@@ -435,6 +451,30 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
 
     @Override
     public void getProjectTemplateFailure(String fail) {
+
+    }
+
+    @Override
+    public void getOssSuccess(AliyunOss aliyunOss) {
+        PreferenceUtils.setPrefString(BaseApplication.mContext, Constants.AK_KEY, aliyunOss.getAccessKeyId());
+        PreferenceUtils.setPrefString(BaseApplication.mContext, Constants.SK_KEY, aliyunOss.getAccessKeySecret());
+        PreferenceUtils.setPrefString(BaseApplication.mContext, Constants.STOKEN_KEY, aliyunOss.getSecurityToken());
+        PreferenceUtils.setPrefString(BaseApplication.mContext, Constants.BUCKET_KEY, aliyunOss.getBucket());
+        PreferenceUtils.setPrefLong(BaseApplication.mContext, Constants.Expiration_KEY, aliyunOss.getExpiration());
+        PreferenceUtils.setPrefString(BaseApplication.mContext, Constants.ENDPOINT_KEY, "http://" + aliyunOss.getRegion() + ".aliyuncs.com");
+        Constants.AK = aliyunOss.getAccessKeyId();
+        Constants.SK = aliyunOss.getAccessKeySecret();
+        Constants.STOKEN = aliyunOss.getSecurityToken();
+        Constants.Expiration = aliyunOss.getExpiration();
+        Constants.BUCKET = aliyunOss.getBucket();
+        Constants.ENDPOINT = "http://" + aliyunOss.getRegion() + ".aliyuncs.com";
+
+        getSTS_OSS(aliyunOss.getAccessKeyId(), aliyunOss.getAccessKeySecret(), aliyunOss.getSecurityToken(), "http://" + aliyunOss.getRegion() + ".aliyuncs.com");
+
+    }
+
+    @Override
+    public void getOssFailure(int statusCode) {
 
     }
 
@@ -447,7 +487,7 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
     private void showProjectName(List<ProjectsDB> projectsDBList) {
         project_name.clear();
         for (int i = 0; i < projectsDBList.size(); i++) {
-            project_name.add(projectsDBList.get(i).getPname());
+            project_name.add(projectsDBList.get(i).getDname());
         }
         OptionsPickerView pvOption_project = new OptionsPickerBuilder(_mActivity, new OnOptionsSelectListener() {
             @Override
@@ -705,28 +745,22 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
     /**
      * OSS对象实例
      */
-    private void getSTS_OSS() {
-        if (credentialProvider == null) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    credentialProvider = new OSSAuthCredentialsProvider(ApiContact.STSSERVER);
-                    ClientConfiguration conf = new ClientConfiguration();
-                    conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
-                    conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
-                    conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
-                    conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
-                    ossClient = new OSSClient(_mActivity, ApiContact.endpoint, credentialProvider, conf);
-                    p.getBeforePic(ossClient, projectId, levelId);
-                }
-            }).start();
-        } else {
-            p.getBeforePic(ossClient, projectId, levelId);
-
-        }
-
+    private void getSTS_OSS(String ak, String sk, String stoken, String endpoint) {
+        ClientConfiguration conf = new ClientConfiguration();
+        conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
+        conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
+        conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
+        conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
+        OSSCredentialProvider credentialProvider = new OSSStsTokenCredentialProvider(ak, sk, stoken);
+        ossClient = new OSSClient(_mActivity, endpoint, credentialProvider, conf);
+        p.getBeforePic(ossClient, projectId, levelId);
     }
 
-
-
+    /**
+     * 获取阿里云Oss
+     */
+    private void getAliyunOss() {
+        Map map = new HashMap();
+        p.getOss(map);
+    }
 }

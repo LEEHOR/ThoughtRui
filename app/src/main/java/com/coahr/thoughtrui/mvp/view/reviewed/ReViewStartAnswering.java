@@ -33,6 +33,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.alibaba.sdk.android.oss.ClientConfiguration;
 import com.alibaba.sdk.android.oss.OSSClient;
 import com.alibaba.sdk.android.oss.common.auth.OSSAuthCredentialsProvider;
+import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
+import com.alibaba.sdk.android.oss.common.auth.OSSStsTokenCredentialProvider;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
@@ -42,6 +44,7 @@ import com.coahr.thoughtrui.Utils.FileIoUtils.SaveOrGetAnswers;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.KeyBoardUtils;
 import com.coahr.thoughtrui.Utils.OSS_Aliyun;
+import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
@@ -50,6 +53,7 @@ import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment_not_padding;
 import com.coahr.thoughtrui.mvp.constract.ReViewStartAnswering_C;
 import com.coahr.thoughtrui.mvp.model.ApiContact;
+import com.coahr.thoughtrui.mvp.model.Bean.AliyunOss;
 import com.coahr.thoughtrui.mvp.model.Bean.isCompleteBean;
 import com.coahr.thoughtrui.mvp.presenter.ReViewStartAnswering_P;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
@@ -617,6 +621,30 @@ public class ReViewStartAnswering extends BaseFragment_not_padding<ReViewStartAn
     }
 
     @Override
+    public void getOssSuccess(AliyunOss aliyunOss) {
+        PreferenceUtils.setPrefString(BaseApplication.mContext, Constants.AK_KEY, aliyunOss.getAccessKeyId());
+        PreferenceUtils.setPrefString(BaseApplication.mContext, Constants.SK_KEY, aliyunOss.getAccessKeySecret());
+        PreferenceUtils.setPrefString(BaseApplication.mContext, Constants.STOKEN_KEY, aliyunOss.getSecurityToken());
+        PreferenceUtils.setPrefString(BaseApplication.mContext, Constants.BUCKET_KEY, aliyunOss.getBucket());
+        PreferenceUtils.setPrefLong(BaseApplication.mContext, Constants.Expiration_KEY, aliyunOss.getExpiration());
+        PreferenceUtils.setPrefString(BaseApplication.mContext, Constants.ENDPOINT_KEY, "http://" + aliyunOss.getRegion()+".aliyuncs.com");
+        Constants.AK=aliyunOss.getAccessKeyId();
+        Constants.SK=aliyunOss.getAccessKeySecret();
+        Constants.STOKEN=aliyunOss.getSecurityToken();
+        Constants.Expiration=aliyunOss.getExpiration();
+        Constants.BUCKET=aliyunOss.getBucket();
+        Constants.ENDPOINT="http://" + aliyunOss.getRegion()+".aliyuncs.com";
+
+        getSTS_OSS(aliyunOss.getAccessKeyId(),aliyunOss.getAccessKeySecret(),aliyunOss.getSecurityToken(),"http://" + aliyunOss.getRegion()+".aliyuncs.com");
+
+    }
+
+    @Override
+    public void getOssFailure(int statusCode) {
+
+    }
+
+    @Override
     public void startUploadCallBack(List<String> list, int uploadSuccessSize, int uploadFailSize, int totalSize, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
         KLog.a("上传", totalSize, uploadFailSize, uploadSuccessSize);
         fileList_Call.clear();
@@ -1126,42 +1154,14 @@ public class ReViewStartAnswering extends BaseFragment_not_padding<ReViewStartAn
     /**
      * OSS对象实例
      */
-    private void getSTS_OSS() {
-        /**
-         * 获取密钥
-         */
-        /*if (ossClient == null) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    OSSAuthCredentialsProvider ossAuthCredentialsProvider = new OSSAuthCredentialsProvider(ApiContact.STSSERVER);
-                    ClientConfiguration conf = new ClientConfiguration();
-                    conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
-                    conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
-                    conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
-                    conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
-                    ossClient = new OSSClient(BaseApplication.mContext, ApiContact.endpoint, ossAuthCredentialsProvider, conf);
-                    mHandler.sendEmptyMessage(GETUPLOADLIST);
-                }
-            }).start();
-        } else {
-            mHandler.sendEmptyMessage(GETUPLOADLIST);
-        }*/
-        if (credentialProvider == null) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    credentialProvider = new OSSAuthCredentialsProvider(ApiContact.STSSERVER);
-                    ClientConfiguration conf = new ClientConfiguration();
-                    conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
-                    conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
-                    conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
-                    conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
-                    ossClient = new OSSClient(_mActivity, ApiContact.endpoint, credentialProvider, conf);
-                }
-            }).start();
-
-        }
+    private void getSTS_OSS(String ak,String sk,String stoken,String endpoint) {
+        ClientConfiguration conf = new ClientConfiguration();
+        conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
+        conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
+        conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
+        conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
+        OSSCredentialProvider credentialProvider = new OSSStsTokenCredentialProvider(ak, sk, stoken);
+        ossClient = new OSSClient(_mActivity, endpoint, credentialProvider, conf);
         p.UpLoadFileList(ht_projectId, subjectsDB_now);
     }
 
@@ -1192,7 +1192,12 @@ public class ReViewStartAnswering extends BaseFragment_not_padding<ReViewStartAn
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         //获取阿里云上传实例
                         if (type == 1 || type == 2) {
-                            getSTS_OSS();
+                            //判断令牌有无过期
+                            if (Constants.Expiration>System.currentTimeMillis()){
+                                getSTS_OSS(Constants.AK,Constants.SK,Constants.STOKEN,Constants.ENDPOINT);
+                            } else {
+                                getAliyunOss();
+                            }
                         }
                         dialog.dismiss();
                     }
@@ -1431,5 +1436,13 @@ public class ReViewStartAnswering extends BaseFragment_not_padding<ReViewStartAn
     private void deleteAudio(String audioPath) {
         FileIOUtils.deleteFile(audioPath);
         p.getSubject(dbProjectId, ht_projectId, _mActivity, number, ht_id);
+    }
+
+    /**
+     * 获取阿里云Oss
+     */
+    private void getAliyunOss() {
+        Map map = new HashMap();
+        p.getOss(map);
     }
 }

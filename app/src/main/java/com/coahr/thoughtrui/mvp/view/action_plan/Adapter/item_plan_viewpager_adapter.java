@@ -1,5 +1,7 @@
 package com.coahr.thoughtrui.mvp.view.action_plan.Adapter;
 
+import android.text.TextUtils;
+
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.coahr.thoughtrui.R;
@@ -31,20 +33,22 @@ public class item_plan_viewpager_adapter extends BaseMultiItemQuickAdapter<Repor
 
     @Override
     protected void convert(BaseViewHolder helper, ReportList.DataBean.AllListBean item) {
-            if (helper.getItemViewType()==-1){  //未完成
-                helper.setText(R.id.plan_viewpager_un_tv_time,item.getTargetDate())
-                        .setText(R.id.plan_viewpager_un_dealer_name,item.getName())
-                        .setText(R.id.plan_viewpager_un_address,item.getDname())
-                        .setText(R.id.plan_viewpager_un_action_time, TimeUtils.getStingYMDHM(item.getNewestTime()))
-                        .setText(R.id.plan_viewpager_un_tips,item.getCount()>1? BaseApplication.mContext.getResources().getString(R.string.plan_viewpager_1_3):"")
-                        .addOnClickListener(R.id.item_plan_unfinish);
+        if (helper.getItemViewType() == -1) {  //未完成
+            helper.setText(R.id.plan_viewpager_un_tv_time, item.getTargetDate())
+                    .setText(R.id.plan_viewpager_un_dealer_name, item.getDname())
+                    .setText(R.id.plan_viewpager_un_address, String.format(BaseApplication.mContext.getResources().getString(R.string.plan_viewpager_1_4), !TextUtils.isEmpty(item.getQuota1()) ? item.getQuota1() : BaseApplication.mContext.getResources().getString(R.string.phrases_35)
+                            , !TextUtils.isEmpty(item.getQuota2()) ? item.getQuota2() : BaseApplication.mContext.getResources().getString(R.string.phrases_35)))
+                    .setText(R.id.plan_viewpager_un_action_time, TimeUtils.getStingYMDHM(item.getNewestTime()))
+                    .setText(R.id.plan_viewpager_un_tips, item.getCount() > 1 ? BaseApplication.mContext.getResources().getString(R.string.plan_viewpager_1_3) : "")
+                    .addOnClickListener(R.id.item_plan_unfinish);
 
-            } else {
-                helper.setText(R.id.plan_viewpager_fi_tv_time,item.getTargetDate())
-                        .setText(R.id.plan_viewpager_fi_dealer_name,item.getName())
-                        .setText(R.id.plan_viewpager_fi_address,item.getDname())
-                        .setText(R.id.plan_viewpager_fi_action_time, TimeUtils.getStingYMDHM(item.getNewestTime()))
-                        .addOnClickListener(R.id.item_plan_finish);
-            }
+        } else {
+            helper.setText(R.id.plan_viewpager_fi_tv_time, item.getTargetDate())
+                    .setText(R.id.plan_viewpager_fi_dealer_name, item.getDname())
+                    .setText(R.id.plan_viewpager_fi_address, String.format(BaseApplication.mContext.getResources().getString(R.string.plan_viewpager_1_4), !TextUtils.isEmpty(item.getQuota1()) ? item.getQuota1() : BaseApplication.mContext.getResources().getString(R.string.phrases_35)
+                            , !TextUtils.isEmpty(item.getQuota2()) ? item.getQuota2() : BaseApplication.mContext.getResources().getString(R.string.phrases_35)))
+                    .setText(R.id.plan_viewpager_fi_action_time, TimeUtils.getStingYMDHM(item.getNewestTime()))
+                    .addOnClickListener(R.id.item_plan_finish);
+        }
     }
 }

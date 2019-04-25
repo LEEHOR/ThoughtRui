@@ -177,6 +177,7 @@
     <string name="plan_viewpager_tittle_1">Unfinished</string>
     <string name="plan_viewpager_tittle_2">Finished</string>
     <string name="plan_viewpager_tittle_3">All</string>
+    <string name="plan_viewpager_1_4">%1$s - %2$s</string>
     <string name="plan_1_tittle">Presentation of newspapers</string>
     <string name="plan_1_1">Date of submission:</string>
     <string name="plan_1_2">Supervisor:</string>
@@ -212,6 +213,7 @@
     <string name="upload_fragment_4">All election</string>
     <string name="upload_fragment_5">Batch upload</string>
     <string name="upload_fragment_6">Uploading(%1$d/%2$d)</string>
+    <string name="upload_fragment_7">Item deleted, unable to upload</string>
     <string name="language_cn">Chinese</string>
     <string name="language_en">ENGLISH</string>
     <string name="language_auto">automatic</string>
@@ -294,6 +296,7 @@
     <string name="phrases_32">Please enter no more than 300 words.</string>
     <string name="phrases_33">Photograph</string>
     <string name="phrases_34">free attendence</string>
+    <string name="phrases_35">Not available</string>
     <string name="dialog_tittle_2">New projects</string>
     <string name="dialog_tittle_3">Completed projects</string>
     <string name="dialog_tittle_4">Unfinished projects</string>

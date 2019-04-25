@@ -7,6 +7,7 @@ import com.alibaba.sdk.android.oss.model.ListObjectsResult;
 import com.alibaba.sdk.android.oss.model.OSSObjectSummary;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
+import com.coahr.thoughtrui.mvp.model.Bean.AliyunOss;
 import com.coahr.thoughtrui.mvp.model.Bean.Dealer_List;
 import com.coahr.thoughtrui.mvp.model.Bean.Template_list;
 import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
@@ -42,6 +43,10 @@ public interface Fragment_action_plan_pre_1_c {
 
         void getProjectTemplateFailure(String fail);
 
+        void getOssSuccess(AliyunOss aliyunOss);
+
+        void getOssFailure(int statusCode);
+
         void putBeforeUploadCallBack(int TotalSize, int successSize, int failureSize);
     }
 
@@ -63,6 +68,13 @@ public interface Fragment_action_plan_pre_1_c {
         void getProjectTemplatesSuccess(Template_list template_list);
 
         void getProjectTemplateFailure(String fail);
+
+        //getOss
+        void getOss(Map<String, Object> map);
+
+        void getOssSuccess(AliyunOss aliyunOss);
+
+        void getOssFailure(int statusCode);
 
         void getBeforePic(OSS ossClient, String projectId, String levelId);
 
@@ -88,6 +100,8 @@ public interface Fragment_action_plan_pre_1_c {
         void getSubjectList(Map<String, Object> map);
 
         void getProjectTemplates(Map<String, Object> map);
+
+        void getOss(Map<String, Object> map);
 
         void getBeforePic(OSS oss, String projectId, String levelId);
 

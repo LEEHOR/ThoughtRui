@@ -11,6 +11,8 @@ import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.mvp.Base.BasePresenter;
 import com.coahr.thoughtrui.mvp.constract.PagerFragment_aC;
+import com.coahr.thoughtrui.mvp.model.Bean.AliyunOss;
+import com.coahr.thoughtrui.mvp.model.Bean.UpLoadCallBack;
 import com.coahr.thoughtrui.mvp.model.PagerFragment_aM;
 import com.coahr.thoughtrui.mvp.view.startProject.PagerFragment_a;
 
@@ -201,6 +203,27 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View, Pager
     }
 
     @Override
+    public void getOss(Map<String, Object> map) {
+        if (mModle != null) {
+            mModle.getOss(map);
+        }
+    }
+
+    @Override
+    public void getOssSuccess(AliyunOss aliyunOss) {
+        if (getView() != null) {
+            getView().getOssSuccess(aliyunOss);
+        }
+    }
+
+    @Override
+    public void getOssFailure(int statusCode) {
+        if (getView() != null) {
+            getView().getOssFailure(statusCode);
+        }
+    }
+
+    @Override
     public void startUpload(OSSClient ossClient, List<String> list, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
         if (mModle != null) {
             mModle.startUpload(ossClient, list, projectsDB, subjectsDB);
@@ -243,16 +266,16 @@ public class PagerFragment_aP extends BasePresenter<PagerFragment_aC.View, Pager
     }
 
     @Override
-    public void CallBackSuccess(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
+    public void CallBackSuccess(ProjectsDB projectsDB, SubjectsDB subjectsDB, UpLoadCallBack upLoadCallBack) {
         if (getView() != null) {
-            getView().CallBackSuccess(projectsDB, subjectsDB);
+            getView().CallBackSuccess(projectsDB, subjectsDB,upLoadCallBack);
         }
     }
 
     @Override
-    public void CallBackFailure(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
+    public void CallBackFailure(ProjectsDB projectsDB, SubjectsDB subjectsDB,UpLoadCallBack upLoadCallBack) {
         if (getView() != null) {
-            getView().CallBackFailure(projectsDB, subjectsDB);
+            getView().CallBackFailure(projectsDB, subjectsDB,upLoadCallBack);
         }
     }
 

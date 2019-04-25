@@ -21,10 +21,13 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.alibaba.sdk.android.oss.ClientConfiguration;
 import com.alibaba.sdk.android.oss.OSSClient;
 import com.alibaba.sdk.android.oss.common.auth.OSSAuthCredentialsProvider;
+import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
+import com.alibaba.sdk.android.oss.common.auth.OSSStsTokenCredentialProvider;
 import com.alibaba.sdk.android.oss.model.OSSObjectSummary;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.DensityUtils;
 import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
+import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.Utils.TimeUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
@@ -32,6 +35,7 @@ import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.Fragment_action_plan_pre_2_c;
 import com.coahr.thoughtrui.mvp.model.ApiContact;
+import com.coahr.thoughtrui.mvp.model.Bean.AliyunOss;
 import com.coahr.thoughtrui.mvp.model.Bean.ReportList;
 import com.coahr.thoughtrui.mvp.model.Bean.SubmitReport;
 import com.coahr.thoughtrui.mvp.presenter.Fragment_action_plan_pre_2_P;
@@ -64,6 +68,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
@@ -163,19 +168,23 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
     private ProgressBar progressBar;
     private TextView tv_tittle;
     private TimePickerDialog datePickerDialog;
+    private long newestTime;
+    private int type;
+    private String firstTime;
 
     @Override
     public Fragment_action_plan_pre_2_c.Presenter getPresenter() {
         return p;
     }
 
-    public static Fragment_Action_plan_presentation_2 newInstance(ReportList.DataBean.AllListBean allListBean, String projectId, String levelId, ArrayList<String> beforeImageList) {
+    public static Fragment_Action_plan_presentation_2 newInstance(ReportList.DataBean.AllListBean allListBean, String projectId, String levelId, ArrayList<String> beforeImageList, int type) {
         Fragment_Action_plan_presentation_2 fragmentActionPlanPresentation2 = new Fragment_Action_plan_presentation_2();
         Bundle bundle = new Bundle();
         bundle.putParcelable("report", allListBean);
         bundle.putString("projectId", projectId);
         bundle.putString("levelId", levelId);
         bundle.putStringArrayList("beforeImage", beforeImageList);
+        bundle.putInt("type", type);
         fragmentActionPlanPresentation2.setArguments(bundle);
         return fragmentActionPlanPresentation2;
     }
@@ -187,17 +196,25 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
 
     @Override
     public void initView() {
-        getSTS_OSS();
+        //判断令牌有无过期
+        if (Constants.Expiration > System.currentTimeMillis()) {
+            getSTS_OSS(Constants.AK, Constants.SK, Constants.STOKEN, Constants.ENDPOINT);
+        } else {
+            getAliyunOss();
+        }
         if (getArguments() != null) {
             report = (ReportList.DataBean.AllListBean) getArguments().getParcelable("report");
             projectId = getArguments().getString("projectId");
             levelId = getArguments().getString("levelId");
             beforeImage = getArguments().getStringArrayList("beforeImage");
+            type = getArguments().getInt("type");
             if (report != null) {
                 projectId = report.getProjectId();
                 duration = report.getDuration();
                 completeStatus = report.getCompleteStatus();
                 targetDate = report.getTargetDate();
+                newestTime = report.getNewestTime();
+                firstTime = report.getFirstTime();
                 diagnosis = report.getDiagnosis();
                 measures = report.getMeasures();
                 executor = report.getExecutor();
@@ -227,6 +244,12 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
             planRecyclerView.setVisibility(View.VISIBLE);
             plan2SpFinished.setSelection(1, true);
         }
+
+        if (type == 2) {
+            plan2TvCauseDiagnosis.setEnabled(false);
+            plan2TvCorrectiveActions.setEnabled(false);
+        }
+
         inflate = LayoutInflater.from(_mActivity).inflate(R.layout.dialog_progress, null);
         tv_message_tittle = inflate.findViewById(R.id.tv_message_tittle);
         tv_tittle = inflate.findViewById(R.id.tv_progress_info);
@@ -305,6 +328,30 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
             }
         });
         initTimePickerDialog();
+    }
+
+    @Override
+    public void getOssSuccess(AliyunOss aliyunOss) {
+        PreferenceUtils.setPrefString(BaseApplication.mContext, Constants.AK_KEY, aliyunOss.getAccessKeyId());
+        PreferenceUtils.setPrefString(BaseApplication.mContext, Constants.SK_KEY, aliyunOss.getAccessKeySecret());
+        PreferenceUtils.setPrefString(BaseApplication.mContext, Constants.STOKEN_KEY, aliyunOss.getSecurityToken());
+        PreferenceUtils.setPrefString(BaseApplication.mContext, Constants.BUCKET_KEY, aliyunOss.getBucket());
+        PreferenceUtils.setPrefLong(BaseApplication.mContext, Constants.Expiration_KEY, aliyunOss.getExpiration());
+        PreferenceUtils.setPrefString(BaseApplication.mContext, Constants.ENDPOINT_KEY, "http://" + aliyunOss.getRegion() + ".aliyuncs.com");
+        Constants.AK = aliyunOss.getAccessKeyId();
+        Constants.SK = aliyunOss.getAccessKeySecret();
+        Constants.STOKEN = aliyunOss.getSecurityToken();
+        Constants.Expiration = aliyunOss.getExpiration();
+        Constants.BUCKET = aliyunOss.getBucket();
+        Constants.ENDPOINT = "http://" + aliyunOss.getRegion() + ".aliyuncs.com";
+
+        getSTS_OSS(aliyunOss.getAccessKeyId(), aliyunOss.getAccessKeySecret(), aliyunOss.getSecurityToken(), "http://" + aliyunOss.getRegion() + ".aliyuncs.com");
+
+    }
+
+    @Override
+    public void getOssFailure(int statusCode) {
+
     }
 
     @Override
@@ -403,25 +450,15 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
     /**
      * OSS对象实例
      */
-    private void getSTS_OSS() {
-        if (credentialProvider == null) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    credentialProvider = new OSSAuthCredentialsProvider(ApiContact.STSSERVER);
-                    ClientConfiguration conf = new ClientConfiguration();
-                    conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
-                    conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
-                    conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
-                    conf.setMaxErrorRetry(10); // 失败后最大重试次数，默认2次
-                    ossClient = new OSSClient(_mActivity, ApiContact.endpoint, credentialProvider, conf);
-                    mHandler.sendEmptyMessage(MSG_LOAD_PIC);
-                    //p.getAfterPic(ossClient, projectId, levelId);
-                }
-            }).start();
-        } else {
-            p.getAfterPic(ossClient, projectId, levelId);
-        }
+    private void getSTS_OSS(String ak, String sk, String stoken, String endpoint) {
+        ClientConfiguration conf = new ClientConfiguration();
+        conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
+        conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
+        conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
+        conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
+        OSSCredentialProvider credentialProvider = new OSSStsTokenCredentialProvider(ak, sk, stoken);
+        ossClient = new OSSClient(_mActivity, endpoint, credentialProvider, conf);
+        p.getAfterPic(ossClient, projectId, levelId);
     }
 
     /**
@@ -520,6 +557,7 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
                 openMulti(10 - adapter_photo.getData().size());
                 break;
             case R.id.plan_2_tv_submit:
+                after_Up.clear();
                 after_Up.addAll(adapter_photo.getData());
                 if (TextUtils.isEmpty(plan2TvCauseDiagnosis.getText())) {
                     ToastUtils.showLong(getResources().getString(R.string.plan_2_13));
@@ -577,6 +615,7 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
     private void sendReport() {
         StringBuffer before_buffer = new StringBuffer();
         StringBuffer after_buffer = new StringBuffer();
+
         for (int i = 0; i < beforeImage.size(); i++) {
             KLog.d("beforeImage_1", FileIOUtils.getE(beforeImage.get(i), "/"));
             if (beforeImage.size() == 1) {
@@ -589,19 +628,22 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
                 }
             }
         }
-
-        for (int i = 0; i < after_Up.size(); i++) {
-            KLog.d("afterImage_1", FileIOUtils.getE(after_Up.get(i), "/"));
-            if (after_Up.size() == 1) {
-                after_buffer.append(FileIOUtils.getE(after_Up.get(i), "/"));
-            } else {
-                if (i == after_Up.size() - 1) {
+        if (status == 1) {
+            for (int i = 0; i < after_Up.size(); i++) {
+                KLog.d("afterImage_1", FileIOUtils.getE(after_Up.get(i), "/"));
+                if (after_Up.size() == 1) {
                     after_buffer.append(FileIOUtils.getE(after_Up.get(i), "/"));
                 } else {
-                    after_buffer.append(FileIOUtils.getE(after_Up.get(i), "/") + ";");
+                    if (i == after_Up.size() - 1) {
+                        after_buffer.append(FileIOUtils.getE(after_Up.get(i), "/"));
+                    } else {
+                        after_buffer.append(FileIOUtils.getE(after_Up.get(i), "/") + ";");
+                    }
                 }
             }
         }
+
+
         Map map = new HashMap();
         map.put("projectId", projectId);
         map.put("levelId", levelId);
@@ -656,7 +698,7 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
     public void onDateSet(TimePickerDialog timePickerView, long millseconds) {
         String stingYMD = TimeUtils.getStingYMD(millseconds);
         plan2TvTime.setText(stingYMD);
-        duration = differentDaysByMillisecond(millseconds, System.currentTimeMillis());
+        duration = differentDaysByMillisecond(millseconds, type == 2 ? Long.valueOf(firstTime) : System.currentTimeMillis());
         plan2TvTimeCount.setText(String.format(getResources().getString(R.string.plan_2_11), duration));
     }
 
@@ -686,19 +728,17 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
                 after_it.remove();
             }
         }
-        ClientConfiguration conf = new ClientConfiguration();
-        conf.setConnectionTimeout(10 * 1000); // 连接超时，默认10秒
-        conf.setSocketTimeout(10 * 1000); // socket超时，默认10秒
-        conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
-        conf.setMaxErrorRetry(10); // 失败后最大重试次数，默认2次
-        ossClient = new OSSClient(_mActivity, ApiContact.endpoint, credentialProvider, conf);
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                p.putImagesUpload(ossClient, beforeImage, after_Up, projectId, levelId, status);
-            }
-        });
 
+        if (ossClient != null) {
+            p.putImagesUpload(ossClient, beforeImage, after_Up, projectId, levelId, status);
+        }
+    }
 
+    /**
+     * 获取阿里云Oss
+     */
+    private void getAliyunOss() {
+        Map map = new HashMap();
+        p.getOss(map);
     }
 }

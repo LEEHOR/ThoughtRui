@@ -7,6 +7,7 @@ import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.mvp.Base.BasePresenter;
 import com.coahr.thoughtrui.mvp.constract.ReViewStartAnswering_C;
+import com.coahr.thoughtrui.mvp.model.Bean.AliyunOss;
 import com.coahr.thoughtrui.mvp.model.ReViewStartAnswering_M;
 import com.coahr.thoughtrui.mvp.view.reviewed.ReViewStartAnswering;
 
@@ -195,6 +196,27 @@ public class ReViewStartAnswering_P extends BasePresenter<ReViewStartAnswering_C
     public void getUpLoadFileListFailure(String failure) {
         if (getView() != null) {
             getView().getUpLoadFileListFailure(failure);
+        }
+    }
+
+    @Override
+    public void getOss(Map<String, Object> map) {
+        if (mModle != null) {
+            mModle.getOss(map);
+        }
+    }
+
+    @Override
+    public void getOssSuccess(AliyunOss aliyunOss) {
+        if (getView() != null) {
+            getView().getOssSuccess(aliyunOss);
+        }
+    }
+
+    @Override
+    public void getOssFailure(int statusCode) {
+        if (getView() != null) {
+            getView().getOssFailure(statusCode);
         }
     }
 

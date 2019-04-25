@@ -1,125 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    >
+
     <LinearLayout
+        android:background="@color/colorWhite"
         android:id="@+id/line_top"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    <com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar
-        android:id="@+id/dealer_Tittle"
-        app:tittle="@string/checking_dealer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:orientation="vertical">
 
-    </com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar>
-    <LinearLayout
+        <com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar
+            android:id="@+id/dealer_Tittle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tittle="@string/checking_dealer">
 
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:padding="@dimen/dp_12"
-            android:gravity="center"
-            android:textSize="@dimen/dp_14"
-            android:textColor="#2C2C2C"
-            android:text="@string/Province"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:padding="@dimen/dp_12"
-            android:id="@+id/tv_select_address"
-            android:hint="@string/select_Province"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:textSize="@dimen/dp_14"
-            android:textColor="#999999"
-            android:lines="1"
-            android:ellipsize="end"
-            android:layout_height="wrap_content"/>
+        </com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_5"
+            android:orientation="horizontal"
+            android:padding="@dimen/dp_5">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/dp_12"
+                android:text="@string/Province"
+                android:textColor="#2C2C2C"
+                android:textSize="@dimen/dp_14" />
+
+            <TextView
+                android:id="@+id/tv_select_address"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:hint="@string/select_Province"
+                android:lines="1"
+                android:padding="@dimen/dp_12"
+                android:textColor="#999999"
+                android:textSize="@dimen/dp_14" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:background="#CACACA" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/dp_5">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/dp_12"
+                android:text="@string/dealer_name_1"
+                android:textColor="#333333"
+                android:textSize="@dimen/dp_14" />
+
+            <TextView
+                android:id="@+id/tv_select_project"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:hint="@string/select_dealer"
+                android:lines="1"
+                android:padding="@dimen/dp_12"
+                android:textColor="#999999"
+                android:textSize="@dimen/dp_14" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:background="#CACACA" />
+
+        <LinearLayout
+            android:padding="@dimen/dp_5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/dp_12"
+                android:text="@string/dealer_code_1"
+                android:textColor="#333333"
+                android:textSize="@dimen/dp_14" />
+
+            <TextView
+                android:id="@+id/tv_project_id"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:lines="1"
+                android:padding="@dimen/dp_12"
+                android:textColor="#999999"
+                android:textSize="@dimen/dp_14" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:background="#CACACA" />
     </LinearLayout>
-    <View
-        android:background="#CACACA"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_1"/>
-    <LinearLayout
-
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:padding="@dimen/dp_12"
-            android:gravity="center"
-            android:textSize="@dimen/dp_14"
-            android:textColor="#333333"
-            android:text="@string/dealer_name_1"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:padding="@dimen/dp_12"
-            android:hint="@string/select_dealer"
-            android:id="@+id/tv_select_project"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:textSize="@dimen/dp_14"
-            android:textColor="#999999"
-            android:lines="1"
-            android:ellipsize="end"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
-    <View
-        android:background="#CACACA"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_1"/>
-    <LinearLayout
-
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:padding="@dimen/dp_12"
-            android:gravity="center"
-            android:textSize="@dimen/dp_14"
-            android:textColor="#333333"
-            android:text="@string/dealer_code_1"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:padding="@dimen/dp_12"
-            android:id="@+id/tv_project_id"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:textSize="@dimen/dp_14"
-            android:textColor="#999999"
-            android:lines="1"
-            android:ellipsize="end"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
-    <View
-        android:background="#CACACA"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_1"/>
-</LinearLayout>
 
     <TextView
         android:id="@+id/tv_submit"
-        android:layout_marginLeft="@dimen/dp_30"
-        android:layout_marginRight="@dimen/dp_30"
-        android:gravity="center"
-        android:padding="@dimen/edge_margin"
-        android:textColor="@color/colorWhite"
-        android:text="@string/start_checking_1"
-        android:textSize="@dimen/dp_14"
-        android:background="@drawable/bg_blue_white_frame_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="100dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_marginLeft="@dimen/dp_30"
+        android:layout_marginRight="@dimen/dp_30"
+        android:layout_marginBottom="@dimen/dp_60"
+        android:background="@drawable/bg_blue_white_frame_background_2"
+        android:gravity="center"
+        android:padding="@dimen/edge_margin"
+        android:text="@string/start_checking_1"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/dp_14" />
 </RelativeLayout>

@@ -31,7 +31,7 @@
     <string name="checking_template">请选择项目模板</string>
 
     <!--经销商选择页-->
-    <string name="Province">省市</string>
+    <string name="Province">省&#32;&#32;&#32;市</string>
     <string name="checking_dealer">请选择经销商</string>
     <string name="dealer_name_1">经销商名称</string>
     <string name="select_dealer">点击选择经销商</string>
@@ -225,6 +225,7 @@
     <string name="plan_viewpager_1_1">计划完成日期:</string>
     <string name="plan_viewpager_1_2">提报时间:</string>
     <string name="plan_viewpager_1_3">多次未完成</string>
+    <string name="plan_viewpager_1_4">%1$s-%2$s</string>
 
     <!--com.coahr.thoughtrui.mvp.view.action_plan.Fragment_action_projects-->
     <string name="plan_tittle">行动计划提报</string>
@@ -277,6 +278,7 @@
     <string name="upload_fragment_4">全选</string>
     <string name="upload_fragment_5">批量上传</string>
     <string name="upload_fragment_6">正在上传(%1$d/%2$d)</string>
+    <string name="upload_fragment_7">项目已删除,无法上传</string>
 
     <!--语言选择-->
     <string name="language_cn">中文</string>
@@ -367,6 +369,7 @@
     <string name="phrases_32">请输入300字以内</string>
     <string name="phrases_33">拍照</string>
     <string name="phrases_34">自由班次</string>
+    <string name="phrases_35">暂无</string>
 
     <!--dialog_text-->
     <string name="dialog_tittle_2">新的项目</string>

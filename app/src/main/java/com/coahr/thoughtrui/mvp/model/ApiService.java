@@ -1,5 +1,6 @@
 package com.coahr.thoughtrui.mvp.model;
 
+import com.coahr.thoughtrui.mvp.model.Bean.AliyunOss;
 import com.coahr.thoughtrui.mvp.model.Bean.AttendRemark;
 import com.coahr.thoughtrui.mvp.model.Bean.Attendance;
 import com.coahr.thoughtrui.mvp.model.Bean.AttendanceHistory;
@@ -220,4 +221,11 @@ public interface ApiService {
     @FormUrlEncoded
     @POST(ApiContact.plan_report_submit)
     Call<SubmitReport> submitReport(@FieldMap Map<String,Object> para);
+
+    /**
+     * 获取阿里云OSS临时安全令牌
+     */
+    @FormUrlEncoded
+    @POST(ApiContact.getOss)
+    Call<AliyunOss> getAliYunOss(@FieldMap Map<String,Object> para);
 }

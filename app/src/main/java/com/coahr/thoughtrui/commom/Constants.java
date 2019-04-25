@@ -11,15 +11,15 @@ import java.util.Locale;
  * 基础配置
  */
 public class Constants {
-    public static String  devicestoken="";
+    public static String devicestoken = "";
     //是否需要自杀进程以便打补丁
     public static boolean need_kill;
     //Latitude
-    public  static  double Latitude;
+    public static double Latitude;
     //Longitude
     public static double Longitude;
     //sessionId
-    public static String sessionId="";
+    public static String sessionId = "";
     //ht_projectId
     public static String ht_ProjectId;  //服务器端项目id
     //name_project
@@ -34,7 +34,7 @@ public class Constants {
     public static int user_type;
 
     //网络访问超时时间
-    public static int timeout=15;
+    public static int timeout = 15;
     //首页定位次数
     public static int location_counts;
     //消息个数
@@ -44,7 +44,7 @@ public class Constants {
     //晚班次
     public static String wan_ka;
     //语言
-    public static Locale system_locale=Locale.CHINA;
+    public static Locale system_locale = Locale.CHINA;
     //阿里云上传的bucket
     public static final String bucket = "three-research";
 
@@ -58,7 +58,7 @@ public class Constants {
     /**
      *
      */
-    public static String SAVE_DIR_GLIDE_CACHE=SAVE_DIR_BASE.concat("GlideCache/");
+    public static String SAVE_DIR_GLIDE_CACHE = SAVE_DIR_BASE.concat("GlideCache/");
     /**
      * 相机拍摄图片存储位置
      */
@@ -94,75 +94,91 @@ public class Constants {
     public static String SAVE_DIR_CRASH = SAVE_DIR_BASE.concat("crash/");
 
     //跳转常数
-    public  static final int MainActivityCode=1;
+    public static final int MainActivityCode = 1;
 
-    public  static final int MyTabFragmentCode=2; //首页
+    public static final int MyTabFragmentCode = 2; //首页
 
-    public  static final int ProjectDetailFragmentCode=3;
+    public static final int ProjectDetailFragmentCode = 3;
 
-    public  static final int loginFragmentCode=4;
+    public static final int loginFragmentCode = 4;
 
-    public static  final int startProjectFragment=5;
+    public static final int startProjectFragment = 5;
 
-    public static final  int fragment_topics=6; //题目列表
+    public static final int fragment_topics = 6; //题目列表
 
-    public static final int fragment_myFragment=7; //我的页面
+    public static final int fragment_myFragment = 7; //我的页面
 
-    public static final int fragment_ChangePass=8; //修改密码
+    public static final int fragment_ChangePass = 8; //修改密码
 
-    public static final int fragment_AnnexViewPager=9; //项目附件
+    public static final int fragment_AnnexViewPager = 9; //项目附件
 
-    public static final int fragment_review_pager=10;//审核首页
+    public static final int fragment_review_pager = 10;//审核首页
 
-    public static final int fragment_review_list=11; //审核列表
+    public static final int fragment_review_list = 11; //审核列表
 
-    public static final int fragment_feedback=12; //帮助与反馈
+    public static final int fragment_feedback = 12; //帮助与反馈
 
-    public static final int fragment_mainInfo=13; //首页选择
+    public static final int fragment_mainInfo = 13; //首页选择
 
-    public static final int fragment_main=14;  //首页
+    public static final int fragment_main = 14;  //首页
 
-    public static final int fragment_template=15; //项目模板
+    public static final int fragment_template = 15; //项目模板
 
-    public static final int fragment_webview=16; //网页
+    public static final int fragment_webview = 16; //网页
 
-    public static final int fragment_Dealer=17; //经销商信息
+    public static final int fragment_Dealer = 17; //经销商信息
 
-    public static final int fragment_search=18; //搜索页
+    public static final int fragment_search = 18; //搜索页
 
-    public static final int fragment_umeng=19; //消息中心
+    public static final int fragment_umeng = 19; //消息中心
 
-    public static final int fragment_uploadOptions=20; //上传设置
+    public static final int fragment_uploadOptions = 20; //上传设置
 
-    public static final int BaseApp=21; //App
+    public static final int BaseApp = 21; //App
 
-    public static final int fragment_action_pan=22; //行动报表
+    public static final int fragment_action_pan = 22; //行动报表
 
     /**
      * PreferenceUtils键
      */
-    public static  String sessionId_key="sessionId";
+    public static String sessionId_key = "sessionId";
     //user_key
-    public static  String user_key="user";
+    public static String user_key = "user";
     //用户类型
-    public static String user_type_key="user_type";
+    public static String user_type_key = "user_type";
     //token_key
-    public static  String token_key="token";
+    public static String token_key = "token";
     //uid
-    public static  String uid_key="uid";
+    public static String uid_key = "uid";
     //devicestoken
-    public static  String devicestoken_key="devicestoken";
+    public static String devicestoken_key = "devicestoken";
 
     //阿里云热更新
-    public static String AliYunHot_key="aliyun_hot";
+    public static String AliYunHot_key = "aliyun_hot";
     //补丁说明
-    public static String path_key="aliyun_path";
+    public static String path_key = "aliyun_path";
     //补丁版本
-    public static String pathVersion_key="aliyun_path_version";
+    public static String pathVersion_key = "aliyun_path_version";
     //app版本
-    public static String app_version_key="app_version";
+    public static String app_version_key = "app_version";
     //语言
-    public  static String system_locale_key="system_locale";
+    public static String system_locale_key = "system_locale";
+
+
+    //阿里云
+    public static String AK_KEY = "AK";
+    public static String SK_KEY = "SK";
+    public static String STOKEN_KEY = "STOKEN";
+    public static String Expiration_KEY = "EXPIRATION";
+    public static String BUCKET_KEY = "BUCKET";
+    public static String ENDPOINT_KEY = "ENDPOINT";
+
+    public static String AK;
+    public static String SK;
+    public static String STOKEN;
+    public static long Expiration;
+    public static String BUCKET;
+    public static String ENDPOINT;
 
 
     //网络类型判断

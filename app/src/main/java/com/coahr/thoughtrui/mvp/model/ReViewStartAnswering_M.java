@@ -23,6 +23,7 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.ReViewStartAnswering_C;
+import com.coahr.thoughtrui.mvp.model.Bean.AliyunOss;
 import com.coahr.thoughtrui.mvp.model.Bean.UpLoadCallBack;
 import com.socks.library.KLog;
 
@@ -153,6 +154,23 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
     }
 
     @Override
+    public void getOss(Map<String, Object> map) {
+        mRxManager.add(createFlowable(new SimpleFlowableOnSubscribe<AliyunOss>(getApiService().getAliYunOss(map)))
+                .subscribeWith(new SimpleDisposableSubscriber<AliyunOss>() {
+                    @Override
+                    public void _onNext(AliyunOss aliyunOss) {
+                        if (getPresenter() != null) {
+                            if (aliyunOss.getStatusCode() == 200) {
+                                getPresenter().getOssSuccess(aliyunOss);
+                            } else {
+                                getPresenter().getOssFailure(aliyunOss.getStatusCode());
+                            }
+                        }
+                    }
+                }));
+    }
+
+    @Override
     public void startUpload(OSSClient ossClient, List<String> list, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
         upList.clear();
         int CountSize = 0;
@@ -266,7 +284,7 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
                             : subjectsDB.getNumber() + "_" + pcPosition + ".png";
                     object = projectsDB.getPid() + "/pictures/" + subjectsDB.getNumber() + "/" + PicName;
                 }
-                PutObjectRequest put = new PutObjectRequest(Constants.bucket, object, localFile);
+                PutObjectRequest put = new PutObjectRequest(Constants.BUCKET, object, localFile);
                 put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
                     @Override
                     public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {

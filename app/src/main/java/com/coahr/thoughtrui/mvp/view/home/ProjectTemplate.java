@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.DensityUtils;
 import com.coahr.thoughtrui.Utils.ScreenUtils;
@@ -36,6 +37,7 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import butterknife.BindView;
 
 /**
@@ -80,6 +82,7 @@ public class ProjectTemplate extends BaseFragment<ProjectTemplate_c.Presenter> i
                 .init();
         template_title.getRoot().setBackgroundColor(Color.rgb(58, 128, 255));
         template_title.getTvTittle().setTextColor(Color.rgb(255, 255, 255));
+        template_title.getLeftIcon().setImageResource(R.mipmap.mytab_back);
         template_title.getLeftIcon().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,12 +107,12 @@ public class ProjectTemplate extends BaseFragment<ProjectTemplate_c.Presenter> i
         templateAdapter = new ProjectTemplateAdapter();
         template_recycle.setLayoutManager(manager);
         template_recycle.setAdapter(templateAdapter);
-        template_recycle.addItemDecoration(new SpacesItemDecoration(DensityUtils.dp2px(BaseApplication.mContext, 0), DensityUtils.dp2px(BaseApplication.mContext, 5)));
+      /*  template_recycle.addItemDecoration(new SpacesItemDecoration(DensityUtils.dp2px(BaseApplication.mContext, 0), DensityUtils.dp2px(BaseApplication.mContext, 5)));
         for (int i = 0; i < template_recycle.getItemDecorationCount(); i++) {
             if (i != 0) {
                 template_recycle.removeItemDecorationAt(i);
             }
-        }
+        }*/
 
         template_swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -135,18 +138,24 @@ public class ProjectTemplate extends BaseFragment<ProjectTemplate_c.Presenter> i
             }
         });
 
-        templateAdapter.setOnClick(new ProjectTemplateAdapter.OnClick() {
+        templateAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                JumpToProjectTemplate(((Template_list.TemplateListBean) adapter.getItem(position)).getId());
+            }
+        });
+    /*    templateAdapter.setOnClick(new ProjectTemplateAdapter.OnClick() {
             @Override
             public void getOnClick(Template_list.TemplateListBean item) {
                 JumpToProjectTemplate(item.getId());
             }
-        });
+        });*/
     }
 
     /**
      * 跳转到经销商
      */
-    private void JumpToProjectTemplate(String Template_id){
+    private void JumpToProjectTemplate(String Template_id) {
         start(DealerFragment.Instance(Template_id));
       /*  Intent intent=new Intent(_mActivity, ConstantsActivity.class);
         intent.putExtra("from", Constants.fragment_mainInfo);
@@ -154,6 +163,7 @@ public class ProjectTemplate extends BaseFragment<ProjectTemplate_c.Presenter> i
         intent.putExtra("to", Constants.fragment_Dealer);
         startActivity(intent);*/
     }
+
     @Override
     public void getProjectTemplatesSuccess(Template_list template_list) {
         isLoad = false;

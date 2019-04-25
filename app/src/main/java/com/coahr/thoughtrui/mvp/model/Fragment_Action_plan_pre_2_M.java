@@ -20,6 +20,7 @@ import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.Fragment_action_plan_pre_1_c;
 import com.coahr.thoughtrui.mvp.constract.Fragment_action_plan_pre_2_c;
+import com.coahr.thoughtrui.mvp.model.Bean.AliyunOss;
 import com.coahr.thoughtrui.mvp.model.Bean.ChangePassWord;
 import com.coahr.thoughtrui.mvp.model.Bean.SubmitReport;
 import com.coahr.thoughtrui.mvp.model.Bean.Template_list;
@@ -51,8 +52,25 @@ public class Fragment_Action_plan_pre_2_M extends BaseModel<Fragment_action_plan
 
 
     @Override
+    public void getOss(Map<String, Object> map) {
+        mRxManager.add(createFlowable(new SimpleFlowableOnSubscribe<AliyunOss>(getApiService().getAliYunOss(map)))
+                .subscribeWith(new SimpleDisposableSubscriber<AliyunOss>() {
+                    @Override
+                    public void _onNext(AliyunOss aliyunOss) {
+                        if (getPresenter() != null) {
+                            if (aliyunOss.getStatusCode() == 200) {
+                                getPresenter().getOssSuccess(aliyunOss);
+                            } else {
+                                getPresenter().getOssFailure(aliyunOss.getStatusCode());
+                            }
+                        }
+                    }
+                }));
+    }
+
+    @Override
     public void getAfterPic(OSS ossClient, String projectId, String levelId) {
-        ListObjectsRequest listObjects = new ListObjectsRequest(Constants.bucket);
+        ListObjectsRequest listObjects = new ListObjectsRequest(Constants.BUCKET);
         listObjects.setPrefix(String.format(BaseApplication.mContext.getResources().getString(R.string.plan_2_12), projectId, levelId));
         ossClient.asyncListObjects(listObjects, new OSSCompletedCallback<ListObjectsRequest, ListObjectsResult>() {
 
@@ -104,21 +122,20 @@ public class Fragment_Action_plan_pre_2_M extends BaseModel<Fragment_action_plan
     }
 
 
-
     @Override
     public void putImagesUpload(OSS oss, List<String> beforeImage, List<String> afterImage, String projectId, String levelId, int type) {
         successCount = 0;
         failureCount = 0;
-        if (beforeImage != null && beforeImage.size() > 0 && type == -1) {
+        if (beforeImage != null && beforeImage.size() > 0) {
             for (int i = 0; i < beforeImage.size(); i++) {
                 KLog.d("before", beforeImage.get(i));
-                putImages(oss, beforeImage.get(i), projectId, levelId, beforeImage.size() , 1);
+                putImages(oss, beforeImage.get(i), projectId, levelId, type == 1 ? beforeImage.size() + afterImage.size() : beforeImage.size(), 1);
             }
         }
         if (afterImage != null && afterImage.size() > 0 && type == 1) {
             for (int i = 0; i < afterImage.size(); i++) {
                 KLog.d("after", afterImage.get(i));
-                putImages(oss, afterImage.get(i), projectId, levelId,  afterImage.size(), 2);
+                putImages(oss, afterImage.get(i), projectId, levelId, beforeImage.size() + afterImage.size(), 2);
 
             }
         }

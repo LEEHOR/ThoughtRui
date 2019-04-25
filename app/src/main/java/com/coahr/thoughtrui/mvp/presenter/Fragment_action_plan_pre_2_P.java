@@ -7,6 +7,7 @@ import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.mvp.Base.BasePresenter;
 import com.coahr.thoughtrui.mvp.constract.Fragment_action_plan_pre_1_c;
 import com.coahr.thoughtrui.mvp.constract.Fragment_action_plan_pre_2_c;
+import com.coahr.thoughtrui.mvp.model.Bean.AliyunOss;
 import com.coahr.thoughtrui.mvp.model.Bean.SubmitReport;
 import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
 import com.coahr.thoughtrui.mvp.model.Fragment_Action_plan_pre_1_M;
@@ -70,6 +71,27 @@ public class Fragment_action_plan_pre_2_P extends BasePresenter<Fragment_action_
     public void getAfterPicUrlFailure(String failure) {
         if (getView() != null) {
             getView().getAfterPicFailure(failure);
+        }
+    }
+
+    @Override
+    public void getOss(Map<String, Object> map) {
+        if (mModle != null) {
+            mModle.getOss(map);
+        }
+    }
+
+    @Override
+    public void getOssSuccess(AliyunOss aliyunOss) {
+        if (getView() != null) {
+            getView().getOssSuccess(aliyunOss);
+        }
+    }
+
+    @Override
+    public void getOssFailure(int statusCode) {
+        if (getView() != null) {
+            getView().getOssFailure(statusCode);
         }
     }
 

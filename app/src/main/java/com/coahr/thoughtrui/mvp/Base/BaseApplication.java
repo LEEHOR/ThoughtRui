@@ -87,6 +87,34 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
         if (PreferenceUtils.contains(mContext, Constants.user_type_key)) {
             Constants.user_type = PreferenceUtils.getPrefInt(mContext, Constants.user_type_key, 1);
         }
+        if (PreferenceUtils.contains(mContext, Constants.user_type_key)) {
+            Constants.user_type = PreferenceUtils.getPrefInt(mContext, Constants.user_type_key, 1);
+        }
+        if (PreferenceUtils.contains(mContext, Constants.user_type_key)) {
+            Constants.user_type = PreferenceUtils.getPrefInt(mContext, Constants.user_type_key, 1);
+        }
+
+
+        //===================================阿里云Oss上传===================================
+        if (PreferenceUtils.contains(mContext, Constants.AK_KEY)) {
+            Constants.AK = PreferenceUtils.getPrefString(mContext, Constants.AK_KEY, "");
+        }
+        if (PreferenceUtils.contains(mContext, Constants.SK_KEY)) {
+            Constants.SK = PreferenceUtils.getPrefString(mContext, Constants.SK_KEY, "");
+        }
+        if (PreferenceUtils.contains(mContext, Constants.STOKEN_KEY)) {
+            Constants.STOKEN = PreferenceUtils.getPrefString(mContext, Constants.STOKEN_KEY, "");
+        }
+        if (PreferenceUtils.contains(mContext, Constants.Expiration_KEY)) {
+            Constants.Expiration = PreferenceUtils.getPrefLong(mContext, Constants.Expiration_KEY, 0);
+        }
+        if (PreferenceUtils.contains(mContext, Constants.BUCKET_KEY)) {
+            Constants.BUCKET = PreferenceUtils.getPrefString(mContext, Constants.BUCKET_KEY, "");
+        }
+        if (PreferenceUtils.contains(mContext, Constants.ENDPOINT_KEY)) {
+            Constants.ENDPOINT = PreferenceUtils.getPrefString(mContext, Constants.ENDPOINT_KEY, "");
+        }
+
         OSSLog.enableLog();
 
     }

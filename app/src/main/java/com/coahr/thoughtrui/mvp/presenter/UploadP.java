@@ -12,6 +12,8 @@ import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.mvp.Base.BasePresenter;
 import com.coahr.thoughtrui.mvp.constract.UploadC;
+import com.coahr.thoughtrui.mvp.model.Bean.AliyunOss;
+import com.coahr.thoughtrui.mvp.model.Bean.UpLoadCallBack;
 import com.coahr.thoughtrui.mvp.model.UploadM;
 import com.coahr.thoughtrui.mvp.view.upload.UploadFragment;
 
@@ -96,9 +98,30 @@ public class UploadP extends BasePresenter<UploadC.View, UploadC.Model> implemen
     }
 
     @Override
-    public void StartUiProgressSuccess( int currentSize, int totalSize, String info) {
+    public void StartUiProgressSuccess(int currentSize, int totalSize, String info) {
         if (getView() != null) {
-            getView().StartUiProgressSuccess( currentSize, totalSize, info);
+            getView().StartUiProgressSuccess(currentSize, totalSize, info);
+        }
+    }
+
+    @Override
+    public void getOss(Map<String, Object> map) {
+        if (mModle != null) {
+            mModle.getOss(map);
+        }
+    }
+
+    @Override
+    public void getOssSuccess(AliyunOss aliyunOss) {
+        if (getView() != null) {
+            getView().getOssSuccess(aliyunOss);
+        }
+    }
+
+    @Override
+    public void getOssFailure(int  statusCode) {
+        if (getView() != null) {
+            getView().getOssFailure(statusCode);
         }
     }
 
@@ -110,9 +133,9 @@ public class UploadP extends BasePresenter<UploadC.View, UploadC.Model> implemen
     }
 
     @Override
-    public void UploadCallBack(List<String> list, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS,List<String> picList, int project_position, int subject_position, int uploadSuccessSize, int uploadFailSize, int totalSize) {
+    public void UploadCallBack(List<String> list, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, List<String> picList, int project_position, int subject_position, int uploadSuccessSize, int uploadFailSize, int totalSize) {
         if (getView() != null) {
-            getView().UploadCallBack(list, subjectsDBList, projectsDBS,picList, project_position, subject_position, uploadSuccessSize, uploadFailSize, totalSize);
+            getView().UploadCallBack(list, subjectsDBList, projectsDBS, picList, project_position, subject_position, uploadSuccessSize, uploadFailSize, totalSize);
         }
     }
 
@@ -132,16 +155,16 @@ public class UploadP extends BasePresenter<UploadC.View, UploadC.Model> implemen
     }
 
     @Override
-    public void CallBackServerSuccess(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
+    public void CallBackServerSuccess(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position, UpLoadCallBack upLoadCallBack) {
         if (getView() != null) {
-            getView().CallBackServerSuccess(subjectsDBList, projectsDBS, project_position, subject_position);
+            getView().CallBackServerSuccess(subjectsDBList, projectsDBS, project_position, subject_position, upLoadCallBack);
         }
     }
 
     @Override
-    public void CallBackServerFailure(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
+    public void CallBackServerFailure(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position, UpLoadCallBack upLoadCallBack) {
         if (getView() != null) {
-            getView().CallBackServerFailure(subjectsDBList, projectsDBS, project_position, subject_position);
+            getView().CallBackServerFailure(subjectsDBList, projectsDBS, project_position, subject_position, upLoadCallBack);
         }
     }
 

@@ -22,6 +22,7 @@ import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.Fragment_action_plan_pre_1_c;
 import com.coahr.thoughtrui.mvp.constract.ProjectDealer_c;
+import com.coahr.thoughtrui.mvp.model.Bean.AliyunOss;
 import com.coahr.thoughtrui.mvp.model.Bean.Dealer_List;
 import com.coahr.thoughtrui.mvp.model.Bean.Template_list;
 import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
@@ -97,6 +98,23 @@ public class Fragment_Action_plan_pre_1_M extends BaseModel<Fragment_action_plan
                                 getPresenter().getProjectTemplatesSuccess(template_list);
                             } else {
                                 getPresenter().getProjectTemplateFailure(template_list.getStatus()+"");
+                            }
+                        }
+                    }
+                }));
+    }
+
+    @Override
+    public void getOss(Map<String, Object> map) {
+        mRxManager.add(createFlowable(new SimpleFlowableOnSubscribe<AliyunOss>(getApiService().getAliYunOss(map)))
+                .subscribeWith(new SimpleDisposableSubscriber<AliyunOss>() {
+                    @Override
+                    public void _onNext(AliyunOss aliyunOss) {
+                        if (getPresenter() != null) {
+                            if (aliyunOss.getStatusCode() == 200) {
+                                getPresenter().getOssSuccess(aliyunOss);
+                            } else {
+                                getPresenter().getOssFailure(aliyunOss.getStatusCode());
                             }
                         }
                     }

@@ -260,10 +260,10 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
      */
     private void JumpToProjectAnnex() {
         start(FragmentAnnexViewPager.newInstance());
-       // Intent intent = new Intent(_mActivity, ConstantsActivity.class);
-       // intent.putExtra("from", Constants.MainActivityCode);
-       // intent.putExtra("to", Constants.fragment_AnnexViewPager);
-       // startActivity(intent);
+        // Intent intent = new Intent(_mActivity, ConstantsActivity.class);
+        // intent.putExtra("from", Constants.MainActivityCode);
+        // intent.putExtra("to", Constants.fragment_AnnexViewPager);
+        // startActivity(intent);
     }
 
     @Override
@@ -279,8 +279,8 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
 
     @Override
     public void getDateSizeSuccess(int subject, int files) {
-        String sAgeFormat1= getResources().getString(R.string.string_1);
-        String sFinal1 = String.format(sAgeFormat1, subject,files);
+        String sAgeFormat1 = getResources().getString(R.string.string_1);
+        String sFinal1 = String.format(sAgeFormat1, subject, files);
         tv_upload_status.setText(sFinal1);
     }
 
@@ -330,14 +330,14 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
                     projectsDB.setUser(usersDBS.get(0));
                 }
                 projectsDB.save();
-                String sAgeFormat1= getResources().getString(R.string.string_1);
-                String sFinal1 = String.format(sAgeFormat1, 0,0);
+                String sAgeFormat1 = getResources().getString(R.string.string_1);
+                String sFinal1 = String.format(sAgeFormat1, 0, 0);
                 tv_upload_status.setText(sFinal1);
                 tv_fstatus.setText(getResources().getString(R.string.string_2));
             }
             tv_cName.setText(projectDetail.getData().getCname());
-            tv_cCode.setText(TextUtils.isEmpty(projectDetail.getData().getSale_code())?projectDetail.getData().getService_code() : TextUtils.isEmpty(projectDetail.getData().getService_code())? projectDetail.getData().getSale_code():"");
-            tv_cLevel.setText(projectDetail.getData().getGrade());
+            tv_cCode.setText(TextUtils.isEmpty(projectDetail.getData().getSale_code()) ? projectDetail.getData().getService_code() : TextUtils.isEmpty(projectDetail.getData().getService_code()) ? projectDetail.getData().getSale_code() : "");
+            tv_cLevel.setText(TextUtils.isEmpty(projectDetail.getData().getGrade()) ? getResources().getString(R.string.phrases_35) : projectDetail.getData().getGrade());
             tv_cAddress.setText(projectDetail.getData().getAreaAddress() + projectDetail.getData().getLocation());
             tv_time_cycle.setText(TimeUtils.getStingYMDHM(projectDetail.getData().getUploadTime()));
             tv_Kclass.setText(projectDetail.getData().getCname());
@@ -377,12 +377,12 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
     @Override
     public void getProjectDetailFailure(String fail) {
         isHaveProject = false;
-        String sAgeFormat1= getResources().getString(R.string.string_1);
-        String sFinal1 = String.format(sAgeFormat1, 0,0);
+        String sAgeFormat1 = getResources().getString(R.string.string_1);
+        String sFinal1 = String.format(sAgeFormat1, 0, 0);
         tv_upload_status.setText(sFinal1);
 
-        String sAgeFormat2= getResources().getString(R.string.string_3);
-        String sFinal1_2= String.format(sAgeFormat2, 0,0);
+        String sAgeFormat2 = getResources().getString(R.string.string_3);
+        String sFinal1_2 = String.format(sAgeFormat2, 0, 0);
         tv_fstatus.setText(sFinal1_2);
     }
 
@@ -395,8 +395,8 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
         List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", projectId);
         if (projectsDBS != null && projectsDBS.size() > 0) {
             ProjectsDB projectsDB = projectsDBS.get(0);
-            tv_cCode.setText(TextUtils.isEmpty(projectsDB.getSale_code()) ?  projectsDB.getService_code() : projectsDB.getSale_code());
-            tv_cLevel.setText(projectsDB.getGrade());
+            tv_cCode.setText(TextUtils.isEmpty(projectsDB.getSale_code()) ? projectsDB.getService_code() : projectsDB.getSale_code());
+            tv_cLevel.setText(TextUtils.isEmpty(projectsDB.getGrade()) ? getResources().getString(R.string.phrases_35) : projectsDB.getGrade());
             tv_cAddress.setText(projectsDB.getAddress() + projectsDB.getLocation());
             tv_time_cycle.setText(TimeUtils.getStingYMDHM(projectsDB.getUploadTime()));
             tv_Kclass.setText(projectsDB.getCname());
@@ -431,12 +431,12 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
             }
             p.getSubjectList(projectsDB);
         } else {
-            String sAgeFormat1= getResources().getString(R.string.string_1);
-            String sFinal1 = String.format(sAgeFormat1, 0,0);
+            String sAgeFormat1 = getResources().getString(R.string.string_1);
+            String sFinal1 = String.format(sAgeFormat1, 0, 0);
             tv_upload_status.setText(sFinal1);
 
-            String sAgeFormat2= getResources().getString(R.string.string_3);
-            String sFinal1_2= String.format(sAgeFormat2, 0,0);
+            String sAgeFormat2 = getResources().getString(R.string.string_3);
+            String sFinal1_2 = String.format(sAgeFormat2, 0, 0);
             tv_fstatus.setText(sFinal1_2);
         }
     }

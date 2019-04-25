@@ -6,6 +6,7 @@ import com.alibaba.sdk.android.oss.OSSClient;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
+import com.coahr.thoughtrui.mvp.model.Bean.AliyunOss;
 
 import java.util.List;
 import java.util.Map;
@@ -54,9 +55,13 @@ public interface ReViewStartAnswering_C {
 
         void getUpLoadFileListFailure(String failure);
 
+        void getOssSuccess(AliyunOss aliyunOss);
+
+        void getOssFailure(int statusCode);
+
         void startUploadCallBack(List<String> list, int uploadSuccessSize, int uploadFailSize, int totalSize, ProjectsDB projectsDB, SubjectsDB subjectsDB);
 
-        void  Up_Pic_Compulsory(ProjectsDB projectsDB, SubjectsDB subjectsDB,List<String> list);
+        void Up_Pic_Compulsory(ProjectsDB projectsDB, SubjectsDB subjectsDB, List<String> list);
 
         void showProgress(int currentSize, int totalSize, String info);
 
@@ -96,7 +101,7 @@ public interface ReViewStartAnswering_C {
 
         void getAnswerFailure();
 
-        void saveAnswers(String answers, String remark, String ht_ProjectId, int number, String ht_id,int type);
+        void saveAnswers(String answers, String remark, String ht_ProjectId, int number, String ht_id, int type);
 
         void saveAnswersSuccess(int type);
 
@@ -122,12 +127,19 @@ public interface ReViewStartAnswering_C {
 
         void getUpLoadFileListFailure(String failure);
 
+        //getOss
+        void getOss(Map<String, Object> map);
+
+        void getOssSuccess(AliyunOss aliyunOss);
+
+        void getOssFailure(int statusCode);
+
         //开始上传
         void startUpload(OSSClient ossClient, List<String> list, ProjectsDB projectsDB, SubjectsDB subjectsDB);
 
         void startUploadCallBack(List<String> list, int uploadSuccessSize, int uploadFailSize, int totalSize, ProjectsDB projectsDB, SubjectsDB subjectsDB);
 
-        void  Up_Pic_Compulsory(ProjectsDB projectsDB, SubjectsDB subjectsDB,List<String> list);
+        void Up_Pic_Compulsory(ProjectsDB projectsDB, SubjectsDB subjectsDB, List<String> list);
 
         void showProgress(int currentSize, int totalSize, String info);
 
@@ -158,13 +170,15 @@ public interface ReViewStartAnswering_C {
 
         void DeleteImage(String deleteImagePath);
 
-        void saveAnswers(String answers, String remark, String ht_ProjectId, int number, String ht_id,int type);
+        void saveAnswers(String answers, String remark, String ht_ProjectId, int number, String ht_id, int type);
 
         void SaveImages(List<MediaBean> mediaBeanList, String ht_ProjectId, int number, String ht_id);
 
         void getAudio(String ht_ProjectId, Activity activity, int number, String ht_id);
 
         void UpLoadFileList(String projectsDB_id, SubjectsDB subjectsDB);
+
+        void getOss(Map<String, Object> map);
 
         void startUpload(OSSClient ossClient, List<String> list, ProjectsDB projectsDB, SubjectsDB subjectsDB);
 

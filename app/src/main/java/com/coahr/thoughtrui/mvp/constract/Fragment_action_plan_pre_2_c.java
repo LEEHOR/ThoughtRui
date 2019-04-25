@@ -6,6 +6,7 @@ import com.alibaba.sdk.android.oss.model.ListObjectsResult;
 import com.alibaba.sdk.android.oss.model.OSSObjectSummary;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
+import com.coahr.thoughtrui.mvp.model.Bean.AliyunOss;
 import com.coahr.thoughtrui.mvp.model.Bean.SubmitReport;
 import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
 
@@ -21,6 +22,10 @@ import java.util.Map;
 public interface Fragment_action_plan_pre_2_c {
     interface View extends BaseContract.View {
 
+        void getOssSuccess(AliyunOss aliyunOss);
+
+        void getOssFailure(int statusCode);
+
         void getAfterPicSuccess(List<OSSObjectSummary> ossObjectSummaries);
 
         void getAfterPicFailure(String failure);
@@ -33,7 +38,7 @@ public interface Fragment_action_plan_pre_2_c {
 
         void SubmitReportFailure(String failure);
 
-        void putUploadProgress(long currentSize, long totalSize,String FileName);
+        void putUploadProgress(long currentSize, long totalSize, String FileName);
     }
 
     interface Presenter extends BaseContract.Presenter {
@@ -51,30 +56,38 @@ public interface Fragment_action_plan_pre_2_c {
 
         void getAfterPicUrlFailure(String failure);
 
-        void putImagesUpload(OSS oss, List<String> beforeImage,List<String> afterImage,String projectId, String levelId,int type);
+        //getOss
+        void getOss(Map<String, Object> map);
+
+        void getOssSuccess(AliyunOss aliyunOss);
+
+        void getOssFailure(int statusCode);
+
+        void putImagesUpload(OSS oss, List<String> beforeImage, List<String> afterImage, String projectId, String levelId, int type);
 
         void putUploadImagesCallBack(int TotalSize, int successSize, int failureSize);
 
-        void SubmitReport(Map<String,Object> map);
+        void SubmitReport(Map<String, Object> map);
 
         void SubmitReportSuccess(SubmitReport submitReport);
 
         void SubmitReportFailure(String failure);
 
-        void putUploadProgress(long currentSize, long totalSize,String FileName);
+        void putUploadProgress(long currentSize, long totalSize, String FileName);
     }
 
     interface Model extends BaseContract.Model {
 
+        void getOss(Map<String, Object> map);
 
         void getAfterPic(OSS ossClient, String projectId, String levelId);
 
         void getAfterPicUrl(OSS oss, List<String> picKeyList);
 
-        void putImagesUpload(OSS oss, List<String> beforeImage,List<String> afterImage,String projectId, String levelId,int type);
+        void putImagesUpload(OSS oss, List<String> beforeImage, List<String> afterImage, String projectId, String levelId, int type);
 
 
-        void SubmitReport(Map<String,Object> map);
+        void SubmitReport(Map<String, Object> map);
 
     }
 }

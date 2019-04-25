@@ -1,48 +1,22 @@
 package com.coahr.thoughtrui.mvp.view.home;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-
-import androidx.annotation.Nullable;
-
-import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
-import com.coahr.thoughtrui.mvp.view.UMPush.Fragment_Umeng;
-import com.coahr.thoughtrui.mvp.view.search.SearchFragment;
-import com.google.android.material.tabs.TabLayout;
-
-import androidx.viewpager.widget.ViewPager;
-
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.coahr.thoughtrui.DBbean.ProjectsDB;
-import com.coahr.thoughtrui.DBbean.UsersDB;
+import androidx.annotation.Nullable;
+import androidx.viewpager.widget.ViewPager;
+
 import com.coahr.thoughtrui.R;
-import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
-import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
-import com.coahr.thoughtrui.commom.Constants;
-import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.MyMainFragmentC;
-import com.coahr.thoughtrui.mvp.model.Bean.Event_Main;
-import com.coahr.thoughtrui.mvp.model.Bean.HomeDataList;
 import com.coahr.thoughtrui.mvp.presenter.MyMainFragmentP;
+import com.coahr.thoughtrui.mvp.view.UMPush.Fragment_Umeng;
 import com.coahr.thoughtrui.mvp.view.home.adapter.MainFragmentViewPageAdapter;
-import com.socks.library.KLog;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import org.litepal.crud.callback.UpdateOrDeleteCallback;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.coahr.thoughtrui.mvp.view.search.SearchFragment;
+import com.google.android.material.tabs.TabLayout;
 
 import javax.inject.Inject;
 
@@ -65,16 +39,18 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
     EditText tv_search;
     @BindView(R.id.iv_message)
     ImageView iv_message;
+    @BindView(R.id.iv_back)
+    ImageView ivBack;
     private MainFragmentViewPageAdapter pageAdapter;
     private int type;
     private int page;
 
 
-    public static MainFragment newInstance(int page,int type) {
-        MainFragment mainFragment=new MainFragment();
-        Bundle bundle=new Bundle();
-        bundle.putInt("page",page);
-        bundle.putInt("type",type);
+    public static MainFragment newInstance(int page, int type) {
+        MainFragment mainFragment = new MainFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("page", page);
+        bundle.putInt("type", type);
         mainFragment.setArguments(bundle);
         return mainFragment;
     }
@@ -112,7 +88,12 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
                 JumpToMassage();
             }
         });
-
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                _mActivity.onBackPressed();
+            }
+        });
     }
 
     @Override
@@ -121,7 +102,7 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
         viewPager.setAdapter(pageAdapter);
         home_tab.setupWithViewPager(viewPager);
         viewPager.setOffscreenPageLimit(1);
-        if (type==2){
+        if (type == 2) {
             viewPager.setCurrentItem(page);
         } else {
             viewPager.setCurrentItem(0);
@@ -137,26 +118,25 @@ public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implem
     /**
      * 跳转到消息中心
      */
-    private void JumpToMassage(){
+    private void JumpToMassage() {
         start(Fragment_Umeng.newInstance());
-       // Intent intent=new Intent(_mActivity, ConstantsActivity.class);
-       // intent.putExtra("from", Constants.fragment_main);
-       // intent.putExtra("to", Constants.fragment_umeng);
-       // startActivity(intent);
+        // Intent intent=new Intent(_mActivity, ConstantsActivity.class);
+        // intent.putExtra("from", Constants.fragment_main);
+        // intent.putExtra("to", Constants.fragment_umeng);
+        // startActivity(intent);
     }
 
     /**
      * 跳转到搜索页
-
      */
     private void JumpToProject() {
         if (haslogin()) {
             start(SearchFragment.instance(1));
-          //  Intent intent = new Intent(getActivity(), ConstantsActivity.class);
-           // intent.putExtra("from", Constants.MyTabFragmentCode);
+            //  Intent intent = new Intent(getActivity(), ConstantsActivity.class);
+            // intent.putExtra("from", Constants.MyTabFragmentCode);
             //intent.putExtra("type", 1);
-           // intent.putExtra("to", Constants.fragment_search);
-           // startActivity(intent);
+            // intent.putExtra("to", Constants.fragment_search);
+            // startActivity(intent);
         } else {
             ToastUtils.showLong(getResources().getString(R.string.toast_10));
         }

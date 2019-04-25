@@ -17,32 +17,34 @@ import com.coahr.thoughtrui.mvp.model.Bean.Template_list;
  * 创建日期：2019/2/26
  * 描述：项目模板adapter
  */
-public class ProjectTemplateAdapter extends BaseQuickAdapter<Template_list.TemplateListBean,BaseViewHolder> {
+public class ProjectTemplateAdapter extends BaseQuickAdapter<Template_list.TemplateListBean, BaseViewHolder> {
     private OnClick onClick;
+
     public ProjectTemplateAdapter() {
         super(R.layout.item_project_template, null);
     }
 
 
     @Override
-    protected void convert(BaseViewHolder helper,Template_list.TemplateListBean item) {
-        helper.setText(R.id.template_name,item.getName())
+    protected void convert(BaseViewHolder helper, Template_list.TemplateListBean item) {
+        helper.setText(R.id.template_name, item.getName())
                 .setText(R.id.template_time, BaseApplication.mContext.getResources().getString(R.string.phrases_1) + TimeUtils.getStingYMD(item.getModify_time()));
-        helper.getConvertView().setOnClickListener(new View.OnClickListener() {
+        helper.addOnClickListener(R.id.root_card);
+    /*.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (onClick != null) {
                     onClick.getOnClick(item);
                 }
             }
-        });
+        });*/
     }
 
     public void setOnClick(OnClick onClick) {
         this.onClick = onClick;
     }
 
-    public interface OnClick{
+    public interface OnClick {
         void getOnClick(Template_list.TemplateListBean item);
     }
 }

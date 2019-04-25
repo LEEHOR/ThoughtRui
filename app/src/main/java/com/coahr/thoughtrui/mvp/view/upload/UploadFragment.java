@@ -1,21 +1,19 @@
 package com.coahr.thoughtrui.mvp.view.upload;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-
-import androidx.annotation.NonNull;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -23,18 +21,23 @@ import com.alibaba.sdk.android.oss.ClientConfiguration;
 import com.alibaba.sdk.android.oss.ClientException;
 import com.alibaba.sdk.android.oss.OSSClient;
 import com.alibaba.sdk.android.oss.common.auth.OSSAuthCredentialsProvider;
+import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
 import com.alibaba.sdk.android.oss.common.auth.OSSFederationToken;
+import com.alibaba.sdk.android.oss.common.auth.OSSStsTokenCredentialProvider;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.DensityUtils;
 import com.coahr.thoughtrui.Utils.FileIoUtils.SaveOrGetAnswers;
+import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.UploadC;
 import com.coahr.thoughtrui.mvp.model.ApiContact;
+import com.coahr.thoughtrui.mvp.model.Bean.AliyunOss;
+import com.coahr.thoughtrui.mvp.model.Bean.UpLoadCallBack;
 import com.coahr.thoughtrui.mvp.presenter.UploadP;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
 import com.coahr.thoughtrui.mvp.view.upload.adapter.UpLoadAdapter;
@@ -44,7 +47,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
 
@@ -77,6 +79,10 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     CheckBox ck_bottom; //底部选择
     @BindView(R.id.tv_Batch_UpLoad)
     TextView tv_Batch_UpLoad; //批量上传
+    @BindView(R.id.iv_search_back)
+    ImageView ivSearchBack;
+    @BindView(R.id.fr_top)
+    FrameLayout frTop;
     //所有的项目列表（全部上传）
     private List<ProjectsDB> allProjectList;
     //所有项目个数
@@ -102,13 +108,13 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     private final int UPDATE_PROGRESS = 2;
     private final int UPDATE_TITTLE = 3;
     private final int UPDATE_MESSAGE = 4;
-    private Handler mHandler = new Handler() {
+/*    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
                 case GETSUBJECTLIST:
-                    getSubjectListByOne();
+                    //getSubjectListByOne();
                     break;
                 case UPDATE_PROGRESS:
                     //progressBar.setMax(msg.arg2);
@@ -123,7 +129,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                     break;
             }
         }
-    };
+    };*/
 
     /**
      * 回调参数
@@ -134,7 +140,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     private int subject_position;
     private TextView tv_message_tittle;
 
-    private ArrayList<String> pic =new ArrayList<>();
+    private ArrayList<String> pic = new ArrayList<>();
     private OSSAuthCredentialsProvider credentialProvider;
     private OSSFederationToken federationToken;
 
@@ -155,6 +161,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     @Override
     public void initView() {
         // getOSS();
+        ivSearchBack.setVisibility(View.INVISIBLE);
         inflate = LayoutInflater.from(_mActivity).inflate(R.layout.dialog_progress, null);
         tv_message_tittle = inflate.findViewById(R.id.tv_message_tittle);
         tv_progress_info = inflate.findViewById(R.id.tv_progress_info);
@@ -198,7 +205,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                 credentialProvider = new OSSAuthCredentialsProvider(ApiContact.STSSERVER);
                 try {
                     federationToken = credentialProvider.getFederationToken();
-                    KLog.d("token",federationToken.getTempAK(),federationToken.getSecurityToken());
+                    KLog.d("token", federationToken.getTempAK(), federationToken.getSecurityToken());
                 } catch (ClientException e) {
                     e.printStackTrace();
                 }
@@ -247,7 +254,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mHandler.removeCallbacksAndMessages(null);
+        // mHandler.removeCallbacksAndMessages(null);
         // ImmersionBar.with(this).destroy();
     }
 
@@ -308,18 +315,43 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
         ToastUtils.showLong(failure);
     }
 
+    @Override
+    public void getOssSuccess(AliyunOss aliyunOss) {
+        //  OSSFederationToken ossFederationToken = new OSSFederationToken(aliyunOss.getAccessKeyId(), aliyunOss.getAccessKeySecret(), aliyunOss.getSecurityToken(), aliyunOss.getExpiration());
+
+        PreferenceUtils.setPrefString(_mActivity, Constants.AK_KEY, aliyunOss.getAccessKeyId());
+        PreferenceUtils.setPrefString(_mActivity, Constants.SK_KEY, aliyunOss.getAccessKeySecret());
+        PreferenceUtils.setPrefString(_mActivity, Constants.STOKEN_KEY, aliyunOss.getSecurityToken());
+        PreferenceUtils.setPrefString(_mActivity, Constants.BUCKET_KEY, aliyunOss.getBucket());
+        PreferenceUtils.setPrefLong(_mActivity, Constants.Expiration_KEY, aliyunOss.getExpiration());
+        PreferenceUtils.setPrefString(_mActivity, Constants.ENDPOINT_KEY, "http://" + aliyunOss.getRegion() + ".aliyuncs.com");
+        Constants.AK = aliyunOss.getAccessKeyId();
+        Constants.SK = aliyunOss.getAccessKeySecret();
+        Constants.STOKEN = aliyunOss.getSecurityToken();
+        Constants.Expiration = aliyunOss.getExpiration();
+        Constants.BUCKET = aliyunOss.getBucket();
+        Constants.ENDPOINT = "http://" + aliyunOss.getRegion() + ".aliyuncs.com";
+
+
+        getOSS(aliyunOss.getAccessKeyId(), aliyunOss.getAccessKeySecret(), aliyunOss.getSecurityToken(), "http://" + aliyunOss.getRegion() + ".aliyuncs.com");
+       /* ClientConfiguration conf = new ClientConfiguration();
+        conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
+        conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
+        conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
+        conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
+        OSSCredentialProvider credentialProvider = new OSSStsTokenCredentialProvider(aliyunOss.getAccessKeyId(), aliyunOss.getAccessKeySecret(), aliyunOss.getSecurityToken());
+        ossClient = new OSSClient(_mActivity, "http://" + aliyunOss.getRegion()+".aliyuncs.com", credentialProvider, conf);
+        getSubjectListByOne();*/
+    }
+
+    @Override
+    public void getOssFailure(int statusCode) {
+        ToastUtils.showLong("临时安全令牌失败,请重新上传");
+    }
+
     //============进度更新
     @Override
     public void StartUiProgressSuccess(int currentSize, int totalSize, String info) {
-        /*private int currentSize_progress;
-        private int totalSize_progress;
-        private String info_progress;*/
-        // progressBar.setMax(totalSize);
-//         Message mes = mHandler.obtainMessage(UPDATE_PROGRESS, info);
-//                     mes.arg1 = currentSize;
-//                     mes.arg2 = totalSize;
-//                     mes.sendToTarget();
-
 
     }
 
@@ -371,15 +403,29 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     }
 
     @Override
-    public void CallBackServerSuccess(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
+    public void CallBackServerSuccess(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position, UpLoadCallBack upLoadCallBack) {
         // Message mes = mHandler.obtainMessage(UPDATE_PROGRESS, String.format(getResources().getString(R.string.upload_fragment_6),subject_position+1,subjectsDBList.size()));
         // mes.sendToTarget();
-        tv_progress_info.setText(String.format(getResources().getString(R.string.upload_fragment_6), subject_position + 1, subjectsDBList.size()));
-        p.UpDataDb(subjectsDBList, projectsDBS, project_position, subject_position, true);
+        if (upLoadCallBack.getMsg().equals("FORBID")) {
+            KLog.d("next", "开始下一项");
+            if (project_position < projectsDBS.size() - 1) {
+                p.getSubjectList(projectsDBS, project_position += 1);
+            } else {
+                // tv_progress_info.setText(getResources().getString(R.string.toast_39));
+                // pro_1.setVisibility(View.INVISIBLE);
+                // ToastUtils.showLong(getResources().getString(R.string.toast_39));
+            }
+            tv_progress_info.setText(getResources().getString(R.string.upload_fragment_7));
+            p.UpDataDb(subjectsDBList, projectsDBS, project_position, subject_position, false);
+        } else {
+            tv_progress_info.setText(String.format(getResources().getString(R.string.upload_fragment_6), subject_position + 1, subjectsDBList.size()));
+            p.UpDataDb(subjectsDBList, projectsDBS, project_position, subject_position, true);
+        }
+
     }
 
     @Override
-    public void CallBackServerFailure(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
+    public void CallBackServerFailure(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position, UpLoadCallBack upLoadCallBack) {
         p.UpDataDb(subjectsDBList, projectsDBS, project_position, subject_position, false);
     }
 
@@ -532,7 +578,13 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         if (types == 1 || types == 2) {
                             //getSubjectListByOne();
-                            getOSS();
+
+                            //判断令牌有无过期
+                            if (Constants.Expiration > System.currentTimeMillis()) {
+                                getOSS(Constants.AK, Constants.SK, Constants.STOKEN, Constants.ENDPOINT);
+                            } else {
+                                getAliyunOss();
+                            }
                         }
                         dialog.dismiss();
                     }
@@ -542,41 +594,15 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     /**
      * OSS对象实例
      */
-    private void getOSS() {
-    mHandler.post(new Runnable() {
-        @Override
-        public void run() {
-            if (federationToken.getTempAK() != null) {
-                ClientConfiguration conf = new ClientConfiguration();
-                conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
-                conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
-                conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
-                conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
-                ossClient = new OSSClient(_mActivity, ApiContact.endpoint, credentialProvider, conf);
-                getSubjectListByOne();
-            } else {
-                KLog.d("as为空");
-            }
-        }
-    });
-
-
-        /*    new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    credentialProvider = new OSSAuthCredentialsProvider(ApiContact.STSSERVER);
-                    ClientConfiguration conf = new ClientConfiguration();
-                    conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
-                    conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
-                    conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
-                    conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
-                    ossClient = new OSSClient(_mActivity, ApiContact.endpoint, credentialProvider, conf);
-                    getSubjectListByOne();
-                   //mHandler.sendEmptyMessage(GETSUBJECTLIST);
-                }
-            }).start();*/
-
-
+    private void getOSS(String ak, String sk, String stoken, String endpoint) {
+        ClientConfiguration conf = new ClientConfiguration();
+        conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
+        conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
+        conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
+        conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
+        OSSCredentialProvider credentialProvider = new OSSStsTokenCredentialProvider(ak, sk, stoken);
+        ossClient = new OSSClient(_mActivity, endpoint, credentialProvider, conf);
+        getSubjectListByOne();
     }
 
     /**
@@ -632,7 +658,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                     credentialProvider = new OSSAuthCredentialsProvider(ApiContact.STSSERVER);
                     try {
                         federationToken = credentialProvider.getFederationToken();
-                        KLog.d("token",federationToken.getTempAK(),federationToken.getSecurityToken());
+                        KLog.d("token", federationToken.getTempAK(), federationToken.getSecurityToken());
                     } catch (ClientException e) {
                         e.printStackTrace();
                     }
@@ -724,12 +750,22 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
             map.put("pictureCount", 0);
         }
 
-        mHandler.post(new Runnable() {
+        p.CallBackServer(map, subjectsDB, projectsDB, project_position, subject_position);
+    /*    mHandler.post(new Runnable() {
             @Override
             public void run() {
-                p.CallBackServer(map, subjectsDB, projectsDB, project_position, subject_position);
-            }
-        });
 
+            }
+        });*/
+
+    }
+
+
+    /**
+     * 获取阿里云Oss
+     */
+    private void getAliyunOss() {
+        Map map = new HashMap();
+        p.getOss(map);
     }
 }

@@ -33,6 +33,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.alibaba.sdk.android.oss.ClientConfiguration;
 import com.alibaba.sdk.android.oss.OSSClient;
 import com.alibaba.sdk.android.oss.common.auth.OSSAuthCredentialsProvider;
+import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
+import com.alibaba.sdk.android.oss.common.auth.OSSStsTokenCredentialProvider;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
@@ -42,6 +44,7 @@ import com.coahr.thoughtrui.Utils.FileIoUtils.SaveOrGetAnswers;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.KeyBoardUtils;
 import com.coahr.thoughtrui.Utils.OSS_Aliyun;
+import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
@@ -50,6 +53,8 @@ import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment_not_padding;
 import com.coahr.thoughtrui.mvp.constract.PagerFragment_aC;
 import com.coahr.thoughtrui.mvp.model.ApiContact;
+import com.coahr.thoughtrui.mvp.model.Bean.AliyunOss;
+import com.coahr.thoughtrui.mvp.model.Bean.UpLoadCallBack;
 import com.coahr.thoughtrui.mvp.model.Bean.isCompleteBean;
 import com.coahr.thoughtrui.mvp.presenter.PagerFragment_aP;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
@@ -206,7 +211,7 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
                         progressBar.setProgress(msg.arg1);
                     }
                     //   progressBar.setProgress(msg.arg1);
-                   // tv_tittle.setText(msg.obj.toString());
+                    // tv_tittle.setText(msg.obj.toString());
                     break;
             }
         }
@@ -397,7 +402,7 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
             case R.id.tv_last:
                 if (!isRecorder) {  //判断是否在录音
                     if (number > 1) {
-                        if (UpdateDB()){
+                        if (UpdateDB()) {
 
                             EventBus.getDefault().postSticky(new isCompleteBean(true, number - 1, 1, 1));
 
@@ -416,7 +421,7 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
             case R.id.tv_next:
                 if (number < countSize) {
                     if (!isRecorder) {
-                        if (UpdateDB()){
+                        if (UpdateDB()) {
                             EventBus.getDefault().postSticky(new isCompleteBean(true, number + 1, 2, 1));
                         }
 //                        if (subjectsDB_now.getPhotoStatus() == 1) {
@@ -542,7 +547,7 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
             //题目
             project_detail_titlle.setText(subjectsDB.getTitle());
             int i = subjectsDB.getsUploadStatus();
-            if (i==1){
+            if (i == 1) {
                 iv_upload_tag.setImageResource(R.mipmap.uploaded);
             } else {
                 iv_upload_tag.setImageResource(R.mipmap.not_uploaded);
@@ -780,6 +785,30 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
     }
 
     @Override
+    public void getOssSuccess(AliyunOss aliyunOss) {
+        PreferenceUtils.setPrefString(_mActivity, Constants.AK_KEY, aliyunOss.getAccessKeyId());
+        PreferenceUtils.setPrefString(_mActivity, Constants.SK_KEY, aliyunOss.getAccessKeySecret());
+        PreferenceUtils.setPrefString(_mActivity, Constants.STOKEN_KEY, aliyunOss.getSecurityToken());
+        PreferenceUtils.setPrefString(_mActivity, Constants.BUCKET_KEY, aliyunOss.getBucket());
+        PreferenceUtils.setPrefLong(_mActivity, Constants.Expiration_KEY, aliyunOss.getExpiration());
+        PreferenceUtils.setPrefString(_mActivity, Constants.ENDPOINT_KEY, "http://" + aliyunOss.getRegion()+".aliyuncs.com");
+        Constants.AK=aliyunOss.getAccessKeyId();
+        Constants.SK=aliyunOss.getAccessKeySecret();
+        Constants.STOKEN=aliyunOss.getSecurityToken();
+        Constants.Expiration=aliyunOss.getExpiration();
+        Constants.BUCKET=aliyunOss.getBucket();
+        Constants.ENDPOINT="http://" + aliyunOss.getRegion()+".aliyuncs.com";
+
+        getSTS_OSS(aliyunOss.getAccessKeyId(),aliyunOss.getAccessKeySecret(),aliyunOss.getSecurityToken(),"http://" + aliyunOss.getRegion()+".aliyuncs.com");
+
+    }
+
+    @Override
+    public void getOssFailure(int statusCode) {
+
+    }
+
+    @Override
     public void startUploadCallBack(List<String> list, int uploadSuccessSize, int uploadFailSize, int totalSize, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
         //上传成功
         if (totalSize == (uploadSuccessSize + uploadFailSize)) {
@@ -846,15 +875,21 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
     }
 
     @Override
-    public void CallBackSuccess(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
-        tv_tittle.setText(String.format(getResources().getString(R.string.upload_fragment_6), 1, 1));
-        tv_tittle.setText(getResources().getString(R.string.toast_39));
-        progressBar_1.setVisibility(View.INVISIBLE);
-        p.UpDataDb(projectsDB, subjectsDB);
+    public void CallBackSuccess(ProjectsDB projectsDB, SubjectsDB subjectsDB, UpLoadCallBack upLoadCallBack) {
+        if (upLoadCallBack.getMsg().equals("FORBID")) {
+            progressBar_1.setVisibility(View.INVISIBLE);
+            tv_tittle.setText(getResources().getString(R.string.upload_fragment_7));
+        } else {
+            tv_tittle.setText(String.format(getResources().getString(R.string.upload_fragment_6), 1, 1));
+            tv_tittle.setText(getResources().getString(R.string.toast_39));
+            progressBar_1.setVisibility(View.INVISIBLE);
+            p.UpDataDb(projectsDB, subjectsDB);
+        }
+
     }
 
     @Override
-    public void CallBackFailure(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
+    public void CallBackFailure(ProjectsDB projectsDB, SubjectsDB subjectsDB, UpLoadCallBack upLoadCallBack) {
         fr_upload.setEnabled(true);
     }
 
@@ -1212,29 +1247,29 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
             map.put("description", "");
         }
         map.put("audioCount", recorderPath != null ? 1 : 0);
-        map.put("audio", recorderPath != null ? subjectsDB.getNumber()+".wav" : "");
+        map.put("audio", recorderPath != null ? subjectsDB.getNumber() + ".wav" : "");
         if (picList != null && picList.size() > 0) {
             StringBuffer stringBuffer = new StringBuffer();
             for (int i = 0; i < picList.size(); i++) {
                 if (picList.size() == 1) {
-                    stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB.getNumber() + "_" + (i+1) + ".jpg"
-                            : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB.getNumber() + "_" + (i+1) + ".png"
-                            : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB.getNumber() + "_" + (i+1) + ".gif"
-                            : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB.getNumber() + "_" + (i+1) + ".jpeg"
-                            : subjectsDB.getNumber() + "_" + (i+1) + ".png");
+                    stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB.getNumber() + "_" + (i + 1) + ".jpg"
+                            : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB.getNumber() + "_" + (i + 1) + ".png"
+                            : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB.getNumber() + "_" + (i + 1) + ".gif"
+                            : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB.getNumber() + "_" + (i + 1) + ".jpeg"
+                            : subjectsDB.getNumber() + "_" + (i + 1) + ".png");
                 } else {
                     if (i == (picList.size() - 1)) {
-                        stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB.getNumber() + "_" + (i+1) + ".jpg"
-                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB.getNumber() + "_" + (i+1) + ".png"
-                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB.getNumber() + "_" + (i+1) + ".gif"
-                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB.getNumber() + "_" + (i+1) + ".jpeg"
-                                : subjectsDB.getNumber() + "_" + (i+1) + ".png");
+                        stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB.getNumber() + "_" + (i + 1) + ".jpg"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB.getNumber() + "_" + (i + 1) + ".png"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB.getNumber() + "_" + (i + 1) + ".gif"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB.getNumber() + "_" + (i + 1) + ".jpeg"
+                                : subjectsDB.getNumber() + "_" + (i + 1) + ".png");
                     } else {
-                        stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB.getNumber() + "_" + (i+1) + ".jpg" + ";"
-                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB.getNumber() + "_" + (i+1) + ".png" + ";"
-                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB.getNumber() + "_" + (i+1) + ".gif" + ";"
-                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB.getNumber() + "_" + (i+1) + ".jpeg" + ";"
-                                : subjectsDB.getNumber() + "_" + (i+1) + ".png" + ";");
+                        stringBuffer.append(FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpg") ? subjectsDB.getNumber() + "_" + (i + 1) + ".jpg" + ";"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("png") ? subjectsDB.getNumber() + "_" + (i + 1) + ".png" + ";"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("gif") ? subjectsDB.getNumber() + "_" + (i + 1) + ".gif" + ";"
+                                : FileIOUtils.getE(picList.get(i), ".").toLowerCase().equals("jpeg") ? subjectsDB.getNumber() + "_" + (i + 1) + ".jpeg" + ";"
+                                : subjectsDB.getNumber() + "_" + (i + 1) + ".png" + ";");
                     }
                 }
             }
@@ -1308,7 +1343,12 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         //获取阿里云上传实例
                         if (type == 1 || type == 2) {
-                            getSTS_OSS();
+                            //判断令牌有无过期
+                            if (Constants.Expiration>System.currentTimeMillis()){
+                                getSTS_OSS(Constants.AK,Constants.SK,Constants.STOKEN,Constants.ENDPOINT);
+                            } else {
+                                getAliyunOss();
+                            }
                         }
                         dialog.dismiss();
                     }
@@ -1325,30 +1365,19 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
         getSubjectDetail();
     }
 
+
     /**
      * OSS对象实例
      */
-    private void getSTS_OSS() {
-
-        if (credentialProvider == null) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    credentialProvider = new OSSAuthCredentialsProvider(ApiContact.STSSERVER);
-                    ClientConfiguration conf = new ClientConfiguration();
-                    conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
-                    conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
-                    conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
-                    conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
-                    ossClient = new OSSClient(_mActivity, ApiContact.endpoint, credentialProvider, conf);
-                    mHandler.sendEmptyMessage(GETUPLOADLIST);
-                }
-            }).start();
-
-        } else {
-            p.UpLoadFileList(projectsDB.getPid(), subjectsDB_now);
-        }
-
+    private void getSTS_OSS(String ak,String sk,String stoken,String endpoint) {
+        ClientConfiguration conf = new ClientConfiguration();
+        conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
+        conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
+        conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
+        conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
+        OSSCredentialProvider credentialProvider = new OSSStsTokenCredentialProvider(ak, sk, stoken);
+        ossClient = new OSSClient(_mActivity, endpoint, credentialProvider, conf);
+        p.UpLoadFileList(projectsDB.getPid(), subjectsDB_now);
     }
 
     /**
@@ -1521,6 +1550,12 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
             }
         }
     }
-
+    /**
+     * 获取阿里云Oss
+     */
+    private void getAliyunOss() {
+        Map map = new HashMap();
+        p.getOss(map);
+    }
 }
 

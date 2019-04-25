@@ -8,6 +8,7 @@ import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.mvp.Base.BasePresenter;
 import com.coahr.thoughtrui.mvp.constract.Fragment_action_plan_pre_1_c;
 import com.coahr.thoughtrui.mvp.constract.ProjectDealer_c;
+import com.coahr.thoughtrui.mvp.model.Bean.AliyunOss;
 import com.coahr.thoughtrui.mvp.model.Bean.Dealer_List;
 import com.coahr.thoughtrui.mvp.model.Bean.Template_list;
 import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
@@ -71,7 +72,7 @@ public class Fragment_action_plan_pre_1_P extends BasePresenter<Fragment_action_
     @Override
     public void getSubjectListFailure(String failure, int code) {
         if (getView() != null) {
-            getView().getSubjectListFailure(failure,code);
+            getView().getSubjectListFailure(failure, code);
         }
     }
 
@@ -93,6 +94,27 @@ public class Fragment_action_plan_pre_1_P extends BasePresenter<Fragment_action_
     public void getProjectTemplateFailure(String fail) {
         if (getView() != null) {
             getView().getProjectTemplateFailure(fail);
+        }
+    }
+
+    @Override
+    public void getOss(Map<String, Object> map) {
+        if (mModle != null) {
+            mModle.getOss(map);
+        }
+    }
+
+    @Override
+    public void getOssSuccess(AliyunOss aliyunOss) {
+        if (getView() != null) {
+            getView().getOssSuccess(aliyunOss);
+        }
+    }
+
+    @Override
+    public void getOssFailure(int statusCode) {
+        if (getView() != null) {
+            getView().getOssFailure(statusCode);
         }
     }
 
@@ -120,7 +142,7 @@ public class Fragment_action_plan_pre_1_P extends BasePresenter<Fragment_action_
     @Override
     public void getBeforePicUrl(OSS oss, List<String> picKeyList) {
         if (mModle != null) {
-            mModle.getBeforePicUrl(oss,picKeyList);
+            mModle.getBeforePicUrl(oss, picKeyList);
         }
     }
 
@@ -139,9 +161,9 @@ public class Fragment_action_plan_pre_1_P extends BasePresenter<Fragment_action_
     }
 
     @Override
-    public void putBeforeUpload(OSS oss, List<String> picUpload,String projectId,String LevelId) {
+    public void putBeforeUpload(OSS oss, List<String> picUpload, String projectId, String LevelId) {
         if (mModle != null) {
-            mModle.putBeforeUpload(oss,picUpload,projectId,LevelId);
+            mModle.putBeforeUpload(oss, picUpload, projectId, LevelId);
         }
     }
 
