@@ -45,9 +45,6 @@ public class Constants {
     public static String wan_ka;
     //语言
     public static Locale system_locale = Locale.CHINA;
-    //阿里云上传的bucket
-    public static final String bucket = "three-research";
-
     //SDCard路径
     public static String SDCARD_PATH = StoreSpaceUtils.getSDCardPath();
 

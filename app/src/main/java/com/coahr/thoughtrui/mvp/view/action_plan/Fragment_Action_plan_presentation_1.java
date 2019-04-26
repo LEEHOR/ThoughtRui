@@ -159,6 +159,7 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
                     isLoaded = false;
                     break;
                 case MSG_LOAD_OSS:
+                    p.getBeforePic(ossClient, projectId, levelId);
                     break;
             }
         }
@@ -746,14 +747,21 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
      * OSS对象实例
      */
     private void getSTS_OSS(String ak, String sk, String stoken, String endpoint) {
-        ClientConfiguration conf = new ClientConfiguration();
-        conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
-        conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
-        conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
-        conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
-        OSSCredentialProvider credentialProvider = new OSSStsTokenCredentialProvider(ak, sk, stoken);
-        ossClient = new OSSClient(_mActivity, endpoint, credentialProvider, conf);
-        p.getBeforePic(ossClient, projectId, levelId);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ClientConfiguration conf = new ClientConfiguration();
+                conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
+                conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
+                conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
+                conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
+                OSSCredentialProvider credentialProvider = new OSSStsTokenCredentialProvider(ak, sk, stoken);
+                ossClient = new OSSClient(_mActivity, endpoint, credentialProvider, conf);
+                mHandler.sendEmptyMessage(MSG_LOAD_OSS);
+               // p.getBeforePic(ossClient, projectId, levelId);
+            }
+        }).start();
+
     }
 
     /**

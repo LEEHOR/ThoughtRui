@@ -123,7 +123,7 @@ public class Fragment_Action_plan_pre_1_M extends BaseModel<Fragment_action_plan
 
     @Override
     public void getBeforePic(OSS oss, String projectId, String levelId) {
-        ListObjectsRequest listObjects = new ListObjectsRequest(Constants.bucket);
+        ListObjectsRequest listObjects = new ListObjectsRequest(Constants.BUCKET);
         listObjects.setPrefix(String.format(BaseApplication.mContext.getResources().getString(R.string.plan_1_12),projectId,levelId));
         oss.asyncListObjects(listObjects, new OSSCompletedCallback<ListObjectsRequest, ListObjectsResult>() {
             @Override
@@ -156,7 +156,7 @@ public class Fragment_Action_plan_pre_1_M extends BaseModel<Fragment_action_plan
                 public void run() {
                     for (int i = 0; i < picKeyList.size(); i++) {
                         try {
-                            String url = oss.presignConstrainedObjectURL(Constants.bucket, picKeyList.get(i), 10 * 60);
+                            String url = oss.presignConstrainedObjectURL(Constants.BUCKET, picKeyList.get(i), 10 * 60);
                             KLog.d("地址",url);
                             PicUrlList.add(url);
                         } catch (ClientException e) {
@@ -202,7 +202,7 @@ public class Fragment_Action_plan_pre_1_M extends BaseModel<Fragment_action_plan
 
         String object = String.format("%1$s/%2$s/%3$s/%4$s/%5$s", "report", projectId, levelId, "before", FileIOUtils.getE(picPath, "/"));
 
-        PutObjectRequest put = new PutObjectRequest(Constants.bucket, object, picPath);
+        PutObjectRequest put = new PutObjectRequest(Constants.BUCKET, object, picPath);
         put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
 
             @Override

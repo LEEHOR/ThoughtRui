@@ -43,7 +43,6 @@ import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.Utils.FileIoUtils.SaveOrGetAnswers;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.KeyBoardUtils;
-import com.coahr.thoughtrui.Utils.OSS_Aliyun;
 import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
@@ -791,15 +790,15 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
         PreferenceUtils.setPrefString(_mActivity, Constants.STOKEN_KEY, aliyunOss.getSecurityToken());
         PreferenceUtils.setPrefString(_mActivity, Constants.BUCKET_KEY, aliyunOss.getBucket());
         PreferenceUtils.setPrefLong(_mActivity, Constants.Expiration_KEY, aliyunOss.getExpiration());
-        PreferenceUtils.setPrefString(_mActivity, Constants.ENDPOINT_KEY, "http://" + aliyunOss.getRegion()+".aliyuncs.com");
-        Constants.AK=aliyunOss.getAccessKeyId();
-        Constants.SK=aliyunOss.getAccessKeySecret();
-        Constants.STOKEN=aliyunOss.getSecurityToken();
-        Constants.Expiration=aliyunOss.getExpiration();
-        Constants.BUCKET=aliyunOss.getBucket();
-        Constants.ENDPOINT="http://" + aliyunOss.getRegion()+".aliyuncs.com";
+        PreferenceUtils.setPrefString(_mActivity, Constants.ENDPOINT_KEY, "http://" + aliyunOss.getRegion() + ".aliyuncs.com");
+        Constants.AK = aliyunOss.getAccessKeyId();
+        Constants.SK = aliyunOss.getAccessKeySecret();
+        Constants.STOKEN = aliyunOss.getSecurityToken();
+        Constants.Expiration = aliyunOss.getExpiration();
+        Constants.BUCKET = aliyunOss.getBucket();
+        Constants.ENDPOINT = "http://" + aliyunOss.getRegion() + ".aliyuncs.com";
 
-        getSTS_OSS(aliyunOss.getAccessKeyId(),aliyunOss.getAccessKeySecret(),aliyunOss.getSecurityToken(),"http://" + aliyunOss.getRegion()+".aliyuncs.com");
+        getSTS_OSS(aliyunOss.getAccessKeyId(), aliyunOss.getAccessKeySecret(), aliyunOss.getSecurityToken(), "http://" + aliyunOss.getRegion() + ".aliyuncs.com");
 
     }
 
@@ -1043,6 +1042,7 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mHandler.removeCallbacksAndMessages(null);
     }
 
     /**
@@ -1344,8 +1344,8 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
                         //获取阿里云上传实例
                         if (type == 1 || type == 2) {
                             //判断令牌有无过期
-                            if (Constants.Expiration>System.currentTimeMillis()){
-                                getSTS_OSS(Constants.AK,Constants.SK,Constants.STOKEN,Constants.ENDPOINT);
+                            if (Constants.Expiration > System.currentTimeMillis()) {
+                                getSTS_OSS(Constants.AK, Constants.SK, Constants.STOKEN, Constants.ENDPOINT);
                             } else {
                                 getAliyunOss();
                             }
@@ -1369,15 +1369,30 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
     /**
      * OSS对象实例
      */
-    private void getSTS_OSS(String ak,String sk,String stoken,String endpoint) {
-        ClientConfiguration conf = new ClientConfiguration();
-        conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
-        conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
-        conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
-        conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
-        OSSCredentialProvider credentialProvider = new OSSStsTokenCredentialProvider(ak, sk, stoken);
-        ossClient = new OSSClient(_mActivity, endpoint, credentialProvider, conf);
-        p.UpLoadFileList(projectsDB.getPid(), subjectsDB_now);
+    private void getSTS_OSS(String ak, String sk, String stoken, String endpoint) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ClientConfiguration conf = new ClientConfiguration();
+                conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
+                conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
+                conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
+                conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
+                OSSCredentialProvider credentialProvider = new OSSStsTokenCredentialProvider(ak, sk, stoken);
+                ossClient = new OSSClient(_mActivity, endpoint, credentialProvider, conf);
+                mHandler.sendEmptyMessage(GETUPLOADLIST);
+            }
+        }).start();
+
+        /*mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+
+                p.UpLoadFileList(projectsDB.getPid(), subjectsDB_now);
+            }
+        });*/
+
     }
 
     /**
@@ -1550,6 +1565,7 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
             }
         }
     }
+
     /**
      * 获取阿里云Oss
      */

@@ -43,16 +43,12 @@ import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.Utils.FileIoUtils.SaveOrGetAnswers;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.KeyBoardUtils;
-import com.coahr.thoughtrui.Utils.OSS_Aliyun;
 import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
-import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
-import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment_not_padding;
 import com.coahr.thoughtrui.mvp.constract.ReViewStartAnswering_C;
-import com.coahr.thoughtrui.mvp.model.ApiContact;
 import com.coahr.thoughtrui.mvp.model.Bean.AliyunOss;
 import com.coahr.thoughtrui.mvp.model.Bean.isCompleteBean;
 import com.coahr.thoughtrui.mvp.presenter.ReViewStartAnswering_P;
@@ -1155,14 +1151,23 @@ public class ReViewStartAnswering extends BaseFragment_not_padding<ReViewStartAn
      * OSS对象实例
      */
     private void getSTS_OSS(String ak,String sk,String stoken,String endpoint) {
-        ClientConfiguration conf = new ClientConfiguration();
-        conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
-        conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
-        conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
-        conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
-        OSSCredentialProvider credentialProvider = new OSSStsTokenCredentialProvider(ak, sk, stoken);
-        ossClient = new OSSClient(_mActivity, endpoint, credentialProvider, conf);
-        p.UpLoadFileList(ht_projectId, subjectsDB_now);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ClientConfiguration conf = new ClientConfiguration();
+                conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
+                conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
+                conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
+                conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
+                OSSCredentialProvider credentialProvider = new OSSStsTokenCredentialProvider(ak, sk, stoken);
+                ossClient = new OSSClient(_mActivity, endpoint, credentialProvider, conf);
+
+                mHandler.sendEmptyMessage(GETUPLOADLIST);
+            }
+        }).start();
+
+       // p.UpLoadFileList(ht_projectId, subjectsDB_now);
     }
 
     /**

@@ -11,7 +11,48 @@
     android:layout_height="wrap_content">
 
 </com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar>
+    <RadioGroup
+        android:checkedButton="@id/rbt_1"
+        android:id="@+id/annex_RG"
+        android:background="@drawable/bg_fff_background"
+        android:padding="@dimen/edge_margin"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RadioButton
+            android:id="@+id/rbt_1"
+            android:layout_marginRight="@dimen/dp_10"
+            android:text="@string/project_annex_all"
+            android:button="@null"
+            android:gravity="center"
+            android:textColor="@drawable/tv_black_white_radio_button"
+            android:background="@drawable/bg_blue_white_radio_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <RadioButton
+            android:id="@+id/rbt_2"
+            android:gravity="center"
+            android:text="@string/project_annex_imgs"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginRight="@dimen/dp_10"
+            android:textColor="@drawable/tv_black_white_radio_button"
+            android:background="@drawable/bg_blue_white_radio_button"
+            android:button="@null"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <RadioButton
+            android:id="@+id/rbt_3"
+            android:gravity="center"
+            android:text="@string/project_annex_audios"
+            android:textColor="@drawable/tv_black_white_radio_button"
+            android:background="@drawable/bg_blue_white_radio_button"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:button="@null"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RadioGroup>
     <com.google.android.material.tabs.TabLayout
+        android:visibility="gone"
         android:id="@+id/annex_tab"
         android:background="@drawable/bg_fff_background"
         app:tabIndicatorColor="#333333"

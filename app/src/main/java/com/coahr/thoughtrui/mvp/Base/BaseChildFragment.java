@@ -34,7 +34,7 @@ public abstract class BaseChildFragment<P extends BaseContract.Presenter> extend
         //由于沉浸式要留白 标题栏，在这里统一设置，支出statusbar的空间，之后每个fragment的头顶第一个子view，都要
         //以一个viewgroup包含要显示tittle的子view形式进行布局，则此代码正确有效
       //  view.getRootView().setBackgroundColor(getResources().getColor(R.color.app_background_color));
-        //UpdateUI(view.getRootView());
+        UpdateUI(view.getRootView());
 //        initView();
 //        initData();
 //        EventBus.getDefault().register(this);

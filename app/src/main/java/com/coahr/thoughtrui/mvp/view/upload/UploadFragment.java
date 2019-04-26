@@ -1,5 +1,8 @@
 package com.coahr.thoughtrui.mvp.view.upload;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
@@ -105,31 +108,17 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     private ProgressBar progressBar, pro_1;
     private OSSClient ossClient;
     private final int GETSUBJECTLIST = 1;
-    private final int UPDATE_PROGRESS = 2;
-    private final int UPDATE_TITTLE = 3;
-    private final int UPDATE_MESSAGE = 4;
-/*    private Handler mHandler = new Handler() {
+    private Handler mHandler = new Handler(Looper.myLooper()) {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
                 case GETSUBJECTLIST:
-                    //getSubjectListByOne();
-                    break;
-                case UPDATE_PROGRESS:
-                    //progressBar.setMax(msg.arg2);
-                    // progressBar.setProgress(msg.arg1);
-                    tv_progress_info.setText(msg.obj != null ? msg.obj.toString() : "");
-                    break;
-                case UPDATE_TITTLE:
-                    tv_message_tittle.setText(msg.obj.toString());
-                    break;
-                case UPDATE_MESSAGE:
-                    tv_progress_info.setText(msg.obj.toString() != null ? msg.obj.toString() : getResources().getString(R.string.phrases_7));
+                    getSubjectListByOne();
                     break;
             }
         }
-    };*/
+    };
 
     /**
      * 回调参数
@@ -199,18 +188,6 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
 
     @Override
     public void initData() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                credentialProvider = new OSSAuthCredentialsProvider(ApiContact.STSSERVER);
-                try {
-                    federationToken = credentialProvider.getFederationToken();
-                    KLog.d("token", federationToken.getTempAK(), federationToken.getSecurityToken());
-                } catch (ClientException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
         if (haslogin()) {
             p.getProjectList(Constants.sessionId);
         }
@@ -254,7 +231,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     @Override
     public void onDestroy() {
         super.onDestroy();
-        // mHandler.removeCallbacksAndMessages(null);
+         mHandler.removeCallbacksAndMessages(null);
         // ImmersionBar.with(this).destroy();
     }
 
@@ -595,14 +572,21 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
      * OSS对象实例
      */
     private void getOSS(String ak, String sk, String stoken, String endpoint) {
-        ClientConfiguration conf = new ClientConfiguration();
-        conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
-        conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
-        conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
-        conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
-        OSSCredentialProvider credentialProvider = new OSSStsTokenCredentialProvider(ak, sk, stoken);
-        ossClient = new OSSClient(_mActivity, endpoint, credentialProvider, conf);
-        getSubjectListByOne();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ClientConfiguration conf = new ClientConfiguration();
+                conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
+                conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
+                conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
+                conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
+                OSSCredentialProvider credentialProvider = new OSSStsTokenCredentialProvider(ak, sk, stoken);
+                ossClient = new OSSClient(_mActivity, endpoint, credentialProvider, conf);
+                mHandler.sendEmptyMessage(GETSUBJECTLIST);
+            }
+        }).start();
+
+        //getSubjectListByOne();
     }
 
     /**
@@ -652,18 +636,6 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
         super.onHiddenChanged(hidden);
         if (!hidden) {
             p.getProjectList(Constants.sessionId);
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    credentialProvider = new OSSAuthCredentialsProvider(ApiContact.STSSERVER);
-                    try {
-                        federationToken = credentialProvider.getFederationToken();
-                        KLog.d("token", federationToken.getTempAK(), federationToken.getSecurityToken());
-                    } catch (ClientException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
         }
     }
 
@@ -750,13 +722,13 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
             map.put("pictureCount", 0);
         }
 
-        p.CallBackServer(map, subjectsDB, projectsDB, project_position, subject_position);
-    /*    mHandler.post(new Runnable() {
+
+        mHandler.post(new Runnable() {
             @Override
             public void run() {
-
+                p.CallBackServer(map, subjectsDB, projectsDB, project_position, subject_position);
             }
-        });*/
+        });
 
     }
 

@@ -16,9 +16,9 @@ import com.coahr.thoughtrui.mvp.view.projectAnnex.FragmentAnnex;
  * 描述：
  */
 public class AnnexViewPagerAdapter extends FragmentPagerAdapter {
-    private String[] title = {BaseApplication.mContext.getResources().getString(R.string.project_annex_all)
+    /*private String[] title = {BaseApplication.mContext.getResources().getString(R.string.project_annex_all)
             , BaseApplication.mContext.getResources().getString(R.string.project_annex_imgs)
-            , BaseApplication.mContext.getResources().getString(R.string.project_annex_audios)};
+            , BaseApplication.mContext.getResources().getString(R.string.project_annex_audios)};*/
     private String projectId;
 
     public AnnexViewPagerAdapter(FragmentManager fm, String projectIds) {
@@ -33,12 +33,12 @@ public class AnnexViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return title.length;
+        return 3;
     }
 
-    @Nullable
+  /*  @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
         return title[position];
-    }
+    }*/
 }

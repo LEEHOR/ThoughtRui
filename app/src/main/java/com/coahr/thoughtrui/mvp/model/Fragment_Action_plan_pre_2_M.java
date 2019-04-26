@@ -102,7 +102,7 @@ public class Fragment_Action_plan_pre_2_M extends BaseModel<Fragment_action_plan
                 public void run() {
                     for (int i = 0; i < picKeyList.size(); i++) {
                         try {
-                            String url = oss.presignConstrainedObjectURL(Constants.bucket, picKeyList.get(i), 10 * 60);
+                            String url = oss.presignConstrainedObjectURL(Constants.BUCKET, picKeyList.get(i), 10 * 60);
                             PicUrlList.add(url);
                         } catch (ClientException e) {
                             e.printStackTrace();
@@ -176,7 +176,7 @@ public class Fragment_Action_plan_pre_2_M extends BaseModel<Fragment_action_plan
 
         String object = String.format("%1$s/%2$s/%3$s/%4$s/%5$s", "report", projectId, levelId, type == 1 ? "before" : type == 2 ? "after" : "before", FileIOUtils.getE(picPath, "/"));
         KLog.d("object", object);
-        PutObjectRequest put = new PutObjectRequest(Constants.bucket, object, picPath);
+        PutObjectRequest put = new PutObjectRequest(Constants.BUCKET, object, picPath);
         put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
 
             @Override

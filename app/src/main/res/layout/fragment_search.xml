@@ -39,12 +39,12 @@
                 android:focusable="false"
                 android:cursorVisible="false"
                 android:focusableInTouchMode="false"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_centerVertical="true"
                 android:layout_height="@dimen/dp_36" />
             <TextView
                 android:layout_marginRight="@dimen/dp_5"
-                android:visibility="visible"
+                android:visibility="invisible"
                 android:id="@+id/search_cancel_2"
                 android:text="取消"
                 android:textColor="@color/colorWhite"

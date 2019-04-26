@@ -118,31 +118,42 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
         String audioPath = null;
         if (list != null && list.size() > 0) {
 
-         /*   fixedThreadPool.execute(new Runnable() {
-                @Override
-                public void run() {
-                    getOss();
-                }
-            });*/
             for (int i = 0; i < list.size(); i++) {
                 if (list.get(i).toLowerCase().endsWith("png") || list.get(i).toLowerCase().endsWith("jpeg")
                         || list.get(i).toLowerCase().endsWith("jpg") || list.get(i).toLowerCase().endsWith("gif")) {
                     CountSize++;
                     upList.add(list.get(i));
-                    KLog.d("上传文件_图片_1", list.get(i).toLowerCase());
+                    if (CountSize > 0 && CountSize == (list.size() - 1)) {
+                        if (upList != null && upList.size() > 0) {
+                            for (int j = 0; j < upList.size(); j++) {
+                                OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
+                                        upList.get(j), CountSize, subjectsDBList, projectsDBS, project_position, subject_position, list, j + 1);
+                            }
+                        }
+                    }
+
+
                 } else if (list.get(i).toLowerCase().endsWith("wav") || list.get(i).toLowerCase().endsWith("amr")
                         || list.get(i).toLowerCase().endsWith("aac")) {
                     CountSize++;
                     upList.add(list.get(i));
-                    KLog.d("上传文件_录音_1", list.get(i).toLowerCase());
-                }
-            }
-
-            if (upList != null && upList.size() > 0) {
-                for (int i = 0; i < upList.size(); i++) {
-                    KLog.d("上传文件_图片_2", upList.get(i));
-                    OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
-                            upList.get(i), CountSize, subjectsDBList, projectsDBS, project_position, subject_position, list, i + 1);
+                    if (CountSize > 0 && CountSize == (list.size() - 1)) {
+                        if (upList != null && upList.size() > 0) {
+                            for (int j = 0; j < upList.size(); j++) {
+                                OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
+                                        upList.get(j), CountSize, subjectsDBList, projectsDBS, project_position, subject_position, list, j + 1);
+                            }
+                        }
+                    }
+                } else {
+                    if (CountSize > 0 && CountSize == (list.size() - 1)) {
+                        if (upList != null && upList.size() > 0) {
+                            for (int j = 0; j < upList.size(); j++) {
+                                OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
+                                        upList.get(j), CountSize, subjectsDBList, projectsDBS, project_position, subject_position, list, j + 1);
+                            }
+                        }
+                    }
                 }
             }
 
@@ -327,6 +338,13 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
         int i = path.lastIndexOf(flag);
         String substring_name = path.substring(i + 1);
         return substring_name;
+    }
+
+    /**
+     * 开始上传
+     */
+    private void startUpload(List<String> fileList, int count) {
+
     }
 
 }
