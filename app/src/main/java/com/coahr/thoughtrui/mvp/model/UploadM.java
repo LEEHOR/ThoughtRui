@@ -181,7 +181,6 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
                     }
                 }));
 
-        //getPresenter().CallBackServerSuccess(subjectsDBList,projectsDBS,project_position,subject_position);
     }
 
     @Override

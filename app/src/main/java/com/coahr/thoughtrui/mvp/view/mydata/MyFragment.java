@@ -24,6 +24,7 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
+import com.coahr.thoughtrui.mvp.Base.BaseFragment_not_padding;
 import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
 import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
 import com.coahr.thoughtrui.widgets.CircularImageView;
@@ -44,7 +45,7 @@ import butterknife.OnClick;
  * 创建日期：2019/1/11
  * 描述：我的页面
  */
-public class MyFragment extends BaseChildFragment implements View.OnClickListener {
+public class MyFragment extends BaseFragment_not_padding implements View.OnClickListener {
     @BindView(R.id.my_header)
     CircularImageView my_header; //用户头像
     @BindView(R.id.tv_user_name)
@@ -395,15 +396,5 @@ public class MyFragment extends BaseChildFragment implements View.OnClickListene
                 }).build().show();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (Constants.message > 0) {
-            tv_xx_count.setVisibility(View.VISIBLE);
-            tv_xx_count.setText((Constants.message) + "");
-        } else {
-            tv_xx_count.setVisibility(View.INVISIBLE);
-        }
-    }
 
 }

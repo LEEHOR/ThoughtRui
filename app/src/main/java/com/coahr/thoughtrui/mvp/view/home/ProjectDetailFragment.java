@@ -303,6 +303,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
                 int update = projectsDB.update(projectsDBS.get(0).getId());
                 Constants.ht_ProjectId = projectDetail.getData().getId();
                 Constants.name_Project = projectDetail.getData().getPname();
+                projectId=projectDetail.getData().getId();
                 //获取数据
                 p.getSubjectList(projectsDBS.get(0));
             } else {
@@ -338,7 +339,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
             tv_cName.setText(projectDetail.getData().getCname());
             tv_cCode.setText(TextUtils.isEmpty(projectDetail.getData().getSale_code()) ? projectDetail.getData().getService_code() : TextUtils.isEmpty(projectDetail.getData().getService_code()) ? projectDetail.getData().getSale_code() : "");
             tv_cLevel.setText(TextUtils.isEmpty(projectDetail.getData().getGrade()) ? getResources().getString(R.string.phrases_35) : projectDetail.getData().getGrade());
-            tv_cAddress.setText(projectDetail.getData().getAreaAddress() + projectDetail.getData().getLocation());
+            tv_cAddress.setText(projectDetail.getData().getLocation());
             tv_time_cycle.setText(TimeUtils.getStingYMDHM(projectDetail.getData().getUploadTime()));
             tv_Kclass.setText(projectDetail.getData().getCname());
             project_detail_name.setText(projectDetail.getData().getPname());
@@ -354,6 +355,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
             tv_project_user.setText(Constants.user_name);
             tv_project_describe.setText(projectDetail.getData().getNotice());
             // List<ProjectsDB> projectsDBS1 = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", projectDetail.getData().getId());
+
             Constants.ht_ProjectId = projectDetail.getData().getId();
             Constants.name_Project = projectDetail.getData().getPname();
             String s = projectDetail.getData().getCname();
@@ -372,6 +374,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
             }
 
         }
+        projectId=projectDetail.getData().getId();
     }
 
     @Override
@@ -397,7 +400,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
             ProjectsDB projectsDB = projectsDBS.get(0);
             tv_cCode.setText(TextUtils.isEmpty(projectsDB.getSale_code()) ? projectsDB.getService_code() : projectsDB.getSale_code());
             tv_cLevel.setText(TextUtils.isEmpty(projectsDB.getGrade()) ? getResources().getString(R.string.phrases_35) : projectsDB.getGrade());
-            tv_cAddress.setText(projectsDB.getAddress() + projectsDB.getLocation());
+            tv_cAddress.setText(projectsDB.getLocation());
             tv_time_cycle.setText(TimeUtils.getStingYMDHM(projectsDB.getUploadTime()));
             tv_Kclass.setText(projectsDB.getCname());
             tv_cName.setText(projectsDB.getDname());

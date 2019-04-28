@@ -107,17 +107,25 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
        /* AlarmTimerUtil  alarmTimerUtil = AlarmTimerUtil.getInstance(BaseApplication.mContext);
         alarmTimerUtil.createGetUpAlarmManager(BaseApplication.mContext,"TIMER_ACTION",10);
         alarmTimerUtil.getUpAlarmManagerStartWork();*/
-        Intent intent = new Intent(this, LocalService.class);
-        startService(intent);
+     /*   Intent intent = new Intent(this, LocalService.class);
         Intent intents = new Intent(this, RomoteService.class);
-        startService(intents);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent);
+            startForegroundService(intents);
+        } else {
+            startService(intent);
+            startService(intents);
+        }*/
         EventBus.getDefault().register(this);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mHandker.removeCallbacksAndMessages(null);
+        if (mHandker != null) {
+            mHandker.removeCallbacksAndMessages(null);
+        }
+
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
@@ -141,6 +149,14 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     @Override
     public void initView() {
         getLocationPermission();
+        loadMultipleRootFragment(R.id.Root_Fragment, 0, mFragments);
+        showHideFragment(mFragments[0], mFragments[bottomNavigationPreposition]);
+        myBottomNavigation.beanSelect(0);
+        bottomNavigationPreposition = 0;
+        if (!haslogin()) {
+            loginDialog();
+        }
+
         myBottomNavigation.setOnTabPositionListener(new MyBottomNavigation.OnTabPositionListener() {
             @Override
             public void onPositionTab(int position) {
@@ -151,13 +167,6 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
 
     @Override
     public void initData() {
-        loadMultipleRootFragment(R.id.Root_Fragment, 0, mFragments);
-        showHideFragment(mFragments[0], mFragments[bottomNavigationPreposition]);
-        myBottomNavigation.beanSelect(0);
-        bottomNavigationPreposition = 0;
-        if (!haslogin()) {
-            loginDialog();
-        }
         p.getLocation(1);
     }
 
@@ -326,4 +335,5 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
             mHandker.removeCallbacksAndMessages(null);
         }
     }
+
 }

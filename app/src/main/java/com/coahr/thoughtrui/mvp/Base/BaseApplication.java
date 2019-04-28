@@ -82,7 +82,6 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
         }
         if (PreferenceUtils.contains(mContext, Constants.devicestoken_key)) {
             Constants.devicestoken = PreferenceUtils.getPrefString(mContext, Constants.devicestoken_key, "");
-            KLog.d(TAG, Constants.devicestoken);
         }
         if (PreferenceUtils.contains(mContext, Constants.user_type_key)) {
             Constants.user_type = PreferenceUtils.getPrefInt(mContext, Constants.user_type_key, 1);
@@ -150,7 +149,6 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
                 String pushId = extra.get("pushId");
                 KLog.d(TAG, pushId, pushType);
                 JumpToProjectList();
-                //super.launchApp(context, msg);
             }
 
             @Override

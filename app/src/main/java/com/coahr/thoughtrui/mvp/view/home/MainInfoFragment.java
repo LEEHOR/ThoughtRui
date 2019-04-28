@@ -7,7 +7,10 @@ import android.widget.ImageView;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
+import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
+import com.coahr.thoughtrui.mvp.Base.BaseFragment;
+import com.coahr.thoughtrui.mvp.Base.BaseFragment_not_padding;
 import com.coahr.thoughtrui.mvp.constract.MainInfoFragment_C;
 import com.coahr.thoughtrui.mvp.presenter.MainInfoFragment_P;
 import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
@@ -29,7 +32,7 @@ import butterknife.BindView;
  * 创建日期：2019/2/25
  * 描述：首页选择页面
  */
-public class MainInfoFragment extends BaseChildFragment<MainInfoFragment_C.Presenter> implements  MainInfoFragment_C.View {
+public class MainInfoFragment extends BaseFragment_not_padding<MainInfoFragment_C.Presenter> implements  MainInfoFragment_C.View {
    @Inject
     MainInfoFragment_P p;
     @BindView(R.id.card_histore)
@@ -40,13 +43,16 @@ public class MainInfoFragment extends BaseChildFragment<MainInfoFragment_C.Prese
     ImageView iv_project_tag;
     @BindView(R.id.iv_massage_center)
     ImageView iv_massage_center;
-    @Override
-    public BaseContract.Presenter getPresenter() {
-        return p;
-    }
+
     public static MainInfoFragment newInstance() {
         return new MainInfoFragment();
     }
+
+    @Override
+    public MainInfoFragment_C.Presenter getPresenter() {
+        return null;
+    }
+
     @Override
     public int bindLayout() {
         return R.layout.fragment_main_info;
@@ -85,7 +91,7 @@ public class MainInfoFragment extends BaseChildFragment<MainInfoFragment_C.Prese
      * 跳转到历史项目
      */
     private void JumpToProjectList(){
-        Intent intent=new Intent(_mActivity, ConstantsActivity.class);
+        Intent intent = new Intent(_mActivity, ConstantsActivity.class);
         intent.putExtra("from", Constants.fragment_mainInfo);
         intent.putExtra("to", Constants.fragment_main);
         startActivity(intent);
@@ -118,8 +124,7 @@ public class MainInfoFragment extends BaseChildFragment<MainInfoFragment_C.Prese
 
     @Override
     public void getProjectSuccess() {
-        iv_project_tag.setVisibility(View.VISIBLE);
-    }
+        iv_project_tag.setVisibility(View.VISIBLE); }
 
     @Override
     public void getProjectFailure(String failure) {

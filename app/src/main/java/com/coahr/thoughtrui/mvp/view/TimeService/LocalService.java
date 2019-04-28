@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.widget.Toast;
@@ -48,7 +49,7 @@ public class LocalService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         this.bindService(new Intent(LocalService.this, RomoteService.class), conn, Context.BIND_IMPORTANT);
         AlarmTimerUtil instance = AlarmTimerUtil.getInstance(this);
-        instance.createGetUpAlarmManager(this,"TIMER_ACTION",10);
+        instance.createGetUpAlarmManager(this, "TIMER_ACTION", 10);
         instance.getUpAlarmManagerStartWork();
         return START_STICKY;
     }
@@ -61,7 +62,12 @@ public class LocalService extends Service {
         @Override
         public void onServiceDisconnected(ComponentName name) {
             //开启远程服务
-            LocalService.this.startService(new Intent(LocalService.this, RomoteService.class));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                LocalService.this.startForegroundService(new Intent(LocalService.this, RomoteService.class));
+            } else {
+                LocalService.this.startService(new Intent(LocalService.this, RomoteService.class));
+            }
+
             //绑定远程服务
             LocalService.this.bindService(new Intent(LocalService.this, RomoteService.class), conn, Context.BIND_IMPORTANT);
         }
@@ -70,10 +76,15 @@ public class LocalService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+
         //开启远程服务
-        LocalService.this.startService(new Intent(LocalService.this, RomoteService.class));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      //      LocalService.this.startForegroundService(new Intent(LocalService.this, RomoteService.class));
+        } else {
+       //     LocalService.this.startService(new Intent(LocalService.this, RomoteService.class));
+        }
         //绑定远程服务
-        LocalService.this.bindService(new Intent(LocalService.this, RomoteService.class), conn, Context.BIND_IMPORTANT);
+      //  LocalService.this.bindService(new Intent(LocalService.this, RomoteService.class), conn, Context.BIND_IMPORTANT);
 
     }
 }

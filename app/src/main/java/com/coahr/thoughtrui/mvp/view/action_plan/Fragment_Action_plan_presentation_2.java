@@ -164,6 +164,7 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
     private String measures; //具体改善措施
     private String executor;
     private View inflate;
+    private View inflate_photo;
     private TextView tv_message_tittle;
     private ProgressBar progressBar;
     private TextView tv_tittle;
@@ -465,7 +466,7 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
             }
         }).start();
 
-       // p.getAfterPic(ossClient, projectId, levelId);
+        // p.getAfterPic(ossClient, projectId, levelId);
     }
 
     /**

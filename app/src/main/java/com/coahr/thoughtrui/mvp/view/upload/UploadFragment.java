@@ -231,8 +231,9 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     @Override
     public void onDestroy() {
         super.onDestroy();
-         mHandler.removeCallbacksAndMessages(null);
-        // ImmersionBar.with(this).destroy();
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
     }
 
     @Override
@@ -620,14 +621,6 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
         int i = path.lastIndexOf(flag);
         String substring_name = path.substring(i + 1);
         return substring_name;
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        if (ossClient != null) {
-            ossClient = null;
-        }
     }
 
 

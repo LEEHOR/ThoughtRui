@@ -216,7 +216,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         }
     };
 
-    private Runnable runnable_location=new Runnable() {
+    private Runnable runnable_location = new Runnable() {
         @Override
         public void run() {
             p.startLocations(4);
@@ -295,7 +295,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                     baiduLocationHelper.stopLocation();
                     if (mHandler != null) {
                         if (latitude != 0 && longitude != 0) {
-                            continueStla = 0 ;
+                            continueStla = 0;
                             continueStlo = 0;
                             p.startLocations(4);
                         }
@@ -311,7 +311,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                     baiduLocationHelper.stopLocation();
                     if (mHandler != null) {
                         if (latitude != 0 && longitude != 0) {
-                            continueStla = 0 ;
+                            continueStla = 0;
                             continueStlo = 0;
                             p.startLocations(4);
                         }
@@ -395,15 +395,16 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         end_tv_bz.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EvaluateInputDialogFragment dialogFragment = new EvaluateInputDialogFragment();
-                dialogFragment.setOnInputCallback(new EvaluateInputDialogFragment.InputCallback() {
+                EvaluateInputDialogFragment dialogFragmen = EvaluateInputDialogFragment.newInstance(30);
+                dialogFragmen.show(getFragmentManager(), TAG);
+                dialogFragmen.setOnInputCallback(new EvaluateInputDialogFragment.InputCallback() {
                     @Override
                     public void onInputSend(String input, AppCompatDialogFragment dialog) {
                         dialogs = dialog;
                         PushAttendanceRemark(input);
                     }
                 });
-                dialogFragment.show(getFragmentManager(),TAG);
+
             }
         });
     }
@@ -652,7 +653,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
 
     @Override
     public void getPushFail(String failure, int code) {
-        ToastUtils.showLong(failure +getResources().getString(R.string.toast_14));
+        ToastUtils.showLong(failure + getResources().getString(R.string.toast_14));
         if (code != -1) {
 
         } else {

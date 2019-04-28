@@ -12,6 +12,7 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
+import com.coahr.thoughtrui.mvp.Base.BaseLazyFragment;
 import com.coahr.thoughtrui.mvp.constract.Fragment_Umeng_C;
 import com.coahr.thoughtrui.mvp.model.Bean.CensorBean;
 import com.coahr.thoughtrui.mvp.model.Bean.NotificationBean;

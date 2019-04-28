@@ -11,6 +11,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
+import com.coahr.thoughtrui.mvp.Base.BaseLazyFragment;
 import com.coahr.thoughtrui.mvp.constract.MyMainFragmentC;
 import com.coahr.thoughtrui.mvp.presenter.MyMainFragmentP;
 import com.coahr.thoughtrui.mvp.view.UMPush.Fragment_Umeng;
@@ -28,7 +29,7 @@ import butterknife.BindView;
  * on 15:42
  * 项目列表
  */
-public class MainFragment extends BaseFragment<MyMainFragmentC.Presenter> implements MyMainFragmentC.View {
+public class MainFragment extends BaseLazyFragment<MyMainFragmentC.Presenter> implements MyMainFragmentC.View {
     @Inject
     MyMainFragmentP p;
     @BindView(R.id.home_tab)

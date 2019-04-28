@@ -31,4 +31,5 @@ public abstract class AllActivityModule {
 
     @ContributesAndroidInjector(modules = StartProjectActivityModule.class)
     abstract StartProjectActivity contributeStartProjectActivityInjector();
+
 }

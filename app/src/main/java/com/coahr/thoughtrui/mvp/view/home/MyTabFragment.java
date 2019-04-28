@@ -329,13 +329,9 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
     @Override
     public void getHomeDataFailure(String fail, int code) {
         ToastUtils.showLong(fail);
-        if (code != -1) {
-            isLoad = false;
-            myTab_swipe.setRefreshing(false);
-        } else {
-            loginDialog();
-        }
-
+        isLoad = false;
+        myTab_swipe.setRefreshing(false);
+        p.getTypeDate(type);
     }
 
     @Override
@@ -344,6 +340,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
         ToastUtils.showLong(e.toString());
         isLoad = false;
         myTab_swipe.setRefreshing(false);
+        p.getTypeDate(type);
     }
 
     /**
@@ -523,10 +520,10 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
         if (haslogin()) {
             //((SupportFragment)getParentFragment())
             /*((SupportFragment)getParentFragment()).*/
-            KLog.d("跳转1","详情页");
-            ((SupportFragment)getParentFragment()).start(ProjectDetailFragment.newInstance(
+            KLog.d("跳转1", "详情页");
+            ((SupportFragment) getParentFragment()).start(ProjectDetailFragment.newInstance(
                     projectId, "", "", 2));
-            KLog.d("跳转1","详情页");
+            KLog.d("跳转1", "详情页");
            /* Intent intent = new Intent(getActivity(), ConstantsActivity.class);
             intent.putExtra("from", Constants.MyTabFragmentCode);
             intent.putExtra("templateId", "");

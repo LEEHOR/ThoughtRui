@@ -54,14 +54,14 @@ public abstract class AllFragmentModule {
     @ContributesAndroidInjector(modules = UploadFragmentModule.class)
     abstract UploadFragment contributeUploadFragmentInjector();
 
-    @ContributesAndroidInjector(modules = MyMainFragmentModule.class)
-    abstract MainFragment MainFragmentInjector();
-
     @ContributesAndroidInjector(modules = MyFragment_Module.class)
     abstract MyFragment MyFragmentInjector();
 
     @ContributesAndroidInjector(modules = MainInfoFragment_Module.class)
     abstract MainInfoFragment mainInfoFragment();
+
+    @ContributesAndroidInjector()
+    abstract MainFragment MainFragmentInjector();
 
     @ContributesAndroidInjector()
     abstract LoginFragment LoginFragmentInjector();

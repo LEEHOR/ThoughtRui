@@ -28,18 +28,19 @@
     <!-- 录音权限 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <!--粘性广播-->
-    <uses-permission android:name="android.permission.BROADCAST_STICKY"/>
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
 
     <application
         android:name=".mvp.Base.BaseApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_desktop"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_desktop"
         android:supportsRtl="true"
-        android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/AppTheme">
-        <activity android:name=".mvp.view.MainActivity"
+        <activity
+            android:name=".mvp.view.MainActivity"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -48,19 +49,20 @@
             </intent-filter>
             <intent-filter>
                 <!--必有项-->
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
                 <!--表示该页面可以被隐式调用，必须加上该项-->
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
                 <!--BROWSABLE指定该Activity能被浏览器安全调用-->
-                <category android:name="android.intent.category.APP_BROWSER"/>
+                <category android:name="android.intent.category.APP_BROWSER" />
                 <!--协议部分-->
                 <!--声明自定义scheme，类似于http, https-->
-                <data android:scheme="myapp" android:host="carsuper"/>
             </intent-filter>
         </activity>
         <!-- 中间跳转 -->
-        <activity android:name=".mvp.view.ConstantsActivity"
-            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".mvp.view.ConstantsActivity"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustPan" />
         <!-- 考勤 -->
         <activity android:name=".mvp.view.attence.AttendanceRootActivity" />
         <!-- 拍照页面 -->
@@ -75,8 +77,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme_Light.Default" />
         <!-- 答题 -->
-        <activity android:name=".mvp.view.StartProjectActivity"
-            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".mvp.view.StartProjectActivity"
+            android:windowSoftInputMode="adjustResize" />
         <!-- 百度定位AK鉴权 -->
         <!-- meta-data需要写在application中 -->
         <meta-data
@@ -87,31 +90,32 @@
             android:enabled="true"
             android:process=":remote"></service>
 
-        <service android:name=".mvp.view.recorder.RecorderService"/>
+        <service android:name=".mvp.view.recorder.RecorderService" />
 
         <!--监听网络状态-->
-      <!--  <receiver android:name=".widgets.BroadcastReceiver.NetWorkReceiver"
-            android:exported="false"
-            android:enabled="true">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
-                <action android:name="android.net.wifi.STATE_CHANGE" />
-            </intent-filter>
-        </receiver>-->
+        <!--  <receiver android:name=".widgets.BroadcastReceiver.NetWorkReceiver"
+              android:exported="false"
+              android:enabled="true">
+              <intent-filter>
+                  <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                  <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+                  <action android:name="android.net.wifi.STATE_CHANGE" />
+              </intent-filter>
+          </receiver>-->
 
         <receiver android:name=".widgets.BroadcastReceiver.AliyunHotReceiver">
-            <intent-filter >
-             <action android:name="hotAliyun"/>
+            <intent-filter>
+                <action android:name="hotAliyun" />
             </intent-filter>
         </receiver>
 
         <!--轮询-->
-        <receiver android:name=".mvp.view.TimeService.TimeTaskReceiver"
-            android:exported="true"
-            android:enabled="true">
+        <receiver
+            android:name=".mvp.view.TimeService.TimeTaskReceiver"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
-                <action android:name="TIMER_ACTION"/>
+                <action android:name="TIMER_ACTION" />
             </intent-filter>
         </receiver>
 
@@ -121,20 +125,22 @@
             android:exported="true" />
         <service
             android:name=".mvp.view.TimeService.RomoteService"
-            android:process=":romoteservice"
             android:enabled="true"
-            android:exported="true"></service>
-        <service
-            android:name=".mvp.view.TimeService.TimeTaskService">
+            android:exported="true"
+            android:process=":romoteservice"></service>
+        <service android:name=".mvp.view.TimeService.TimeTaskService">
             <intent-filter>
-                <action android:name="TIMER_ACTION"/>
+                <action android:name="TIMER_ACTION" />
             </intent-filter>
         </service>
 
         <!-- 腾讯X5内核初始化 -->
 
 
-        <service android:name="com.tencent.smtt.export.external.DexClassLoaderProviderService" android:label="dexopt" android:process=":dexopt"/>
+        <service
+            android:name="com.tencent.smtt.export.external.DexClassLoaderProviderService"
+            android:label="dexopt"
+            android:process=":dexopt" />
     </application>
 
 </manifest>

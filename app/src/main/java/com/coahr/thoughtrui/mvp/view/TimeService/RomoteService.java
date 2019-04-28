@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.widget.Toast;
@@ -61,9 +62,15 @@ public class RomoteService extends Service {
         @Override
         public void onServiceDisconnected(ComponentName name) {
             //开启本地服务
-            RomoteService.this.startService(new Intent(RomoteService.this, LocalService.class));
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                RomoteService.this.startForegroundService(new Intent(RomoteService.this, LocalService.class));
+            } else {
+                RomoteService.this.startService(new Intent(RomoteService.this, LocalService.class));
+            }
             //绑定本地服务
             RomoteService.this.bindService(new Intent(RomoteService.this, LocalService.class), conn, Context.BIND_IMPORTANT);
+
         }
 
     }
@@ -72,9 +79,9 @@ public class RomoteService extends Service {
     public void onDestroy() {
         super.onDestroy();
         //开启本地服务
-        RomoteService.this.startService(new Intent(RomoteService.this, LocalService.class));
+       // RomoteService.this.startService(new Intent(RomoteService.this, LocalService.class));
         //绑定本地服务
-        RomoteService.this.bindService(new Intent(RomoteService.this, LocalService.class), conn, Context.BIND_IMPORTANT);
+       // RomoteService.this.bindService(new Intent(RomoteService.this, LocalService.class), conn, Context.BIND_IMPORTANT);
 
     }
 

@@ -105,9 +105,4 @@ public class ReviewedFragment extends BaseFragment {
         censor_viewpager.setCurrentItem(0);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        //ImmersionBar.with(this).destroy();
-    }
 }

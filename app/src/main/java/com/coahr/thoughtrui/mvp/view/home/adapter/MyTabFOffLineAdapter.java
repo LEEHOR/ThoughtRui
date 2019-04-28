@@ -77,8 +77,8 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_times.setText(projectsDBList.get(i).getPname());
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_code.setText(projectsDBList.get(i).getCode());
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_name.setText(projectsDBList.get(i).getPname());
-              //  ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_company.setText(projectsDBList.get(i).getdName());
-                ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_address.setText(projectsDBList.get(i).getAddress());
+                ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_company.setText(projectsDBList.get(i).getDname());
+               // ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_project_address.setText(projectsDBList.get(i).getAddress());
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_tv_update_time.setText(TimeUtils.getStringDate_start(projectsDBList.get(i).getModifyTime()));
                 ((newListHaveBeenCancelViewHolder) viewHolder).new_cardView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -104,8 +104,8 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_times.setText(projectsDBList.get(i).getPname());
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_code.setText(projectsDBList.get(i).getCode());
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_name.setText(projectsDBList.get(i).getPname());
-               // ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_company.setText(projectsDBList.get(i).getdName());
-                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_address.setText(projectsDBList.get(i).getAddress());
+                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_company.setText(projectsDBList.get(i).getDname());
+                //((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_address.setText(projectsDBList.get(i).getAddress());
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_update_time.setText(TimeUtils.getStringDate_start(projectsDBList.get(i).getModifyTime()));
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_cardView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -132,8 +132,8 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_times.setText(projectsDBList.get(i).getPname());
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_code.setText(projectsDBList.get(i).getCode());
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_name.setText(projectsDBList.get(i).getPname());
-               // ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_company.setText(projectsDBList.get(i).getdName());
-                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_address.setText(projectsDBList.get(i).getAddress());
+                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_company.setText(projectsDBList.get(i).getDname());
+                //((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_address.setText(projectsDBList.get(i).getAddress());
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_update_time.setText(TimeUtils.getStringDate_start(projectsDBList.get(i).getModifyTime()));
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_item_data.setText(getItemDate(projectsDBList.get(i).getPid()));
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).uncomplete_cardView.setOnClickListener(new View.OnClickListener() {
@@ -161,8 +161,8 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_times.setText(projectsDBList.get(i).getPname());
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_code.setText(projectsDBList.get(i).getCode());
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_name.setText(projectsDBList.get(i).getPname());
-               // ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_company.setText(projectsDBList.get(i).getdName());
-                ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_address.setText(projectsDBList.get(i).getAddress());
+                ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_company.setText(projectsDBList.get(i).getDname());
+                //((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_tv_project_address.setText(projectsDBList.get(i).getAddress());
                 ((unDownLoadListHaveBeenCancelViewHolder) viewHolder).undownload_cardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -206,23 +206,25 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
            }*//*
             return uncomplete;
         } */
-        if (type == 1) {  //已完成
-            return complete;
-        }
-        if (type == 2) { //未完成
-            return uncomplete;
-        }
-
-        if (type == 3) { //全部
-           /* if (projectsDBList.get(position).getCompleteStatus() == 1 && projectsDBList.get(position).getDownloadTime() != -1) {//新项目
-                return newProject;
-            }*/
+        if (type == 0) {  //全部
             if (projectsDBList.get(position).getCompleteStatus() == 2 || projectsDBList.get(position).getCompleteStatus() == 1) {  //未完成
                 return uncomplete;
             }
             if (projectsDBList.get(position).getCompleteStatus() == 3) {  //完成
                 return complete;
             }
+
+        }
+        if (type == 1) { //未完成
+            return uncomplete;
+        }
+
+        if (type == 2) { //已完成
+            return complete;
+           /* if (projectsDBList.get(position).getCompleteStatus() == 1 && projectsDBList.get(position).getDownloadTime() != -1) {//新项目
+                return newProject;
+            }*/
+
          /*   if (projectsDBList.get(position).getCompleteStatus() == 1 && projectsDBList.get(position).getDownloadTime() == -1) { //未下载
                 return undownload;
             } else {
