@@ -4,6 +4,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.ToastUtils;
@@ -14,8 +15,6 @@ import com.coahr.thoughtrui.mvp.model.Bean.isCompleteBean;
 import com.coahr.thoughtrui.mvp.view.action_plan.Adapter.plan_ViewPagerAdapter;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
 import com.google.android.material.tabs.TabLayout;
-import com.landptf.view.ButtonM;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -37,7 +36,7 @@ public class Fragment_action_projects extends BaseFragment {
     @BindView(R.id.plan_top_line)
     View planTopLine;
     @BindView(R.id.plan_action_pre)
-    ButtonM planActionPre;
+    TextView planActionPre;
     @BindView(R.id.plan_bottom_parts)
     RelativeLayout planBottomParts;
     @BindView(R.id.plan_tab)
@@ -63,11 +62,6 @@ public class Fragment_action_projects extends BaseFragment {
 
     @Override
     public void initView() {
-        planActionPre.setFillet(true);
-        planActionPre.setRadius(10);
-        planActionPre.setBackColor(getResources().getColor(R.color.material_blue_700));
-        planActionPre.setTextColor(getResources().getColor(R.color.colorWhite));
-        planActionPre.setShape(GradientDrawable.RECTANGLE);
         planTittle.getLeftIcon().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

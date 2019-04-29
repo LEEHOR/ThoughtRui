@@ -51,24 +51,19 @@
             android:layout_height="1sp"
             android:background="#999999"/>
 
-            <com.landptf.view.ButtonM
+            <TextView
                 android:id="@+id/plan_action_pre"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/dp_10"
-                android:layout_below="@+id/plan_top_line"
-                android:layout_marginBottom="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dp_60"
+                android:layout_marginTop="@dimen/dp_20"
                 android:layout_marginRight="@dimen/dp_60"
-                android:padding="@dimen/dp_10"
+                android:layout_marginBottom="@dimen/dp_20"
+                android:background="@drawable/bg_blue_white_frame_background"
                 android:gravity="center"
-                landptf:backColor="@color/material_blue_900"
-                landptf:targetApi="P"
-                landptf:fillet="true"
-                landptf:shape="rectangle"
-                landptf:textColor="@color/colorWhite"
-                landptf:textSize="@dimen/dp_14"
+                android:padding="@dimen/dp_10"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/dp_14"
                 android:text="@string/plan_submit_action_plan_presentation"
                 />
     </RelativeLayout>
