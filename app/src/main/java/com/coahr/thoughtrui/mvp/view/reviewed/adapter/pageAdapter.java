@@ -37,7 +37,7 @@ public class pageAdapter extends BaseQuickAdapter<CensorBean.DataBean.ListBean, 
                     .setText(R.id.tv_project_times, item.getPname())
                     //.setText(R.id.tv_project_name,item.getPname())
                     .setText(R.id.tv_project_company, item.getDname())
-                    .setText(R.id.tv_project_address, item.getAreaAddress())
+                    .setText(R.id.tv_project_address, item.getLocation())
                     .setText(R.id.tv_update_time, TimeUtils.getStingYMDHM(item.getModifyTime()))
                     .setText(R.id.item_data, String.format(BaseApplication.mContext.getResources().getString(R.string.review_fragment_3), type == 0 ? item.getRepulseCount() : type == 1 ? item.getPassCount() : item.getRepulseCount()));
 

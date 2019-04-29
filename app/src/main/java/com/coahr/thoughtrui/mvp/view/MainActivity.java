@@ -55,6 +55,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import androidx.appcompat.app.AppCompatDialogFragment;
+
 import butterknife.BindView;
 import me.yokeyword.fragmentation.SupportFragment;
 import omrecorder.PullableSource;
@@ -72,7 +73,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     private static final long INTERVAL_TIME = 2000;
     private String sessionId;
     private int page = 0; //当前显示页面
-    private static int TIMES = 1000 * 60 * 5;
+    private static int TIMES = 1000 * 5 * 60;  //发送定位时间间隔
     private static int SEND_MESSAGE = 1;
     private BaiduLocationHelper baiduLocationHelper_s;
     private Handler mHandker = new Handler() {
