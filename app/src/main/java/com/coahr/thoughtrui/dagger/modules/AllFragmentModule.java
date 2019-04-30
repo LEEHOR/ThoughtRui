@@ -2,7 +2,6 @@ package com.coahr.thoughtrui.dagger.modules;
 
 import com.coahr.thoughtrui.dagger.components.BaseFragmentComponents;
 import com.coahr.thoughtrui.mvp.view.UMPush.Fragment_Umeng;
-import com.coahr.thoughtrui.mvp.view.WebView.Fragment_WebView;
 import com.coahr.thoughtrui.mvp.view.action_plan.Fragment_Action_plan_presentation_1;
 import com.coahr.thoughtrui.mvp.view.action_plan.Fragment_Action_plan_presentation_2;
 import com.coahr.thoughtrui.mvp.view.action_plan.Fragment_action_plan_viewPager;
@@ -128,9 +127,6 @@ public abstract class AllFragmentModule {
 
     @ContributesAndroidInjector()
     abstract Fragment_Umeng fragment_umeng();
-
-    @ContributesAndroidInjector()
-    abstract Fragment_WebView fragment_webView();
 
     @ContributesAndroidInjector()
     abstract SearchFragment searchFragment();

@@ -208,8 +208,6 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
 
             }
 
-
-
             if (upList != null && upList.size() > 0) {
                 for (int i = 0; i < upList.size(); i++) {
                     OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
@@ -217,7 +215,7 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
                 }
             }
 
-            if (upList == null && upList.size()==0) {
+            if (upList != null && upList.size()==0) {
                 if (getPresenter() != null) {
                     getPresenter().Pic_CompulsoryC(list, projectsDB, subjectsDB);
                 }

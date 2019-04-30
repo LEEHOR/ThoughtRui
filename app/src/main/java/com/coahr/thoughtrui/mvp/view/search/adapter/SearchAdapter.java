@@ -30,7 +30,7 @@ public class SearchAdapter extends BaseQuickAdapter<SearchBeans.DataBean.SearchL
                     .setText(R.id.tv_project_code,item.getCode())
                     //.setText(R.id.tv_project_name,item.getPname())
                     .setText(R.id.tv_project_company,item.getDname())
-                    .setText(R.id.tv_project_address,item.getAreaAddress())
+                    .setText(R.id.tv_project_address,item.getLocation())
                     .setText(R.id.tv_update_time, TimeUtils.getStingYMDHM(item.getModifyTime()));
                    helper .getView(R.id.item_data).setVisibility(View.INVISIBLE);
                    helper .getView(R.id.tv_schedule).setVisibility(View.INVISIBLE);

@@ -788,14 +788,14 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                                     if (type_daka == 1) {
                                         Message message = new Message();
                                         message.what = zao_daka;
-                                        message.obj = baiduApiBean.getResult().getAddressComponent().getStreet();
+                                        message.obj = baiduApiBean.getResult().getAddressComponent().getCity() + baiduApiBean.getResult().getAddressComponent().getStreet();
                                         mHandler.sendMessage(message);
                                         // tv_start_location.setText(baiduApiBean.getResult().getAddressComponent().getStreet());
                                     } else {
                                         // tv_end_location.setText(baiduApiBean.getResult().getAddressComponent().getStreet());
                                         Message message = new Message();
                                         message.what = wan_daka;
-                                        message.obj = baiduApiBean.getResult().getAddressComponent().getStreet();
+                                        message.obj = baiduApiBean.getResult().getAddressComponent().getCity() + baiduApiBean.getResult().getAddressComponent().getStreet();
                                         mHandler.sendMessage(message);
                                     }
                                 }

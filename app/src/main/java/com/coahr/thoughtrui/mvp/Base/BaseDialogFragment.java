@@ -55,6 +55,7 @@ public abstract class BaseDialogFragment<P extends BaseContract.Presenter> exten
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+       // getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
 
         initAnimate();
@@ -72,13 +73,10 @@ public abstract class BaseDialogFragment<P extends BaseContract.Presenter> exten
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         view = inflater.inflate(bindLayout(), container, false);
-        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         unbinder = ButterKnife.bind(this, view);
         //由于沉浸式要留白 标题栏，在这里统一设置，支出statusbar的空间，之后每个fragment的头顶第一个子view，都要
         //以一个viewgroup包含要显示tittle的子view形式进行布局，则此代码正确有效
-
         UpdateUI(view.getRootView());
         addFootView = inflater.inflate(R.layout.recyclerview_item_foot, container, false);
         initView();
@@ -90,6 +88,9 @@ public abstract class BaseDialogFragment<P extends BaseContract.Presenter> exten
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
+        ImmersionBar.with(this, dialog)
+                .statusBarDarkFont(true, 0.2f) //原理：如果当前设备支持状态栏字体变色，会设置状态栏字体为黑色，如果当前设备不支持状态栏字体变色，会使当前状态栏加上透明度，否则不执行透明度
+                .init();
       /*  Window window = dialog.getWindow();
         if (window != null) {
             window.getDecorView().setPadding(0, 0, 0, 0);

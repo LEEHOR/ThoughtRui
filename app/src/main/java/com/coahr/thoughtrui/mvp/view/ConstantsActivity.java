@@ -7,7 +7,6 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseSupportActivity;
 import com.coahr.thoughtrui.mvp.view.UMPush.Fragment_Umeng;
-import com.coahr.thoughtrui.mvp.view.WebView.Fragment_WebView;
 import com.coahr.thoughtrui.mvp.view.action_plan.Fragment_action_projects;
 import com.coahr.thoughtrui.mvp.view.home.DealerFragment;
 import com.coahr.thoughtrui.mvp.view.home.MainFragment;
@@ -77,7 +76,7 @@ public class ConstantsActivity extends BaseSupportActivity {
                 loadRootFragment(R.id.Constants_Fragment, DealerFragment.Instance(getIntent().getStringExtra("Template_id")));
                 break;
             case Constants.fragment_webview: //网页
-                loadRootFragment(R.id.Constants_Fragment, Fragment_WebView.Instance(getIntent().getStringExtra("url")));
+                //loadRootFragment(R.id.Constants_Fragment, Fragment_WebView.Instance(getIntent().getStringExtra("url")));
                 break;
             case Constants.fragment_search: //搜索页
                 loadRootFragment(R.id.Constants_Fragment, SearchFragment.instance(getIntent().getIntExtra("type", 0)));

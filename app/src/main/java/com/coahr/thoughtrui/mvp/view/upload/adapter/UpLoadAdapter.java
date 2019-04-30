@@ -46,12 +46,12 @@ public class UpLoadAdapter extends BaseQuickAdapter<ProjectsDB, BaseViewHolder> 
     protected void convert(BaseViewHolder helper, final ProjectsDB item) {
         if (item != null) {
             helper.setText(R.id.up_tv_schedule, item.getProgress())
-                    .setText(R.id.f_type, TextUtils.isEmpty(item.getSale_code())?"["+item.getService_code()+"]":"["+item.getSale_code()+"]")
+                    .setText(R.id.f_type, TextUtils.isEmpty(item.getSale_code()) ? "[" + item.getService_code() + "]" : "[" + item.getSale_code() + "]")
                     .setText(R.id.up_tv_time, item.getPname())
                     .setText(R.id.up_tv_project_code, item.getCode())
                     .setText(R.id.up_tv_project_name, item.getPname())
-                     .setText(R.id.up_tv_project_company,item.getDname())
-                    .setText(R.id.up_tv_project_address, item.getAddress() + item.getLocation())
+                    .setText(R.id.up_tv_project_company, item.getDname())
+                    .setText(R.id.up_tv_project_address, item.getLocation())
                     .setText(R.id.up_tv_update_time, TimeUtils.getStingYMDHM(item.getModifyTime()));
             String itemDate = getItemDate(item.getPid());
             ((TextView) helper.getView(R.id.up_item_data)).setText(itemDate);

@@ -312,10 +312,6 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-      /*  if (intent != null) {
-            int page = intent.getIntExtra("page", 0);
-                showFragment(page);
-        }*/
     }
 
     @Override

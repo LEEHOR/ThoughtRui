@@ -6,7 +6,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+
 import com.coahr.thoughtrui.Utils.KeyBoardUtils;
 import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.commom.ActivityManager;
@@ -14,7 +16,9 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.widgets.BroadcastReceiver.NetWorkReceiver;
 import com.gyf.barlibrary.ImmersionBar;
 import com.socks.library.KLog;
+
 import org.litepal.LitePal;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import dagger.android.AndroidInjection;
@@ -47,14 +51,14 @@ public abstract class BaseActivity<P extends BaseContract.Presenter> extends Sup
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-       AndroidInjection.inject(this);  //一处声明，处处依赖注入
+        AndroidInjection.inject(this);  //一处声明，处处依赖注
         super.onCreate(savedInstanceState);
-        setContentView(binLayout());
-        KeyBoardUtils.UpdateUI(getWindow().getDecorView().getRootView(), this);
         //手机顶部状态栏颜色适配
         ImmersionBar.with(this)
                 .statusBarDarkFont(true, 0.2f) //原理：如果当前设备支持状态栏字体变色，会设置状态栏字体为黑色，如果当前设备不支持状态栏字体变色，会使当前状态栏加上透明度，否则不执行透明度
                 .init();
+        KeyBoardUtils.UpdateUI(getWindow().getDecorView().getRootView(), this);
+        setContentView(binLayout());
         unbinder = ButterKnife.bind(this);
         LitePal.getDatabase();
         ActivityManager.getInstance().addActivity(this);
@@ -72,23 +76,27 @@ public abstract class BaseActivity<P extends BaseContract.Presenter> extends Sup
         netWorkReceiver.setNetStatusListener(new NetWorkReceiver.INetStatusListener() {
             @Override
             public void getNetState(String netWorkType, boolean isConnect, NetworkInfo.DetailedState detailedState) {
-                KLog.d("网络",isConnect,netWorkType);
-                Constants.isNetWorkConnect=isConnect;
-                Constants.NetWorkType=netWorkType;
+                KLog.d("网络", isConnect, netWorkType);
+                Constants.isNetWorkConnect = isConnect;
+                Constants.NetWorkType = netWorkType;
             }
         });
 
-       // TimeTaskReceiver timeTaskReceiver = new TimeTaskReceiver();
+        // TimeTaskReceiver timeTaskReceiver = new TimeTaskReceiver();
 
     }
+
     public void showLoading() {
 
     }
+
     public void dismissLoading() {
 
     }
+
     public void showError(@Nullable Throwable e) {
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();

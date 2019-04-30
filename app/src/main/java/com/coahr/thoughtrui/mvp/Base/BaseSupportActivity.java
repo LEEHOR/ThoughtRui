@@ -38,16 +38,18 @@ public abstract class BaseSupportActivity extends SupportActivity {
     public abstract void initView();
 
     public abstract void initData();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         AndroidInjection.inject(this);  //一处声明，处处依赖注入
+
         super.onCreate(savedInstanceState);
-        setContentView(binLayout());
-        KeyBoardUtils.UpdateUI(getWindow().getDecorView().getRootView(), this);
         ImmersionBar.with(this)
                 .statusBarDarkFont(true, 0.2f) //原理：如果当前设备支持状态栏字体变色，会设置状态栏字体为黑色，如果当前设备不支持状态栏字体变色，会使当前状态栏加上透明度，否则不执行透明度
                 .init();
         getWindow().setBackgroundDrawableResource(R.drawable.bg_fff_background);
+        KeyBoardUtils.UpdateUI(getWindow().getDecorView().getRootView(), this);
+        setContentView(binLayout());
         unbinder = ButterKnife.bind(this);
         ActivityManager.getInstance().addActivity(this);
         initView();

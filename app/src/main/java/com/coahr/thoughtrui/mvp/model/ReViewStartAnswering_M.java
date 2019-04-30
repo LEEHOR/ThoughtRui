@@ -197,7 +197,7 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
                 }
             }
 
-            if (upList == null && upList.size() == 0) {
+            if (upList != null && upList.size() == 0) {
                 getPresenter().Up_Pic_Compulsory(projectsDB, subjectsDB, list);
             }
 

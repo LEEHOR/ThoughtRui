@@ -20,7 +20,6 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.dagger.components.DaggerApplicationComponents;
 import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
 import com.socks.library.KLog;
-import com.tencent.smtt.sdk.QbSdk;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.MsgConstant;
@@ -69,7 +68,6 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
 //获取消息推送代理示例
         mPushAgent = PushAgent.getInstance(this);
         //registerUmeng();
-        initX5WebView();
         initUpush();
         //自4.3.0起，百度地图SDK所有接口均支持百度坐标和国测局坐标，用此方法设置您使用的坐标类型.
         //包括BD09LL和GCJ02两种坐标，默认是BD09LL坐标。
@@ -203,21 +201,4 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
         startActivity(intent);
     }
 
-    /**
-     * 初始化X5Web
-     */
-    private void initX5WebView() {
-        //x5内核初始化接口
-        QbSdk.initX5Environment(getApplicationContext(), new QbSdk.PreInitCallback() {
-            @Override
-            public void onCoreInitFinished() {
-
-            }
-
-            @Override
-            public void onViewInitFinished(boolean b) {
-
-            }
-        });
-    }
 }
