@@ -153,14 +153,14 @@
 
     <!--com.coahr.thoughtrui.mvp.view.UMPush.Fragment_Umeng-->
     <string name="umeng_fragment_not_pass">[审核未通过]</string>
-    <string name="umeng_fragment_not_pass_detail">你有项目审核未通过,经销商代码为:</string>
+    <string name="umeng_fragment_not_pass_detail">你有项目审核未通过，经销商代码为:</string>
     <string name="umeng_fragment_upload">[任务上传]</string>
     <string name="umeng_fragment_upload_detail">你有项目未上传，经销商代码为:</string>
     <string name="umeng_fragment_overdue_reminder">[超期提醒]</string>
     <string name="umeng_fragment_overdue_reminder_detail">你有项目已超期，经销商代码为:</string>
 
     <!--com.coahr.thoughtrui.mvp.view.upload.UploadFragment-->
-    <string name="upload_fragment_date_size">共有%1$d题, %2$d数据未上传</string>
+    <string name="upload_fragment_date_size">共有%1$d题, %2$d数据未上你有项目未上传，经销商代码为传</string>
 
     <!--com.coahr.thoughtrui.mvp.view.mydata.ChangePasswordFragment-->
     <string name="change_password_fragment_change_password">修改密码</string>
