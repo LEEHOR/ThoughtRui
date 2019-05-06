@@ -76,9 +76,7 @@ public class Fragment_Action_plan_pre_2_M extends BaseModel<Fragment_action_plan
 
             @Override
             public void onSuccess(ListObjectsRequest request, ListObjectsResult result) {
-                for (int i = 0; i < result.getObjectSummaries().size(); i++) {
-                    KLog.d("图片", result.getObjectSummaries().get(i).getKey());
-                }
+
                 if (getPresenter() != null) {
                     getPresenter().getAfterPicSuccess(result.getObjectSummaries());
                 }
@@ -128,13 +126,11 @@ public class Fragment_Action_plan_pre_2_M extends BaseModel<Fragment_action_plan
         failureCount = 0;
         if (beforeImage != null && beforeImage.size() > 0) {
             for (int i = 0; i < beforeImage.size(); i++) {
-                KLog.d("before", beforeImage.get(i));
                 putImages(oss, beforeImage.get(i), projectId, levelId, type == 1 ? beforeImage.size() + afterImage.size() : beforeImage.size(), 1);
             }
         }
         if (afterImage != null && afterImage.size() > 0 && type == 1) {
             for (int i = 0; i < afterImage.size(); i++) {
-                KLog.d("after", afterImage.get(i));
                 putImages(oss, afterImage.get(i), projectId, levelId, beforeImage.size() + afterImage.size(), 2);
 
             }
@@ -175,7 +171,6 @@ public class Fragment_Action_plan_pre_2_M extends BaseModel<Fragment_action_plan
     private void putImages(OSS oss, String picPath, String projectId, String levelId, int TotalSize, int type) {
 
         String object = String.format("%1$s/%2$s/%3$s/%4$s/%5$s", "report", projectId, levelId, type == 1 ? "before" : type == 2 ? "after" : "before", FileIOUtils.getE(picPath, "/"));
-        KLog.d("object", object);
         PutObjectRequest put = new PutObjectRequest(Constants.BUCKET, object, picPath);
         put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
 
