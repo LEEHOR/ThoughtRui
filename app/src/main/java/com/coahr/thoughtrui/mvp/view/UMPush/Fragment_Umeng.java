@@ -91,23 +91,6 @@ public class Fragment_Umeng extends BaseFragment<Fragment_UmengP> implements Fra
             }
         }
         umeng_rcyv.addItemDecoration(new SpacesItemDecoration(0, DensityUtils.dp2px(BaseApplication.mContext, 5)));
-    }
-
-    @Override
-    public void getNotification_DbSuccess(NotificationBean notificationBean) {
-
-        if (notificationBean != null) {
-            if (notificationBean.getNotificationList() != null && notificationBean.getNotificationList().size() > 0) {
-                notificationList.addAll(notificationBean.getNotificationList());
-            }
-        }
-
-        if (notificationList.size() > 0) {
-            notificationAdapter.setNewData(notificationList);
-        } else {
-
-        }
-
         notificationAdapter.setCallBack(new NotificationAdapter.pushCallBack() {
             @Override
             public void itemClickLong(NotificationBean.Notification item) {
@@ -147,6 +130,24 @@ public class Fragment_Umeng extends BaseFragment<Fragment_UmengP> implements Fra
                 }
             }
         });
+
+    }
+
+    @Override
+    public void getNotification_DbSuccess(NotificationBean notificationBean) {
+
+        if (notificationBean != null) {
+            if (notificationBean.getNotificationList() != null && notificationBean.getNotificationList().size() > 0) {
+                notificationList.addAll(notificationBean.getNotificationList());
+            }
+        }
+
+        if (notificationList.size() > 0) {
+            notificationAdapter.setNewData(notificationList);
+        } else {
+
+        }
+
     }
 
     @Override

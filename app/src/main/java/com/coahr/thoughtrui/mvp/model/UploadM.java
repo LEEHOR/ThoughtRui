@@ -278,13 +278,11 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
 
         PutObjectRequest put = new PutObjectRequest(Constants.BUCKET, object, localFile);
 
-        KLog.d("上传文件_up", object);
         //  put.setCRC64(OSSRequest.CRC64Config.YES);
         OSSAsyncTask task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
             @Override
             public void onSuccess(PutObjectRequest request, PutObjectResult result) {
                 UpLoadSuccessCount++;
-                KLog.d("上传文件_成功", count, UpLoadFailureCount, UpLoadSuccessCount);
               /*
                     new Thread(new Runnable() {
                         @Override
@@ -314,7 +312,6 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
                     Log.e("RawMessage", serviceException.getRawMessage());
                     info = serviceException.toString();
                 }
-                KLog.d("上传文件_失败");
                 UpLoadFailureCount++;
                 if (getPresenter() != null) {
                     getPresenter().UploadCallBack(list, subjectsDBList, projectsDBS, null, project_position, subject_position,
