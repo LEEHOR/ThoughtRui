@@ -18,6 +18,7 @@ import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.constract.FragmentAnnex_C;
+import com.coahr.thoughtrui.mvp.model.Bean.AnnexDate;
 import com.coahr.thoughtrui.mvp.presenter.FragmentAnnex_P;
 import com.coahr.thoughtrui.mvp.view.projectAnnex.adapter.AnnexAdapter;
 import com.coahr.thoughtrui.widgets.AltDialog.PhotoAlbumDialogFragment;
@@ -153,8 +154,8 @@ public class FragmentAnnex extends BaseChildFragment<FragmentAnnex_C.Presenter> 
     }
 
     @Override
-    public void getFileListSuccess(final List<List<String>> fileList) {
-        annexAdapter.setAdapterList(fileList, position);
+    public void getFileListSuccess(AnnexDate annexDate) {
+        annexAdapter.setAdapterList(annexDate, position);
         annexAdapter.notifyDataSetChanged();
     }
 

@@ -1,7 +1,10 @@
 package com.coahr.thoughtrui.commom;
 
 import com.coahr.thoughtrui.Utils.StoreSpaceUtils;
+import com.coahr.thoughtrui.mvp.model.Bean.NotificationBean;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -12,8 +15,6 @@ import java.util.Locale;
  */
 public class Constants {
     public static String devicestoken = "";
-    //是否需要自杀进程以便打补丁
-    public static boolean need_kill;
     //Latitude
     public static double Latitude;
     //Longitude
@@ -149,18 +150,10 @@ public class Constants {
     public static String uid_key = "uid";
     //devicestoken
     public static String devicestoken_key = "devicestoken";
-
-    //阿里云热更新
-    public static String AliYunHot_key = "aliyun_hot";
-    //补丁说明
-    public static String path_key = "aliyun_path";
-    //补丁版本
-    public static String pathVersion_key = "aliyun_path_version";
-    //app版本
-    public static String app_version_key = "app_version";
-    //语言
-    public static String system_locale_key = "system_locale";
-
+//是否单次打开消息中心;
+    public static boolean isOpenMessage;
+    //消息中心列表;
+    public  static ArrayList<NotificationBean.Notification> notificationList = new ArrayList<>();
 
     //阿里云
     public static String AK_KEY = "AK";

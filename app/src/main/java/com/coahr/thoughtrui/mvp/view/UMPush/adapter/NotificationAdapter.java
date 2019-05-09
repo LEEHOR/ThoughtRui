@@ -21,7 +21,6 @@ import java.util.List;
  */
 public class NotificationAdapter extends BaseQuickAdapter<NotificationBean.Notification, BaseViewHolder> {
 
-    private pushCallBack callBack;
     public NotificationAdapter() {
         super(R.layout.item_notification, null);
     }
@@ -36,33 +35,9 @@ public class NotificationAdapter extends BaseQuickAdapter<NotificationBean.Notif
                     .setText(R.id.notifi_tv_tittle,item.getNotificationTittle())
                     .setText(R.id.notifi_tv_content,item.getNotificationContent())
                     .setText(R.id.notifi_tv_time, TimeUtils.getStingYMDHM(item.getNotificationTime()));
-
-            helper.getConvertView().setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    if (callBack != null) {
-                        callBack.itemClickLong(item);
-                    }
-                    return true;
-                }
-            });
-            helper.getConvertView().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (callBack != null) {
-                        callBack.itemClick(item);
-                    }
-                }
-            });
+                   helper.addOnClickListener(R.id.notification_root)
+                    .addOnLongClickListener(R.id.notification_root);
         }
     }
 
-    public interface pushCallBack{
-        void itemClickLong(NotificationBean.Notification item);
-        void itemClick(NotificationBean.Notification item);
-    }
-
-    public void setCallBack(pushCallBack callBack) {
-        this.callBack = callBack;
-    }
 }

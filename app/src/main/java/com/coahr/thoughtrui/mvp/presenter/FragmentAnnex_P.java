@@ -5,6 +5,7 @@ import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.mvp.Base.BasePresenter;
 import com.coahr.thoughtrui.mvp.constract.FragmentAnnex_C;
 import com.coahr.thoughtrui.mvp.constract.FragmentAnnex_C.Presenter;
+import com.coahr.thoughtrui.mvp.model.Bean.AnnexDate;
 import com.coahr.thoughtrui.mvp.model.FragmentAnnex_M;
 import com.coahr.thoughtrui.mvp.view.projectAnnex.FragmentAnnex;
 
@@ -53,9 +54,9 @@ public class FragmentAnnex_P extends BasePresenter<FragmentAnnex_C.View,Fragment
     }
 
     @Override
-    public void getFileListSuccess(List<List<String>> fileList) {
+    public void getFileListSuccess(AnnexDate annexDate) {
         if (getView() != null) {
-            getView().getFileListSuccess(fileList);
+            getView().getFileListSuccess(annexDate);
         }
     }
 
