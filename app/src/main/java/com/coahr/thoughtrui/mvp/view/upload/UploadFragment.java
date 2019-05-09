@@ -263,14 +263,11 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     public void getSubjectListSuccess(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position) {
         showProgressDialog();
         //获取上传文件列表
-        // tv_progress_info.setText(String.format(getResources().getString(R.string.upload_fragment_6),project_position+1,subjectsDBList.size()));
         p.UpLoadFileList(subjectsDBList, projectsDBS, project_position, 0);
     }
 
     @Override
     public void getSubjectListFailure(String failure, List<ProjectsDB> projectsDBS, int project_position) {
-        // Message mes = mHandler.obtainMessage(UPDATE_MESSAGE, getResources().getString(R.string.phrases_7));
-        // mes.sendToTarget();
         ToastUtils.showLong(failure);
         //开始查询下一个项目下的题目
         if (project_position < projectsDBS.size() - 1) {
@@ -337,10 +334,8 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     @Override
     public void UploadCallBack(List<String> list, List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, List<String> picList, int project_position, int subject_position, int uploadSuccessSize, int uploadFailSize, int totalSize) {
 
-        KLog.d("上传文件_成功_2", uploadSuccessSize, uploadFailSize, totalSize);
         if (totalSize == (uploadSuccessSize + uploadFailSize)) {
             if (totalSize == uploadSuccessSize) {  //上传成功
-                KLog.d("上传文件_成功_3", uploadSuccessSize, uploadFailSize, totalSize);
                 //回调服务器
                 uPAudioPath = null;
                 textMassage = null;
@@ -357,7 +352,6 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                 //回调到后台服务器
                 callbackForServer(projectsDBS, subjectsDBList, pic, textMassage, uPAudioPath, project_position, subject_position);
             } else {         //上传失败
-                KLog.d("上传文件_失败_2", uploadSuccessSize, uploadFailSize, totalSize);
                 p.UpDataDb(subjectsDBList, projectsDBS, project_position, subject_position, false);
             }
         }
@@ -385,7 +379,6 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
         // Message mes = mHandler.obtainMessage(UPDATE_PROGRESS, String.format(getResources().getString(R.string.upload_fragment_6),subject_position+1,subjectsDBList.size()));
         // mes.sendToTarget();
         if (upLoadCallBack.getMsg().equals("FORBID")) {
-            KLog.d("next", "开始下一项");
             if (project_position < projectsDBS.size() - 1) {
                 p.getSubjectList(projectsDBS, project_position += 1);
             } else {
@@ -411,12 +404,10 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     public void UpDataDbSuccess(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
         //如果当前项目下的题目数据上传完毕，则开始传下一个项目
         if (subject_position < subjectsDBList.size() - 1) { //项目下还有题目没传，开始下一题
-            KLog.d("上传文件_", "切换下一题");
             p.UpLoadFileList(subjectsDBList, projectsDBS, project_position, subject_position += 1);
         } else {   //上一个项目传完了，开始下一个项目
             //1.查询下一个项目
             if (project_position < projectsDBS.size() - 1) {
-                KLog.d("上传文件_", "切换下一项目");
                 p.getSubjectList(projectsDBS, project_position += 1);
             } else {
                 tv_progress_info.setText(getResources().getString(R.string.toast_39));

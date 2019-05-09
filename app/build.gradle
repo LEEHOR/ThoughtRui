@@ -27,9 +27,9 @@ android {
         multiDexEnabled true
         //manifestPlaceholders = [qqappid: "1232323"]
         testInstrumentationRunner "android.support.ThreeNode.runner.AndroidJUnitRunner"
-        ndk { abiFilters "armeabi", "armeabi-v7a","x86" }
+        ndk { abiFilters "armeabi", "armeabi-v7a", "x86" }
     }
-    
+
     buildTypes {
         release {
             minifyEnabled false
@@ -42,23 +42,22 @@ android {
             jniLibs.srcDirs = ['libs']
         }
     }
- /*  allprojects {
-        repositories {
-            google()
-            maven { url "https://jitpack.io" }
-        }
-    }
+    /*  allprojects {
+           repositories {
+               google()
+               maven { url "https://jitpack.io" }
+           }
+       }
 
-    repositories {
-        google()
-    }*/
+       repositories {
+           google()
+       }*/
 
     compileOptions {
         sourceCompatibility 1.8
         targetCompatibility 1.8
     }
 }
-
 
 
 dependencies {
@@ -156,6 +155,5 @@ dependencies {
 
     //仿ios
     implementation 'com.contrarywind:Android-PickerView:4.1.8'
-    //implementation files('libs/tbs_sdk_thirdapp_v3.6.0.1352_43618_sharewithdownload_withoutGame_obfs_20180918_120327.jar')
 
 }

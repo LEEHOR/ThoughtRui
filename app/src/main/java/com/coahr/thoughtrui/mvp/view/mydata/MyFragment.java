@@ -280,9 +280,9 @@ public class MyFragment extends BaseFragment_not_padding implements View.OnClick
         upload.setText(String.valueOf(unUpload));
         complete.setText(String.valueOf(unComplete));
         star.setText(String.valueOf(unStart));
-        if (Constants.message > 0) {
+        if (unLoad+unComplete+unStart+unUpload > 0) {
             tv_xx_count.setVisibility(View.VISIBLE);
-            tv_xx_count.setText((Constants.message) + "");
+            tv_xx_count.setText((unLoad+unComplete+unStart+unUpload) + "");
         } else {
             tv_xx_count.setVisibility(View.INVISIBLE);
         }
