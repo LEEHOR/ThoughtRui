@@ -23,6 +23,8 @@ import com.coahr.thoughtrui.mvp.view.MainActivity;
 import com.coahr.thoughtrui.mvp.view.UMPush.adapter.NotificationAdapter;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
 import com.coahr.thoughtrui.mvp.view.home.MainFragment;
+import com.coahr.thoughtrui.mvp.view.reviewed.ReviewedFragment;
+import com.coahr.thoughtrui.mvp.view.upload.UploadFragment;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
 import com.socks.library.KLog;
 
@@ -78,7 +80,7 @@ public class Fragment_Umeng extends BaseFragment<Fragment_UmengP> implements Fra
             }
         });
         if (!Constants.isOpenMessage) {
-            Constants.isOpenMessage=true;
+            Constants.isOpenMessage = true;
             getDateBy_net();
         }
 
@@ -105,11 +107,13 @@ public class Fragment_Umeng extends BaseFragment<Fragment_UmengP> implements Fra
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 if (((NotificationBean.Notification) adapter.getData().get(position)).getType() == 1) {   //上传
-                    JumpToMainActivity(1);
+                    //JumpToMainActivity(1);
+                    JumpToUploadPage();
                 } else if (((NotificationBean.Notification) adapter.getData().get(position)).getType() == 2) { //超期
                     JumpToProjectList(Constants.fragment_main);
                 } else if (((NotificationBean.Notification) adapter.getData().get(position)).getType() == 3) {  //审核
-                    JumpToMainActivity(2);
+                    //JumpToMainActivity(2);
+                    JumpToReview();
                 }
             }
         });
@@ -183,7 +187,7 @@ public class Fragment_Umeng extends BaseFragment<Fragment_UmengP> implements Fra
 
     @Override
     public void getNotification_netFailure(String failure) {
-        Constants.isOpenMessage=false;
+        Constants.isOpenMessage = false;
         ToastUtils.showLong(failure);
         //p.getNotification_Db(Constants.sessionId);
     }
@@ -199,12 +203,26 @@ public class Fragment_Umeng extends BaseFragment<Fragment_UmengP> implements Fra
      * 跳转到历史项目
      */
     private void JumpToProjectList(int i) {
-        start(MainFragment.newInstance(2, 2));
+        start(MainFragment.newInstance(0, 2));
     }
 
     private void JumpToMainActivity(int i) {
         Intent intent = new Intent(_mActivity, MainActivity.class);
         intent.putExtra("page", i);
         startActivity(intent);
+    }
+
+    /**
+     * 跳转到上传页面
+     */
+    private void JumpToUploadPage() {
+        start(UploadFragment.newInstance());
+    }
+
+    /**
+     * 跳转到审核
+     */
+    private void JumpToReview() {
+        start(ReviewedFragment.newInstance());
     }
 }

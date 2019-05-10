@@ -149,6 +149,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
 
     @Override
     public void initView() {
+
         getLocationPermission();
         loadMultipleRootFragment(R.id.Root_Fragment, 0, mFragments);
         showHideFragment(mFragments[0], mFragments[bottomNavigationPreposition]);

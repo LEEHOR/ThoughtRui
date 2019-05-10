@@ -41,7 +41,6 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".mvp.view.MainActivity"
-            android:launchMode="singleTask"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -134,14 +133,6 @@
                 <action android:name="TIMER_ACTION" />
             </intent-filter>
         </service>
-
-        <!-- 腾讯X5内核初始化 -->
-
-
-        <service
-            android:name="com.tencent.smtt.export.external.DexClassLoaderProviderService"
-            android:label="dexopt"
-            android:process=":dexopt" />
     </application>
 
 </manifest>

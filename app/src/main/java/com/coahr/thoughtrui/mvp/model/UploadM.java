@@ -189,7 +189,7 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
         if (success) {  //是否上传和回调到后台成功
             SubjectsDB subjectsDB1 = new SubjectsDB();
             subjectsDB1.setsUploadStatus(1);
-            subjectsDB1.setCensor(1);
+            subjectsDB1.setStage(2);
             update = subjectsDB1.update(subjectsDBList.get(subject_position).getId());
         }
 

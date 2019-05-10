@@ -46,6 +46,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import androidx.appcompat.app.AppCompatDialogFragment;
+
 import butterknife.BindView;
 
 /**
@@ -187,7 +188,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                             subjectsDB.setType(questionList.get(i).getType());
                             subjectsDB.setOptions(questionList.get(i).getOptions());
                             subjectsDB.setNumber(questionList.get(i).getNumber());
-                            subjectsDB.setCensor(questionList.get(i).getCensor());
+                           // subjectsDB.setStage(1);
                             subjectsDB.setRecordStatus(questionList.get(i).getRecordStatus());
                             if (questionList.get(i).getQuota1() != null) {
                                 subjectsDB.setQuota1(questionList.get(i).getQuota1());
@@ -215,7 +216,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                             subjectsDB.setRecordStatus(-1);
                         }
 
-                        subjectsDB.setCensor(questionList.get(i).getCensor());
+                        subjectsDB.setStage(1);
                         subjectsDB.setIsComplete(0);
                         subjectsDB.setType(questionList.get(i).getType());
                         subjectsDB.setDh("0");
@@ -343,6 +344,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
             }
         }).build().show();
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();

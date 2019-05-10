@@ -336,7 +336,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
                 tv_upload_status.setText(sFinal1);
                 tv_fstatus.setText(getResources().getString(R.string.string_2));
             }
-            tv_cName.setText(projectDetail.getData().getCname());
+            tv_cName.setText(projectDetail.getData().getDname());
             tv_cCode.setText(TextUtils.isEmpty(projectDetail.getData().getSale_code()) ? projectDetail.getData().getService_code() : TextUtils.isEmpty(projectDetail.getData().getService_code()) ? projectDetail.getData().getSale_code() : "");
             tv_cLevel.setText(TextUtils.isEmpty(projectDetail.getData().getGrade()) ? getResources().getString(R.string.phrases_35) : projectDetail.getData().getGrade());
             tv_cAddress.setText(projectDetail.getData().getLocation());

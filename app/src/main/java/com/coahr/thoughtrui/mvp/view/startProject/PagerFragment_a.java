@@ -1214,10 +1214,10 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
     private void callbackForServer(final ProjectsDB projectsDB, final SubjectsDB subjectsDB, String recorderPath, List<String> picList, String text) {
         final Map map = new HashMap();
         map.put("projectId", projectsDB.getPid());
-        map.put("censor", subjectsDB.getCensor());
+       // map.put("censor", subjectsDB.getCensor());
         map.put("answerId", subjectsDB.getHt_id());
         map.put("number", subjectsDB.getNumber());
-        map.put("stage", projectsDB.getStage());
+        map.put("stage", subjectsDB.getStage());
         if (text != null) {
             String[] split = text.split("&");
             if (split != null && split.length > 0) {
