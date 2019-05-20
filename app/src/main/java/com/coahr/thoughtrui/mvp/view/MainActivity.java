@@ -43,6 +43,7 @@ import com.coahr.thoughtrui.mvp.view.reviewed.ReviewedFragment;
 import com.coahr.thoughtrui.mvp.view.upload.UploadFragment;
 import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
 import com.coahr.thoughtrui.widgets.MyBottomNavigation.MyBottomNavigation;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -73,7 +74,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     private static final long INTERVAL_TIME = 2000;
     private String sessionId;
     private int page = 0; //当前显示页面
-    private static int TIMES = 1000 * 5 * 60;  //发送定位时间间隔
+    private static int TIMES = 1000 * 20 * 60;  //发送定位时间间隔
     private static int SEND_MESSAGE = 1;
     private BaiduLocationHelper baiduLocationHelper_s;
     private Handler mHandker = new Handler() {
@@ -158,7 +159,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
         if (!haslogin()) {
             loginDialog();
         }
-
+       // CrashReport.testJavaCrash();
         myBottomNavigation.setOnTabPositionListener(new MyBottomNavigation.OnTabPositionListener() {
             @Override
             public void onPositionTab(int position) {

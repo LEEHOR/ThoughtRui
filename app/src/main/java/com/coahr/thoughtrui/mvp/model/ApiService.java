@@ -36,13 +36,13 @@ import retrofit2.http.POST;
  * on 2018/11/6
  * on 16:01
  */
-public interface ApiService {
+public interface  ApiService {
 
     /**
      * 登陆接口
      *
      * @param para
-     * @return
+     *
      */
     @FormUrlEncoded
     @POST(ApiContact.login)
@@ -52,7 +52,7 @@ public interface ApiService {
      * 首页数据请求接口
      *
      * @param para
-     * @return
+     *
      */
     @FormUrlEncoded
     @POST(ApiContact.getHomeData)

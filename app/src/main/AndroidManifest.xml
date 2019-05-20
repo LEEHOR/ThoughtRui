@@ -30,6 +30,9 @@
     <!--粘性广播-->
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
 
+    <!--日志读取-->
+    <uses-permission android:name="android.permission.READ_LOGS" />
+
     <application
         android:name=".mvp.Base.BaseApplication"
         android:allowBackup="true"

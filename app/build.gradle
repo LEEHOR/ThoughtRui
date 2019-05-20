@@ -27,7 +27,7 @@ android {
         multiDexEnabled true
         //manifestPlaceholders = [qqappid: "1232323"]
         testInstrumentationRunner "android.support.ThreeNode.runner.AndroidJUnitRunner"
-        ndk { abiFilters "armeabi", "armeabi-v7a", "x86" }
+        ndk { abiFilters "armeabi", "armeabi-v7a", "x86" ,"x86_64","arm64_v8a"}
     }
 
     buildTypes {
@@ -155,5 +155,9 @@ dependencies {
 
     //仿ios
     implementation 'com.contrarywind:Android-PickerView:4.1.8'
+
+    //QQbugly
+    implementation 'com.tencent.bugly:crashreport:latest.release'
+    implementation 'com.tencent.bugly:nativecrashreport:latest.release'
 
 }

@@ -1167,7 +1167,6 @@ public class ReViewStartAnswering extends BaseFragment_not_padding<ReViewStartAn
             }
         }).start();
 
-       // p.UpLoadFileList(ht_projectId, subjectsDB_now);
     }
 
     /**
