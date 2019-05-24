@@ -24,11 +24,9 @@ import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.Utils.ScreenUtils;
 import com.coahr.thoughtrui.Utils.imageLoader.Imageloader;
 import com.coahr.thoughtrui.commom.Constants;
-import com.coahr.thoughtrui.widgets.BroadcastReceiver.AliyunHotReceiver;
 
 import java.util.List;
 
-import androidx.fragment.app.Fragment;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import dagger.android.support.AndroidSupportInjection;
@@ -50,8 +48,6 @@ public abstract class BaseFragment<P extends BaseContract.Presenter> extends Sup
     protected final String TAG = this.getClass().getSimpleName();
     Unbinder unbinder;
     private Dialog dialog;
-    private AliyunHotReceiver aliyunHotReceiver;
-
     public abstract P getPresenter();
 
     public abstract int bindLayout();

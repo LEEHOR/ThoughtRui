@@ -18,10 +18,8 @@ import com.coahr.thoughtrui.Utils.DensityUtils;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.KeyBoardUtils;
 import com.coahr.thoughtrui.Utils.PreferenceUtils;
-import com.coahr.thoughtrui.Utils.ScreenUtils;
 import com.coahr.thoughtrui.Utils.imageLoader.Imageloader;
 import com.coahr.thoughtrui.commom.Constants;
-import com.coahr.thoughtrui.widgets.BroadcastReceiver.AliyunHotReceiver;
 
 import java.util.List;
 
@@ -48,7 +46,6 @@ public abstract class BaseFragment_not_padding<P extends BaseContract.Presenter>
     protected final String TAG = this.getClass().getSimpleName();
     Unbinder unbinder;
     private Dialog dialog;
-    private AliyunHotReceiver aliyunHotReceiver;
 
     public abstract P getPresenter();
 

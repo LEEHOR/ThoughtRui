@@ -343,7 +343,7 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
             @Override
             public void setOnClick(String text) {
                 if (text != null && standard_score != null) {
-                    if (Integer.parseInt(text) <= Integer.parseInt(standard_score) && Integer.parseInt(text) >= 0) {
+                    if (Double.parseDouble(text) <= Double.parseDouble(standard_score) && Double.parseDouble(text) >= 0) {
                         ed_score.setText(text);
                         p.saveAnswers(text, remark, ht_projectId, number, ht_id, 1);
                     } else {

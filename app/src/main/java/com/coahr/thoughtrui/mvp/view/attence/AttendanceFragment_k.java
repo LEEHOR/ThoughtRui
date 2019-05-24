@@ -1,6 +1,7 @@
 package com.coahr.thoughtrui.mvp.view.attence;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
@@ -10,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
+import android.provider.Settings;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -223,6 +225,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
             mHandler.postDelayed(runnable_location, 3000);
         }
     };
+    private MaterialDialog materialDialog_build;
 
     public static AttendanceFragment_k newInstance() {
         AttendanceFragment_k attendanceFragment_k = new AttendanceFragment_k();
@@ -637,7 +640,10 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
     public void LocationContinuouslyFailure(int failure, BaiduLocationHelper baiduLocationHelper) {
         this.baiduLocationHelper = baiduLocationHelper;
         baiduLocationHelper.stopLocation();
-        ToastUtils.showLong(getResources().getString(R.string.toast_13));
+        ToastUtils.showShort(getResources().getString(R.string.toast_13));
+        if (failure==62){
+            showGPSDialog("提示","请打开GPS开关");
+        }
         p.startLocations(4);
     }
 
@@ -855,5 +861,44 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
     public void showError(@Nullable Throwable e) {
         super.showError(e);
         ToastUtils.showLong(e.toString());
+    }
+
+    /**
+     * 开启gps定位开关
+     * 弹窗
+     *
+     * @param title
+     * @param Content
+     */
+    private void showGPSDialog(String title, String Content) {
+        if (materialDialog_build == null) {
+            materialDialog_build = new MaterialDialog.Builder(_mActivity)
+                    .title(title)
+                    .content(Content)
+                    .negativeText(getResources().getString(R.string.cancel))
+                    .positiveText(getResources().getString(R.string.resume))
+                    .onNegative(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            dialog.dismiss();
+                        }
+                    }).onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            Intent intent =  new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivity(intent);
+                            dialog.dismiss();
+                        }
+                    }).build();
+            materialDialog_build.show();
+        } else {
+            if (materialDialog_build.isShowing()){
+
+            } else {
+                materialDialog_build.show();
+            }
+
+        }
+
     }
 }
