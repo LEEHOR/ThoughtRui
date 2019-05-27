@@ -1,15 +1,14 @@
 package com.coahr.thoughtrui.mvp.model;
 
-import com.baidu.location.BDLocation;
+import com.amap.api.location.AMapLocation;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
-import com.coahr.thoughtrui.Utils.BaiDuLocation.BaiduLocationHelper;
+import com.coahr.thoughtrui.Utils.BaiDuLocation.GaodeMapLocationHelper;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.StartProjectActivity_C;
 import com.coahr.thoughtrui.mvp.model.Bean.QuestionBean;
 import com.coahr.thoughtrui.mvp.model.Bean.RTSL;
-import com.socks.library.KLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,15 +29,15 @@ public class StartProjectActivity_M extends BaseModel<StartProjectActivity_C.Pre
     private int locationType=2;
     private int type;
     @Inject
-    BaiduLocationHelper baiduLocationHelper;
+    GaodeMapLocationHelper gaodeMapLocationHelper;
 
-    private BaiduLocationHelper.OnLocationCallBack onLocationCallBack = new BaiduLocationHelper.OnLocationCallBack() {
+    private GaodeMapLocationHelper.OnLocationCallBack onLocationCallBack = new GaodeMapLocationHelper.OnLocationCallBack() {
         @Override
-        public void onLocationSuccess(BDLocation location) {
+        public void onLocationSuccess(AMapLocation location) {
             //连续定位成功
             if (locationType == type){
                 if (getPresenter() != null) {
-                    getPresenter().getLocationSuccess(location,baiduLocationHelper);
+                    getPresenter().getLocationSuccess(location,gaodeMapLocationHelper);
                 }
             }
 
@@ -49,7 +48,7 @@ public class StartProjectActivity_M extends BaseModel<StartProjectActivity_C.Pre
             //连续定位失败
             if (locationType == type){
                 if (getPresenter() != null) {
-                    getPresenter().getLocationFailure(locType,baiduLocationHelper);
+                    getPresenter().getLocationFailure(locType,gaodeMapLocationHelper);
                 }
             }
         }
@@ -58,7 +57,7 @@ public class StartProjectActivity_M extends BaseModel<StartProjectActivity_C.Pre
     public void getLocation(int type) {
         this.type = type;
         initlocation();
-        baiduLocationHelper.startLocation();
+        gaodeMapLocationHelper.startLocation();
     }
 
     @Override
@@ -116,11 +115,11 @@ public class StartProjectActivity_M extends BaseModel<StartProjectActivity_C.Pre
                 }));
     }
     private void initlocation() {
-        baiduLocationHelper.registerLocationCallback(onLocationCallBack);
+        gaodeMapLocationHelper.registerLocationCallback(onLocationCallBack);
     }
     @Override
     public void detachPresenter() {
         super.detachPresenter();
-        baiduLocationHelper.unRegisterLocationCallback(onLocationCallBack);
+        gaodeMapLocationHelper.unRegisterLocationCallback(onLocationCallBack);
     }
 }

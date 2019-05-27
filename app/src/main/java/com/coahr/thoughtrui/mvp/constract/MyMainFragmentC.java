@@ -1,10 +1,8 @@
 package com.coahr.thoughtrui.mvp.constract;
 
-import com.baidu.location.BDLocation;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
-import com.coahr.thoughtrui.mvp.model.Bean.HomeDataList;
 
-import java.util.Map;
+
 
 /**
  * Created by Leehor

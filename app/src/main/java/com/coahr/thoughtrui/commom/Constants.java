@@ -33,6 +33,8 @@ public class Constants {
     public static String user_name;
     //用户类型
     public static int user_type;
+    //安装包下载位置
+    public static final String URL = "url";
 
     //网络访问超时时间
     public static int timeout = 15;

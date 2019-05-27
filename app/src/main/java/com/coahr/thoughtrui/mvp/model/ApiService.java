@@ -22,6 +22,7 @@ import com.coahr.thoughtrui.mvp.model.Bean.Template_list;
 import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
 import com.coahr.thoughtrui.mvp.model.Bean.UnDownLoad;
 import com.coahr.thoughtrui.mvp.model.Bean.UpLoadCallBack;
+import com.coahr.thoughtrui.mvp.model.Bean.UpdateBean;
 
 import java.util.Map;
 
@@ -30,6 +31,7 @@ import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.QueryMap;
 
 /**
  * Created by Leehor
@@ -228,4 +230,9 @@ public interface  ApiService {
     @FormUrlEncoded
     @POST(ApiContact.getOss)
     Call<AliyunOss> getAliYunOss(@FieldMap Map<String,Object> para);
+
+
+    //版本更新检测
+    @POST(ApiContact.getVersion)
+    Call<UpdateBean> updatecheck(@QueryMap Map<String, Object> options);
 }

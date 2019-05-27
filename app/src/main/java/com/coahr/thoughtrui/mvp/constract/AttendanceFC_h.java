@@ -1,9 +1,6 @@
 package com.coahr.thoughtrui.mvp.constract;
 
-import com.baidu.location.BDLocation;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
-import com.coahr.thoughtrui.mvp.model.Bean.AttendRemark;
-import com.coahr.thoughtrui.mvp.model.Bean.Attendance;
 import com.coahr.thoughtrui.mvp.model.Bean.AttendanceHistory;
 
 import java.util.Map;

@@ -91,7 +91,13 @@
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote"></service>
+            android:process=":remote"/>
+
+        <!--高德定位-->
+        <service android:name="com.amap.api.location.APSService"/>
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="973d19d1b7e7205ac3c820f9bbfb43e0" />
 
         <service android:name=".mvp.view.recorder.RecorderService" />
 
@@ -114,7 +120,7 @@
             android:name=".mvp.view.TimeService.RomoteService"
             android:enabled="true"
             android:exported="true"
-            android:process=":romoteservice"></service>
+            android:process=":romoteservice"/>
         <service android:name=".mvp.view.TimeService.TimeTaskService">
             <intent-filter>
                 <action android:name="TIMER_ACTION" />

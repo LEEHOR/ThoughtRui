@@ -2,6 +2,7 @@
     <!--应用-->
     <string name="carsuper_exit">再按一次退出程序</string>
     <string name="app_name">RBJ掌上检核</string>
+    <string name="download_apk">正在下载RBJ掌上检核安装包</string>
     <string name="recyclerview_item_foot">正在加载&#8230;</string>
     <!--底部菜单栏-->
     <string name="home">首页</string>

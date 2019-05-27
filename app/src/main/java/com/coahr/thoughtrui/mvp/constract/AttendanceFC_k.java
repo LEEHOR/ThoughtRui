@@ -1,7 +1,7 @@
 package com.coahr.thoughtrui.mvp.constract;
 
-import com.baidu.location.BDLocation;
-import com.coahr.thoughtrui.Utils.BaiDuLocation.BaiduLocationHelper;
+import com.amap.api.location.AMapLocation;
+import com.coahr.thoughtrui.Utils.BaiDuLocation.GaodeMapLocationHelper;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.model.Bean.AttendRemark;
 import com.coahr.thoughtrui.mvp.model.Bean.Attendance;
@@ -26,9 +26,9 @@ public interface AttendanceFC_k {
 
         void sendRemarkFailure(String failure,int code);
 
-        void LocationContinuouslySuccess(BDLocation location, BaiduLocationHelper baiduLocationHelper);
+        void LocationContinuouslySuccess(AMapLocation location, GaodeMapLocationHelper gaodeMapLocationHelper);
 
-        void LocationContinuouslyFailure(int failure,BaiduLocationHelper baiduLocationHelper);
+        void LocationContinuouslyFailure(int failure,GaodeMapLocationHelper gaodeMapLocationHelper);
 
         void getPushSuccess(PushAttendanceCard pushAttendanceCard);
 
@@ -52,9 +52,9 @@ public interface AttendanceFC_k {
 
         void sendRemarkFailure(String failure,int code);
 
-        void LocationContinuouslySuccess(BDLocation location, BaiduLocationHelper baiduLocationHelper);
+        void LocationContinuouslySuccess(AMapLocation location, GaodeMapLocationHelper gaodeMapLocationHelper);
 
-        void LocationContinuouslyFailure(int failure,BaiduLocationHelper baiduLocationHelper);
+        void LocationContinuouslyFailure(int failure,GaodeMapLocationHelper gaodeMapLocationHelper);
 
         void getPushCard(Map<String,Object> map);
 

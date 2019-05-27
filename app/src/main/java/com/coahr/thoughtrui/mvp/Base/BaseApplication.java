@@ -13,8 +13,6 @@ import androidx.multidex.MultiDexApplication;
 import androidx.fragment.app.Fragment;
 
 import com.alibaba.sdk.android.oss.common.OSSLog;
-import com.baidu.mapapi.CoordType;
-import com.baidu.mapapi.SDKInitializer;
 import com.coahr.thoughtrui.BuildConfig;
 import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.commom.Constants;
@@ -68,7 +66,7 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
         mContext = getApplicationContext();
           MultiDex.install(mContext);
         LitePal.initialize(getApplicationContext());
-        SDKInitializer.initialize(getApplicationContext());
+
         UMConfigure.init(this, "5c2c19abf1f556991e0000b8", "Umeng", UMConfigure.DEVICE_TYPE_PHONE, "ced813027db2c5016506edd6827d3d95");
 //获取消息推送代理示例
         mPushAgent = PushAgent.getInstance(this);
@@ -76,7 +74,8 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
         initUpush();
         //自4.3.0起，百度地图SDK所有接口均支持百度坐标和国测局坐标，用此方法设置您使用的坐标类型.
         //包括BD09LL和GCJ02两种坐标，默认是BD09LL坐标。
-        SDKInitializer.setCoordType(CoordType.BD09LL);
+        //SDKInitializer.initialize(getApplicationContext());
+        //SDKInitializer.setCoordType(CoordType.BD09LL);
 
         //初始化QQbugly
 

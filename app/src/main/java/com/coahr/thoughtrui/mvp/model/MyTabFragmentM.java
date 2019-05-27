@@ -1,22 +1,13 @@
 package com.coahr.thoughtrui.mvp.model;
 
-import android.app.KeyguardManager;
-
-import com.baidu.location.BDLocation;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.UsersDB;
-import com.coahr.thoughtrui.Utils.BaiDuLocation.BaiduLocationHelper;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
-import com.coahr.thoughtrui.Utils.JDBC.DataBaseWorkAsync;
-import com.coahr.thoughtrui.Utils.JDBC.JDBCSelectMultiListener;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.MyTabFragmentC;
 import com.coahr.thoughtrui.mvp.model.Bean.HomeDataList;
 import com.coahr.thoughtrui.mvp.model.Bean.UnDownLoad;
-import com.socks.library.KLog;
-
-import org.litepal.crud.callback.UpdateOrDeleteCallback;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -8,7 +8,6 @@ import android.os.Message;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import android.provider.Settings;
@@ -21,11 +20,10 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.baidu.location.BDLocation;
-import com.baidu.mapapi.model.LatLng;
-import com.baidu.mapapi.utils.DistanceUtil;
+import com.amap.api.location.AMapLocation;
 import com.coahr.thoughtrui.R;
-import com.coahr.thoughtrui.Utils.BaiDuLocation.BaiduLocationHelper;
+import com.coahr.thoughtrui.Utils.BaiDuLocation.GaodeMapLocationHelper;
+import com.coahr.thoughtrui.Utils.BaiDuLocation.GetDistance;
 import com.coahr.thoughtrui.Utils.NetWorkAvailable;
 import com.coahr.thoughtrui.Utils.TimeUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
@@ -46,6 +44,7 @@ import com.google.gson.Gson;
 import com.socks.library.KLog;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -151,7 +150,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
     /**
      * 循环定位信息
      */
-    private BaiduLocationHelper baiduLocationHelper;
+    private GaodeMapLocationHelper gaodeMapLocationHelper_s;
     private static final int LOCATIONMESSAGE = 1;
     private static final int zao_daka = 2;
     private static final int wan_daka = 3;
@@ -166,10 +165,15 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
             switch (msg.what) {
                 case LOCATIONMESSAGE:
                     //当前定位
-                    LatLng LocationPoint = new LatLng(continueStla, continueStlo);
-                    //门店定位
-                    LatLng latLng = new LatLng(latitude, longitude);//公司坐标
-                    double distance = DistanceUtil.getDistance(LocationPoint, latLng);
+                   // LatLng LocationPoint = new LatLng(continueStla, continueStlo);
+                    //目标定位
+                 //   LatLng latLng = new LatLng(30.5097050000,114.1647640000);//公司坐标
+
+                   // double distance = DistanceUtil.getDistance(LocationPoint, latLng); 30.5096240000,114.1643720000
+                    double temp = GetDistance.GetLongDistance( continueStlo,continueStla, longitude ,latitude)/1000;
+                    BigDecimal bd  = new   BigDecimal(temp);
+                    double distance = bd.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
+                    KLog.d("距离",distance);
                     if (distance > 200) {
                         isOnCircle = false;
                         //定位状态
@@ -278,8 +282,8 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         update_daka.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (baiduLocationHelper != null) {
-                    baiduLocationHelper.stopLocation();
+                if (gaodeMapLocationHelper_s != null) {
+                    gaodeMapLocationHelper_s.stopLocation();
                 }
                 //连续定位
                 p.startLocations(4);
@@ -294,8 +298,8 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         relocation_in.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (baiduLocationHelper != null) {
-                    baiduLocationHelper.stopLocation();
+                if (gaodeMapLocationHelper_s != null) {
+                    gaodeMapLocationHelper_s.stopLocation();
                     if (mHandler != null) {
                         if (latitude != 0 && longitude != 0) {
                             continueStla = 0;
@@ -310,8 +314,8 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         relocation_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (baiduLocationHelper != null) {
-                    baiduLocationHelper.stopLocation();
+                if (gaodeMapLocationHelper_s != null) {
+                    gaodeMapLocationHelper_s.stopLocation();
                     if (mHandler != null) {
                         if (latitude != 0 && longitude != 0) {
                             continueStla = 0;
@@ -619,27 +623,27 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
      * @param location
      */
     @Override
-    public void LocationContinuouslySuccess(BDLocation location, BaiduLocationHelper baiduLocationHelper) {
-        this.baiduLocationHelper = baiduLocationHelper;
+    public void LocationContinuouslySuccess(AMapLocation location, GaodeMapLocationHelper gaodeMapLocationHelper) {
+        this.gaodeMapLocationHelper_s = gaodeMapLocationHelper;
         //当前经纬度
         continueStla = location.getLatitude();
         continueStlo = location.getLongitude();
         //当前定位位置
-        Location_now = location.getAddress().street;
+        Location_now = location.getAddress();
         //把定位信息赋值
         location_address_in.setText(Location_now);
         location_address_out.setText(Location_now);
 
         mHandler.sendEmptyMessage(LOCATIONMESSAGE);
 
-        baiduLocationHelper.stopLocation();
+        gaodeMapLocationHelper.stopLocation();
 
     }
 
     @Override
-    public void LocationContinuouslyFailure(int failure, BaiduLocationHelper baiduLocationHelper) {
-        this.baiduLocationHelper = baiduLocationHelper;
-        baiduLocationHelper.stopLocation();
+    public void LocationContinuouslyFailure(int failure, GaodeMapLocationHelper gaodeMapLocationHelper) {
+        this.gaodeMapLocationHelper_s = gaodeMapLocationHelper;
+        gaodeMapLocationHelper.stopLocation();
         ToastUtils.showShort(getResources().getString(R.string.toast_13));
         if (failure==62){
             showGPSDialog("提示","请打开GPS开关");
@@ -716,8 +720,8 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         mHandler.removeMessages(LOCATIONMESSAGE);
         mHandler.removeCallbacks(run_time);
         mHandler.removeCallbacks(runnable_location);
-        if (baiduLocationHelper != null) {
-            baiduLocationHelper.stopLocation();
+        if (gaodeMapLocationHelper_s != null) {
+            gaodeMapLocationHelper_s.stopLocation();
         }
     }
 
@@ -743,8 +747,8 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         mHandler.removeCallbacks(run_time);
         mHandler.removeCallbacks(runnable_location);
         mHandler.removeMessages(LOCATIONMESSAGE);
-        if (baiduLocationHelper != null) {
-            baiduLocationHelper.stopLocation();
+        if (gaodeMapLocationHelper_s != null) {
+            gaodeMapLocationHelper_s.stopLocation();
         }
     }
 
@@ -755,8 +759,8 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
             mHandler.removeCallbacks(run_time);
             mHandler.removeCallbacks(runnable_location);
             mHandler.removeMessages(LOCATIONMESSAGE);
-            if (baiduLocationHelper != null) {
-                baiduLocationHelper.stopLocation();
+            if (gaodeMapLocationHelper_s != null) {
+                gaodeMapLocationHelper_s.stopLocation();
             }
         } else {
             mHandler.post(run_time);
@@ -840,8 +844,8 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                 if (haslogin()) {
                     if (isNetworkAvailable()) {  //有网络
                         mHandler.removeMessages(LOCATIONMESSAGE);
-                        if (baiduLocationHelper != null) {
-                            baiduLocationHelper.stopLocation();
+                        if (gaodeMapLocationHelper_s != null) {
+                            gaodeMapLocationHelper_s.stopLocation();
                         }
                         getData();
                         p.startLocations(4);
