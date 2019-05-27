@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation" >
     <!--应用-->
     <string name="carsuper_exit">再按一次退出程序</string>
     <string name="app_name">RBJ掌上检核</string>

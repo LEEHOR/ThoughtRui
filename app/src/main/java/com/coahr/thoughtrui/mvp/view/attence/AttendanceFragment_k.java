@@ -424,6 +424,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
             //获取门店的经纬度
             latitude = attendance.getData().getLatitude();
             longitude = attendance.getData().getLongitude();
+
             classId = attendance.getData().getClassId();
             dealerId = attendance.getData().getDealerId();
             projectId = attendance.getData().getProjectId();
@@ -621,6 +622,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         //当前经纬度
         continueStla = location.getLatitude();
         continueStlo = location.getLongitude();
+
         //当前定位位置
         Location_now = location.getAddress().street;
         //把定位信息赋值
