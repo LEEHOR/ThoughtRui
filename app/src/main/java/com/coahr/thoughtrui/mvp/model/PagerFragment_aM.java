@@ -246,7 +246,7 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
     public void UpDataDb(ProjectsDB projectsDB, SubjectsDB subjectsDB) {
         SubjectsDB subjectsDB1 = new SubjectsDB();
         subjectsDB1.setsUploadStatus(1);
-        subjectsDB1.setCensor(1);
+        subjectsDB1.setStage(1);
         update = subjectsDB1.update(subjectsDB.getId());
         List<SubjectsDB> subjectsDBList = projectsDB.getSubjectsDBList();
         if (subjectsDBList != null && subjectsDBList.size() > 0) {

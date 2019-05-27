@@ -1,15 +1,16 @@
 package com.coahr.thoughtrui.mvp.view.attence;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
+import android.provider.Settings;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -19,11 +20,10 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.baidu.location.BDLocation;
-import com.baidu.mapapi.model.LatLng;
-import com.baidu.mapapi.utils.DistanceUtil;
+import com.amap.api.location.AMapLocation;
 import com.coahr.thoughtrui.R;
-import com.coahr.thoughtrui.Utils.BaiDuLocation.BaiduLocationHelper;
+import com.coahr.thoughtrui.Utils.BaiDuLocation.GaodeMapLocationHelper;
+import com.coahr.thoughtrui.Utils.BaiDuLocation.GetDistance;
 import com.coahr.thoughtrui.Utils.NetWorkAvailable;
 import com.coahr.thoughtrui.Utils.TimeUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
@@ -44,6 +44,7 @@ import com.google.gson.Gson;
 import com.socks.library.KLog;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -149,7 +150,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
     /**
      * 循环定位信息
      */
-    private BaiduLocationHelper baiduLocationHelper;
+    private GaodeMapLocationHelper gaodeMapLocationHelper_s;
     private static final int LOCATIONMESSAGE = 1;
     private static final int zao_daka = 2;
     private static final int wan_daka = 3;
@@ -164,10 +165,15 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
             switch (msg.what) {
                 case LOCATIONMESSAGE:
                     //当前定位
-                    LatLng LocationPoint = new LatLng(continueStla, continueStlo);
-                    //门店定位
-                    LatLng latLng = new LatLng(latitude, longitude);//公司坐标
-                    double distance = DistanceUtil.getDistance(LocationPoint, latLng);
+                   // LatLng LocationPoint = new LatLng(continueStla, continueStlo);
+                    //目标定位
+                 //   LatLng latLng = new LatLng(30.5097050000,114.1647640000);//公司坐标
+
+                   // double distance = DistanceUtil.getDistance(LocationPoint, latLng); 30.5096240000,114.1643720000
+                    double temp = GetDistance.GetLongDistance( continueStlo,continueStla, longitude ,latitude)/1000;
+                    BigDecimal bd  = new   BigDecimal(temp);
+                    double distance = bd.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
+                    KLog.d("距离",distance);
                     if (distance > 200) {
                         isOnCircle = false;
                         //定位状态
@@ -223,6 +229,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
             mHandler.postDelayed(runnable_location, 3000);
         }
     };
+    private MaterialDialog materialDialog_build;
 
     public static AttendanceFragment_k newInstance() {
         AttendanceFragment_k attendanceFragment_k = new AttendanceFragment_k();
@@ -275,8 +282,8 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         update_daka.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (baiduLocationHelper != null) {
-                    baiduLocationHelper.stopLocation();
+                if (gaodeMapLocationHelper_s != null) {
+                    gaodeMapLocationHelper_s.stopLocation();
                 }
                 //连续定位
                 p.startLocations(4);
@@ -291,8 +298,8 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         relocation_in.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (baiduLocationHelper != null) {
-                    baiduLocationHelper.stopLocation();
+                if (gaodeMapLocationHelper_s != null) {
+                    gaodeMapLocationHelper_s.stopLocation();
                     if (mHandler != null) {
                         if (latitude != 0 && longitude != 0) {
                             continueStla = 0;
@@ -307,8 +314,8 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         relocation_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (baiduLocationHelper != null) {
-                    baiduLocationHelper.stopLocation();
+                if (gaodeMapLocationHelper_s != null) {
+                    gaodeMapLocationHelper_s.stopLocation();
                     if (mHandler != null) {
                         if (latitude != 0 && longitude != 0) {
                             continueStla = 0;
@@ -617,29 +624,32 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
      * @param location
      */
     @Override
-    public void LocationContinuouslySuccess(BDLocation location, BaiduLocationHelper baiduLocationHelper) {
-        this.baiduLocationHelper = baiduLocationHelper;
+    public void LocationContinuouslySuccess(AMapLocation location, GaodeMapLocationHelper gaodeMapLocationHelper) {
+        this.gaodeMapLocationHelper_s = gaodeMapLocationHelper;
         //当前经纬度
         continueStla = location.getLatitude();
         continueStlo = location.getLongitude();
 
         //当前定位位置
-        Location_now = location.getAddress().street;
+        Location_now = location.getAddress();
         //把定位信息赋值
         location_address_in.setText(Location_now);
         location_address_out.setText(Location_now);
 
         mHandler.sendEmptyMessage(LOCATIONMESSAGE);
 
-        baiduLocationHelper.stopLocation();
+        gaodeMapLocationHelper.stopLocation();
 
     }
 
     @Override
-    public void LocationContinuouslyFailure(int failure, BaiduLocationHelper baiduLocationHelper) {
-        this.baiduLocationHelper = baiduLocationHelper;
-        baiduLocationHelper.stopLocation();
-        ToastUtils.showLong(getResources().getString(R.string.toast_13));
+    public void LocationContinuouslyFailure(int failure, GaodeMapLocationHelper gaodeMapLocationHelper) {
+        this.gaodeMapLocationHelper_s = gaodeMapLocationHelper;
+        gaodeMapLocationHelper.stopLocation();
+        ToastUtils.showShort(getResources().getString(R.string.toast_13));
+        if (failure==62){
+            showGPSDialog("提示","请打开GPS开关");
+        }
         p.startLocations(4);
     }
 
@@ -712,8 +722,8 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         mHandler.removeMessages(LOCATIONMESSAGE);
         mHandler.removeCallbacks(run_time);
         mHandler.removeCallbacks(runnable_location);
-        if (baiduLocationHelper != null) {
-            baiduLocationHelper.stopLocation();
+        if (gaodeMapLocationHelper_s != null) {
+            gaodeMapLocationHelper_s.stopLocation();
         }
     }
 
@@ -739,8 +749,8 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         mHandler.removeCallbacks(run_time);
         mHandler.removeCallbacks(runnable_location);
         mHandler.removeMessages(LOCATIONMESSAGE);
-        if (baiduLocationHelper != null) {
-            baiduLocationHelper.stopLocation();
+        if (gaodeMapLocationHelper_s != null) {
+            gaodeMapLocationHelper_s.stopLocation();
         }
     }
 
@@ -751,8 +761,8 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
             mHandler.removeCallbacks(run_time);
             mHandler.removeCallbacks(runnable_location);
             mHandler.removeMessages(LOCATIONMESSAGE);
-            if (baiduLocationHelper != null) {
-                baiduLocationHelper.stopLocation();
+            if (gaodeMapLocationHelper_s != null) {
+                gaodeMapLocationHelper_s.stopLocation();
             }
         } else {
             mHandler.post(run_time);
@@ -836,8 +846,8 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                 if (haslogin()) {
                     if (isNetworkAvailable()) {  //有网络
                         mHandler.removeMessages(LOCATIONMESSAGE);
-                        if (baiduLocationHelper != null) {
-                            baiduLocationHelper.stopLocation();
+                        if (gaodeMapLocationHelper_s != null) {
+                            gaodeMapLocationHelper_s.stopLocation();
                         }
                         getData();
                         p.startLocations(4);
@@ -857,5 +867,44 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
     public void showError(@Nullable Throwable e) {
         super.showError(e);
         ToastUtils.showLong(e.toString());
+    }
+
+    /**
+     * 开启gps定位开关
+     * 弹窗
+     *
+     * @param title
+     * @param Content
+     */
+    private void showGPSDialog(String title, String Content) {
+        if (materialDialog_build == null) {
+            materialDialog_build = new MaterialDialog.Builder(_mActivity)
+                    .title(title)
+                    .content(Content)
+                    .negativeText(getResources().getString(R.string.cancel))
+                    .positiveText(getResources().getString(R.string.resume))
+                    .onNegative(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            dialog.dismiss();
+                        }
+                    }).onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            Intent intent =  new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivity(intent);
+                            dialog.dismiss();
+                        }
+                    }).build();
+            materialDialog_build.show();
+        } else {
+            if (materialDialog_build.isShowing()){
+
+            } else {
+                materialDialog_build.show();
+            }
+
+        }
+
     }
 }

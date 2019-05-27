@@ -3,7 +3,6 @@ package com.coahr.thoughtrui.mvp.view;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -15,18 +14,15 @@ import androidx.annotation.Nullable;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
-import android.telephony.TelephonyManager;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.baidu.location.BDLocation;
+import com.amap.api.location.AMapLocation;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.ActivityManagerUtils;
-import com.coahr.thoughtrui.Utils.BaiDuLocation.BaiduLocationHelper;
+import com.coahr.thoughtrui.Utils.BaiDuLocation.GaodeMapLocationHelper;
 import com.coahr.thoughtrui.Utils.Permission.OnRequestPermissionListener;
 import com.coahr.thoughtrui.Utils.Permission.RequestPermissionUtils;
-import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseActivity;
@@ -34,9 +30,6 @@ import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.constract.MainActivityC;
 import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_LoginSuccess;
 import com.coahr.thoughtrui.mvp.presenter.MainActivityP;
-import com.coahr.thoughtrui.mvp.view.TimeService.AlarmTimerUtil;
-import com.coahr.thoughtrui.mvp.view.TimeService.LocalService;
-import com.coahr.thoughtrui.mvp.view.TimeService.RomoteService;
 import com.coahr.thoughtrui.mvp.view.home.MainInfoFragment;
 import com.coahr.thoughtrui.mvp.view.mydata.MyFragment;
 import com.coahr.thoughtrui.mvp.view.reviewed.ReviewedFragment;
@@ -58,7 +51,6 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 import butterknife.BindView;
 import me.yokeyword.fragmentation.SupportFragment;
-import omrecorder.PullableSource;
 
 public class MainActivity extends BaseActivity<MainActivityC.Presenter> implements MainActivityC.View {
 
@@ -73,9 +65,9 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     private static final long INTERVAL_TIME = 2000;
     private String sessionId;
     private int page = 0; //当前显示页面
-    private static int TIMES = 1000 * 5 * 60;  //发送定位时间间隔
+    private static int TIMES = 1000 * 20 * 60;  //发送定位时间间隔
     private static int SEND_MESSAGE = 1;
-    private BaiduLocationHelper baiduLocationHelper_s;
+    private GaodeMapLocationHelper gaodeMapLocationHelper_s;
     private Handler mHandker = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -149,6 +141,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
 
     @Override
     public void initView() {
+
         getLocationPermission();
         loadMultipleRootFragment(R.id.Root_Fragment, 0, mFragments);
         showHideFragment(mFragments[0], mFragments[bottomNavigationPreposition]);
@@ -157,7 +150,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
         if (!haslogin()) {
             loginDialog();
         }
-
+       // CrashReport.testJavaCrash();
         myBottomNavigation.setOnTabPositionListener(new MyBottomNavigation.OnTabPositionListener() {
             @Override
             public void onPositionTab(int position) {
@@ -267,11 +260,11 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
 
 
     @Override
-    public void getLocationSuccess(BDLocation location, BaiduLocationHelper baiduLocationHelper) {
-        this.baiduLocationHelper_s = baiduLocationHelper;
+    public void getLocationSuccess(AMapLocation location, GaodeMapLocationHelper gaodeMapLocationHelper) {
+        this.gaodeMapLocationHelper_s = gaodeMapLocationHelper;
         Constants.Longitude = location.getLongitude();
         Constants.Latitude = location.getLatitude();
-        baiduLocationHelper.stopLocation();
+        gaodeMapLocationHelper.stopLocation();
         mHandker.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -282,9 +275,9 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     }
 
     @Override
-    public void getLocationFailure(int failure, BaiduLocationHelper baiduLocationHelper) {
-        this.baiduLocationHelper_s = baiduLocationHelper;
-        baiduLocationHelper.stopLocation();
+    public void getLocationFailure(int failure, GaodeMapLocationHelper gaodeMapLocationHelper) {
+        this.gaodeMapLocationHelper_s = gaodeMapLocationHelper;
+        gaodeMapLocationHelper_s.stopLocation();
         p.getLocation(1);
     }
 
@@ -319,8 +312,8 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     @Override
     protected void onResume() {
         super.onResume();
-        if (baiduLocationHelper_s != null) {
-            baiduLocationHelper_s.stopLocation();
+        if (gaodeMapLocationHelper_s != null) {
+            gaodeMapLocationHelper_s.stopLocation();
             p.getLocation(1);
         }
 
@@ -329,8 +322,8 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     @Override
     protected void onPause() {
         super.onPause();
-        if (baiduLocationHelper_s != null) {
-            baiduLocationHelper_s.stopLocation();
+        if (gaodeMapLocationHelper_s != null) {
+            gaodeMapLocationHelper_s.stopLocation();
             mHandker.removeCallbacksAndMessages(null);
         }
     }

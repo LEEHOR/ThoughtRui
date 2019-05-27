@@ -43,7 +43,7 @@ public class SubjectsDB extends DataSupport {
     private int sUploadStatus;
     private int isComplete;
     private int number;
-    private int censor;
+    private int Stage;
     private String dh;
     private long times;
 
@@ -57,7 +57,7 @@ public class SubjectsDB extends DataSupport {
     public SubjectsDB() {
     }
 
-    public SubjectsDB(int id, String ht_id, String title, int type, String options, String description, int photoStatus, int recordStatus, int describeStatus, String quota1, String quota2, String quota3, int sUploadStatus, int isComplete, int number, int censor, String dh, long times, ProjectsDB projectsDB, List<ImagesDB> imagesDBList, AnswersDB answersDB) {
+    public SubjectsDB(int id, String ht_id, String title, int type, String options, String description, int photoStatus, int recordStatus, int describeStatus, String quota1, String quota2, String quota3, int sUploadStatus, int isComplete, int number, int stage, String dh, long times, ProjectsDB projectsDB, List<ImagesDB> imagesDBList, AnswersDB answersDB) {
         this.id = id;
         this.ht_id = ht_id;
         this.title = title;
@@ -73,7 +73,7 @@ public class SubjectsDB extends DataSupport {
         this.sUploadStatus = sUploadStatus;
         this.isComplete = isComplete;
         this.number = number;
-        this.censor = censor;
+        Stage = stage;
         this.dh = dh;
         this.times = times;
         this.projectsDB = projectsDB;
@@ -201,12 +201,12 @@ public class SubjectsDB extends DataSupport {
         this.number = number;
     }
 
-    public int getCensor() {
-        return censor;
+    public int getStage() {
+        return Stage;
     }
 
-    public void setCensor(int censor) {
-        this.censor = censor;
+    public void setStage(int stage) {
+        Stage = stage;
     }
 
     public String getDh() {

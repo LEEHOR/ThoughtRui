@@ -343,7 +343,7 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
             @Override
             public void setOnClick(String text) {
                 if (text != null && standard_score != null) {
-                    if (Integer.parseInt(text) <= Integer.parseInt(standard_score) && Integer.parseInt(text) >= 0) {
+                    if (Double.parseDouble(text) <= Double.parseDouble(standard_score) && Double.parseDouble(text) >= 0) {
                         ed_score.setText(text);
                         p.saveAnswers(text, remark, ht_projectId, number, ht_id, 1);
                     } else {
@@ -1214,10 +1214,10 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
     private void callbackForServer(final ProjectsDB projectsDB, final SubjectsDB subjectsDB, String recorderPath, List<String> picList, String text) {
         final Map map = new HashMap();
         map.put("projectId", projectsDB.getPid());
-        map.put("censor", subjectsDB.getCensor());
+       // map.put("censor", subjectsDB.getCensor());
         map.put("answerId", subjectsDB.getHt_id());
         map.put("number", subjectsDB.getNumber());
-        map.put("stage", projectsDB.getStage());
+        map.put("stage", subjectsDB.getStage());
         if (text != null) {
             String[] split = text.split("&");
             if (split != null && split.length > 0) {

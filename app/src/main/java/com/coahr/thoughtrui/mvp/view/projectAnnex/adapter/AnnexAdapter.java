@@ -1,9 +1,11 @@
 package com.coahr.thoughtrui.mvp.view.projectAnnex.adapter;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +17,11 @@ import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.DensityUtils;
 import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
+import com.coahr.thoughtrui.mvp.model.Bean.AnnexDate;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
 import com.coahr.thoughtrui.mvp.view.startProject.adapter.PagerFragmentPhotoAdapter;
 import com.coahr.thoughtrui.mvp.view.startProject.adapter.PagerFragmentPhotoListener;
+import com.socks.library.KLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,20 +33,19 @@ import java.util.List;
  * 描述：
  */
 public class AnnexAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<List<String>> listList = new ArrayList<>();
     private int type;
     private Context context;
     private annexAdapterOnClick annexAdapterOnClick;
-    private List<List<String>> zkList = new ArrayList<>();
     private List<String> listPic;
+    private AnnexDate annexDate;
 
     public AnnexAdapter(Context context) {
         this.context = context;
     }
 
-    public void setAdapterList(List<List<String>> list, int types) {
-        listList.clear();
-        this.listList.addAll(list);
+    public void setAdapterList(AnnexDate a, int types) {
+        KLog.d("tips3");
+        this.annexDate=a;
         this.type = types;
         getItemCount();
     }
@@ -68,9 +71,9 @@ public class AnnexAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         if (viewHolder instanceof MyAdapter_q) {
             String audioPath = null;
-            if (listList != null && listList.size() > 0) {
+            if (annexDate.getListList() != null && annexDate.getListList().size() > 0) {
                 ((MyAdapter_q) viewHolder).annex_tv_tittle_q.setText(BaseApplication.mContext.getResources().getString(R.string.phrases_16) + String.valueOf(i + 1));
-                final List<String> listPath = listList.get(i);
+                final List<String> listPath = annexDate.getListList().get(i).getListFile();
                 if (listPath != null && listPath.size() > 0) {
                     listPic = new ArrayList<>();
                     for (int j = 0; j < listPath.size(); j++) {
@@ -153,21 +156,24 @@ public class AnnexAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     @Override
                     public void onClick(View v) {
                         //展开
-                        if (!zkList.contains(listList.get(i))) {
+                        if (!annexDate.getListList().get(i).isShow()) {
                             ((MyAdapter_q) viewHolder).annex_child_recycler.setVisibility(View.VISIBLE);
                             ((MyAdapter_q) viewHolder).iv_zk.setImageResource(R.mipmap.back);
                             ((MyAdapter_q) viewHolder).iv_zk.setRotation(-90);
-                            zkList.add(listList.get(i));
+                            annexDate.getListList().get(i).setShow(true);
+                          //  KLog.d("tips1", zkList.toString(),listList.toString());
                         } else {
                             ((MyAdapter_q) viewHolder).annex_child_recycler.setVisibility(View.GONE);
                             ((MyAdapter_q) viewHolder).iv_zk.setImageResource(R.mipmap.back);
                             ((MyAdapter_q) viewHolder).iv_zk.setRotation(90);
-                            zkList.remove(listList.get(i));
+                            //zkList.remove(listList.get(i));
+                            annexDate.getListList().get(i).setShow(false);
+                           // KLog.d("tips2", zkList.toString());
                         }
                     }
                 });
 
-                if (zkList.contains(listList.get(i))) {
+                if (annexDate.getListList().get(i).isShow()) {
                     ((MyAdapter_q) viewHolder).annex_child_recycler.setVisibility(View.VISIBLE);
                     ((MyAdapter_q) viewHolder).iv_zk.setImageResource(R.mipmap.back);
                     ((MyAdapter_q) viewHolder).iv_zk.setRotation(-90);
@@ -182,10 +188,9 @@ public class AnnexAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
 
         if (viewHolder instanceof MyAdapter_t) {
-            if (listList != null && listList.size() > 0) {
-
+            if (annexDate.getListList() != null && annexDate.getListList().size() > 0) {
                 ((MyAdapter_t) viewHolder).annex_tv_tittle_t.setText(BaseApplication.mContext.getResources().getString(R.string.phrases_16) + String.valueOf(i + 1));
-                final List<String> listPath = listList.get(i);
+                final List<String> listPath = annexDate.getListList().get(i).getListFile();
                 if (listPath != null && listPath.size() > 0) {
                     listPic = new ArrayList<>();
                     for (int j = 0; j < listPath.size(); j++) {
@@ -243,20 +248,22 @@ public class AnnexAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     @Override
                     public void onClick(View v) {
                         //展开
-                        if (!zkList.contains(listList.get(i))) {
+                        if (!annexDate.getListList().get(i).isShow()) {
                             ((MyAdapter_t) viewHolder).annex_child_recycler_t.setVisibility(View.VISIBLE);
                             ((MyAdapter_t) viewHolder).iv_zk_t.setImageResource(R.mipmap.back);
                             ((MyAdapter_t) viewHolder).iv_zk_t.setRotation(-90);
-                            zkList.add(listList.get(i));
+                            //zkList.add(listList.get(i));
+                            annexDate.getListList().get(i).setShow(true);
                         } else {
                             ((MyAdapter_t) viewHolder).annex_child_recycler_t.setVisibility(View.GONE);
                             ((MyAdapter_t) viewHolder).iv_zk_t.setImageResource(R.mipmap.back);
                             ((MyAdapter_t) viewHolder).iv_zk_t.setRotation(90);
-                            zkList.remove(listList.get(i));
+                            //zkList.remove(listList.get(i));
+                            annexDate.getListList().get(i).setShow(false);
                         }
                     }
                 });
-                if (zkList.contains(listList.get(i))) {
+                if (annexDate.getListList().get(i).isShow()) {
                     ((MyAdapter_t) viewHolder).annex_child_recycler_t.setVisibility(View.VISIBLE);
                     ((MyAdapter_t) viewHolder).iv_zk_t.setImageResource(R.mipmap.back);
                     ((MyAdapter_t) viewHolder).iv_zk_t.setRotation(-90);
@@ -270,9 +277,9 @@ public class AnnexAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
 
         if (viewHolder instanceof MyAdapter_l) {
-            if (listList != null && listList.size() > 0) {
+            if (annexDate.getListList() != null && annexDate.getListList().size() > 0) {
                 ((MyAdapter_l) viewHolder).annex_tv_tittle_l.setText(BaseApplication.mContext.getResources().getString(R.string.phrases_16) + String.valueOf(i + 1));
-                final List<String> listPath = listList.get(i);
+                final List<String> listPath = annexDate.getListList().get(i).getListFile();
                 String audioPath = null;
                 if (listPath != null && listPath.size() > 0) {
                     for (int j = 0; j < listPath.size(); j++) {
@@ -306,7 +313,7 @@ public class AnnexAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return listList.size();
+        return annexDate.getListList().size();
     }
 
     @Override
@@ -347,7 +354,7 @@ public class AnnexAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             super(itemView);
             annex_tv_tittle_t = itemView.findViewById(R.id.annex_tv_tittle_t);
             iv_zk_t = itemView.findViewById(R.id.iv_zk_t);
-            annex_pic_re_image= itemView.findViewById(R.id.annex_pic_re_image);
+            annex_pic_re_image = itemView.findViewById(R.id.annex_pic_re_image);
             annex_pic_count_t = itemView.findViewById(R.id.annex_pic_count_t);
             annex_child_recycler_t = itemView.findViewById(R.id.annex_child_recycler_t);
         }

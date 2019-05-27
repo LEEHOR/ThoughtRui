@@ -1,7 +1,7 @@
 package com.coahr.thoughtrui.mvp.presenter;
 
-import com.baidu.location.BDLocation;
-import com.coahr.thoughtrui.Utils.BaiDuLocation.BaiduLocationHelper;
+import com.amap.api.location.AMapLocation;
+import com.coahr.thoughtrui.Utils.BaiDuLocation.GaodeMapLocationHelper;
 import com.coahr.thoughtrui.mvp.Base.BasePresenter;
 import com.coahr.thoughtrui.mvp.constract.AttendanceFC_k;
 import com.coahr.thoughtrui.mvp.model.AttendanceFM_k;
@@ -77,16 +77,16 @@ public class AttendanceFP_k extends BasePresenter<AttendanceFC_k.View,Attendance
     }
 
     @Override
-    public void LocationContinuouslySuccess(BDLocation location, BaiduLocationHelper baiduLocationHelper) {
+    public void LocationContinuouslySuccess(AMapLocation location, GaodeMapLocationHelper gaodeMapLocationHelper) {
         if (getView() != null) {
-            getView().LocationContinuouslySuccess(location,baiduLocationHelper);
+            getView().LocationContinuouslySuccess(location,gaodeMapLocationHelper);
         }
     }
 
     @Override
-    public void LocationContinuouslyFailure(int failure,BaiduLocationHelper baiduLocationHelper) {
+    public void LocationContinuouslyFailure(int failure,GaodeMapLocationHelper gaodeMapLocationHelper) {
         if (getView() != null) {
-            getView().LocationContinuouslyFailure(failure,baiduLocationHelper);
+            getView().LocationContinuouslyFailure(failure,gaodeMapLocationHelper);
         }
     }
 

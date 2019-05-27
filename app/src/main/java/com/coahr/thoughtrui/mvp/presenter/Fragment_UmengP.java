@@ -1,15 +1,10 @@
 package com.coahr.thoughtrui.mvp.presenter;
 
-import com.baidu.location.BDLocation;
-import com.coahr.thoughtrui.Utils.BaiDuLocation.BaiduLocationHelper;
 import com.coahr.thoughtrui.mvp.Base.BasePresenter;
 import com.coahr.thoughtrui.mvp.constract.Fragment_Umeng_C;
-import com.coahr.thoughtrui.mvp.constract.MainActivityC;
 import com.coahr.thoughtrui.mvp.model.Bean.CensorBean;
 import com.coahr.thoughtrui.mvp.model.Bean.NotificationBean;
 import com.coahr.thoughtrui.mvp.model.Fragment_Umeng_M;
-import com.coahr.thoughtrui.mvp.model.MainActivityM;
-import com.coahr.thoughtrui.mvp.view.MainActivity;
 import com.coahr.thoughtrui.mvp.view.UMPush.Fragment_Umeng;
 
 import java.util.Map;

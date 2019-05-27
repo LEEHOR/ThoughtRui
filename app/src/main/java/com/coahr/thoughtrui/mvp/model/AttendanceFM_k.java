@@ -1,7 +1,7 @@
 package com.coahr.thoughtrui.mvp.model;
 
-import com.baidu.location.BDLocation;
-import com.coahr.thoughtrui.Utils.BaiDuLocation.BaiduLocationHelper;
+import com.amap.api.location.AMapLocation;
+import com.coahr.thoughtrui.Utils.BaiDuLocation.GaodeMapLocationHelper;
 import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.AttendanceFC_k;
 import com.coahr.thoughtrui.mvp.model.Bean.AttendRemark;
@@ -26,15 +26,15 @@ public class AttendanceFM_k extends BaseModel<AttendanceFC_k.Presenter> implemen
   private int  continuously=4;
   private int type;
   @Inject
-  BaiduLocationHelper baiduLocationHelper;
+  GaodeMapLocationHelper gaodeMapLocationHelper;
 
-  private BaiduLocationHelper.OnLocationCallBack onLocationCallBack = new BaiduLocationHelper.OnLocationCallBack() {
+  private GaodeMapLocationHelper.OnLocationCallBack onLocationCallBack = new GaodeMapLocationHelper.OnLocationCallBack() {
     @Override
-    public void onLocationSuccess(BDLocation location) {
+    public void onLocationSuccess(AMapLocation location) {
       //连续定位成功
       if (continuously == type){
         if (getPresenter() != null) {
-          getPresenter().LocationContinuouslySuccess(location,baiduLocationHelper);
+          getPresenter().LocationContinuouslySuccess(location,gaodeMapLocationHelper);
         }
       }
 
@@ -45,7 +45,7 @@ public class AttendanceFM_k extends BaseModel<AttendanceFC_k.Presenter> implemen
       //连续定位失败
       if (continuously == type){
         if (getPresenter() != null) {
-          getPresenter().LocationContinuouslyFailure(locType,baiduLocationHelper);
+          getPresenter().LocationContinuouslyFailure(locType,gaodeMapLocationHelper);
         }
       }
     }
@@ -72,7 +72,7 @@ public class AttendanceFM_k extends BaseModel<AttendanceFC_k.Presenter> implemen
     public void startLocations(int type) {
       this.type = type;
       initlocation();
-      baiduLocationHelper.startLocation();
+    gaodeMapLocationHelper.startLocation();
     }
 
     @Override
@@ -107,11 +107,11 @@ public class AttendanceFM_k extends BaseModel<AttendanceFC_k.Presenter> implemen
       }));
     }
   private void initlocation() {
-    baiduLocationHelper.registerLocationCallback(onLocationCallBack);
+    gaodeMapLocationHelper.registerLocationCallback(onLocationCallBack);
   }
   @Override
   public void detachPresenter() {
     super.detachPresenter();
-    baiduLocationHelper.unRegisterLocationCallback(onLocationCallBack);
+    gaodeMapLocationHelper.unRegisterLocationCallback(onLocationCallBack);
   }
 }

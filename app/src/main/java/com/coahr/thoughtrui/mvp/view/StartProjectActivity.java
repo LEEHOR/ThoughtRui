@@ -12,11 +12,11 @@ import android.view.View;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.baidu.location.BDLocation;
+import com.amap.api.location.AMapLocation;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
-import com.coahr.thoughtrui.Utils.BaiDuLocation.BaiduLocationHelper;
+import com.coahr.thoughtrui.Utils.BaiDuLocation.GaodeMapLocationHelper;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.ScreenUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
@@ -46,6 +46,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import androidx.appcompat.app.AppCompatDialogFragment;
+
 import butterknife.BindView;
 
 /**
@@ -73,7 +74,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
             super.handleMessage(msg);
         }
     };
-    private BaiduLocationHelper baiduLocationHelper_s;
+    private GaodeMapLocationHelper gaodeMapLocationHelper_s;
     private Login_DialogFragment login_dialogFragment;
     private String format;
 
@@ -145,8 +146,8 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     }
 
     @Override
-    public void getLocationSuccess(BDLocation location, BaiduLocationHelper baiduLocationHelper) {
-        this.baiduLocationHelper_s = baiduLocationHelper;
+    public void getLocationSuccess(AMapLocation location, GaodeMapLocationHelper baiduLocationHelper) {
+        this.gaodeMapLocationHelper_s = baiduLocationHelper;
         latitude = location.getLatitude();
         longitude = location.getLongitude();
         Constants.Latitude = latitude;
@@ -164,10 +165,10 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     }
 
     @Override
-    public void getLocationFailure(int failure, BaiduLocationHelper baiduLocationHelper) {
-        this.baiduLocationHelper_s = baiduLocationHelper;
-        if (baiduLocationHelper != null) {
-            baiduLocationHelper.stopLocation();
+    public void getLocationFailure(int failure, GaodeMapLocationHelper gaodeMapLocationHelper) {
+        this.gaodeMapLocationHelper_s = gaodeMapLocationHelper;
+        if (gaodeMapLocationHelper_s != null) {
+            gaodeMapLocationHelper_s.stopLocation();
         }
         p.getLocation(2);
     }
@@ -187,7 +188,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                             subjectsDB.setType(questionList.get(i).getType());
                             subjectsDB.setOptions(questionList.get(i).getOptions());
                             subjectsDB.setNumber(questionList.get(i).getNumber());
-                            subjectsDB.setCensor(questionList.get(i).getCensor());
+                           // subjectsDB.setStage(1);
                             subjectsDB.setRecordStatus(questionList.get(i).getRecordStatus());
                             if (questionList.get(i).getQuota1() != null) {
                                 subjectsDB.setQuota1(questionList.get(i).getQuota1());
@@ -215,7 +216,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                             subjectsDB.setRecordStatus(-1);
                         }
 
-                        subjectsDB.setCensor(questionList.get(i).getCensor());
+                        subjectsDB.setStage(1);
                         subjectsDB.setIsComplete(0);
                         subjectsDB.setType(questionList.get(i).getType());
                         subjectsDB.setDh("0");
@@ -279,8 +280,8 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     @Override
     public void sendRtslFail(String fail, int result) {
         if (result == -1) {
-            if (baiduLocationHelper_s != null) {
-                baiduLocationHelper_s.stopLocation();
+            if (gaodeMapLocationHelper_s != null) {
+                gaodeMapLocationHelper_s.stopLocation();
             }
             loginDialog();
         }
@@ -335,14 +336,15 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 dialog.dismiss();
-                if (baiduLocationHelper_s != null) {
-                    baiduLocationHelper_s.stopLocation();
+                if (gaodeMapLocationHelper_s != null) {
+                    gaodeMapLocationHelper_s.stopLocation();
                 }
                 mHandler.removeCallbacksAndMessages(null);
                 finish();
             }
         }).build().show();
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -436,8 +438,8 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     @Override
     protected void onPause() {
 
-        if (baiduLocationHelper_s != null) {
-            baiduLocationHelper_s.stopLocation();
+        if (gaodeMapLocationHelper_s != null) {
+            gaodeMapLocationHelper_s.stopLocation();
             mHandler.removeCallbacksAndMessages(null);
         }
         super.onPause();
@@ -446,8 +448,8 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
     @Override
     protected void onResume() {
 
-        if (baiduLocationHelper_s != null) {
-            baiduLocationHelper_s.stopLocation();
+        if (gaodeMapLocationHelper_s != null) {
+            gaodeMapLocationHelper_s.stopLocation();
             p.getLocation(2);
         }
         super.onResume();

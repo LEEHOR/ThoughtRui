@@ -1,7 +1,7 @@
 package com.coahr.thoughtrui.mvp.presenter;
 
-import com.baidu.location.BDLocation;
-import com.coahr.thoughtrui.Utils.BaiDuLocation.BaiduLocationHelper;
+import com.amap.api.location.AMapLocation;
+import com.coahr.thoughtrui.Utils.BaiDuLocation.GaodeMapLocationHelper;
 import com.coahr.thoughtrui.mvp.Base.BasePresenter;
 import com.coahr.thoughtrui.mvp.constract.MainActivityC;
 import com.coahr.thoughtrui.mvp.model.MainActivityM;
@@ -31,16 +31,16 @@ public class MainActivityP extends BasePresenter<MainActivityC.View,MainActivity
     }
 
     @Override
-    public void getLocationSuccess(BDLocation location, BaiduLocationHelper baiduLocationHelper) {
+    public void getLocationSuccess(AMapLocation location, GaodeMapLocationHelper gaodeMapLocationHelper) {
         if (getView() != null) {
-            getView().getLocationSuccess(location, baiduLocationHelper);
+            getView().getLocationSuccess(location, gaodeMapLocationHelper);
         }
     }
 
     @Override
-    public void getLocationFailure(int failure, BaiduLocationHelper baiduLocationHelper) {
+    public void getLocationFailure(int failure, GaodeMapLocationHelper gaodeMapLocationHelper) {
         if (getView() != null) {
-            getView().getLocationFailure(failure, baiduLocationHelper);
+            getView().getLocationFailure(failure, gaodeMapLocationHelper);
         }
     }
 

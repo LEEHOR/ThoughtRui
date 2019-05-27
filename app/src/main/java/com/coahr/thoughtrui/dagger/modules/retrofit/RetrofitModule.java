@@ -136,4 +136,6 @@ public class RetrofitModule {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())//可以让apiservice中方法返回  observerble 与rxjava对接
                 .build();
     }
+
+
 }

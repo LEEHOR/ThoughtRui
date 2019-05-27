@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.multidex.MultiDex;
@@ -12,14 +13,13 @@ import androidx.multidex.MultiDexApplication;
 import androidx.fragment.app.Fragment;
 
 import com.alibaba.sdk.android.oss.common.OSSLog;
-import com.baidu.mapapi.CoordType;
-import com.baidu.mapapi.SDKInitializer;
+import com.coahr.thoughtrui.BuildConfig;
 import com.coahr.thoughtrui.Utils.PreferenceUtils;
-import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.dagger.components.DaggerApplicationComponents;
 import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
 import com.socks.library.KLog;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.MsgConstant;
@@ -30,6 +30,9 @@ import com.umeng.message.entity.UMessage;
 import org.litepal.LitePal;
 
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -61,9 +64,9 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
         super.onCreate();
         DaggerApplicationComponents.create().inject(this);
         mContext = getApplicationContext();
-        MultiDex.install(mContext);
+          MultiDex.install(mContext);
         LitePal.initialize(getApplicationContext());
-        SDKInitializer.initialize(getApplicationContext());
+
         UMConfigure.init(this, "5c2c19abf1f556991e0000b8", "Umeng", UMConfigure.DEVICE_TYPE_PHONE, "ced813027db2c5016506edd6827d3d95");
 //获取消息推送代理示例
         mPushAgent = PushAgent.getInstance(this);
@@ -71,7 +74,23 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
         initUpush();
         //自4.3.0起，百度地图SDK所有接口均支持百度坐标和国测局坐标，用此方法设置您使用的坐标类型.
         //包括BD09LL和GCJ02两种坐标，默认是BD09LL坐标。
-        SDKInitializer.setCoordType(CoordType.BD09LL);
+        //SDKInitializer.initialize(getApplicationContext());
+        //SDKInitializer.setCoordType(CoordType.BD09LL);
+
+        //初始化QQbugly
+
+        // 获取当前包名
+        String packageName = mContext.getPackageName();
+        // 获取当前进程名
+        String processName = getProcessName(android.os.Process.myPid());
+        // 设置是否为上报进程
+        CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(mContext);
+        strategy.setUploadProcess(processName == null || processName.equals(packageName));
+        CrashReport.setIsDevelopmentDevice(mContext, BuildConfig.DEBUG);
+        // 初始化Bugly
+        CrashReport.initCrashReport(mContext, "e056cf4e34", true, strategy);
+
+
         if (PreferenceUtils.contains(mContext, Constants.user_key)) {
             Constants.user_name = PreferenceUtils.getPrefString(mContext, Constants.user_key, "");
         }
@@ -113,7 +132,14 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
         }
 
         OSSLog.enableLog();
+//        CrashReport.testJavaCrash();
 
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+       // MultiDex.install(this);
     }
 
     @Override
@@ -201,4 +227,33 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
         startActivity(intent);
     }
 
+
+    /**
+     * 获取进程号对应的进程名
+     *
+     * @param pid 进程号
+     * @return 进程名
+     */
+    private static String getProcessName(int pid) {
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader("/proc/" + pid + "/cmdline"));
+            String processName = reader.readLine();
+            if (!TextUtils.isEmpty(processName)) {
+                processName = processName.trim();
+            }
+            return processName;
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        } finally {
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+        }
+        return null;
+    }
 }

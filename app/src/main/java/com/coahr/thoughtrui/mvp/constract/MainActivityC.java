@@ -1,7 +1,7 @@
 package com.coahr.thoughtrui.mvp.constract;
 
-import com.baidu.location.BDLocation;
-import com.coahr.thoughtrui.Utils.BaiDuLocation.BaiduLocationHelper;
+import com.amap.api.location.AMapLocation;
+import com.coahr.thoughtrui.Utils.BaiDuLocation.GaodeMapLocationHelper;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
 
 import java.util.Map;
@@ -15,9 +15,9 @@ public interface MainActivityC {
 
     interface View extends BaseContract.View {
 
-        void getLocationSuccess(BDLocation location, BaiduLocationHelper baiduLocationHelper);
+        void getLocationSuccess(AMapLocation location, GaodeMapLocationHelper gaodeMapLocationHelper);
 
-        void getLocationFailure(int failure, BaiduLocationHelper baiduLocationHelper);
+        void getLocationFailure(int failure, GaodeMapLocationHelper gaodeMapLocationHelper);
 
         void sendRtslSuccess(String success,int result);
 
@@ -29,9 +29,9 @@ public interface MainActivityC {
 
         void getLocation(int type);
 
-        void getLocationSuccess(BDLocation location, BaiduLocationHelper baiduLocationHelper);
+        void getLocationSuccess(AMapLocation location, GaodeMapLocationHelper gaodeMapLocationHelper);
 
-        void getLocationFailure(int failure, BaiduLocationHelper baiduLocationHelper);
+        void getLocationFailure(int failure, GaodeMapLocationHelper gaodeMapLocationHelper);
 
         void sendRtsl(Map<String,Object> map);
 

@@ -1,7 +1,7 @@
 package com.coahr.thoughtrui.mvp.model;
 
-import com.baidu.location.BDLocation;
-import com.coahr.thoughtrui.Utils.BaiDuLocation.BaiduLocationHelper;
+import com.amap.api.location.AMapLocation;
+import com.coahr.thoughtrui.Utils.BaiDuLocation.GaodeMapLocationHelper;
 import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.MainActivityC;
 import com.coahr.thoughtrui.mvp.model.Bean.RTSL;
@@ -26,15 +26,15 @@ public class MainActivityM extends BaseModel<MainActivityC.Presenter> implements
     private int type_s;
 
     @Inject
-    BaiduLocationHelper baiduLocationHelper;
+    GaodeMapLocationHelper gaodeMapLocationHelper;
 
-    private BaiduLocationHelper.OnLocationCallBack onLocationCallBack = new BaiduLocationHelper.OnLocationCallBack() {
+    private GaodeMapLocationHelper.OnLocationCallBack onLocationCallBack = new GaodeMapLocationHelper.OnLocationCallBack() {
         @Override
-        public void onLocationSuccess(BDLocation location) {
+        public void onLocationSuccess(AMapLocation location) {
             //连续定位成功
             if (i == type_s){
                 if (getPresenter() != null) {
-                    getPresenter().getLocationSuccess(location,baiduLocationHelper);
+                    getPresenter().getLocationSuccess(location,gaodeMapLocationHelper);
                 }
             }
 
@@ -45,7 +45,7 @@ public class MainActivityM extends BaseModel<MainActivityC.Presenter> implements
             //连续定位失败
             if (i == type_s){
                 if (getPresenter() != null) {
-                    getPresenter().getLocationFailure(locType,baiduLocationHelper);
+                    getPresenter().getLocationFailure(locType,gaodeMapLocationHelper);
                 }
             }
         }
@@ -55,7 +55,7 @@ public class MainActivityM extends BaseModel<MainActivityC.Presenter> implements
     public void getLocation(int type) {
        this.type_s=type;
         initlocation();
-        baiduLocationHelper.startLocation();
+        gaodeMapLocationHelper.startLocation();
     }
 
     @Override
@@ -76,11 +76,11 @@ public class MainActivityM extends BaseModel<MainActivityC.Presenter> implements
     }
 
     private void initlocation() {
-        baiduLocationHelper.registerLocationCallback(onLocationCallBack);
+        gaodeMapLocationHelper.registerLocationCallback(onLocationCallBack);
     }
     @Override
     public void detachPresenter() {
         super.detachPresenter();
-        baiduLocationHelper.unRegisterLocationCallback(onLocationCallBack);
+        gaodeMapLocationHelper.unRegisterLocationCallback(onLocationCallBack);
     }
 }

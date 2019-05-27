@@ -7,6 +7,7 @@ import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.FragmentAnnex_C;
+import com.coahr.thoughtrui.mvp.model.Bean.AnnexDate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ public class FragmentAnnex_M extends BaseModel<FragmentAnnex_C.Presenter> implem
     public FragmentAnnex_M() {
         super();
     }
-  private   List<List<String>> listList=new ArrayList<>();
+    private AnnexDate annexDate=new AnnexDate();
 
     @Override
     public void getSubject(ProjectsDB projectsDB) {
@@ -41,19 +42,20 @@ public class FragmentAnnex_M extends BaseModel<FragmentAnnex_C.Presenter> implem
 
     @Override
     public void getFileList(final List<SubjectsDB> subjectsDBList, final ProjectsDB projectsDB) {
-        listList.clear();
+        annexDate.getListList().clear();
                     for (int i = 0; i < subjectsDBList.size(); i++) {
                         List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + projectsDB.getPid() + "/" + subjectsDBList.get(i).getNumber() + "_" + subjectsDBList.get(i).getHt_id());
-                        List<String>  stringList = new ArrayList<>();
+                        AnnexDate.AnnexFileList annexFileList=new AnnexDate.AnnexFileList();
+                        annexFileList.setShow(false);
                         if (fileList != null && fileList.size()>0) {
                             for (int j = 0; j <fileList.size() ; j++) {
-                                stringList.add(fileList.get(j)) ;
+                                annexFileList.getListFile().add(fileList.get(j));
                             }
                         }
-                        listList.add(stringList);
+                        annexDate.getListList().add(annexFileList);
                     }
-                    if (listList.size()>0) {
-                        getPresenter().getFileListSuccess(listList);
+                    if (annexDate !=null ) {
+                        getPresenter().getFileListSuccess(annexDate);
                     } else {
                         getPresenter().getFileListFailure("没有数据");
                     }

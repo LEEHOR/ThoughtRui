@@ -36,6 +36,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDialogFragment;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -62,7 +63,7 @@ public class MyFragment extends BaseFragment_not_padding implements View.OnClick
     RelativeLayout re_mytop;
 
     @BindView(R.id.re_action_plan) //行动报表
-    RelativeLayout reActionPlan;
+            RelativeLayout reActionPlan;
 
     @BindView(R.id.re_message_center)
     RelativeLayout re_message_center;  //消息中心
@@ -280,12 +281,22 @@ public class MyFragment extends BaseFragment_not_padding implements View.OnClick
         upload.setText(String.valueOf(unUpload));
         complete.setText(String.valueOf(unComplete));
         star.setText(String.valueOf(unStart));
-        if (unLoad+unComplete+unStart+unUpload > 0) {
-            tv_xx_count.setVisibility(View.VISIBLE);
-            tv_xx_count.setText((unLoad+unComplete+unStart+unUpload) + "");
+        if (!Constants.isOpenMessage) {
+            if (unLoad + unComplete + unStart + unUpload > 0) {
+                tv_xx_count.setVisibility(View.VISIBLE);
+              //  tv_xx_count.setText((unLoad + unComplete + unStart + unUpload) + "");
+            } else {
+                tv_xx_count.setVisibility(View.INVISIBLE);
+            }
         } else {
-            tv_xx_count.setVisibility(View.INVISIBLE);
+            if (Constants.notificationList.size() > 0) {
+                tv_xx_count.setVisibility(View.VISIBLE);
+               // tv_xx_count.setText((Constants.notificationList.size()) + "");
+            } else {
+                tv_xx_count.setVisibility(View.INVISIBLE);
+            }
         }
+
     }
 
     /**

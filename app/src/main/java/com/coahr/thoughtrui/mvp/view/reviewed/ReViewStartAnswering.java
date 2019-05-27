@@ -736,7 +736,7 @@ public class ReViewStartAnswering extends BaseFragment_not_padding<ReViewStartAn
         map.put("projectId", projectsDB.getPid());
         map.put("answerId", subjectsDB.getHt_id());
         map.put("number", subjectsDB.getNumber());
-        map.put("stage", projectsDB.getStage());
+        map.put("stage", subjectsDB.getStage());
         if (text != null) {
             String[] split = text.split("&");
             if (split != null && split.length > 0) {
@@ -1167,7 +1167,6 @@ public class ReViewStartAnswering extends BaseFragment_not_padding<ReViewStartAn
             }
         }).start();
 
-       // p.UpLoadFileList(ht_projectId, subjectsDB_now);
     }
 
     /**

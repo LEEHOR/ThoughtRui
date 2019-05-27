@@ -2,7 +2,7 @@ package com.coahr.thoughtrui.dagger.components;
 
 import com.coahr.thoughtrui.dagger.modules.AllActivityModule;
 import com.coahr.thoughtrui.dagger.modules.AllFragmentModule;
-import com.coahr.thoughtrui.dagger.modules.BaiduLocationModule;
+import com.coahr.thoughtrui.dagger.modules.GaodeLocationModule;
 import com.coahr.thoughtrui.dagger.modules.retrofit.ApiModule;
 import com.coahr.thoughtrui.dagger.modules.retrofit.OkHttpModule;
 import com.coahr.thoughtrui.dagger.modules.retrofit.RetrofitModule;
@@ -29,7 +29,7 @@ import dagger.android.support.AndroidSupportInjectionModule;
         ApiModule.class,
         OkHttpModule.class,
         RetrofitModule.class,
-        BaiduLocationModule.class
+       GaodeLocationModule.class
 })
 public  interface ApplicationComponents {
 

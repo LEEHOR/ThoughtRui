@@ -1,7 +1,7 @@
 package com.coahr.thoughtrui.mvp.constract;
 
-import com.baidu.location.BDLocation;
-import com.coahr.thoughtrui.Utils.BaiDuLocation.BaiduLocationHelper;
+import com.amap.api.location.AMapLocation;
+import com.coahr.thoughtrui.Utils.BaiDuLocation.GaodeMapLocationHelper;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.model.Bean.QuestionBean;
 
@@ -16,9 +16,9 @@ import java.util.Map;
 public interface StartProjectActivity_C {
     interface View extends BaseContract.View {
 
-        void getLocationSuccess(BDLocation location, BaiduLocationHelper baiduLocationHelper);
+        void getLocationSuccess(AMapLocation location, GaodeMapLocationHelper gaodeMapLocationHelper);
 
-        void getLocationFailure(int failure, BaiduLocationHelper baiduLocationHelper);
+        void getLocationFailure(int failure, GaodeMapLocationHelper gaodeMapLocationHelper);
 
         void getMainDataSuccess(QuestionBean questionBean);
 
@@ -40,9 +40,9 @@ public interface StartProjectActivity_C {
 
         void getLocation(int type);
 
-        void getLocationSuccess(BDLocation location, BaiduLocationHelper baiduLocationHelper);
+        void getLocationSuccess(AMapLocation location, GaodeMapLocationHelper gaodeMapLocationHelper);
 
-        void getLocationFailure(int failure, BaiduLocationHelper baiduLocationHelper);
+        void getLocationFailure(int failure, GaodeMapLocationHelper gaodeMapLocationHelper);
 
         void getMainData(Map map);
 

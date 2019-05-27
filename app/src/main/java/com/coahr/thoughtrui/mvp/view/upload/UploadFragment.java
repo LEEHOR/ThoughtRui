@@ -184,6 +184,8 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                 }
             }
         });
+
+       // NetWorkDialog("","",1);
     }
 
     @Override
@@ -637,10 +639,10 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
     private void callbackForServer(List<ProjectsDB> projectsDB, List<SubjectsDB> subjectsDB, List<String> picList, String text, String audioPath, int project_position, int subject_position) {
         Map map = new HashMap();
         map.put("projectId", projectsDB.get(project_position).getPid());
-        map.put("censor", subjectsDB.get(subject_position).getCensor());
+        //map.put("censor", subjectsDB.get(subject_position).getCensor());
         map.put("answerId", subjectsDB.get(subject_position).getHt_id());
         map.put("number", subjectsDB.get(subject_position).getNumber());
-        map.put("stage", projectsDB.get(project_position).getStage());
+        map.put("stage", subjectsDB.get(subject_position).getStage());
         if (text != null) {
             String[] split = text.split("&");
             if (split != null && split.length > 0) {
@@ -697,7 +699,6 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                                 : subjectsDB.get(subject_position).getNumber() + "_" + (i + 1) + ".png" + ";");
                     }
                 }
-                KLog.d("上传文件_回调", stringBuffer.toString());
                 map.put("picture", stringBuffer.toString());
                 map.put("pictureCount", picList.size());
             }

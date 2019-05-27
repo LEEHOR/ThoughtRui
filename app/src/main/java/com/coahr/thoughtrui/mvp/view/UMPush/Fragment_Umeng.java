@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.DensityUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
@@ -22,7 +23,10 @@ import com.coahr.thoughtrui.mvp.view.MainActivity;
 import com.coahr.thoughtrui.mvp.view.UMPush.adapter.NotificationAdapter;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
 import com.coahr.thoughtrui.mvp.view.home.MainFragment;
+import com.coahr.thoughtrui.mvp.view.reviewed.ReviewedFragment;
+import com.coahr.thoughtrui.mvp.view.upload.UploadFragment;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
+import com.socks.library.KLog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +38,7 @@ import javax.inject.Inject;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import butterknife.BindView;
 import me.yokeyword.fragmentation.SupportFragment;
 
@@ -51,7 +56,6 @@ public class Fragment_Umeng extends BaseFragment<Fragment_UmengP> implements Fra
     @BindView(R.id.umeng_rcyv)
     RecyclerView umeng_rcyv;
     private NotificationAdapter notificationAdapter;
-    private List<NotificationBean.Notification> notificationList = new ArrayList<>();
 
     public static Fragment_Umeng newInstance() {
         return new Fragment_Umeng();
@@ -69,14 +73,17 @@ public class Fragment_Umeng extends BaseFragment<Fragment_UmengP> implements Fra
 
     @Override
     public void initView() {
-        Constants.message=0;
         umeng_tittle.getLeftIcon().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 _mActivity.onBackPressed();
             }
         });
-        getDateBy_net();
+        if (!Constants.isOpenMessage) {
+            Constants.isOpenMessage = true;
+            getDateBy_net();
+        }
+
     }
 
     @Override
@@ -91,9 +98,29 @@ public class Fragment_Umeng extends BaseFragment<Fragment_UmengP> implements Fra
             }
         }
         umeng_rcyv.addItemDecoration(new SpacesItemDecoration(0, DensityUtils.dp2px(BaseApplication.mContext, 5)));
-        notificationAdapter.setCallBack(new NotificationAdapter.pushCallBack() {
+        if (Constants.isOpenMessage) {
+            if (Constants.notificationList.size() > 0) {
+                notificationAdapter.setNewData(Constants.notificationList);
+            }
+        }
+        notificationAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
-            public void itemClickLong(NotificationBean.Notification item) {
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                if (((NotificationBean.Notification) adapter.getData().get(position)).getType() == 1) {   //上传
+                    //JumpToMainActivity(1);
+                    JumpToUploadPage();
+                } else if (((NotificationBean.Notification) adapter.getData().get(position)).getType() == 2) { //超期
+                    JumpToProjectList(Constants.fragment_main);
+                } else if (((NotificationBean.Notification) adapter.getData().get(position)).getType() == 3) {  //审核
+                    //JumpToMainActivity(2);
+                    JumpToReview();
+                }
+            }
+        });
+
+        notificationAdapter.setOnItemChildLongClickListener(new BaseQuickAdapter.OnItemChildLongClickListener() {
+            @Override
+            public boolean onItemChildLongClick(BaseQuickAdapter adapter, View view, int position) {
                 new MaterialDialog.Builder(_mActivity)
                         .title(getResources().getString(R.string.dialog_tittle_7))
                         .content(getResources().getString(R.string.dialog_content_3))
@@ -108,29 +135,16 @@ public class Fragment_Umeng extends BaseFragment<Fragment_UmengP> implements Fra
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                if (notificationList != null) {
-                                    notificationList.remove(item);
-                                    notificationAdapter.setNewData(notificationList);
+                                if (Constants.notificationList != null) {
+                                    Constants.notificationList.remove(position);
+                                    notificationAdapter.notifyItemRemoved(position);
                                 }
                                 dialog.dismiss();
                             }
                         }).build().show();
-            }
-
-            @Override
-            public void itemClick(NotificationBean.Notification item) {
-                if (item != null) {
-                    if (item.getType() == 1) {   //上传
-                        JumpToMainActivity(1);
-                    } else if (item.getType() == 2) { //超期
-                        JumpToProjectList(Constants.fragment_main);
-                    } else if (item.getType() == 3) {  //审核
-                        JumpToMainActivity(2);
-                    }
-                }
+                return true;
             }
         });
-
     }
 
     @Override
@@ -138,29 +152,26 @@ public class Fragment_Umeng extends BaseFragment<Fragment_UmengP> implements Fra
 
         if (notificationBean != null) {
             if (notificationBean.getNotificationList() != null && notificationBean.getNotificationList().size() > 0) {
-                notificationList.addAll(notificationBean.getNotificationList());
+                Constants.notificationList.addAll(notificationBean.getNotificationList());
             }
         }
 
-        if (notificationList.size() > 0) {
-            notificationAdapter.setNewData(notificationList);
-        } else {
-
+        if (Constants.notificationList.size() > 0) {
+            notificationAdapter.setNewData(Constants.notificationList);
         }
 
     }
 
     @Override
     public void getNotification_DbFailure(String failure) {
-        if (notificationList.size() > 0) {
-            notificationAdapter.setNewData(notificationList);
-        } else {
+        if (Constants.notificationList.size() > 0) {
+            notificationAdapter.setNewData(Constants.notificationList);
         }
     }
 
     @Override
     public void getNotification_netSuccess(CensorBean censorBean) {
-        notificationList.clear();
+        Constants.notificationList.clear();
         if (censorBean != null && censorBean.getData().getList() != null && censorBean.getData().getList().size() > 0) {
             for (int i = 0; i < censorBean.getData().getList().size(); i++) {
                 NotificationBean.Notification notification = new NotificationBean.Notification();
@@ -168,7 +179,7 @@ public class Fragment_Umeng extends BaseFragment<Fragment_UmengP> implements Fra
                 notification.setNotificationTittle(getResources().getString(R.string.umeng_fragment_not_pass));
                 notification.setNotificationContent(getResources().getString(R.string.umeng_fragment_not_pass_detail) + (censorBean.getData().getList().get(i).getService_code()));
                 notification.setNotificationTime(System.currentTimeMillis());
-                notificationList.add(notification);
+                Constants.notificationList.add(notification);
             }
         }
         p.getNotification_Db(Constants.sessionId);
@@ -176,8 +187,9 @@ public class Fragment_Umeng extends BaseFragment<Fragment_UmengP> implements Fra
 
     @Override
     public void getNotification_netFailure(String failure) {
+        Constants.isOpenMessage = false;
         ToastUtils.showLong(failure);
-        p.getNotification_Db(Constants.sessionId);
+        //p.getNotification_Db(Constants.sessionId);
     }
 
     private void getDateBy_net() {
@@ -191,12 +203,26 @@ public class Fragment_Umeng extends BaseFragment<Fragment_UmengP> implements Fra
      * 跳转到历史项目
      */
     private void JumpToProjectList(int i) {
-        start(MainFragment.newInstance(2,2));
+        start(MainFragment.newInstance(0, 2));
     }
 
     private void JumpToMainActivity(int i) {
         Intent intent = new Intent(_mActivity, MainActivity.class);
         intent.putExtra("page", i);
         startActivity(intent);
+    }
+
+    /**
+     * 跳转到上传页面
+     */
+    private void JumpToUploadPage() {
+        start(UploadFragment.newInstance());
+    }
+
+    /**
+     * 跳转到审核
+     */
+    private void JumpToReview() {
+        start(ReviewedFragment.newInstance());
     }
 }

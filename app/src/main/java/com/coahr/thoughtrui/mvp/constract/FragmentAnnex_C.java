@@ -5,6 +5,7 @@ import android.app.Activity;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
+import com.coahr.thoughtrui.mvp.model.Bean.AnnexDate;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public interface FragmentAnnex_C {
 
         void getSubjectFailure(String failure);
 
-        void getFileListSuccess(List<List<String>> fileList);
+        void getFileListSuccess(AnnexDate annexDate);
 
         void getFileListFailure(String failure);
     }
@@ -39,7 +40,7 @@ public interface FragmentAnnex_C {
 
         void getFileList(List<SubjectsDB> subjectsDBList,ProjectsDB projectsDB);
 
-        void getFileListSuccess(List<List<String>> fileList);
+        void getFileListSuccess(AnnexDate annexDate);
 
         void getFileListFailure(String failure);
     }

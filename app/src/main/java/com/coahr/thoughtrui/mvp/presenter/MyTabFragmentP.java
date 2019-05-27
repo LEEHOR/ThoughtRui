@@ -1,6 +1,5 @@
 package com.coahr.thoughtrui.mvp.presenter;
 
-import com.baidu.location.BDLocation;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.mvp.Base.BasePresenter;
 import com.coahr.thoughtrui.mvp.constract.MyTabFragmentC;
