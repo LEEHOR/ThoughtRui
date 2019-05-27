@@ -30,6 +30,7 @@
     <!--粘性广播-->
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
 
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
     <!--日志读取-->
     <uses-permission android:name="android.permission.READ_LOGS" />
 
@@ -83,15 +84,7 @@
         <activity
             android:name=".mvp.view.StartProjectActivity"
             android:windowSoftInputMode="adjustResize" />
-        <!-- 百度定位AK鉴权 -->
-        <!-- meta-data需要写在application中 -->
-        <meta-data
-            android:name="com.baidu.lbsapi.API_KEY"
-            android:value="zRN4LdcsWnyGqEcZdeUC5NdrfWRGIe4f" /> <!-- http://lbsyun.baidu.com/apiconsole/key -->
-        <service
-            android:name="com.baidu.location.f"
-            android:enabled="true"
-            android:process=":remote"/>
+
 
         <!--高德定位-->
         <service android:name="com.amap.api.location.APSService"/>
@@ -126,6 +119,12 @@
                 <action android:name="TIMER_ACTION" />
             </intent-filter>
         </service>
+        <receiver android:name=".Utils.UpdateVersion.DownloadReceive">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+                <!--<action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED" />-->
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
