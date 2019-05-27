@@ -24,6 +24,7 @@ import com.coahr.thoughtrui.Utils.BaiDuLocation.GaodeMapLocationHelper;
 import com.coahr.thoughtrui.Utils.Permission.OnRequestPermissionListener;
 import com.coahr.thoughtrui.Utils.Permission.RequestPermissionUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
+import com.coahr.thoughtrui.Utils.UpdateVersion.CheckVersion;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseActivity;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
@@ -76,6 +77,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
         }
     };
     private Login_DialogFragment login_dialogFragment;
+    private CheckVersion checkVersion;
 
     @Override
     public MainActivityC.Presenter getPresenter() {
@@ -110,6 +112,12 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
             startService(intents);
         }*/
         EventBus.getDefault().register(this);
+        checkVersion();
+    }
+
+    private void checkVersion() {
+        checkVersion =new CheckVersion(this);
+        checkVersion.check();
     }
 
     @Override
