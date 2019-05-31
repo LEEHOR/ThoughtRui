@@ -55,6 +55,11 @@ public class Constants {
      * 本地存储总目录
      */
     public static String SAVE_DIR_BASE = SDCARD_PATH.concat("/com.thoughtRui.coahr/");
+
+    /**
+     * 版本更新下载
+     */
+    public static String SAVE_DOWNLOAD_APK=SAVE_DIR_BASE.concat("downLoadApk/");
     /**
      *
      */

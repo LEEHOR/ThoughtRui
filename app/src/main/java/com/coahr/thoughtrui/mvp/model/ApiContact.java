@@ -56,7 +56,6 @@ public class ApiContact {
     public static final String plan_report_submit = "app/report/submit.htm";
     //获取阿里云OSS临时安全令牌
     public static final String getOss = "http://leinuo.coahr.com:8085/research/app/answer/oss/token.htm";
-
     //版本更新检测
-    public static final String getVersion="app/version.htm";
+    public static final String getVersion = "app/version/new.htm";
 }

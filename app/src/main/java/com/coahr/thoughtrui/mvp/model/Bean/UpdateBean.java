@@ -6,26 +6,22 @@ package com.coahr.thoughtrui.mvp.model.Bean;
  */
 
 public class UpdateBean {
-
-
     /**
-     * isnew : 1
-     * msg : 请求成功！
      * result : 1
-     * url : http://android.woyaokanche.com:8082/51kanche/wykc.apk
+     * msg : 请求成功！
+     * data : {"version":"1.0.3","url":"http://leinuo.coahr.com:8085/research/RBJ掌上检核v1.0.3.apk"}
      */
 
-    private int isnew;
-    private String msg;
     private int result;
-    private String url;
+    private String msg;
+    private DataBean data;
 
-    public int getIsnew() {
-        return isnew;
+    public int getResult() {
+        return result;
     }
 
-    public void setIsnew(int isnew) {
-        this.isnew = isnew;
+    public void setResult(int result) {
+        this.result = result;
     }
 
     public String getMsg() {
@@ -36,19 +32,48 @@ public class UpdateBean {
         this.msg = msg;
     }
 
-    public int getResult() {
-        return result;
+    public DataBean getData() {
+        return data;
     }
 
-    public void setResult(int result) {
-        this.result = result;
+    public void setData(DataBean data) {
+        this.data = data;
     }
 
-    public String getUrl() {
-        return url;
+    public static class DataBean {
+        /**
+         * version : 1.0.3
+         * url : http://leinuo.coahr.com:8085/research/RBJ掌上检核v1.0.3.apk
+         */
+
+        private String version;
+        private String url;
+
+        public String getVersion() {
+            return version;
+        }
+
+        public void setVersion(String version) {
+            this.version = version;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+ /*   {
+        "result": 1,
+            "msg": "请求成功！",
+            "data": {
+        "version": "1.0.3",
+                "url": "http://leinuo.coahr.com:8085/research/RBJ掌上检核v1.0.3.apk"
     }
+    }*/
+
+
 }

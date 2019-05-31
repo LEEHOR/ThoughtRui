@@ -25,6 +25,7 @@ import com.coahr.thoughtrui.Utils.Permission.OnRequestPermissionListener;
 import com.coahr.thoughtrui.Utils.Permission.RequestPermissionUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.Utils.UpdateVersion.CheckVersion;
+import com.coahr.thoughtrui.Utils.UpdateVersion.InstallApk;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseActivity;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
@@ -107,7 +108,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(intent);
             startForegroundService(intents);
-        } else {
+        } else {  
             startService(intent);
             startService(intents);
         }*/
@@ -116,6 +117,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     }
 
     private void checkVersion() {
+        //InstallApk.openAPKFile(this,"/storage/emulated/0/com.thoughtRui.coahr/downLoadApk/RBJ掌上检核v1.0.3.apk");
         checkVersion =new CheckVersion(this);
         checkVersion.check();
     }
