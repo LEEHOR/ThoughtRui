@@ -29,9 +29,10 @@ public class GaodeMapLocationHelper {
     public void initGaodeMap() {
         mLocationClient = new AMapLocationClient(BaseApplication.mContext);
         AMapLocationClientOption option = new AMapLocationClientOption();
-        //option.setGpsFirst(true);
+        option.setGpsFirst(true);
         option.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
         option.setNeedAddress(true);
+        option.setInterval(2000);
         mLocationClient.setLocationOption(option);
 
         mLocationClient.setLocationListener(new AMapLocationListener() {

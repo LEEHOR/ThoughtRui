@@ -2,7 +2,6 @@ package com.coahr.thoughtrui.mvp.Base;
 
 import com.coahr.thoughtrui.commom.RxManager;
 import com.coahr.thoughtrui.mvp.model.ApiService;
-import com.socks.library.KLog;
 
 import java.lang.ref.WeakReference;
 

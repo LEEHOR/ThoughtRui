@@ -115,17 +115,13 @@ public class InstallApk {
         }
         String[] version1Array = version1.split("\\.");
         String[] version2Array = version2.split("\\.");
-        KLog.d("HomePageActivity", "version1Array=="+version1Array.length);
-        KLog.d("HomePageActivity", "version2Array=="+version2Array.length);
         int index = 0;
         // 获取最小长度值
         int minLen = Math.min(version1Array.length, version2Array.length);
+
         int diff = 0;
         // 循环判断每位的大小
-        KLog.d("HomePageActivity", "verTag2=2222="+version1Array[index]);
-        while (index < minLen
-                && (diff = Integer.parseInt(version1Array[index])
-                - Integer.parseInt(version2Array[index])) == 0) {
+        while (index < minLen && (diff = Integer.parseInt(version1Array[index]) -Integer.parseInt(version2Array[index])) == 0) {
             index++;
         }
         if (diff == 0) {

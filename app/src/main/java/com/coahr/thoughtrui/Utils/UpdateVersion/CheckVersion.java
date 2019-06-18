@@ -19,7 +19,6 @@ import com.coahr.thoughtrui.mvp.model.Bean.UpdateBean;
 import com.socks.library.KLog;
 
 import java.io.File;
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 

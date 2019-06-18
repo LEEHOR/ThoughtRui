@@ -108,7 +108,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(intent);
             startForegroundService(intents);
-        } else {  
+        } else {
             startService(intent);
             startService(intents);
         }*/

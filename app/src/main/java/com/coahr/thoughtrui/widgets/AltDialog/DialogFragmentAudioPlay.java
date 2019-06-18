@@ -201,10 +201,6 @@ public class DialogFragmentAudioPlay extends BaseDialogFragment implements View.
         prepare();
     }
 
-    @Override
-    public void initAnimate() {
-
-    }
 
     @Override
     public void iniWidow(Window window) {
