@@ -23,7 +23,6 @@ import retrofit2.Retrofit;
  * on 15:38
  */
 public class BaseModel<P extends BaseContract.Presenter> implements BaseContract.Model {
-
     @Inject
     Retrofit retrofit;
 
@@ -60,14 +59,13 @@ public class BaseModel<P extends BaseContract.Presenter> implements BaseContract
             mPresenter = null;
         }
     }
+
     //由于rxjava2.0  回调太多，本项目部分回调不与使用或处理趋于雷同，所以以下代码做简易化封装
     public <T> Flowable<T> createFlowable(SimpleFlowableOnSubscribe<T> simpleFlowableOnSubscribe ){
         return  Flowable.create(simpleFlowableOnSubscribe, BackpressureStrategy.BUFFER);
     }
 
-
     public class SimpleFlowableOnSubscribe<T> implements FlowableOnSubscribe<T> {
-
         private Call<T> call;
 
         public SimpleFlowableOnSubscribe(Call<T> call) {
@@ -123,10 +121,7 @@ public class BaseModel<P extends BaseContract.Presenter> implements BaseContract
             _onNext(t);
         }
 
-
         public abstract void _onNext(T t);
-
-
 
 //        public abstract void _onError(Throwable t);
     }

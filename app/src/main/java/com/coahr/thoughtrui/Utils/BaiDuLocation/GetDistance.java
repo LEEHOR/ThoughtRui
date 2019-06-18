@@ -13,8 +13,7 @@ public class GetDistance {
     static double DEF_R =6370693.5; // 地球半径
 
     //根据球面距离计算两点直接的距离
-    public static double GetLongDistance(double lon1, double lat1, double lon2, double lat2)
-    {
+    public static double GetLongDistance(double lon1, double lat1, double lon2, double lat2) {
         double ew1, ns1, ew2, ns2;
         double distance;
         // 角度转换为弧度
@@ -58,5 +57,4 @@ public class GetDistance {
         distance = Math.sqrt(dx * dx + dy * dy);
         return distance;
     }
-
 }

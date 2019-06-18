@@ -420,7 +420,6 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
     public void initData() {
         //获取打卡信息
         getData();
-       // p.startLocations(4);
         mHandler.post(runnable_location);
         mHandler.post(run_time); //开启时间线程
     }
@@ -637,7 +636,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
 
         mHandler.sendEmptyMessage(LOCATIONMESSAGE);
 
-        //gaodeMapLocationHelper.stopLocation();
+        gaodeMapLocationHelper.stopLocation();
 
     }
 
@@ -649,7 +648,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         if (failure==62){
             showGPSDialog("提示","请打开GPS开关");
         }
-       // p.startLocations(4);
+        p.startLocations(4);
     }
 
     @Override
