@@ -174,7 +174,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                     BigDecimal bd  = new   BigDecimal(temp);
                     double distance = bd.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
                     KLog.d("距离",distance);
-                    if (distance > 200) {
+                    if (distance > 600) {
                         isOnCircle = false;
                         //定位状态
                         //早班卡

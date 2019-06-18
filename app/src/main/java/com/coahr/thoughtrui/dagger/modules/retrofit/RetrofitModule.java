@@ -104,7 +104,6 @@ public class RetrofitModule {
         final TypeAdapter<String> STRING = new TypeAdapter<String>() {
             @Override
             public void write(JsonWriter out, String value) throws IOException {
-                // TODO Auto-generated method stub
                 if (value == null) {
                     out.nullValue();
                     return;
@@ -114,15 +113,12 @@ public class RetrofitModule {
 
             @Override
             public String read(JsonReader in) throws IOException {
-
-                // TODO Auto-generated method stub
                 if (in.peek() == JsonToken.NULL) {
                     in.nextNull();
                     return "";
                 }
                 return in.nextString();
             }
-
         };
 
         gsonBuilder.registerTypeAdapterFactory(TypeAdapters.newFactory(String.class,String.class,STRING));
@@ -136,6 +132,4 @@ public class RetrofitModule {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())//可以让apiservice中方法返回  observerble 与rxjava对接
                 .build();
     }
-
-
 }
