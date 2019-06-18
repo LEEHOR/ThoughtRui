@@ -161,7 +161,7 @@
     <string name="umeng_fragment_overdue_reminder_detail">你有项目已超期，经销商代码为:</string>
 
     <!--com.coahr.thoughtrui.mvp.view.upload.UploadFragment-->
-    <string name="upload_fragment_date_size">共有%1$d题, %2$d数据未上你有项目未上传，经销商代码为传</string>
+    <string name="upload_fragment_date_size">共有%1$d题, %2$d数据未上传</string>
 
     <!--com.coahr.thoughtrui.mvp.view.mydata.ChangePasswordFragment-->
     <string name="change_password_fragment_change_password">修改密码</string>
