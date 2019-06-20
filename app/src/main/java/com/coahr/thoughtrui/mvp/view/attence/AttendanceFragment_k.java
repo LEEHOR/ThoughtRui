@@ -730,7 +730,8 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         map.put("id", k_id);
         map.put("remark", remark);
         map.put("sessionId", Constants.sessionId);
-        map.put("token", Constants.devicestoken);
+//        map.put("token", Constants.devicestoken);
+
         p.sendRemark(map);
     }
 

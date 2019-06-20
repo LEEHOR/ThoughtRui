@@ -45,7 +45,7 @@ public class AnnexAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public void setAdapterList(AnnexDate a, int types) {
         KLog.d("tips3");
-        this.annexDate = a;
+        this.annexDate=a;
         this.type = types;
         getItemCount();
     }
@@ -161,14 +161,14 @@ public class AnnexAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                             ((MyAdapter_q) viewHolder).iv_zk.setImageResource(R.mipmap.back);
                             ((MyAdapter_q) viewHolder).iv_zk.setRotation(-90);
                             annexDate.getListList().get(i).setShow(true);
-                            //  KLog.d("tips1", zkList.toString(),listList.toString());
+                          //  KLog.d("tips1", zkList.toString(),listList.toString());
                         } else {
                             ((MyAdapter_q) viewHolder).annex_child_recycler.setVisibility(View.GONE);
                             ((MyAdapter_q) viewHolder).iv_zk.setImageResource(R.mipmap.back);
                             ((MyAdapter_q) viewHolder).iv_zk.setRotation(90);
                             //zkList.remove(listList.get(i));
                             annexDate.getListList().get(i).setShow(false);
-                            // KLog.d("tips2", zkList.toString());
+                           // KLog.d("tips2", zkList.toString());
                         }
                     }
                 });
@@ -313,9 +313,7 @@ public class AnnexAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public int getItemCount() {
-
-        return annexDate == null ? 0 : annexDate.getListList() == null ? 0 : annexDate.getListList().size();
-
+        return annexDate.getListList().size();
     }
 
     @Override
