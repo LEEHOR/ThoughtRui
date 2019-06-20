@@ -520,6 +520,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                 }
             } else if (type == 3) { //(上下班卡都打了)
                 //早班卡逻辑判断
+                k_id = k_bean.getId();
                 long inTime = k_bean.getInTime();
                 if (inTime != 0) {   //如果不为0则打卡了否则没打卡
                     //早班打卡信息显示
@@ -715,10 +716,11 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
      */
     private void PushAttendanceRemark(String remark) {
         Map<String, Object> map = new HashMap();
-        map.put("id", classId);
+        map.put("id", k_id);
         map.put("remark", remark);
         map.put("sessionId", Constants.sessionId);
-        map.put("token", Constants.devicestoken);
+//        map.put("token", Constants.devicestoken);
+
         p.sendRemark(map);
     }
 
