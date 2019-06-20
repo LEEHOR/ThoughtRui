@@ -108,10 +108,7 @@ public class Fill_in_blankDialog extends BaseDialogFragment {
         ed_input.findFocus();
     }
 
-    @Override
-    public void initAnimate() {
 
-    }
 
     @Override
     public void iniWidow(Window window) {

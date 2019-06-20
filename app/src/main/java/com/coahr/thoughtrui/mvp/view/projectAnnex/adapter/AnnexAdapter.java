@@ -313,8 +313,7 @@ public class AnnexAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        int count = (annexDate == null? 0:(annexDate.getListList() == null? 0:annexDate.getListList().size()));
-        return count;
+        return annexDate.getListList().size();
     }
 
     @Override

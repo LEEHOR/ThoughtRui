@@ -37,7 +37,7 @@ public abstract class BaseDialogFragment<P extends BaseContract.Presenter> exten
     protected int animate_style = R.style.top_in_out_animation;
     protected View addFootView;
     private View view;
-
+    public P mPresenter;
     public abstract P getPresenter();
 
     public abstract int bindLayout();
@@ -45,8 +45,6 @@ public abstract class BaseDialogFragment<P extends BaseContract.Presenter> exten
     public abstract void initView();
 
     public abstract void initData();
-
-    public abstract void initAnimate();
 
     public abstract void iniWidow(Window window);
 
@@ -57,8 +55,7 @@ public abstract class BaseDialogFragment<P extends BaseContract.Presenter> exten
     public void onCreate(@Nullable Bundle savedInstanceState) {
        // getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-
-        initAnimate();
+        mPresenter=getPresenter();
     }
 
     @Override

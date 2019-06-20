@@ -91,11 +91,6 @@ public class ProjectSuccessDialog extends BaseDialogFragment<ProjectSuccessDialo
     }
 
     @Override
-    public void initAnimate() {
-
-    }
-
-    @Override
     public void iniWidow(Window window) {
         if (window != null) {
             WindowManager.LayoutParams lp = new WindowManager.LayoutParams();

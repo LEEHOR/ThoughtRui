@@ -161,10 +161,6 @@ public class Login_DialogFragment extends BaseDialogFragment<LoginFragmentC.Pres
         clearAccount();
     }
 
-    @Override
-    public void initAnimate() {
-
-    }
 
     @Override
     public void iniWidow(Window window) {

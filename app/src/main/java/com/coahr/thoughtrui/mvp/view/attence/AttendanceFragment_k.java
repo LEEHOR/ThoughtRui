@@ -121,6 +121,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
     private View end_tv_bz;  //考勤备注
 
     private int closeStatus;
+    //打卡ID
     private String k_id;
     private AppCompatDialogFragment dialogs;
     private Attendance.DataBean.AttendanceBean k_bean;
@@ -231,6 +232,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         }
     };
     private MaterialDialog materialDialog_build;
+
 
     public static AttendanceFragment_k newInstance() {
         AttendanceFragment_k attendanceFragment_k = new AttendanceFragment_k();
@@ -428,11 +430,21 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
     @Override
     public void getMainDataSuccess(Attendance attendance) {
         if (attendance.getData() != null) {
+            String areaAddress = attendance.getData().getAreaAddress();
+            if (areaAddress == null) {
+                areaAddress = "";
+            }
+
+            String DataLocation = attendance.getData().getLocation();
+
+            if (DataLocation == null) {
+                DataLocation = "";
+            }
+
             closeStatus = attendance.getData().getCloseStatus();
             //获取门店的经纬度
             latitude = attendance.getData().getLatitude();
             longitude = attendance.getData().getLongitude();
-
             classId = attendance.getData().getClassId();
             dealerId = attendance.getData().getDealerId();
             projectId = attendance.getData().getProjectId();
@@ -452,11 +464,6 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
 
             type = attendance.getData().getType();
             k_bean = attendance.getData().getAttendance();
-
-            String areaAddress = attendance.getData().getAreaAddress();
-            areaAddress = areaAddress == null? "": areaAddress;
-            String location = attendance.getData().getLocation();
-            location = location == null? "": location;
             if (type == 1) { //渲染上班卡（没打卡）
                 //早班打卡信息隐藏
                 include_start.setVisibility(View.GONE);
@@ -471,6 +478,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
             } else if (type == 2) {  //（打了早班卡，下班卡没打）
                 if (k_bean != null) { //判断是否为空
                     k_id = k_bean.getId();
+                    KLog.d("打卡",k_id);
                     if (k_id != null && !k_id.equals("")) {
                         //早班卡逻辑判断
                         long inTime = k_bean.getInTime();
@@ -479,6 +487,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                             include_start.setVisibility(View.VISIBLE);
                             //早班打卡区域隐藏
                             push_in2_re.setVisibility(View.GONE);
+
                             //早班卡底部定位栏隐藏
                             in_bottom_address_in.setVisibility(View.GONE);
                             //早班卡打卡所在位置经纬度
@@ -495,7 +504,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                             if (startLocationStatus == 1 && startTimeStatus == 1) {  //在范围内
                                 start_tag.setImageResource(R.mipmap.kaoqinz);
                                 //早班打卡位置
-                                tv_start_location.setText(areaAddress + location);
+                                tv_start_location.setText(areaAddress + DataLocation);
                             } else if (startLocationStatus == -1 || startTimeStatus == -1) {
                                 start_tag.setImageResource(R.mipmap.kaoqinyc);
                                 new Thread(new Runnable() {
@@ -544,7 +553,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                     //图标
                     if (startLocationStatus == 1 && startTimeStatus == 1) {  //在范围内
                         start_tag.setImageResource(R.mipmap.kaoqinz);
-                        tv_start_location.setText(areaAddress + location);
+                        tv_start_location.setText(areaAddress + DataLocation);
                     } else if (startLocationStatus == -1 || startTimeStatus == -1) {
                         start_tag.setImageResource(R.mipmap.kaoqinyc);
                         new Thread(new Runnable() {
@@ -579,7 +588,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                     outLng = k_bean.getOutLng();
                     if (endLocationStatus == 1 && endTimeStatus == 1) {
                         //晚班打卡位置(正常就直接显示上班地址)
-                        tv_end_location.setText(areaAddress + location);
+                        tv_end_location.setText(areaAddress + DataLocation);
                         end_tag.setImageResource(R.mipmap.kaoqinz);
                     } else if (endLocationStatus == -1 || endTimeStatus == -1) {
                         end_tag.setImageResource(R.mipmap.kaoqinyc);
@@ -636,17 +645,19 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         //当前经纬度
         continueStla = location.getLatitude();
         continueStlo = location.getLongitude();
-
         //当前定位位置
         Location_now = location.getAddress();
         //把定位信息赋值
         if (!TextUtils.isEmpty(Location_now)) {
             location_address_in.setText(Location_now);
             location_address_out.setText(Location_now);
+
             mHandler.sendEmptyMessage(LOCATIONMESSAGE);
         }
 
-//        gaodeMapLocationHelper.stopLocation();
+
+        // gaodeMapLocationHelper.stopLocation();
+
     }
 
     @Override
@@ -657,7 +668,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         if (failure == 62) {
             showGPSDialog("提示", "请打开GPS开关");
         }
-//        p.startLocations(4);
+        // p.startLocations(4);
     }
 
     @Override

@@ -3,7 +3,6 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.socks.library.KLog;
 
@@ -31,7 +30,6 @@ public class GaodeMapLocationHelper {
         mLocationClient = new AMapLocationClient(BaseApplication.mContext);
         AMapLocationClientOption option = new AMapLocationClientOption();
         //option.setGpsFirst(true);
-        option.setInterval(2000);
         option.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
         option.setNeedAddress(true);
         mLocationClient.setLocationOption(option);
@@ -54,17 +52,15 @@ public class GaodeMapLocationHelper {
                     LOCATION_COUTNS++;
                     sb.append("\n检查位置更新次数：");
                     sb.append(String.valueOf(LOCATION_COUTNS));
-//                    if (aMapLocation.getStreet() != null
-//                            && !"".equals(aMapLocation.getStreet())) {
+                 //   if (aMapLocation.getStreet() != null && !"".equals(aMapLocation.getStreet())) {
                         for (OnLocationCallBack callBack : locationCallBacks) {
                             callBack.onLocationSuccess(aMapLocation);
                         }
-//                    } else {
-//                        for (OnLocationCallBack callBack : locationCallBacks) {
-//                            callBack.onLocationFailure(aMapLocation.getLocationType());
-//                            KLog.d("高德定位","ErrorCode ==== 0" + "onLocationFailure == " + aMapLocation.getLocationType());
-//                        }
-//                    }
+                  //  } else {
+                      //  for (OnLocationCallBack callBack : locationCallBacks) {
+                          //  callBack.onLocationFailure(aMapLocation.getLocationType());
+                      //  }
+                   // }
                 } else {  //失败
                     for (OnLocationCallBack callBack : locationCallBacks) {
                         callBack.onLocationFailure(aMapLocation.getLocationType());
