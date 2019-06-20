@@ -52,16 +52,15 @@ public class GaodeMapLocationHelper {
                     LOCATION_COUTNS++;
                     sb.append("\n检查位置更新次数：");
                     sb.append(String.valueOf(LOCATION_COUTNS));
-                    if (aMapLocation.getStreet() != null
-                            && !"".equals(aMapLocation.getStreet())) {
+                 //   if (aMapLocation.getStreet() != null && !"".equals(aMapLocation.getStreet())) {
                         for (OnLocationCallBack callBack : locationCallBacks) {
                             callBack.onLocationSuccess(aMapLocation);
                         }
-                    } else {
-                        for (OnLocationCallBack callBack : locationCallBacks) {
-                            callBack.onLocationFailure(aMapLocation.getLocationType());
-                        }
-                    }
+                  //  } else {
+                      //  for (OnLocationCallBack callBack : locationCallBacks) {
+                          //  callBack.onLocationFailure(aMapLocation.getLocationType());
+                      //  }
+                   // }
                 } else {  //失败
                     for (OnLocationCallBack callBack : locationCallBacks) {
                         callBack.onLocationFailure(aMapLocation.getLocationType());
