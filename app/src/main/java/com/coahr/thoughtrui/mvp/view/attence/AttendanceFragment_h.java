@@ -2,6 +2,7 @@ package com.coahr.thoughtrui.mvp.view.attence;
 
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -61,6 +62,9 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
     @BindView(R.id.tv_h_remark)
     TextView tv_h_remark;
     private String projectId;
+
+    //时间选择器选择的时间
+    private String mSelectTime = "";
 
     private TextView attendance_time_k;
     private ImageView iv_attendance_tag_start;
@@ -144,7 +148,7 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
                 //进度
                 tv_progress.setText(attendance.getProgress());
                 //时间
-                tv_select_time.setText(attendance.getDateTime());
+                tv_select_time.setText(TextUtils.isEmpty(mSelectTime)? attendance.getDateTime():mSelectTime);
                 //早班卡时间
                 tv_date_in.setText(Constants.zao_ka);
                 //晚班卡时间
@@ -249,6 +253,7 @@ public class AttendanceFragment_h extends BaseChildFragment<AttendanceFC_h.Prese
 
     @Override
     public void onDateSet(TimePickerDialog timePickerView, long millseconds) {
+        mSelectTime = TimeUtils.getStingYMD(millseconds);
         getHistory(Constants.ht_ProjectId, millseconds);
     }
 

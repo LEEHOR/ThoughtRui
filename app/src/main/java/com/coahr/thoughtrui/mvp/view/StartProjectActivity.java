@@ -2,13 +2,13 @@ package com.coahr.thoughtrui.mvp.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -44,8 +44,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-
-import androidx.appcompat.app.AppCompatDialogFragment;
 
 import butterknife.BindView;
 
@@ -135,7 +133,6 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
 
         } else {
             ToastUtils.showLong(getResources().getString(R.string.toast_13));
-
         }
     }
 
@@ -160,8 +157,6 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                 p.getLocation(2);
             }
         }, 1000 * 60 * 5);
-
-
     }
 
     @Override
@@ -235,7 +230,6 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                         subjectsDB.save();
                     }
                 }
-
             }
             p.getOfflineDate(Constants.ht_ProjectId);
         } else {
@@ -256,7 +250,6 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
 
     @Override
     public void getOfflineSuccess(int size, String ht_projectId, List<String> ht_list) {
-
         this.subject_size = size;
         htId_List.clear();
         this.htId_List = ht_list;
@@ -437,7 +430,6 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
 
     @Override
     protected void onPause() {
-
         if (gaodeMapLocationHelper_s != null) {
             gaodeMapLocationHelper_s.stopLocation();
             mHandler.removeCallbacksAndMessages(null);
@@ -447,7 +439,6 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
 
     @Override
     protected void onResume() {
-
         if (gaodeMapLocationHelper_s != null) {
             gaodeMapLocationHelper_s.stopLocation();
             p.getLocation(2);
