@@ -1,489 +1,543 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
+
     <com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar
         android:id="@+id/naviBar"
-        app:tittle="@string/project_detail_tittle"
-        android:layout_alignParentTop="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar>
-        <androidx.core.widget.NestedScrollView
-            android:layout_below="@+id/naviBar"
-            android:layout_above="@+id/bottom_menu"
-            android:layout_marginBottom="@dimen/dp_10"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        app:tittle="@string/project_detail_tittle"></com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_menu"
+        android:layout_below="@+id/naviBar"
+        android:layout_marginBottom="@dimen/dp_10">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorWhite"
+                android:padding="@dimen/edge_margin">
+
+                <RelativeLayout
+                    android:id="@+id/re_left_top"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:layout_toLeftOf="@+id/iv_include">
+
+                    <TextView
+                        android:id="@+id/project_detail_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/dp_20" />
+
+                    <TextView
+                        android:id="@+id/project_detail_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/project_detail_name"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:textColor="#B1B1B1" />
+
+                    <ProgressBar
+                        android:id="@+id/project_detail_progress"
+                        style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/project_detail_time"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:progressTint="@color/material_blue_550" />
+                </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/iv_include"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/re_left_top"
+                    android:layout_alignBottom="@+id/re_left_top"
+                    android:layout_alignParentRight="true"
+                    android:src="@mipmap/project_detail_incloud" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/re_left_top"
+                    android:layout_marginTop="@dimen/dp_20"
+                    android:orientation="horizontal">
+
                     <RelativeLayout
-                        android:padding="@dimen/edge_margin"
-                        android:background="@color/colorWhite"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                       <RelativeLayout
-                           android:id="@+id/re_left_top"
-                           android:layout_marginRight="@dimen/dp_10"
-                           android:layout_alignParentLeft="true"
-                            android:layout_toLeftOf="@+id/iv_include"
-                           android:layout_width="wrap_content"
-                           android:layout_height="wrap_content">
-                           <TextView
-                               android:id="@+id/project_detail_name"
-                               android:textColor="#333333"
-                               android:textSize="@dimen/dp_20"
-                               android:layout_width="wrap_content"
-                               android:layout_height="wrap_content" />
-                           <TextView
-                               android:id="@+id/project_detail_time"
-                               android:layout_marginTop="@dimen/dp_10"
-                               android:textColor="#B1B1B1"
-                               android:layout_below="@+id/project_detail_name"
-                               android:layout_width="wrap_content"
-                               android:layout_height="wrap_content" />
-                           <ProgressBar
-                               android:id="@+id/project_detail_progress"
-                               android:layout_below="@+id/project_detail_time"
-                               android:layout_marginTop="@dimen/dp_10"
-                               style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
-                               android:progressTint="@color/material_blue_550"
-                               android:layout_width="100dp"
-                               android:layout_height="wrap_content" />
-                       </RelativeLayout>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:visibility="gone">
+
                         <ImageView
-                            android:id="@+id/iv_include"
-                            android:layout_alignTop="@+id/re_left_top"
-                            android:layout_alignBottom="@+id/re_left_top"
-                            android:src="@mipmap/project_detail_incloud"
-                            android:layout_alignParentRight="true"
+                            android:id="@+id/iv_4"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                        <LinearLayout
-                            android:layout_marginTop="@dimen/dp_20"
-                            android:layout_below="@+id/re_left_top"
-                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/dp_40"
+                            android:paddingTop="@dimen/dp_5"
+                            android:paddingBottom="@dimen/dp_5"
+                            android:src="@mipmap/type" />
+
+                        <TextView
+                            android:id="@+id/tv_type"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-                            <RelativeLayout
-                                android:visibility="gone"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1">
-                                <ImageView
-                                    android:paddingTop="@dimen/dp_5"
-                                    android:paddingBottom="@dimen/dp_5"
-                                    android:id="@+id/iv_4"
-                                    android:src="@mipmap/type"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="@dimen/dp_40" />
-                                <TextView
-                                    android:textSize="@dimen/dp_14"
-                                    android:id="@+id/tv_type"
-                                    android:layout_toRightOf="@+id/iv_4"
-                                    android:layout_alignTop="@+id/iv_4"
-                                    android:textColor="#555555"
-                                    android:layout_marginLeft="@dimen/dp_10"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
-                                <TextView
-                                    android:textSize="@dimen/dp_14"
-                                    android:layout_toRightOf="@+id/iv_4"
-                                   android:layout_alignBottom="@+id/iv_4"
-                                    android:text="检核类型"
-                                    android:textColor="#C4C4C4"
-                                    android:layout_marginLeft="@dimen/dp_10"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
-                            </RelativeLayout>
-                            <RelativeLayout
-                                android:gravity="center"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1">
-                                <ImageView
-                                    android:paddingTop="@dimen/dp_5"
-                                    android:paddingBottom="@dimen/dp_5"
-                                    android:id="@+id/iv_5"
-                                    android:src="@mipmap/project_manager"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="@dimen/dp_40" />
-                                <TextView
-                                    android:textSize="@dimen/dp_14"
-                                    android:id="@+id/tv_project_manager"
-                                    android:layout_toRightOf="@+id/iv_5"
-                                    android:layout_alignTop="@+id/iv_5"
-                                    android:textColor="#555555"
-                                    android:layout_marginLeft="@dimen/dp_10"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
-                                <TextView
-                                    android:textSize="@dimen/sp_14"
-                                    android:layout_toRightOf="@+id/iv_5"
-                                    android:layout_alignBottom="@+id/iv_5"
-                                    android:text="@string/project_detail_manager"
-                                    android:textColor="#C4C4C4"
-                                    android:layout_marginLeft="@dimen/dp_10"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
-                            </RelativeLayout>
-                            <RelativeLayout
-                                android:gravity="center"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1">
-                                <ImageView
-                                    android:paddingTop="@dimen/dp_5"
-                                    android:paddingBottom="@dimen/dp_5"
-                                    android:id="@+id/iv_6"
-                                    android:src="@mipmap/project_user"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="@dimen/dp_40" />
-                                <TextView
-                                    android:textSize="@dimen/dp_14"
-                                    android:id="@+id/tv_project_user"
-                                    android:layout_toRightOf="@+id/iv_6"
-                                    android:layout_alignTop="@+id/iv_6"
-                                    android:textColor="#555555"
-                                    android:layout_marginLeft="@dimen/dp_10"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
-                                <TextView
-                                    android:textSize="@dimen/sp_14"
-                                    android:layout_toRightOf="@+id/iv_6"
-                                    android:layout_alignBottom="@+id/iv_6"
-                                    android:text="@string/project_detail_auditor"
-                                    android:textColor="#C4C4C4"
-                                    android:layout_marginLeft="@dimen/dp_10"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
-                            </RelativeLayout>
-                        </LinearLayout>
+                            android:layout_alignTop="@+id/iv_4"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:layout_toRightOf="@+id/iv_4"
+                            android:textColor="#555555"
+                            android:textSize="@dimen/dp_14" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/iv_4"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:layout_toRightOf="@+id/iv_4"
+                            android:text="检核类型"
+                            android:textColor="#C4C4C4"
+                            android:textSize="@dimen/dp_14" />
                     </RelativeLayout>
-                    <androidx.cardview.widget.CardView
-                        android:layout_marginLeft="@dimen/dp_10"
-                        android:layout_marginRight="@dimen/dp_10"
-                        app:cardCornerRadius="@dimen/dp_5"
-                       app:contentPadding="@dimen/edge_margin"
-                        app:cardBackgroundColor="#2D7DFF"
-                        android:layout_marginTop="@dimen/dp_10"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <LinearLayout
-                            android:layout_width="match_parent"
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:id="@+id/iv_5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/dp_40"
+                            android:paddingTop="@dimen/dp_5"
+                            android:paddingBottom="@dimen/dp_5"
+                            android:src="@mipmap/project_manager" />
+
+                        <TextView
+                            android:id="@+id/tv_project_manager"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-                                <TextView
-                                    android:textSize="@dimen/dp_14"
-                                    android:textColor="@color/colorWhite"
-                                    android:text="@string/project_detail_dealer_name_2"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
-                                <TextView
-                                    android:id="@+id/tv_cName"
-                                    android:textSize="@dimen/dp_14"
-                                    android:textColor="@color/colorWhite"
-                                    android:lines="1"
-                                    android:ellipsize="end"
-                                    android:layout_marginLeft="@dimen/dp_10"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
-                            </LinearLayout>
+                            android:layout_alignTop="@+id/iv_5"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:layout_toRightOf="@+id/iv_5"
+                            android:textColor="#555555"
+                            android:textSize="@dimen/dp_14" />
 
-                            <LinearLayout
-                                android:layout_marginTop="@dimen/dp_10"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-                                <TextView
-                                    android:textSize="@dimen/dp_14"
-                                    android:textColor="@color/colorWhite"
-                                    android:text="@string/project_detail_dealer_code_2"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
-                                <TextView
-                                    android:id="@+id/tv_cCode"
-                                    android:textSize="@dimen/dp_14"
-                                    android:textColor="@color/colorWhite"
-                                    android:lines="1"
-                                    android:ellipsize="end"
-                                    android:layout_marginLeft="@dimen/dp_10"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_marginTop="@dimen/dp_10"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-                                <TextView
-                                    android:textSize="@dimen/dp_14"
-                                    android:textColor="@color/colorWhite"
-                                    android:text="@string/project_detail_authorization_level"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
-                                <TextView
-                                    android:id="@+id/tv_cLevel"
-                                    android:textSize="@dimen/dp_14"
-                                    android:textColor="@color/colorWhite"
-                                    android:lines="1"
-                                    android:ellipsize="end"
-                                    android:layout_marginLeft="@dimen/dp_10"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_marginTop="@dimen/dp_10"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-                                <TextView
-                                    android:textSize="@dimen/dp_14"
-                                    android:textColor="@color/colorWhite"
-                                    android:text="@string/project_detail_address_1"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
-                                <TextView
-                                    android:id="@+id/tv_cAddress"
-                                    android:textSize="@dimen/dp_14"
-                                    android:textColor="@color/colorWhite"
-                                    android:lines="1"
-                                    android:ellipsize="end"
-                                    android:layout_marginLeft="@dimen/dp_10"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
-                            </LinearLayout>
-
-                            <View
-                                android:layout_marginTop="@dimen/dp_10"
-                                android:layout_width="match_parent"
-                                android:background="@color/colorWhite"
-                                android:layout_height="1dp"/>
-
-                            <LinearLayout
-                                android:layout_marginTop="@dimen/dp_10"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-                                <TextView
-                                    android:textSize="@dimen/dp_14"
-                                    android:textColor="@color/colorWhite"
-                                    android:text="@string/project_detail_upload_times"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
-                                <TextView
-                                    android:id="@+id/tv_time_cycle"
-                                    android:textSize="@dimen/dp_14"
-                                    android:textColor="@color/colorWhite"
-                                    android:lines="1"
-                                    android:ellipsize="end"
-                                    android:layout_marginLeft="@dimen/dp_10"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_marginTop="@dimen/dp_10"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-                                <TextView
-                                    android:textSize="@dimen/dp_14"
-                                    android:textColor="@color/colorWhite"
-                                    android:text="@string/project_detail_attendance_schedule"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
-                                <TextView
-                                    android:id="@+id/tv_Kclass"
-                                    android:textSize="@dimen/dp_14"
-                                    android:textColor="@color/colorWhite"
-                                    android:lines="1"
-                                    android:ellipsize="end"
-                                    android:layout_marginLeft="@dimen/dp_10"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_marginTop="@dimen/dp_10"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-                                <TextView
-                                    android:textSize="@dimen/dp_14"
-                                    android:textColor="@color/colorWhite"
-                                    android:text="@string/project_detail_access_state"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
-                                <TextView
-                                    android:id="@+id/tv_fstatus"
-                                    android:textSize="@dimen/dp_14"
-                                    android:textColor="@color/colorWhite"
-                                    android:lines="1"
-                                    android:ellipsize="end"
-                                    android:layout_marginLeft="@dimen/dp_10"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_marginTop="@dimen/dp_10"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-                                <TextView
-                                    android:textSize="@dimen/dp_14"
-                                    android:textColor="@color/colorWhite"
-                                    android:text="@string/project_detail_upload_state"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
-                                <TextView
-                                    android:id="@+id/tv_upload_status"
-                                    android:textSize="@dimen/dp_14"
-                                    android:textColor="@color/colorWhite"
-                                    android:lines="1"
-                                    android:ellipsize="end"
-                                    android:layout_marginLeft="@dimen/dp_10"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
-                            </LinearLayout>
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
-
-                    <androidx.cardview.widget.CardView
-                       android:layout_margin="@dimen/dp_10"
-                        app:cardCornerRadius="@dimen/dp_5"
-                        app:cardBackgroundColor="@color/colorWhite"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <LinearLayout
-                            android:padding="@dimen/edge_margin"
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
-                            <RelativeLayout
+                            android:layout_alignBottom="@+id/iv_5"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:layout_toRightOf="@+id/iv_5"
+                            android:text="@string/project_detail_manager"
+                            android:textColor="#C4C4C4"
+                            android:textSize="@dimen/sp_14" />
+                    </RelativeLayout>
 
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-                                <ImageView
-                                    android:id="@+id/iv_7"
-                                    android:layout_centerVertical="true"
-                                    android:layout_alignParentLeft="true"
-                                    android:src="@mipmap/project_detail_list"
-                                    android:layout_width="15dp"
-                                    android:layout_height="15dp" />
-                                <TextView
-                                    android:layout_toRightOf="@+id/iv_7"
-                                    android:layout_marginLeft="@dimen/dp_10"
-                                    android:textSize="@dimen/dp_14"
-                                    android:textColor="#555555"
-                                    android:text="@string/project_detail_entry_specification"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
-                            </RelativeLayout>
-                            <View
-                                android:layout_marginTop="@dimen/dp_10"
-                                android:layout_width="match_parent"
-                                android:background="@color/gray_2"
-                                android:layout_height="1dp"/>
-                            <TextView
-                                android:id="@+id/tv_project_describe"
-                                android:layout_marginTop="15dp"
-                                android:gravity="top"
-                                android:textSize="@dimen/dp_12"
-                                android:textColor="#666666"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center">
 
+                        <ImageView
+                            android:id="@+id/iv_6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/dp_40"
+                            android:paddingTop="@dimen/dp_5"
+                            android:paddingBottom="@dimen/dp_5"
+                            android:src="@mipmap/project_user" />
+
+                        <TextView
+                            android:id="@+id/tv_project_user"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignTop="@+id/iv_6"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:layout_toRightOf="@+id/iv_6"
+                            android:textColor="#555555"
+                            android:textSize="@dimen/dp_14" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/iv_6"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:layout_toRightOf="@+id/iv_6"
+                            android:text="@string/project_detail_auditor"
+                            android:textColor="#C4C4C4"
+                            android:textSize="@dimen/sp_14" />
+                    </RelativeLayout>
                 </LinearLayout>
+            </RelativeLayout>
 
-        </androidx.core.widget.NestedScrollView>
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_10"
+                app:cardBackgroundColor="#2D7DFF"
+                app:cardCornerRadius="@dimen/dp_5"
+                app:contentPadding="@dimen/edge_margin">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/project_detail_dealer_name_2"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/dp_14" />
+
+                        <TextView
+                            android:id="@+id/tv_cName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:ellipsize="end"
+                            android:lines="1"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/dp_14" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/project_detail_dealer_code_2"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/dp_14" />
+
+                        <TextView
+                            android:id="@+id/tv_cCode"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:ellipsize="end"
+                            android:lines="1"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/dp_14" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/project_detail_authorization_level"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/dp_14" />
+
+                        <TextView
+                            android:id="@+id/tv_cLevel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:ellipsize="end"
+                            android:lines="1"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/dp_14" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/project_detail_address_1"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/dp_14" />
+
+                        <TextView
+                            android:id="@+id/tv_cAddress"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:ellipsize="end"
+                            android:lines="1"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/dp_14" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:background="@color/colorWhite" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/project_detail_upload_times"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/dp_14" />
+
+                        <TextView
+                            android:id="@+id/tv_time_cycle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:ellipsize="end"
+                            android:lines="1"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/dp_14" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/project_detail_attendance_schedule"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/dp_14" />
+
+                        <TextView
+                            android:id="@+id/tv_Kclass"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:ellipsize="end"
+                            android:lines="1"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/dp_14" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/project_detail_access_state"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/dp_14" />
+
+                        <TextView
+                            android:id="@+id/tv_fstatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:ellipsize="end"
+                            android:lines="1"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/dp_14" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/project_detail_upload_state"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/dp_14" />
+
+                        <TextView
+                            android:id="@+id/tv_upload_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:ellipsize="end"
+                            android:lines="1"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/dp_14" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_10"
+                app:cardBackgroundColor="@color/colorWhite"
+                app:cardCornerRadius="@dimen/dp_5">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/edge_margin">
+
+                    <RelativeLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/iv_7"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:src="@mipmap/project_detail_list" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:layout_toRightOf="@+id/iv_7"
+                            android:text="@string/project_detail_entry_specification"
+                            android:textColor="#555555"
+                            android:textSize="@dimen/dp_14" />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:background="@color/gray_2" />
+
+                    <TextView
+                        android:id="@+id/tv_project_describe"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:gravity="top"
+                        android:textColor="#666666"
+                        android:textSize="@dimen/dp_12" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
     <FrameLayout
         android:id="@+id/bottom_menu"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/dp_5">
+
             <RelativeLayout
                 android:id="@+id/kaoqing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
+
                 <ImageView
-                    android:layout_alignParentTop="false"
-                   android:id="@+id/iv_1"
+                    android:id="@+id/iv_1"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_40"
-                    android:src="@mipmap/checking_in"
+                    android:layout_alignParentTop="false"
                     android:scaleType="fitCenter"
-                    />
+                    android:src="@mipmap/checking_in" />
+
                 <TextView
-                    android:text="@string/project_detail_attendance_card"
-                    android:layout_marginTop="@dimen/dp_5"
-                    android:textColor="#333333"
-                    android:textSize="@dimen/sp_14"
-                    android:layout_centerHorizontal="true"
-                   android:layout_below="@+id/iv_1"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/iv_1"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:text="@string/project_detail_attendance_card"
+                    android:textColor="#333333"
+                    android:textSize="@dimen/sp_14" />
             </RelativeLayout>
+
             <RelativeLayout
                 android:id="@+id/fangwen"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
+
                 <ImageView
-                   android:id="@+id/iv_2"
+                    android:id="@+id/iv_2"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_40"
-                    android:src="@mipmap/visit"
                     android:scaleType="fitCenter"
-                    />
+                    android:src="@mipmap/visit" />
+
                 <TextView
-                    android:text="@string/project_detail_start_checking_2"
-                    android:layout_marginTop="@dimen/dp_5"
-                    android:textColor="#333333"
-                    android:textSize="@dimen/sp_14"
-                    android:layout_centerHorizontal="true"
-                    android:layout_below="@+id/iv_2"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/iv_2"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:text="@string/project_detail_start_checking_2"
+                    android:textColor="#333333"
+                    android:textSize="@dimen/sp_14" />
             </RelativeLayout>
+
             <RelativeLayout
                 android:id="@+id/attachment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
+
                 <ImageView
                     android:id="@+id/iv_3"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_40"
-                    android:src="@mipmap/accessory"
                     android:scaleType="fitCenter"
-                    />
+                    android:src="@mipmap/accessory" />
+
                 <TextView
-                    android:text="@string/project_detail_browse_attachment"
-                    android:layout_marginTop="@dimen/dp_5"
-                    android:textColor="#333333"
-                    android:textSize="@dimen/sp_14"
-                    android:layout_centerHorizontal="true"
-                    android:layout_below="@+id/iv_3"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/iv_3"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:text="@string/project_detail_browse_attachment"
+                    android:textColor="#333333"
+                    android:textSize="@dimen/sp_14" />
             </RelativeLayout>
 
         </LinearLayout>

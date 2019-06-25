@@ -175,7 +175,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                     double temp = GetDistance.GetLongDistance(continueStlo, continueStla, longitude, latitude) / 1000;
                     BigDecimal bd = new BigDecimal(temp);
                     double distance = bd.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-                    KLog.d("距离", distance);
+                    KLog.d("高德定位", "距离 == " + distance);
                     if (distance > 600) {
                         isOnCircle = false;
                         //定位状态
@@ -194,6 +194,8 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                         location_message_out.setTextColor(Color.rgb(153, 153, 153));
                         location_message_out.setText(getResources().getString(R.string.attendance_limits));
                     }
+
+                    KLog.e("高德定位", "isOnCircle == " + isOnCircle);
                     break;
                 case zao_daka:
                     String s = msg.obj.toString();
@@ -294,6 +296,10 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                     ToastUtils.showLong(getResources().getString(R.string.toast_12));
                     return;
                 }
+                if (latitude == 0 || longitude == 0){
+                    ToastUtils.showLong(getResources().getString(R.string.toast_41));
+                    return;
+                }
                 PushCard();
             }
         });
@@ -313,7 +319,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                 }
             }
         });
-//晚班卡重新定位
+        //晚班卡重新定位
         relocation_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -337,6 +343,11 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                     ToastUtils.showLong(getResources().getString(R.string.toast_12));
                     return;
                 }
+                if (latitude == 0 || longitude == 0){
+                    ToastUtils.showLong(getResources().getString(R.string.toast_41));
+                    return;
+                }
+
                 if (isOnCircle) {
                     PushCard();
                 } else {
@@ -374,6 +385,11 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                     ToastUtils.showLong(getResources().getString(R.string.toast_12));
                     return;
                 }
+                if (latitude == 0 || longitude == 0){
+                    ToastUtils.showLong(getResources().getString(R.string.toast_41));
+                    return;
+                }
+
                 if (isOnCircle) {
                     PushCard();
                 } else {
@@ -524,7 +540,6 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                         in_bottom_address.setVisibility(View.VISIBLE);
                         //晚班卡打卡信息隐藏
                         include_end.setVisibility(View.GONE);
-
                     }
                 }
             } else if (type == 3) { //(上下班卡都打了)
@@ -604,7 +619,6 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                 }
             }
         }
-
     }
 
     @Override
@@ -645,16 +659,16 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         //当前经纬度
         continueStla = location.getLatitude();
         continueStlo = location.getLongitude();
+
         //当前定位位置
         Location_now = location.getAddress();
         //把定位信息赋值
         if (!TextUtils.isEmpty(Location_now)) {
             location_address_in.setText(Location_now);
             location_address_out.setText(Location_now);
-
-            mHandler.sendEmptyMessage(LOCATIONMESSAGE);
         }
 
+        mHandler.sendEmptyMessage(LOCATIONMESSAGE);
 
         // gaodeMapLocationHelper.stopLocation();
 

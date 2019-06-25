@@ -26,8 +26,7 @@
             android:layout_marginLeft="@dimen/dp_10"
             android:id="@+id/iv_attendance_tag_end"
             android:layout_width="35dp"
-            android:layout_height="20dp"
-            android:src="@mipmap/kaoqinz"/>
+            android:layout_height="20dp"/>
         <TextView
             android:id="@+id/tv_bzhu"
             android:textSize="@dimen/dp_14"
