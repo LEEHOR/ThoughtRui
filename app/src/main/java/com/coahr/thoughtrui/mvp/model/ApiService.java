@@ -8,6 +8,7 @@ import com.coahr.thoughtrui.mvp.model.Bean.CensorBean;
 import com.coahr.thoughtrui.mvp.model.Bean.CensorInfoList;
 import com.coahr.thoughtrui.mvp.model.Bean.ChangePassWord;
 import com.coahr.thoughtrui.mvp.model.Bean.Dealer_List;
+import com.coahr.thoughtrui.mvp.model.Bean.DeleteProjectBean;
 import com.coahr.thoughtrui.mvp.model.Bean.FeedBack;
 import com.coahr.thoughtrui.mvp.model.Bean.HomeDataList;
 import com.coahr.thoughtrui.mvp.model.Bean.LoginBean;
@@ -29,7 +30,6 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.QueryMap;
 
@@ -204,11 +204,18 @@ public interface  ApiService {
     Call<RTSL>RTSL (@FieldMap Map<String,Object> para);
 
     /**
-     * 搜索请求
+     * 通知消息
      */
     @FormUrlEncoded
     @POST(ApiContact.notification)
-    Call<CensorBean>Notification (@FieldMap Map<String,Object> para);
+    Call<CensorBean>Notification(@FieldMap Map<String,Object> para);
+
+    /**
+     * 刪除工程
+     */
+    @FormUrlEncoded
+    @POST(ApiContact.delete_project)
+    Call<DeleteProjectBean> deleteProject(@FieldMap Map<String,Object> para);
 
     /**
      * 提报列表

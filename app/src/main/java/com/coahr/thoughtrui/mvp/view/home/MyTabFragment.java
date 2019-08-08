@@ -1,6 +1,6 @@
 package com.coahr.thoughtrui.mvp.view.home;
 
-import android.content.Intent;
+import android.content.ContentValues;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,13 +12,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
+import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.DBbean.UsersDB;
 import com.coahr.thoughtrui.R;
+import com.coahr.thoughtrui.Utils.AlertDialogUtil;
 import com.coahr.thoughtrui.Utils.DensityUtils;
+import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.NetWorkAvailable;
 import com.coahr.thoughtrui.Utils.PreferenceUtils;
@@ -27,11 +31,9 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
 import com.coahr.thoughtrui.mvp.constract.MyTabFragmentC;
-import com.coahr.thoughtrui.mvp.model.Bean.Event_Main;
 import com.coahr.thoughtrui.mvp.model.Bean.HomeDataList;
 import com.coahr.thoughtrui.mvp.model.Bean.UnDownLoad;
 import com.coahr.thoughtrui.mvp.presenter.MyTabFragmentP;
-import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
 import com.coahr.thoughtrui.mvp.view.home.adapter.MyTabFOffLineAdapter;
 import com.coahr.thoughtrui.mvp.view.home.adapter.MyTabFOnLineAdapter;
@@ -39,9 +41,6 @@ import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
 import com.coahr.thoughtrui.widgets.SelectImageView;
 import com.coahr.thoughtrui.widgets.SelectTextView;
 import com.socks.library.KLog;
-
-import org.greenrobot.eventbus.EventBus;
-import org.litepal.crud.callback.UpdateOrDeleteCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -101,6 +100,9 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
     private String DownLoadProject_Id;
     private List<HomeDataList.DataBean.AllListBean> allListBeanList = new ArrayList<>();
     private List<String> db_list = new ArrayList<>();
+
+    private List<ProjectsDB> mProjectsDBS;
+    private int selectedPosition = -1;
 
     @Override
     public MyTabFragmentC.Presenter getPresenter() {
@@ -181,7 +183,6 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
             tab_on_recyclerView.addItemDecoration(spacesItemDecoration);
         } else {
             tab_off_recyclerView.removeItemDecoration(spacesItemDecoration);
-
         }
 
         if (tab_off_recyclerView.getItemDecorationCount() == 0) {
@@ -207,7 +208,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
 
             @Override
             public void newListLongClick(HomeDataList.DataBean.AllListBean newListBean) {
-                showDialog(getResources().getString(R.string.dialog_tittle_2), getResources().getString(R.string.dialog_content_2), false);
+//                showDialog(getResources().getString(R.string.dialog_tittle_2), getResources().getString(R.string.dialog_content_2), false);
             }
 
             @Override
@@ -216,8 +217,9 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
             }
 
             @Override
-            public void completeLongClick(HomeDataList.DataBean.AllListBean completeListBean) {
-                showDialog(getResources().getString(R.string.dialog_tittle_3), getResources().getString(R.string.dialog_content_3), true);
+            public void completeLongClick(HomeDataList.DataBean.AllListBean completeListBean, int position) {
+//                showDialog(getResources().getString(R.string.dialog_tittle_3), getResources().getString(R.string.dialog_content_3), true);
+                showBottomDialog(completeListBean.getId(), position);
             }
 
             @Override
@@ -226,8 +228,9 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
             }
 
             @Override
-            public void unCompleteLongClick(HomeDataList.DataBean.AllListBean unCompleteListBean) {
-                showDialog(getResources().getString(R.string.dialog_tittle_4), getResources().getString(R.string.dialog_content_2), false);
+            public void unCompleteLongClick(HomeDataList.DataBean.AllListBean unCompleteListBean, int position) {
+//                showDialog(getResources().getString(R.string.dialog_tittle_4), getResources().getString(R.string.dialog_content_2), false);
+                showBottomDialog(unCompleteListBean.getId(), position);
             }
 
             @Override
@@ -251,7 +254,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
 
             @Override
             public void newListLongClick(ProjectsDB projectsDB) {
-                showDialog(getResources().getString(R.string.dialog_tittle_2), getResources().getString(R.string.dialog_content_2), false);
+//                showDialog(getResources().getString(R.string.dialog_tittle_2), getResources().getString(R.string.dialog_content_2), false);
             }
 
             @Override
@@ -260,8 +263,9 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
             }
 
             @Override
-            public void completeLongClick(ProjectsDB projectsDB) {
-                showDialog(getResources().getString(R.string.dialog_tittle_3), getResources().getString(R.string.dialog_content_3), true);
+            public void completeLongClick(ProjectsDB projectsDB, int position) {
+//                showDialog(getResources().getString(R.string.dialog_tittle_3), getResources().getString(R.string.dialog_content_3), true);
+                showBottomDialog(projectsDB.getPid(), position);
             }
 
             @Override
@@ -270,8 +274,9 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
             }
 
             @Override
-            public void unCompleteLongClick(ProjectsDB projectsDB) {
-                showDialog(getResources().getString(R.string.dialog_tittle_4), getResources().getString(R.string.dialog_content_2), false);
+            public void unCompleteLongClick(ProjectsDB projectsDB, int position) {
+//                showDialog(getResources().getString(R.string.dialog_tittle_4), getResources().getString(R.string.dialog_content_2), false);
+                showBottomDialog(projectsDB.getPid(), position);
             }
 
             @Override
@@ -284,7 +289,24 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
             public void unDownLoadLongClick(ProjectsDB projectsDB) {
             }
         });
+    }
 
+    /**
+     * 底部警告Dialog
+     */
+    private void showBottomDialog(String projectId, int position) {
+        AlertDialogUtil.showProjectDeleteDialog(_mActivity, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog(/*getResources().getString(R.string.dialog_tittle_4), getResources().getString(R.string.dialog_content_2), */false, projectId, position);
+            }
+        }, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //删除所有
+                showDialog(/*getResources().getString(R.string.dialog_tittle_4), getResources().getString(R.string.dialog_content_2), */true, projectId, position);
+            }
+        });
     }
 
     @Override
@@ -350,9 +372,9 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
      */
     @Override
     public void getTypeDateSuccess(List<ProjectsDB> projectsDB) {
-
+        mProjectsDBS = projectsDB;
         myTabFOffLineAdapter.setType(type);
-        myTabFOffLineAdapter.setHomeDataList(projectsDB, BaseApplication.mContext);
+        myTabFOffLineAdapter.setHomeDataList(mProjectsDBS, BaseApplication.mContext);
         change_offline();
         isLoad = false;
         myTab_swipe.setRefreshing(false);
@@ -395,6 +417,24 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
     @Override
     public void getSaveDbFailure() {
 
+    }
+
+    @Override
+    public void deleteProjectSuccess(String success) {
+        ToastUtils.showShort("删除成功");
+        //移除当前数据
+        if (selectedPosition != -1) {
+            allListBeanList.remove(selectedPosition);
+        }
+
+        if (tabFAdapter != null) {
+            tabFAdapter.setHomeDataList(allListBeanList, BaseApplication.mContext);
+        }
+    }
+
+    @Override
+    public void deleteProjectFailure(String failure) {
+        ToastUtils.showShort(failure);
     }
 
     @Override
@@ -457,6 +497,7 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
         if (haslogin()) {
             Map<String, Object> map = new HashMap<>();
             map.put("sessionId", Constants.sessionId);
+            KLog.e("测试代码", "sessionId == " + Constants.sessionId);
             p.getHomeData(map);
         } else {
             isLoad = false;
@@ -488,12 +529,15 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
         tab_on_recyclerView.setVisibility(View.GONE);
     }
 
-    private void showDialog(String title, String Content, final boolean delete) {
+    private void showDialog(/*String title, String Content, */final boolean isDeleteAll, String projectId, int position) {
+        selectedPosition = position;
+        KLog.e("测试代码", "projectId == " + projectId);
+
         new MaterialDialog.Builder(_mActivity)
-                .title(title)
-                .content(Content)
+                .title("警告：如未上传，删除后数据会永久丢失！")
+//                .content(Content)
+                .positiveText(getResources().getString(R.string.confirm_delete))
                 .negativeText(getResources().getString(R.string.cancel))
-                .positiveText(getResources().getString(R.string.resume))
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -503,27 +547,77 @@ public class MyTabFragment extends BaseChildFragment<MyTabFragmentC.Presenter> i
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        if (delete) {
+                        //更新本地数据库数据
+                        updateLocalData(projectId, isDeleteAll);
 
+                        //删除项目
+                        if (isDeleteAll) {
+                            if (isNetworkAvailable()) {
+                                Map map = new HashMap();
+                                map.put("projectId", projectId);
+                                p.deleteProject(map);
+                            } else {
+                                if (mProjectsDBS != null && mProjectsDBS.size() > 0 && selectedPosition != -1) {
+                                    mProjectsDBS.remove(selectedPosition);
+                                }
+                                //离线数据删除后，更新UI
+                                if (myTabFOffLineAdapter != null) {
+                                    myTabFOffLineAdapter.setHomeDataList(mProjectsDBS, BaseApplication.mContext);
+                                }
+                            }
                         }
+
                         dialog.dismiss();
                     }
                 }).build().show();
     }
 
     /**
+     * 更新本地数据库数据
+     */
+    private void updateLocalData(String projectId, boolean isDeleteAll) {
+        List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", projectId);
+        if (projectsDBS != null && projectsDBS.size() > 0) {
+            //获取该项目的所属题目集合
+            List<SubjectsDB> subjectsDBS = projectsDBS.get(0).getSubjectsDBList();
+
+            if (isDeleteAll) {
+                //删除工程
+                int deleteProject = DataBaseWork.DBDeleteById(ProjectsDB.class, projectsDBS.get(0).getId());
+                KLog.e("测试代码", "deleteProject == " + deleteProject);
+
+                if (subjectsDBS != null && subjectsDBS.size() > 0) {
+
+                    //删除本地文件
+                    FileIOUtils.deleteFile(Constants.SAVE_DIR_PROJECT_Document + projectId);
+
+                    //更新每个题目数据
+                    for (SubjectsDB subjectsDB : subjectsDBS) {
+                        int deleteSubjectsDB = DataBaseWork.DBDeleteById(SubjectsDB.class, subjectsDB.getId());
+                        KLog.e("测试代码", "deleteSubjectsDB == " + deleteSubjectsDB);
+                    }
+                }
+            } else {
+                if (subjectsDBS != null && subjectsDBS.size() > 0) {
+                    //删除每个题目的图片
+                    for (SubjectsDB subjectsDB : subjectsDBS) {
+                        FileIOUtils.deleteFile(Constants.SAVE_DIR_PROJECT_Document + projectId + "/" + subjectsDB.getNumber() + "_" + subjectsDB.getHt_id() + "/" + "picture");
+                        FileIOUtils.deleteFile(Constants.SAVE_DIR_PROJECT_Document + projectId + "/" + subjectsDB.getNumber() + "_" + subjectsDB.getHt_id() + "/" + "audio");
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * 跳转到详情页
-     *
-     * @param projectId
      */
     private void JumpToProject(String projectId) {
         if (haslogin()) {
             //((SupportFragment)getParentFragment())
             /*((SupportFragment)getParentFragment()).*/
-            KLog.d("跳转1", "详情页");
             ((SupportFragment) getParentFragment()).start(ProjectDetailFragment.newInstance(
                     projectId, "", "", 2));
-            KLog.d("跳转1", "详情页");
            /* Intent intent = new Intent(getActivity(), ConstantsActivity.class);
             intent.putExtra("from", Constants.MyTabFragmentCode);
             intent.putExtra("templateId", "");

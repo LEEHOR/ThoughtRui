@@ -5,6 +5,7 @@ import com.coahr.thoughtrui.Utils.BaiDuLocation.GaodeMapLocationHelper;
 import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.MainActivityC;
 import com.coahr.thoughtrui.mvp.model.Bean.RTSL;
+import com.socks.library.KLog;
 
 
 import java.util.Map;

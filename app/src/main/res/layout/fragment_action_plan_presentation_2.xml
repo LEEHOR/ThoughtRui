@@ -18,6 +18,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:focusableInTouchMode="true"
             android:orientation="vertical">
 
             <TextView
@@ -104,7 +105,7 @@
                 android:textSize="@dimen/dp_14" />
 
             <TextView
-                android:id="@+id/plan_2_tv_executor"
+                android:id="@+id/plan_2_et_executor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorWhite"
@@ -127,18 +128,66 @@
                 android:entries="@array/select_plan"
                 android:padding="@dimen/edge_margin" />
 
+            <LinearLayout
+                android:id="@+id/ll_plan_status_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/edge_margin"
+                android:paddingTop="@dimen/edge_margin"
+                android:paddingRight="@dimen/edge_margin"
+                android:visibility="visible">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="@dimen/dp_5">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/edge_margin">
+
+                        <TextView
+                            android:id="@+id/plan_tv_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentTop="true"
+                            android:text="@string/plan_1_15"
+                            android:textColor="#333333" />
+
+                        <TextView
+                            android:id="@+id/et_plan_status"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/plan_tv_status"
+                            android:background="@drawable/bg_fff_background"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
+                            android:gravity="top"
+                            android:hint="请输入100字之内的内容"
+                            android:lines="5"
+                            android:maxLength="100"
+                            android:padding="@dimen/dp_5"
+                            android:textColor="#666666"
+                            android:textSize="@dimen/dp_14" />
+
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+
             <include layout="@layout/layout_plan_presentation_photo" />
 
             <include layout="@layout/layout_plan_presentation_recycler" />
 
             <TextView
                 android:id="@+id/plan_2_tv_submit"
-                android:layout_marginBottom="@dimen/dp_20"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dp_60"
                 android:layout_marginTop="@dimen/dp_20"
                 android:layout_marginRight="@dimen/dp_60"
+                android:layout_marginBottom="@dimen/dp_20"
                 android:background="@drawable/bg_blue_white_frame_background"
                 android:gravity="center"
                 android:padding="@dimen/dp_10"

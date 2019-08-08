@@ -1,5 +1,7 @@
 package com.coahr.thoughtrui.DBbean;
 
+import androidx.annotation.NonNull;
+
 import org.litepal.crud.DataSupport;
 
 /**
@@ -9,27 +11,47 @@ import org.litepal.crud.DataSupport;
  */
 public class AnswersDB extends DataSupport {
 
-    private  int id;
+
+    private  String answerId;
+
+    public String getAnswerId() {
+        return answerId;
+    }
+
+    public void setAnswerId(String answerId) {
+        this.answerId = answerId;
+    }
+
     private  String answer;
-    private  String remakes;
-    private SubjectsDB subjectsDB;
+//    private  String remakes;
+//    private SubjectsDB subjectsDB;
+    private String subjectsDBId;
+
+    @Override
+    public String toString() {
+        return "AnswersDB{" +
+                "answerId='" + answerId + '\'' +
+                ", answer='" + answer + '\'' +
+                ", subjectsDBId='" + subjectsDBId + '\'' +
+                '}';
+    }
+
+    public String getSubjectsDBId() {
+        return subjectsDBId;
+    }
+
+    public void setSubjectsDBId(String subjectsDBId) {
+        this.subjectsDBId = subjectsDBId;
+    }
 
     public AnswersDB() {
     }
 
-    public AnswersDB(int id, String answer, String remakes, SubjectsDB subjectsDB) {
-        this.id = id;
+    public AnswersDB(String answerId, String answer/*, String remakes, SubjectsDB subjectsDB*/) {
+        this.answerId = answerId;
         this.answer = answer;
-        this.remakes = remakes;
-        this.subjectsDB = subjectsDB;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+//        this.remakes = remakes;
+//        this.subjectsDB = subjectsDB;
     }
 
     public String getAnswer() {
@@ -40,19 +62,21 @@ public class AnswersDB extends DataSupport {
         this.answer = answer;
     }
 
-    public String getRemakes() {
-        return remakes;
-    }
+//    public String getRemakes() {
+//        return remakes;
+//    }
+//
+//    public void setRemakes(String remakes) {
+//        this.remakes = remakes;
+//    }
+//
+//    public SubjectsDB getSubjectsDB() {
+//        return subjectsDB;
+//    }
+//
+//    public void setSubjectsDB(SubjectsDB subjectsDB) {
+//        this.subjectsDB = subjectsDB;
+//    }
 
-    public void setRemakes(String remakes) {
-        this.remakes = remakes;
-    }
 
-    public SubjectsDB getSubjectsDB() {
-        return subjectsDB;
-    }
-
-    public void setSubjectsDB(SubjectsDB subjectsDB) {
-        this.subjectsDB = subjectsDB;
-    }
 }

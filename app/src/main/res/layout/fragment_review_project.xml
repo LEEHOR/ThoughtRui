@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -30,8 +29,6 @@
             android:orientation="vertical">
             <TextView
                 android:padding="@dimen/dp_5"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
                 android:id="@+id/project_detail_titlle"
                 android:gravity="top"
                 android:textSize="@dimen/dp_14"
@@ -99,8 +96,9 @@
                     android:background="@drawable/bg_orgin_white_frame_background"
                     android:layout_toLeftOf="@+id/tv_f"
                     android:layout_centerVertical="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:gravity="center"
+                    android:layout_width="@dimen/dp_44"
+                    android:layout_height="@dimen/dp_24" />
                 <TextView
                     android:id="@+id/tv_jian"
                     android:textSize="@dimen/dp_14"

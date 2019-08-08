@@ -109,7 +109,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
     @BindView(R.id.include_end)
     View include_end;   //晚班打卡信息
 
-
+    private static int TIMES = 1000 * 20 * 60;  //发送定位时间间隔
     private ImageView start_tag;//早班卡打卡状态图标
     private TextView start_time_d; //早班打卡时间
     private TextView tv_start_location; //早班打卡位置
@@ -230,7 +230,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
         @Override
         public void run() {
             p.startLocations(4);
-            mHandler.postDelayed(runnable_location, 3000);
+            mHandler.postDelayed(runnable_location, TIMES);
         }
     };
     private MaterialDialog materialDialog_build;
@@ -447,14 +447,13 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
     public void getMainDataSuccess(Attendance attendance) {
         if (attendance.getData() != null) {
             String areaAddress = attendance.getData().getAreaAddress();
-            if (areaAddress == null) {
-                areaAddress = "";
-            }
+            areaAddress = areaAddress == null? "": areaAddress;
 
-            String DataLocation = attendance.getData().getLocation();
+            String dataLocation = attendance.getData().getLocation();
+            dataLocation = dataLocation == null? "": dataLocation;
 
-            if (DataLocation == null) {
-                DataLocation = "";
+            if (dataLocation == null) {
+                dataLocation = "";
             }
 
             closeStatus = attendance.getData().getCloseStatus();
@@ -516,11 +515,13 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                             //早班打卡时间
                             String stringDate_start = TimeUtils.getStingHM(k_bean.getInTime());
                             start_time_d.setText(stringDate_start);
+
+                            KLog.e("高德定位", "打了早班卡，下班卡没打：startLocationStatus == " + startLocationStatus + " -- startTimeStatus == " + startTimeStatus);
                             //图标
                             if (startLocationStatus == 1 && startTimeStatus == 1) {  //在范围内
                                 start_tag.setImageResource(R.mipmap.kaoqinz);
                                 //早班打卡位置
-                                tv_start_location.setText(areaAddress + DataLocation);
+                                tv_start_location.setText(areaAddress + dataLocation);
                             } else if (startLocationStatus == -1 || startTimeStatus == -1) {
                                 start_tag.setImageResource(R.mipmap.kaoqinyc);
                                 new Thread(new Runnable() {
@@ -565,10 +566,11 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                     start_time_d.setText(stringDate_start);
                     //早班打卡位置
 
+                    KLog.e("高德定位", "上下班卡都打了：startLocationStatus == " + startLocationStatus + " -- startTimeStatus == " + startTimeStatus);
                     //图标
                     if (startLocationStatus == 1 && startTimeStatus == 1) {  //在范围内
                         start_tag.setImageResource(R.mipmap.kaoqinz);
-                        tv_start_location.setText(areaAddress + DataLocation);
+                        tv_start_location.setText(areaAddress + dataLocation);
                     } else if (startLocationStatus == -1 || startTimeStatus == -1) {
                         start_tag.setImageResource(R.mipmap.kaoqinyc);
                         new Thread(new Runnable() {
@@ -603,7 +605,7 @@ public class AttendanceFragment_k extends BaseChildFragment<AttendanceFC_k.Prese
                     outLng = k_bean.getOutLng();
                     if (endLocationStatus == 1 && endTimeStatus == 1) {
                         //晚班打卡位置(正常就直接显示上班地址)
-                        tv_end_location.setText(areaAddress + DataLocation);
+                        tv_end_location.setText(areaAddress + dataLocation);
                         end_tag.setImageResource(R.mipmap.kaoqinz);
                     } else if (endLocationStatus == -1 || endTimeStatus == -1) {
                         end_tag.setImageResource(R.mipmap.kaoqinyc);

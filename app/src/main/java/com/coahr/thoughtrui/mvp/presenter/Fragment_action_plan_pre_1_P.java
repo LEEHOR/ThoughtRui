@@ -1,21 +1,15 @@
 package com.coahr.thoughtrui.mvp.presenter;
 
 import com.alibaba.sdk.android.oss.OSS;
-import com.alibaba.sdk.android.oss.OSSClient;
-import com.alibaba.sdk.android.oss.model.ListObjectsResult;
 import com.alibaba.sdk.android.oss.model.OSSObjectSummary;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.mvp.Base.BasePresenter;
 import com.coahr.thoughtrui.mvp.constract.Fragment_action_plan_pre_1_c;
-import com.coahr.thoughtrui.mvp.constract.ProjectDealer_c;
 import com.coahr.thoughtrui.mvp.model.Bean.AliyunOss;
-import com.coahr.thoughtrui.mvp.model.Bean.Dealer_List;
 import com.coahr.thoughtrui.mvp.model.Bean.Template_list;
 import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
 import com.coahr.thoughtrui.mvp.model.Fragment_Action_plan_pre_1_M;
-import com.coahr.thoughtrui.mvp.model.ProjectDealer_M;
 import com.coahr.thoughtrui.mvp.view.action_plan.Fragment_Action_plan_presentation_1;
-import com.coahr.thoughtrui.mvp.view.home.DealerFragment;
 
 import java.util.List;
 import java.util.Map;

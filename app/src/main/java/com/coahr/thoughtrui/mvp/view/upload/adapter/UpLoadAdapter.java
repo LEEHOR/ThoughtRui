@@ -14,6 +14,7 @@ import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
+import com.coahr.thoughtrui.Utils.ReviewScoreUtil;
 import com.coahr.thoughtrui.Utils.TimeUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
@@ -55,6 +56,15 @@ public class UpLoadAdapter extends BaseQuickAdapter<ProjectsDB, BaseViewHolder> 
                     .setText(R.id.up_tv_update_time, TimeUtils.getStingYMDHM(item.getModifyTime()));
             String itemDate = getItemDate(item.getPid());
             ((TextView) helper.getView(R.id.up_item_data)).setText(itemDate);
+
+            List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", item.getPid());
+            int totalScore = 0;
+            if (projectsDBS != null && projectsDBS.size() > 0) {
+                List<SubjectsDB> subjectsDBS = projectsDBS.get(0).getSubjectsDBList();
+                totalScore = ReviewScoreUtil.getTotalScore(subjectsDBS);
+            }
+
+            helper.setText(R.id.up_tv_project_score, "检核得分：" + totalScore + "分");
         }
 
         if (visible) {
@@ -137,7 +147,8 @@ public class UpLoadAdapter extends BaseQuickAdapter<ProjectsDB, BaseViewHolder> 
                 for (int i = 0; i < subjectsDBS.size(); i++) {
                     CountAll++;
                     if (subjectsDBS.get(i).getIsComplete() == 1 && subjectsDBS.get(i).getsUploadStatus() == 0) {
-                        List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + id + "/" + subjectsDBS.get(i).getNumber() + "_" + subjectsDBS.get(i).getHt_id());
+//                        List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + id + "/" + subjectsDBS.get(i).getNumber() + "_" + subjectsDBS.get(i).getHt_id());
+                        List<String> fileList = FileIOUtils.getAllFileList(Constants.SAVE_DIR_PROJECT_Document + id + "/" + subjectsDBS.get(i).getNumber() + "_" + subjectsDBS.get(i).getHt_id());
                         if (fileList != null && fileList.size() > 0) {
                             for (int j = 0; j < fileList.size(); j++) {
                                 if (!fileList.get(j).endsWith("txt")) {

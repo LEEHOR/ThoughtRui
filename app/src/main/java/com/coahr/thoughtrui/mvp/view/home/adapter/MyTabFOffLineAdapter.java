@@ -16,6 +16,7 @@ import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
+import com.coahr.thoughtrui.Utils.ReviewScoreUtil;
 import com.coahr.thoughtrui.Utils.TimeUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
@@ -107,6 +108,16 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_company.setText(projectsDBList.get(i).getDname());
                 //((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_address.setText(projectsDBList.get(i).getAddress());
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_update_time.setText(TimeUtils.getStringDate_start(projectsDBList.get(i).getModifyTime()));
+
+                List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", projectsDBList.get(i).getPid());
+                int totalScore = 0;
+                if (projectsDBS != null && projectsDBS.size() > 0) {
+                    List<SubjectsDB> subjectsDBS = projectsDBS.get(0).getSubjectsDBList();
+                    totalScore = ReviewScoreUtil.getTotalScore(subjectsDBS);
+                }
+                ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_score.setText("检核得分: " + totalScore + "分");
+
+
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_cardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -119,7 +130,7 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
                     @Override
                     public boolean onLongClick(View view) {
                         if (adapter_offline != null) {
-                            adapter_offline.completeLongClick(projectsDBList.get(i));
+                            adapter_offline.completeLongClick(projectsDBList.get(i), i);
                         }
                         return false;
                     }
@@ -136,6 +147,15 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
                 //((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_address.setText(projectsDBList.get(i).getAddress());
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_update_time.setText(TimeUtils.getStringDate_start(projectsDBList.get(i).getModifyTime()));
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_item_data.setText(getItemDate(projectsDBList.get(i).getPid()));
+
+                List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", projectsDBList.get(i).getPid());
+                int totalScore = 0;
+                if (projectsDBS != null && projectsDBS.size() > 0) {
+                    List<SubjectsDB> subjectsDBS = projectsDBS.get(0).getSubjectsDBList();
+                    totalScore = ReviewScoreUtil.getTotalScore(subjectsDBS);
+                }
+                ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_score.setText("检核得分: " + totalScore + "分");
+
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).uncomplete_cardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -148,7 +168,7 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
                     @Override
                     public boolean onLongClick(View view) {
                         if (adapter_offline != null) {
-                            adapter_offline.unCompleteLongClick(projectsDBList.get(i));
+                            adapter_offline.unCompleteLongClick(projectsDBList.get(i), i);
                         }
                         return false;
                     }
@@ -269,6 +289,7 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
         private TextView complete_tv_project_code;
         private TextView complete_tv_project_name;
         private TextView complete_tv_project_company;
+        private TextView complete_tv_project_score;
         private TextView complete_tv_project_address;
         private TextView complete_tv_update_time;
 
@@ -281,6 +302,7 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
             complete_tv_project_code = itemView.findViewById(R.id.complete_tv_project_code);
             complete_tv_project_name = itemView.findViewById(R.id.complete_tv_project_name);
             complete_tv_project_company = itemView.findViewById(R.id.complete_tv_project_company);
+            complete_tv_project_score = itemView.findViewById(R.id.complete_tv_project_score);
             complete_tv_project_address = itemView.findViewById(R.id.complete_tv_project_address);
             complete_tv_update_time = itemView.findViewById(R.id.complete_tv_update_time);
 
@@ -295,6 +317,7 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
         private TextView unComplete_tv_project_code;
         private TextView unComplete_tv_project_name;
         private TextView unComplete_tv_project_company;
+        private TextView unComplete_tv_project_score;
         private TextView unComplete_tv_project_address;
         private TextView unComplete_tv_update_time;
         private TextView unComplete_item_data;
@@ -308,6 +331,7 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
             unComplete_tv_project_code = itemView.findViewById(R.id.unComplete_tv_project_code);
             unComplete_tv_project_name = itemView.findViewById(R.id.unComplete_tv_project_name);
             unComplete_tv_project_company = itemView.findViewById(R.id.unComplete_tv_project_company);
+            unComplete_tv_project_score = itemView.findViewById(R.id.unComplete_tv_project_score);
             unComplete_tv_project_address = itemView.findViewById(R.id.unComplete_tv_project_address);
             unComplete_tv_update_time = itemView.findViewById(R.id.unComplete_tv_update_time);
             unComplete_item_data = itemView.findViewById(R.id.unComplete_item_data);
@@ -344,11 +368,11 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         void completeClick(ProjectsDB projectsDB);
 
-        void completeLongClick(ProjectsDB projectsDB);
+        void completeLongClick(ProjectsDB projectsDB, int i);
 
         void unCompleteClick(ProjectsDB projectsDB);
 
-        void unCompleteLongClick(ProjectsDB projectsDB);
+        void unCompleteLongClick(ProjectsDB projectsDB, int i);
 
         void unDownLoadClick(ProjectsDB projectsDB);
 
@@ -370,7 +394,8 @@ public class MyTabFOffLineAdapter extends RecyclerView.Adapter<RecyclerView.View
                 for (int i = 0; i < subjectsDBS.size(); i++) {
                     CountAll++;
                     if (subjectsDBS.get(i).getIsComplete() == 1 && subjectsDBS.get(i).getsUploadStatus() == 0) {
-                        List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + id + "/" + subjectsDBS.get(i).getNumber() + "_" + subjectsDBS.get(i).getHt_id());
+//                        List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + id + "/" + subjectsDBS.get(i).getNumber() + "_" + subjectsDBS.get(i).getHt_id());
+                        List<String> fileList = FileIOUtils.getAllFileList(Constants.SAVE_DIR_PROJECT_Document + id + "/" + subjectsDBS.get(i).getNumber() + "_" + subjectsDBS.get(i).getHt_id());
                         if (fileList != null && fileList.size() > 0) {
                             for (int j = 0; j < fileList.size(); j++) {
                                 if (!fileList.get(j).endsWith("txt")) {

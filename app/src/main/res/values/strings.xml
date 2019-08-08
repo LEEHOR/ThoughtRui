@@ -41,7 +41,7 @@
     <string name="start_checking_1">开始检核</string>
 
     <!--ProjectDetailFragment-->
-    <string name="string_1">数据条%1$d,附件%2$d个未上传</string>
+    <string name="string_1">数据%1$d条,附件%2$d个未上传</string>
     <string name="string_2">暂无数据</string>
     <string name="string_3">未完成(%1$d/%2$d)</string>
     <string name="dialog_tittle_1">提示</string>
@@ -57,7 +57,7 @@
     <string name="project_detail_address_1">地址:</string>
     <string name="project_detail_upload_times">上传时间节点:</string>
     <string name="project_detail_attendance_schedule">考勤班次:</string>
-    <string name="project_detail_access_state">访问状态:</string>
+    <string name="project_detail_access_state">检核进度:</string>
     <string name="project_detail_upload_state">上传状态:</string>
     <string name="project_detail_entry_specification">项目说明</string>
     <string name="project_detail_attendance_card">考勤打卡</string>
@@ -68,7 +68,7 @@
     <string name="project_list_all_1">全部</string>
     <string name="project_list_uncomplete_1">未完成</string>
     <string name="project_list_complete_1">已完成</string>
-    <string name="project_list_date_size">共有%1$d题, %2$d数据未上传</string>
+    <string name="project_list_date_size">共有%1$d题, %2$d个附件未上传</string>
 
     <!--考勤页-->
     <string name="attence_tittle_1">考勤</string>
@@ -185,7 +185,7 @@
     <string name="feed_back_length_limited">长度限制10-300字</string>
 
     <!--com.coahr.thoughtrui.mvp.view.mydata.UploadOptions-->
-    <string name="upload_options_1">在WIFI连接时自动上传</string>
+    <string name="upload_options_1">在WIFI连接时提示上传</string>
     <string name="upload_options_2">图片上传质量</string>
     <string name="upload_options_3">高</string>
     <string name="upload_options_4">低</string>
@@ -230,7 +230,7 @@
 
     <!--com.coahr.thoughtrui.mvp.view.action_plan.Fragment_action_projects-->
     <string name="plan_tittle">行动计划提报</string>
-    <string name="plan_submit_action_plan_presentation">提交报表</string>
+    <string name="plan_submit_action_plan_presentation">发起提报</string>
     <string name="plan_viewpager_tittle_1">未完成</string>
     <string name="plan_viewpager_tittle_2">已完成</string>
     <string name="plan_viewpager_tittle_3">全部</string>
@@ -250,6 +250,8 @@
     <string name="plan_1_11">下一步</string>
     <string name="plan_1_12">report/%1$s/%2$s/before/</string>
     <string name="plan_1_13">改善后图片</string>
+    <string name="plan_1_14">改善前状态</string>
+    <string name="plan_1_15">改善后状态</string>
     <!--com.coahr.thoughtrui.mvp.view.action_plan.Fragment_Action_plan_presentation_2-->
     <string name="plan_2_1">提报中</string>
     <string name="plan_2_2">原因诊断</string>
@@ -287,8 +289,9 @@
     <string name="language_auto">自动</string>
 
     <!--土司-->
-    <string name="toast_1">请输入4位及以上字符的账户</string>
-    <string name="toast_2">请输入4位及以上字符的密码</string>
+    <!--<string name="toast_1">请输入4位及以上字符的账户</string>-->
+    <string name="toast_1">请输入正确账户</string>
+    <string name="toast_2">请输入6位及以上字符的密码</string>
     <string name="toast_3">当前网络不可用，请联网后再试!</string>
     <string name="toast_4">加载列表失败</string>
     <string name="toast_5">登录成功</string>
@@ -332,6 +335,7 @@
     <!--控件_按钮-->
     <string name="btn_1">登录</string>
     <string name="resume">确定</string>
+    <string name="confirm_delete">确定删除</string>
     <string name="cancel">取消</string>
     <string name="setting">设置</string>
     <string name="tittle">提示</string>
@@ -365,7 +369,7 @@
     <string name="phrases_26">获取存储大小失败</string>
     <string name="phrases_27">没有读取权限</string>
     <string name="phrases_28">指标列表</string>
-    <string name="phrases_29">数据为空,点击重新加载</string>
+    <string name="phrases_29">暂无数据</string>
     <string name="phrases_30">数据加载出错,点击重新加载</string>
     <string name="phrases_31">请输入100字以内</string>
     <string name="phrases_32">请输入300字以内</string>

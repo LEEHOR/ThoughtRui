@@ -4,11 +4,14 @@ import com.amap.api.location.AMapLocation;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.Utils.BaiDuLocation.GaodeMapLocationHelper;
+import com.coahr.thoughtrui.Utils.FileIoUtils.SaveOrGetAnswers;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
+import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.StartProjectActivity_C;
 import com.coahr.thoughtrui.mvp.model.Bean.QuestionBean;
 import com.coahr.thoughtrui.mvp.model.Bean.RTSL;
+import com.socks.library.KLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,5 +124,15 @@ public class StartProjectActivity_M extends BaseModel<StartProjectActivity_C.Pre
     public void detachPresenter() {
         super.detachPresenter();
         gaodeMapLocationHelper.unRegisterLocationCallback(onLocationCallBack);
+    }
+
+    @Override
+    public void saveAnswers(String answers, String remark, String ht_ProjectId, int number, String ht_id, int type) {
+        boolean b = SaveOrGetAnswers.saveToFile(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id + "/", "AnswerAndRemark.txt", "1答案:" + answers + "&2备注:" + remark, false);
+        if (b) {
+            getPresenter().saveAnswersSuccess(type);
+        } else {
+            getPresenter().saveAnswersFailure(type);
+        }
     }
 }

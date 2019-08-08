@@ -16,8 +16,11 @@ import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_report;
 import com.coahr.thoughtrui.mvp.model.Bean.ReportList;
 import com.coahr.thoughtrui.mvp.presenter.Fragment_action_plan_viewPager_P;
 import com.coahr.thoughtrui.mvp.view.action_plan.Adapter.item_plan_viewpager_adapter;
+import com.socks.library.KLog;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +32,7 @@ import javax.inject.Inject;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import butterknife.BindView;
 import me.yokeyword.fragmentation.SupportFragment;
 
@@ -65,13 +69,20 @@ public class Fragment_action_plan_viewPager extends BaseChildFragment<Fragment_a
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
     public int bindLayout() {
         return R.layout.fragment_plan_viewpager;
     }
 
     @Override
     public void initView() {
-
         getReportList();
     }
 
@@ -92,20 +103,31 @@ public class Fragment_action_plan_viewPager extends BaseChildFragment<Fragment_a
                 getReportList();
             }
         });
-        error.setOnClickListener(new View.OnClickListener() {
+        /*error.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getReportList();
             }
-        });
+        });*/
 
         adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 ReportList.DataBean.AllListBean allListBean = (ReportList.DataBean.AllListBean) adapter.getItem(position);
-                ((SupportFragment) getParentFragment()).start(Fragment_Action_plan_presentation_1.newInstance(allListBean,2));
+                ((SupportFragment) getParentFragment()).start(Fragment_Action_plan_presentation_1.newInstance(allListBean, 2));
             }
         });
+    }
+
+    /**
+     * Evenbus,提交后，自动关闭
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void EvenBus(Boolean isFinish) {
+        KLog.e("测试代码", "isFinish == " + isFinish);
+        if (isFinish) {
+            getReportList();
+        }
     }
 
     @Override
@@ -119,7 +141,9 @@ public class Fragment_action_plan_viewPager extends BaseChildFragment<Fragment_a
             if (reportList != null) {
                 if (reportList.getData() != null) {
                     if (reportList.getData().getAllList() != null && reportList.getData().getAllList().size() > 0) {
+                        KLog.e("测试代码", "size == " + reportList.getData().getAllList().size());
                         for (int i = 0; i < reportList.getData().getAllList().size(); i++) {
+                            KLog.e("测试代码", "CompleteStatus == " + reportList.getData().getAllList().get(i).getCompleteStatus());
                             if (reportList.getData().getAllList().get(i).getCompleteStatus() == -1) {
                                 reportList_s.add(reportList.getData().getAllList().get(i));
                             }
@@ -131,7 +155,9 @@ public class Fragment_action_plan_viewPager extends BaseChildFragment<Fragment_a
             if (reportList != null) {
                 if (reportList.getData() != null) {
                     if (reportList.getData().getAllList() != null && reportList.getData().getAllList().size() > 0) {
+                        KLog.e("测试代码", "size == " + reportList.getData().getAllList().size());
                         for (int i = 0; i < reportList.getData().getAllList().size(); i++) {
+                            KLog.e("测试代码", "CompleteStatus == " + reportList.getData().getAllList().get(i).getCompleteStatus());
                             if (reportList.getData().getAllList().get(i).getCompleteStatus() == 1) {
                                 reportList_s.add(reportList.getData().getAllList().get(i));
                             }
@@ -168,6 +194,7 @@ public class Fragment_action_plan_viewPager extends BaseChildFragment<Fragment_a
     private void getReportList() {
         Map map = new HashMap();
         map.put("sessionId", Constants.sessionId);
+        KLog.e("测试代码", "sessionId == " + Constants.sessionId);
         p.getPlanList(map);
     }
 
@@ -175,5 +202,13 @@ public class Fragment_action_plan_viewPager extends BaseChildFragment<Fragment_a
     public void showError(@Nullable Throwable e) {
         super.showError(e);
         adapter.setEmptyView(error);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 }

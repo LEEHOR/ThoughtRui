@@ -18,7 +18,7 @@ public class ReportList {
     /**
      * result : 1
      * msg : 请求成功！
-     * data : {"unCompleteList":[{"quota1":null,"Uname":"liuc","quota2":"组织架构","firstTime":"1555311372409","address":"湖北省武汉市蔡甸区","count":2,"diagnosis":"不行的","reasonList":[{"submitTime":1555311609518,"incompleteReason":"2222"},{"submitTime":1555311372409,"incompleteReason":"11111"}],"measures":"rewrwerw","executor":"小刘","levelId":"68e5e84121334af7b37aa19d95d13b3a","name":"【流程】华晨雷诺金杯授权经销商销售流程检核","newestTime":1555311609518,"projectId":"6a59a7206bae499b80e527207d1c5f5e","Dname":"湖北三环盛通汽车有限公司"}],"allList":[{"quota1":null,"Uname":"liuc","quota2":"组织架构","firstTime":"1555311372409","address":"湖北省武汉市蔡甸区","count":2,"diagnosis":"不行的","reasonList":[{"submitTime":1555311609518,"incompleteReason":"2222"},{"submitTime":1555311372409,"incompleteReason":"11111"}],"measures":"rewrwerw","executor":"小刘","levelId":"68e5e84121334af7b37aa19d95d13b3a","name":"【流程】华晨雷诺金杯授权经销商销售流程检核","newestTime":1555311609518,"projectId":"6a59a7206bae499b80e527207d1c5f5e","Dname":"湖北三环盛通汽车有限公司"}],"completeList":[],"submitStatus":true}
+     * data : {"unCompleteList":[{"quota1":"销售流程","Uname":"ITA01","quota2":"潜客开发","newestTime":1564453360231,"city":"天津","bigRegion":"北区","type":1,"reasonList":[{"submitTime":1564453360231,"incompleteReason":""}],"beforeDesc":"MSN","duration":1,"measures":"热热？","province":"天津","executor":"彭先生","levelId":"ce8e8ac710c448f89b1e275a5a869325","completeStatus":-1,"address":"天津天津","targetDate":"2019-07-30","smallRegion":"天津、河北二区","count":1,"diagnosis":"二弟","firstTime":"1564453360231","afterDesc":"","name":"销售流程检核-2019年三季度","projectId":"8d59d56ee40641e4bb0e313300c39aa6","Dname":"天津市泰歌汽车销售有限公司"}],"allList":[{"quota1":"销售流程","Uname":"ITA01","quota2":"潜客开发","newestTime":1564453360231,"city":"天津","bigRegion":"北区","type":1,"reasonList":[{"submitTime":1564453360231,"incompleteReason":""}],"beforeDesc":"MSN","duration":1,"measures":"热热？","province":"天津","executor":"彭先生","levelId":"ce8e8ac710c448f89b1e275a5a869325","completeStatus":-1,"address":"天津天津","targetDate":"2019-07-30","smallRegion":"天津、河北二区","count":1,"diagnosis":"二弟","firstTime":"1564453360231","afterDesc":"","name":"销售流程检核-2019年三季度","projectId":"8d59d56ee40641e4bb0e313300c39aa6","Dname":"天津市泰歌汽车销售有限公司"},{"quota1":"停车场","Uname":"ITA01","quota2":"停车场环境","address":"北京北京","newestTime":1564453225575,"city":"北京","targetDate":"2019-07-30","smallRegion":"北京","bigRegion":"北区","diagnosis":"咩","type":1,"reasonList":[{"submitTime":1563521764246,"incompleteReason":"，"},{"submitTime":1563521748621,"incompleteReason":"，"}],"beforeDesc":"MSN","duration":1,"measures":"哦婆婆","province":"北京","afterDesc":"哦婆婆","executor":"彭先生","levelId":"573cb4f9f82b4ad486e59dddb3ba26eb","name":"销售标准检核-2019年三季度","completeStatus":1,"projectId":"85acdcec59324cd0827058944ea8ba49","Dname":"北京友福祥瑞汽车销售有限责任公司"}],"completeList":[{"quota1":"停车场","Uname":"ITA01","quota2":"停车场环境","address":"北京北京","newestTime":1564453225575,"city":"北京","targetDate":"2019-07-30","smallRegion":"北京","bigRegion":"北区","diagnosis":"咩","type":1,"reasonList":[{"submitTime":1563521764246,"incompleteReason":"，"},{"submitTime":1563521748621,"incompleteReason":"，"}],"beforeDesc":"MSN","duration":1,"measures":"哦婆婆","province":"北京","afterDesc":"哦婆婆","executor":"彭先生","levelId":"573cb4f9f82b4ad486e59dddb3ba26eb","name":"销售标准检核-2019年三季度","completeStatus":1,"projectId":"85acdcec59324cd0827058944ea8ba49","Dname":"北京友福祥瑞汽车销售有限责任公司"}],"submitStatus":true}
      */
 
     private int result;
@@ -51,9 +51,9 @@ public class ReportList {
 
     public static class DataBean {
         /**
-         * unCompleteList : [{"quota1":null,"Uname":"liuc","quota2":"组织架构","firstTime":"1555311372409","address":"湖北省武汉市蔡甸区","count":2,"diagnosis":"不行的","reasonList":[{"submitTime":1555311609518,"incompleteReason":"2222"},{"submitTime":1555311372409,"incompleteReason":"11111"}],"measures":"rewrwerw","executor":"小刘","levelId":"68e5e84121334af7b37aa19d95d13b3a","name":"【流程】华晨雷诺金杯授权经销商销售流程检核","newestTime":1555311609518,"projectId":"6a59a7206bae499b80e527207d1c5f5e","Dname":"湖北三环盛通汽车有限公司"}]
-         * allList : [{"quota1":null,"Uname":"liuc","quota2":"组织架构","firstTime":"1555311372409","address":"湖北省武汉市蔡甸区","count":2,"diagnosis":"不行的","reasonList":[{"submitTime":1555311609518,"incompleteReason":"2222"},{"submitTime":1555311372409,"incompleteReason":"11111"}],"measures":"rewrwerw","executor":"小刘","levelId":"68e5e84121334af7b37aa19d95d13b3a","name":"【流程】华晨雷诺金杯授权经销商销售流程检核","newestTime":1555311609518,"projectId":"6a59a7206bae499b80e527207d1c5f5e","Dname":"湖北三环盛通汽车有限公司"}]
-         * completeList : []
+         * unCompleteList : [{"quota1":"销售流程","Uname":"ITA01","quota2":"潜客开发","newestTime":1564453360231,"city":"天津","bigRegion":"北区","type":1,"reasonList":[{"submitTime":1564453360231,"incompleteReason":""}],"beforeDesc":"MSN","duration":1,"measures":"热热？","province":"天津","executor":"彭先生","levelId":"ce8e8ac710c448f89b1e275a5a869325","completeStatus":-1,"address":"天津天津","targetDate":"2019-07-30","smallRegion":"天津、河北二区","count":1,"diagnosis":"二弟","firstTime":"1564453360231","afterDesc":"","name":"销售流程检核-2019年三季度","projectId":"8d59d56ee40641e4bb0e313300c39aa6","Dname":"天津市泰歌汽车销售有限公司"}]
+         * allList : [{"quota1":"销售流程","Uname":"ITA01","quota2":"潜客开发","newestTime":1564453360231,"city":"天津","bigRegion":"北区","type":1,"reasonList":[{"submitTime":1564453360231,"incompleteReason":""}],"beforeDesc":"MSN","duration":1,"measures":"热热？","province":"天津","executor":"彭先生","levelId":"ce8e8ac710c448f89b1e275a5a869325","completeStatus":-1,"address":"天津天津","targetDate":"2019-07-30","smallRegion":"天津、河北二区","count":1,"diagnosis":"二弟","firstTime":"1564453360231","afterDesc":"","name":"销售流程检核-2019年三季度","projectId":"8d59d56ee40641e4bb0e313300c39aa6","Dname":"天津市泰歌汽车销售有限公司"},{"quota1":"停车场","Uname":"ITA01","quota2":"停车场环境","address":"北京北京","newestTime":1564453225575,"city":"北京","targetDate":"2019-07-30","smallRegion":"北京","bigRegion":"北区","diagnosis":"咩","type":1,"reasonList":[{"submitTime":1563521764246,"incompleteReason":"，"},{"submitTime":1563521748621,"incompleteReason":"，"}],"beforeDesc":"MSN","duration":1,"measures":"哦婆婆","province":"北京","afterDesc":"哦婆婆","executor":"彭先生","levelId":"573cb4f9f82b4ad486e59dddb3ba26eb","name":"销售标准检核-2019年三季度","completeStatus":1,"projectId":"85acdcec59324cd0827058944ea8ba49","Dname":"北京友福祥瑞汽车销售有限责任公司"}]
+         * completeList : [{"quota1":"停车场","Uname":"ITA01","quota2":"停车场环境","address":"北京北京","newestTime":1564453225575,"city":"北京","targetDate":"2019-07-30","smallRegion":"北京","bigRegion":"北区","diagnosis":"咩","type":1,"reasonList":[{"submitTime":1563521764246,"incompleteReason":"，"},{"submitTime":1563521748621,"incompleteReason":"，"}],"beforeDesc":"MSN","duration":1,"measures":"哦婆婆","province":"北京","afterDesc":"哦婆婆","executor":"彭先生","levelId":"573cb4f9f82b4ad486e59dddb3ba26eb","name":"销售标准检核-2019年三季度","completeStatus":1,"projectId":"85acdcec59324cd0827058944ea8ba49","Dname":"北京友福祥瑞汽车销售有限责任公司"}]
          * submitStatus : true
          */
 
@@ -96,40 +96,55 @@ public class ReportList {
 
         public static class UnCompleteListBean {
             /**
-             * quota1 : null
-             * Uname : liuc
-             * quota2 : 组织架构
-             * firstTime : 1555311372409
-             * address : 湖北省武汉市蔡甸区
-             * targetDate:  2019-04-18
-             * count : 2
-             * diagnosis : 不行的
-             * reasonList : [{"submitTime":1555311609518,"incompleteReason":"2222"},{"submitTime":1555311372409,"incompleteReason":"11111"}]
-             * measures : rewrwerw
-             * executor : 小刘
-             * levelId : 68e5e84121334af7b37aa19d95d13b3a
-             * name : 【流程】华晨雷诺金杯授权经销商销售流程检核
-             * completeStatus :  3
-             * newestTime : 1555311609518
-             * projectId : 6a59a7206bae499b80e527207d1c5f5e
-             * Dname : 湖北三环盛通汽车有限公司
+             * quota1 : 销售流程
+             * Uname : ITA01
+             * quota2 : 潜客开发
+             * newestTime : 1564453360231
+             * city : 天津
+             * bigRegion : 北区
+             * type : 1
+             * reasonList : [{"submitTime":1564453360231,"incompleteReason":""}]
+             * beforeDesc : MSN
+             * duration : 1
+             * measures : 热热？
+             * province : 天津
+             * executor : 彭先生
+             * levelId : ce8e8ac710c448f89b1e275a5a869325
+             * completeStatus : -1
+             * address : 天津天津
+             * targetDate : 2019-07-30
+             * smallRegion : 天津、河北二区
+             * count : 1
+             * diagnosis : 二弟
+             * firstTime : 1564453360231
+             * afterDesc :
+             * name : 销售流程检核-2019年三季度
+             * projectId : 8d59d56ee40641e4bb0e313300c39aa6
+             * Dname : 天津市泰歌汽车销售有限公司
              */
 
             private String quota1;
             private String Uname;
             private String quota2;
-            private String firstTime;
-            private String address;
-            private String targetDate;
-            private int count;
-            private String diagnosis;
+            private long newestTime;
+            private String city;
+            private String bigRegion;
+            private int type;
+            private String beforeDesc;
             private int duration;
             private String measures;
+            private String province;
             private String executor;
             private String levelId;
-            private String name;
             private int completeStatus;
-            private long newestTime;
+            private String address;
+            private String targetDate;
+            private String smallRegion;
+            private int count;
+            private String diagnosis;
+            private String firstTime;
+            private String afterDesc;
+            private String name;
             private String projectId;
             private String Dname;
             private List<ReasonListBean> reasonList;
@@ -158,44 +173,44 @@ public class ReportList {
                 this.quota2 = quota2;
             }
 
-            public String getFirstTime() {
-                return firstTime;
+            public long getNewestTime() {
+                return newestTime;
             }
 
-            public void setFirstTime(String firstTime) {
-                this.firstTime = firstTime;
+            public void setNewestTime(long newestTime) {
+                this.newestTime = newestTime;
             }
 
-            public String getAddress() {
-                return address;
+            public String getCity() {
+                return city;
             }
 
-            public void setAddress(String address) {
-                this.address = address;
+            public void setCity(String city) {
+                this.city = city;
             }
 
-            public String getTargetDate() {
-                return targetDate;
+            public String getBigRegion() {
+                return bigRegion;
             }
 
-            public void setTargetDate(String targetDate) {
-                this.targetDate = targetDate;
+            public void setBigRegion(String bigRegion) {
+                this.bigRegion = bigRegion;
             }
 
-            public int getCount() {
-                return count;
+            public int getType() {
+                return type;
             }
 
-            public void setCount(int count) {
-                this.count = count;
+            public void setType(int type) {
+                this.type = type;
             }
 
-            public String getDiagnosis() {
-                return diagnosis;
+            public String getBeforeDesc() {
+                return beforeDesc;
             }
 
-            public void setDiagnosis(String diagnosis) {
-                this.diagnosis = diagnosis;
+            public void setBeforeDesc(String beforeDesc) {
+                this.beforeDesc = beforeDesc;
             }
 
             public int getDuration() {
@@ -214,6 +229,14 @@ public class ReportList {
                 this.measures = measures;
             }
 
+            public String getProvince() {
+                return province;
+            }
+
+            public void setProvince(String province) {
+                this.province = province;
+            }
+
             public String getExecutor() {
                 return executor;
             }
@@ -230,14 +253,6 @@ public class ReportList {
                 this.levelId = levelId;
             }
 
-            public String getName() {
-                return name;
-            }
-
-            public void setName(String name) {
-                this.name = name;
-            }
-
             public int getCompleteStatus() {
                 return completeStatus;
             }
@@ -246,12 +261,68 @@ public class ReportList {
                 this.completeStatus = completeStatus;
             }
 
-            public long getNewestTime() {
-                return newestTime;
+            public String getAddress() {
+                return address;
             }
 
-            public void setNewestTime(long newestTime) {
-                this.newestTime = newestTime;
+            public void setAddress(String address) {
+                this.address = address;
+            }
+
+            public String getTargetDate() {
+                return targetDate;
+            }
+
+            public void setTargetDate(String targetDate) {
+                this.targetDate = targetDate;
+            }
+
+            public String getSmallRegion() {
+                return smallRegion;
+            }
+
+            public void setSmallRegion(String smallRegion) {
+                this.smallRegion = smallRegion;
+            }
+
+            public int getCount() {
+                return count;
+            }
+
+            public void setCount(int count) {
+                this.count = count;
+            }
+
+            public String getDiagnosis() {
+                return diagnosis;
+            }
+
+            public void setDiagnosis(String diagnosis) {
+                this.diagnosis = diagnosis;
+            }
+
+            public String getFirstTime() {
+                return firstTime;
+            }
+
+            public void setFirstTime(String firstTime) {
+                this.firstTime = firstTime;
+            }
+
+            public String getAfterDesc() {
+                return afterDesc;
+            }
+
+            public void setAfterDesc(String afterDesc) {
+                this.afterDesc = afterDesc;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
             }
 
             public String getProjectId() {
@@ -280,8 +351,8 @@ public class ReportList {
 
             public static class ReasonListBean {
                 /**
-                 * submitTime : 1555311609518
-                 * incompleteReason : 2222
+                 * submitTime : 1564453360231
+                 * incompleteReason :
                  */
 
                 private long submitTime;
@@ -305,63 +376,85 @@ public class ReportList {
             }
         }
 
-        public static class AllListBean implements MultiItemEntity, Parcelable {
+        public static class AllListBean implements Parcelable, MultiItemEntity  {
             /**
-             * quota1 : null
-             * Uname : liuc
-             * quota2 : 组织架构
-             * firstTime : 1555311372409
-             * address : 湖北省武汉市蔡甸区
-             * targetDate:  2019-04-18
-             * count : 2
-             * diagnosis : 不行的
-             * reasonList : [{"submitTime":1555311609518,"incompleteReason":"2222"},{"submitTime":1555311372409,"incompleteReason":"11111"}]
-             * measures : rewrwerw
-             * executor : 小刘
-             * levelId : 68e5e84121334af7b37aa19d95d13b3a
-             * name : 【流程】华晨雷诺金杯授权经销商销售流程检核
+             * quota1 : 销售流程
+             * Uname : ITA01
+             * quota2 : 潜客开发
+             * newestTime : 1564453360231
+             * city : 天津
+             * bigRegion : 北区
+             * type : 1
+             * reasonList : [{"submitTime":1564453360231,"incompleteReason":""}]
+             * beforeDesc : MSN
+             * duration : 1
+             * measures : 热热？
+             * province : 天津
+             * executor : 彭先生
+             * levelId : ce8e8ac710c448f89b1e275a5a869325
              * completeStatus : -1
-             * newestTime : 1555311609518
-             * projectId : 6a59a7206bae499b80e527207d1c5f5e
-             * Dname : 湖北三环盛通汽车有限公司
+             * address : 天津天津
+             * targetDate : 2019-07-30
+             * smallRegion : 天津、河北二区
+             * count : 1
+             * diagnosis : 二弟
+             * firstTime : 1564453360231
+             * afterDesc :
+             * name : 销售流程检核-2019年三季度
+             * projectId : 8d59d56ee40641e4bb0e313300c39aa6
+             * Dname : 天津市泰歌汽车销售有限公司
              */
             public static final int FINISH = 1;
             public static final int UN_FINISH = -1;
             private String quota1;
             private String Uname;
             private String quota2;
-            private String firstTime;
-            private String address;
-            private String targetDate;
-            private int count;
-            private String diagnosis;
+            private long newestTime;
+            private String city;
+            private String bigRegion;
+            private int type;
+            private String beforeDesc;
             private int duration;
             private String measures;
+            private String province;
             private String executor;
             private String levelId;
-            private String name;
             private int completeStatus;
-            private long newestTime;
+            private String address;
+            private String targetDate;
+            private String smallRegion;
+            private int count;
+            private String diagnosis;
+            private String firstTime;
+            private String afterDesc;
+            private String name;
             private String projectId;
             private String Dname;
             private List<ReasonListBeanX> reasonList;
 
             protected AllListBean(Parcel in) {
-                quota1=in.readString();
+                quota1 = in.readString();
                 Uname = in.readString();
                 quota2 = in.readString();
-                firstTime = in.readString();
-                address = in.readString();
-                targetDate = in.readString();
-                count = in.readInt();
-                diagnosis = in.readString();
-                duration=in.readInt();
+                newestTime = in.readLong();
+                city = in.readString();
+                bigRegion = in.readString();
+                type = in.readInt();
+                beforeDesc = in.readString();
+                duration = in.readInt();
                 measures = in.readString();
+                province = in.readString();
                 executor = in.readString();
                 levelId = in.readString();
-                name = in.readString();
                 completeStatus = in.readInt();
-                newestTime = in.readLong();
+                address = in.readString();
+                targetDate = in.readString();
+                smallRegion = in.readString();
+                count = in.readInt();
+                diagnosis = in.readString();
+                firstTime = in.readString();
+                afterDesc = in.readString();
+                name = in.readString();
                 projectId = in.readString();
                 Dname = in.readString();
             }
@@ -402,44 +495,44 @@ public class ReportList {
                 this.quota2 = quota2;
             }
 
-            public String getFirstTime() {
-                return firstTime;
+            public long getNewestTime() {
+                return newestTime;
             }
 
-            public void setFirstTime(String firstTime) {
-                this.firstTime = firstTime;
+            public void setNewestTime(long newestTime) {
+                this.newestTime = newestTime;
             }
 
-            public String getAddress() {
-                return address;
+            public String getCity() {
+                return city;
             }
 
-            public void setAddress(String address) {
-                this.address = address;
+            public void setCity(String city) {
+                this.city = city;
             }
 
-            public String getTargetDate() {
-                return targetDate;
+            public String getBigRegion() {
+                return bigRegion;
             }
 
-            public void setTargetDate(String targetDate) {
-                this.targetDate = targetDate;
+            public void setBigRegion(String bigRegion) {
+                this.bigRegion = bigRegion;
             }
 
-            public int getCount() {
-                return count;
+            public int getType() {
+                return type;
             }
 
-            public void setCount(int count) {
-                this.count = count;
+            public void setType(int type) {
+                this.type = type;
             }
 
-            public String getDiagnosis() {
-                return diagnosis;
+            public String getBeforeDesc() {
+                return beforeDesc;
             }
 
-            public void setDiagnosis(String diagnosis) {
-                this.diagnosis = diagnosis;
+            public void setBeforeDesc(String beforeDesc) {
+                this.beforeDesc = beforeDesc;
             }
 
             public int getDuration() {
@@ -458,6 +551,14 @@ public class ReportList {
                 this.measures = measures;
             }
 
+            public String getProvince() {
+                return province;
+            }
+
+            public void setProvince(String province) {
+                this.province = province;
+            }
+
             public String getExecutor() {
                 return executor;
             }
@@ -474,14 +575,6 @@ public class ReportList {
                 this.levelId = levelId;
             }
 
-            public String getName() {
-                return name;
-            }
-
-            public void setName(String name) {
-                this.name = name;
-            }
-
             public int getCompleteStatus() {
                 return completeStatus;
             }
@@ -490,12 +583,68 @@ public class ReportList {
                 this.completeStatus = completeStatus;
             }
 
-            public long getNewestTime() {
-                return newestTime;
+            public String getAddress() {
+                return address;
             }
 
-            public void setNewestTime(long newestTime) {
-                this.newestTime = newestTime;
+            public void setAddress(String address) {
+                this.address = address;
+            }
+
+            public String getTargetDate() {
+                return targetDate;
+            }
+
+            public void setTargetDate(String targetDate) {
+                this.targetDate = targetDate;
+            }
+
+            public String getSmallRegion() {
+                return smallRegion;
+            }
+
+            public void setSmallRegion(String smallRegion) {
+                this.smallRegion = smallRegion;
+            }
+
+            public int getCount() {
+                return count;
+            }
+
+            public void setCount(int count) {
+                this.count = count;
+            }
+
+            public String getDiagnosis() {
+                return diagnosis;
+            }
+
+            public void setDiagnosis(String diagnosis) {
+                this.diagnosis = diagnosis;
+            }
+
+            public String getFirstTime() {
+                return firstTime;
+            }
+
+            public void setFirstTime(String firstTime) {
+                this.firstTime = firstTime;
+            }
+
+            public String getAfterDesc() {
+                return afterDesc;
+            }
+
+            public void setAfterDesc(String afterDesc) {
+                this.afterDesc = afterDesc;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
             }
 
             public String getProjectId() {
@@ -523,40 +672,47 @@ public class ReportList {
             }
 
             @Override
-            public int getItemType() {
-                return completeStatus;
-            }
-
-            @Override
             public int describeContents() {
                 return 0;
             }
 
             @Override
-            public void writeToParcel(Parcel parcel, int i) {
-                parcel.writeString(quota1);
-                parcel.writeString(Uname);
-                parcel.writeString(quota2);
-                parcel.writeString(firstTime);
-                parcel.writeString(address);
-                parcel.writeString(targetDate);
-                parcel.writeInt(count);
-                parcel.writeString(diagnosis);
-                parcel.writeInt(duration);
-                parcel.writeString(measures);
-                parcel.writeString(executor);
-                parcel.writeString(levelId);
-                parcel.writeString(name);
-                parcel.writeInt(completeStatus);
-                parcel.writeLong(newestTime);
-                parcel.writeString(projectId);
-                parcel.writeString(Dname);
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(quota1);
+                dest.writeString(Uname);
+                dest.writeString(quota2);
+                dest.writeLong(newestTime);
+                dest.writeString(city);
+                dest.writeString(bigRegion);
+                dest.writeInt(type);
+                dest.writeString(beforeDesc);
+                dest.writeInt(duration);
+                dest.writeString(measures);
+                dest.writeString(province);
+                dest.writeString(executor);
+                dest.writeString(levelId);
+                dest.writeInt(completeStatus);
+                dest.writeString(address);
+                dest.writeString(targetDate);
+                dest.writeString(smallRegion);
+                dest.writeInt(count);
+                dest.writeString(diagnosis);
+                dest.writeString(firstTime);
+                dest.writeString(afterDesc);
+                dest.writeString(name);
+                dest.writeString(projectId);
+                dest.writeString(Dname);
+            }
+
+            @Override
+            public int getItemType() {
+                return completeStatus;
             }
 
             public static class ReasonListBeanX {
                 /**
-                 * submitTime : 1555311609518
-                 * incompleteReason : 2222
+                 * submitTime : 1564453360231
+                 * incompleteReason :
                  */
 
                 private long submitTime;
@@ -582,43 +738,54 @@ public class ReportList {
 
         public static class CompleteListBean {
             /**
-             * quota1 : null
-             * Uname : liuc
-             * quota2 : 组织架构
-             * firstTime : 1555311372409
-             * address : 湖北省武汉市蔡甸区
-             * targetDate:  2019-04-18
-             * count : 2
-             * diagnosis : 不行的
-             * reasonList : [{"submitTime":1555311609518,"incompleteReason":"2222"},{"submitTime":1555311372409,"incompleteReason":"11111"}]
-             * measures : rewrwerw
-             * executor : 小刘
-             * levelId : 68e5e84121334af7b37aa19d95d13b3a
-             * name : 【流程】华晨雷诺金杯授权经销商销售流程检核
-             * completeStatus: 1
-             * newestTime : 1555311609518
-             * projectId : 6a59a7206bae499b80e527207d1c5f5e
-             * Dname : 湖北三环盛通汽车有限公司
+             * quota1 : 停车场
+             * Uname : ITA01
+             * quota2 : 停车场环境
+             * address : 北京北京
+             * newestTime : 1564453225575
+             * city : 北京
+             * targetDate : 2019-07-30
+             * smallRegion : 北京
+             * bigRegion : 北区
+             * diagnosis : 咩
+             * type : 1
+             * reasonList : [{"submitTime":1563521764246,"incompleteReason":"，"},{"submitTime":1563521748621,"incompleteReason":"，"}]
+             * beforeDesc : MSN
+             * duration : 1
+             * measures : 哦婆婆
+             * province : 北京
+             * afterDesc : 哦婆婆
+             * executor : 彭先生
+             * levelId : 573cb4f9f82b4ad486e59dddb3ba26eb
+             * name : 销售标准检核-2019年三季度
+             * completeStatus : 1
+             * projectId : 85acdcec59324cd0827058944ea8ba49
+             * Dname : 北京友福祥瑞汽车销售有限责任公司
              */
 
             private String quota1;
             private String Uname;
             private String quota2;
-            private String firstTime;
             private String address;
+            private long newestTime;
+            private String city;
             private String targetDate;
-            private int count;
+            private String smallRegion;
+            private String bigRegion;
             private String diagnosis;
+            private int type;
+            private String beforeDesc;
             private int duration;
             private String measures;
+            private String province;
+            private String afterDesc;
             private String executor;
             private String levelId;
             private String name;
             private int completeStatus;
-            private long newestTime;
             private String projectId;
             private String Dname;
-            private List<ReasonListBeanX> reasonList;
+            private List<ReasonListBeanXX> reasonList;
 
             public String getQuota1() {
                 return quota1;
@@ -644,20 +811,28 @@ public class ReportList {
                 this.quota2 = quota2;
             }
 
-            public String getFirstTime() {
-                return firstTime;
-            }
-
-            public void setFirstTime(String firstTime) {
-                this.firstTime = firstTime;
-            }
-
             public String getAddress() {
                 return address;
             }
 
             public void setAddress(String address) {
                 this.address = address;
+            }
+
+            public long getNewestTime() {
+                return newestTime;
+            }
+
+            public void setNewestTime(long newestTime) {
+                this.newestTime = newestTime;
+            }
+
+            public String getCity() {
+                return city;
+            }
+
+            public void setCity(String city) {
+                this.city = city;
             }
 
             public String getTargetDate() {
@@ -668,12 +843,20 @@ public class ReportList {
                 this.targetDate = targetDate;
             }
 
-            public int getCount() {
-                return count;
+            public String getSmallRegion() {
+                return smallRegion;
             }
 
-            public void setCount(int count) {
-                this.count = count;
+            public void setSmallRegion(String smallRegion) {
+                this.smallRegion = smallRegion;
+            }
+
+            public String getBigRegion() {
+                return bigRegion;
+            }
+
+            public void setBigRegion(String bigRegion) {
+                this.bigRegion = bigRegion;
             }
 
             public String getDiagnosis() {
@@ -682,6 +865,22 @@ public class ReportList {
 
             public void setDiagnosis(String diagnosis) {
                 this.diagnosis = diagnosis;
+            }
+
+            public int getType() {
+                return type;
+            }
+
+            public void setType(int type) {
+                this.type = type;
+            }
+
+            public String getBeforeDesc() {
+                return beforeDesc;
+            }
+
+            public void setBeforeDesc(String beforeDesc) {
+                this.beforeDesc = beforeDesc;
             }
 
             public int getDuration() {
@@ -698,6 +897,22 @@ public class ReportList {
 
             public void setMeasures(String measures) {
                 this.measures = measures;
+            }
+
+            public String getProvince() {
+                return province;
+            }
+
+            public void setProvince(String province) {
+                this.province = province;
+            }
+
+            public String getAfterDesc() {
+                return afterDesc;
+            }
+
+            public void setAfterDesc(String afterDesc) {
+                this.afterDesc = afterDesc;
             }
 
             public String getExecutor() {
@@ -732,14 +947,6 @@ public class ReportList {
                 this.completeStatus = completeStatus;
             }
 
-            public long getNewestTime() {
-                return newestTime;
-            }
-
-            public void setNewestTime(long newestTime) {
-                this.newestTime = newestTime;
-            }
-
             public String getProjectId() {
                 return projectId;
             }
@@ -756,18 +963,18 @@ public class ReportList {
                 this.Dname = Dname;
             }
 
-            public List<ReasonListBeanX> getReasonList() {
+            public List<ReasonListBeanXX> getReasonList() {
                 return reasonList;
             }
 
-            public void setReasonList(List<ReasonListBeanX> reasonList) {
+            public void setReasonList(List<ReasonListBeanXX> reasonList) {
                 this.reasonList = reasonList;
             }
 
-            public static class ReasonListBeanX {
+            public static class ReasonListBeanXX {
                 /**
-                 * submitTime : 1555311609518
-                 * incompleteReason : 2222
+                 * submitTime : 1563521764246
+                 * incompleteReason : ，
                  */
 
                 private long submitTime;

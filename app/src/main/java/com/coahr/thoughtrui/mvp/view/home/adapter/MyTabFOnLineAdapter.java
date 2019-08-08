@@ -16,6 +16,7 @@ import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
+import com.coahr.thoughtrui.Utils.ReviewScoreUtil;
 import com.coahr.thoughtrui.Utils.TimeUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
@@ -110,6 +111,21 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_company.setText(allListBean.get(i).getDname());
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_address.setText(allListBean.get(i).getAreaAddress());
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_update_time.setText(TimeUtils.getStringDate_start(allListBean.get(i).getModifyTime()));
+
+                List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", allListBean.get(i).getId());
+                int totalScore = 0;
+                if (projectsDBS != null && projectsDBS.size() > 0) {
+                    List<SubjectsDB> subjectsDBS = projectsDBS.get(0).getSubjectsDBList();
+                    if (subjectsDBS != null && subjectsDBS.size() > 0) {
+                        totalScore = ReviewScoreUtil.getTotalScore(subjectsDBS);
+                        ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_score.setText("检核得分: " + totalScore + "分");
+                        KLog.e("lizhiguo", "totalScore == " + totalScore);
+                    } else {
+                        ((completeListHaveBeenCancelViewHolder) viewHolder).complete_tv_project_score.setText("检核得分: " + allListBean.get(i).getTotalScore() + "分");
+                        KLog.e("lizhiguo", "TotalScore == " + allListBean.get(i).getTotalScore());
+                    }
+                }
+
                 ((completeListHaveBeenCancelViewHolder) viewHolder).complete_cardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -122,7 +138,7 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     @Override
                     public boolean onLongClick(View view) {
                         if (adapter_online != null) {
-                            adapter_online.completeLongClick(allListBean.get(i));
+                            adapter_online.completeLongClick(allListBean.get(i), i);
                         }
                         return false;
                     }
@@ -139,6 +155,20 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_address.setText(allListBean.get(i).getAreaAddress());
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_update_time.setText(TimeUtils.getStringDate_start(allListBean.get(i).getModifyTime()));
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_item_data.setText(getItemDate(allListBean.get(i).getId()));
+
+                List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", allListBean.get(i).getId());
+                int totalScore = 0;
+                if (projectsDBS != null && projectsDBS.size() > 0) {
+                    List<SubjectsDB> subjectsDBS = projectsDBS.get(0).getSubjectsDBList();
+                    if (subjectsDBS != null && subjectsDBS.size() > 0) {
+                        totalScore = ReviewScoreUtil.getTotalScore(subjectsDBS);
+                        KLog.e("lizhiguo", "totalScore == " + totalScore);
+                        ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_score.setText("检核得分: " + totalScore + "分");
+                    } else {
+                        ((unCompleteListHaveBeenCancelViewHolder) viewHolder).unComplete_tv_project_score.setText("检核得分: " + allListBean.get(i).getTotalScore() + "分");
+                        KLog.e("lizhiguo", "TotalScore == " + allListBean.get(i).getTotalScore());
+                    }
+                }
                 ((unCompleteListHaveBeenCancelViewHolder) viewHolder).uncomplete_cardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -151,7 +181,7 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     @Override
                     public boolean onLongClick(View view) {
                         if (adapter_online != null) {
-                            adapter_online.unCompleteLongClick(allListBean.get(i));
+                            adapter_online.unCompleteLongClick(allListBean.get(i), i);
                         }
                         return false;
                     }
@@ -275,6 +305,7 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         private TextView complete_tv_project_code;
         private TextView complete_tv_project_name;
         private TextView complete_tv_project_company;
+        private TextView complete_tv_project_score;
         private TextView complete_tv_project_address;
         private TextView complete_tv_update_time;
 
@@ -287,6 +318,7 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             complete_tv_project_code = itemView.findViewById(R.id.complete_tv_project_code);
             complete_tv_project_name = itemView.findViewById(R.id.complete_tv_project_name);
             complete_tv_project_company = itemView.findViewById(R.id.complete_tv_project_company);
+            complete_tv_project_score = itemView.findViewById(R.id.complete_tv_project_score);
             complete_tv_project_address = itemView.findViewById(R.id.complete_tv_project_address);
             complete_tv_update_time = itemView.findViewById(R.id.complete_tv_update_time);
 
@@ -301,6 +333,7 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         private TextView unComplete_tv_project_code;
         private TextView unComplete_tv_project_name;
         private TextView unComplete_tv_project_company;
+        private TextView unComplete_tv_project_score;
         private TextView unComplete_tv_project_address;
         private TextView unComplete_tv_update_time;
         private TextView unComplete_item_data;
@@ -314,6 +347,7 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             unComplete_tv_project_code = itemView.findViewById(R.id.unComplete_tv_project_code);
             unComplete_tv_project_name = itemView.findViewById(R.id.unComplete_tv_project_name);
             unComplete_tv_project_company = itemView.findViewById(R.id.unComplete_tv_project_company);
+            unComplete_tv_project_score = itemView.findViewById(R.id.unComplete_tv_project_score);
             unComplete_tv_project_address = itemView.findViewById(R.id.unComplete_tv_project_address);
             unComplete_tv_update_time = itemView.findViewById(R.id.unComplete_tv_update_time);
             unComplete_item_data = itemView.findViewById(R.id.unComplete_item_data);
@@ -356,11 +390,11 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         void completeClick(HomeDataList.DataBean.AllListBean completeListBean);
 
-        void completeLongClick(HomeDataList.DataBean.AllListBean completeListBean);
+        void completeLongClick(HomeDataList.DataBean.AllListBean completeListBean, int i);
 
         void unCompleteClick(HomeDataList.DataBean.AllListBean unCompleteListBean);
 
-        void unCompleteLongClick(HomeDataList.DataBean.AllListBean unCompleteListBean);
+        void unCompleteLongClick(HomeDataList.DataBean.AllListBean unCompleteListBean, int i);
 
         void unDownLoadClick(HomeDataList.DataBean.AllListBean newListBean);
 
@@ -379,9 +413,11 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             List<SubjectsDB> subjectsDBS = projectsDBS.get(0).getSubjectsDBList();
             if (subjectsDBS != null && subjectsDBS.size() > 0) {
                 for (int i = 0; i < subjectsDBS.size(); i++) {
-                    CountAll++;
+                    //已完成，未上传
                     if (subjectsDBS.get(i).getIsComplete() == 1 && subjectsDBS.get(i).getsUploadStatus() == 0) {
-                        List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + id + "/" + subjectsDBS.get(i).getNumber() + "_" + subjectsDBS.get(i).getHt_id());
+                        CountAll++;
+//                        List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + id + "/" + subjectsDBS.get(i).getNumber() + "_" + subjectsDBS.get(i).getHt_id());
+                        List<String> fileList = FileIOUtils.getAllFileList(Constants.SAVE_DIR_PROJECT_Document + id + "/" + subjectsDBS.get(i).getNumber() + "_" + subjectsDBS.get(i).getHt_id());
                         if (fileList != null && fileList.size() > 0) {
                             for (int j = 0; j < fileList.size(); j++) {
                                 if (!fileList.get(j).endsWith("txt")) {
@@ -391,6 +427,7 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         }
                     }
                 }
+
                 String format = BaseApplication.mContext.getResources().getString(R.string.project_list_date_size);
                 String format1 = String.format(format, CountAll, dataSize);
                 massage = format1;
@@ -398,6 +435,7 @@ public class MyTabFOnLineAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             }
         }
+
         return massage;
     }
 }

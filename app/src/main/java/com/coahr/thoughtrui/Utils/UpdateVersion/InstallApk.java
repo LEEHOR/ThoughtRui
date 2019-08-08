@@ -83,6 +83,7 @@ public class InstallApk {
                 }
             } catch (Throwable e) {
                 e.printStackTrace();
+                KLog.e("测试代码", "Throwable == " + e.toString());
               //  DataEmbeddingUtil.dataEmbeddingAPPUpdate(e.toString());
                // CommonUtils.makeEventToast(MyApplication.getContext(), MyApplication.getContext().getString(R.string.download_hint), false);
             }

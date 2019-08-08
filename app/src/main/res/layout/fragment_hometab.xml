@@ -1,116 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
-<LinearLayout
-    android:visibility="gone"
-    android:padding="@dimen/dp_10"
-    android:background="@color/colorPrimary"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
-    <RelativeLayout
-        android:id="@+id/rl_start_time"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content">
-        <com.coahr.thoughtrui.widgets.SelectTextView
-            android:textSize="@dimen/dp_14"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:id="@+id/tv_start_time"
 
-            android:textColor="@color/material_grey_500"
-            app:select_color="@color/black"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <com.coahr.thoughtrui.widgets.SelectImageView
-            android:id="@+id/iv_start_time"
-            android:layout_marginLeft="@dimen/dp_5"
-            android:layout_centerVertical="true"
-            android:layout_width="@dimen/dp_10"
-            android:layout_height="@dimen/dp_10"
-            app:select_src="@mipmap/sort_c"
-            android:src="@mipmap/sort"
-            android:layout_toRightOf="@+id/tv_start_time"
-            />
-    </RelativeLayout>
-    <RelativeLayout
-        android:id="@+id/rl_end_time"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content">
-        <com.coahr.thoughtrui.widgets.SelectTextView
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:textSize="@dimen/dp_14"
-            android:id="@+id/tv_end_time"
-
-            android:textColor="@color/material_grey_500"
-            app:select_color="@color/black"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <com.coahr.thoughtrui.widgets.SelectImageView
-            android:id="@+id/iv_end_time"
-            android:layout_marginLeft="@dimen/dp_5"
-            android:layout_centerVertical="true"
-            android:layout_width="@dimen/dp_10"
-            android:layout_height="@dimen/dp_10"
-            app:select_src="@mipmap/sort_c"
-            android:src="@mipmap/sort"
-            android:layout_toRightOf="@+id/tv_end_time"
-            />
-    </RelativeLayout>
-    <RelativeLayout
-        android:visibility="gone"
-        android:id="@+id/rl_distance"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content">
-        <com.coahr.thoughtrui.widgets.SelectTextView
-            android:textSize="@dimen/dp_14"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:id="@+id/tv_distance"
-            android:textColor="@color/material_grey_500"
-            app:select_color="@color/black"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <com.coahr.thoughtrui.widgets.SelectImageView
-            android:id="@+id/iv_distance"
-            android:layout_marginLeft="@dimen/dp_5"
-            android:layout_centerVertical="true"
-            android:layout_width="@dimen/dp_10"
-            android:layout_height="@dimen/dp_10"
-            app:select_src="@mipmap/sort_c"
-            android:src="@mipmap/sort"
-            android:layout_toRightOf="@+id/tv_distance"
-            />
-    </RelativeLayout>
-
-</LinearLayout>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-    android:id="@+id/myTab_swipe"
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="1">
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/tab_off_recyclerView"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </androidx.recyclerview.widget.RecyclerView>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/tab_on_recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </androidx.recyclerview.widget.RecyclerView>
-    </FrameLayout>
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        android:padding="@dimen/dp_10"
+        android:visibility="gone">
 
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        <RelativeLayout
+            android:id="@+id/rl_start_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <com.coahr.thoughtrui.widgets.SelectTextView
+                android:id="@+id/tv_start_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+
+                android:layout_centerVertical="true"
+                android:textColor="@color/material_grey_500"
+                android:textSize="@dimen/dp_14"
+                app:select_color="@color/black" />
+
+            <com.coahr.thoughtrui.widgets.SelectImageView
+                android:id="@+id/iv_start_time"
+                android:layout_width="@dimen/dp_10"
+                android:layout_height="@dimen/dp_10"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_toRightOf="@+id/tv_start_time"
+                android:src="@mipmap/sort"
+                app:select_src="@mipmap/sort_c" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_end_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <com.coahr.thoughtrui.widgets.SelectTextView
+                android:id="@+id/tv_end_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+
+                android:layout_centerVertical="true"
+                android:textColor="@color/material_grey_500"
+                android:textSize="@dimen/dp_14"
+                app:select_color="@color/black" />
+
+            <com.coahr.thoughtrui.widgets.SelectImageView
+                android:id="@+id/iv_end_time"
+                android:layout_width="@dimen/dp_10"
+                android:layout_height="@dimen/dp_10"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_toRightOf="@+id/tv_end_time"
+                android:src="@mipmap/sort"
+                app:select_src="@mipmap/sort_c" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_distance"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="gone">
+
+            <com.coahr.thoughtrui.widgets.SelectTextView
+                android:id="@+id/tv_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:textColor="@color/material_grey_500"
+                android:textSize="@dimen/dp_14"
+                app:select_color="@color/black" />
+
+            <com.coahr.thoughtrui.widgets.SelectImageView
+                android:id="@+id/iv_distance"
+                android:layout_width="@dimen/dp_10"
+                android:layout_height="@dimen/dp_10"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_toRightOf="@+id/tv_distance"
+                android:src="@mipmap/sort"
+                app:select_src="@mipmap/sort_c" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/myTab_swipe"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/tab_off_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"></androidx.recyclerview.widget.RecyclerView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/tab_on_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
+        </FrameLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>

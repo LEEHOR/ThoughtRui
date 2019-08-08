@@ -2,6 +2,7 @@ package com.coahr.thoughtrui.mvp.model.Bean;
 
 import com.contrarywind.interfaces.IPickerViewData;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ import java.util.List;
  * 创建日期：2019/3/5
  * 描述：
  */
-public class Template_list {
+public class Template_list implements Serializable {
 
 
     /**
@@ -20,6 +21,14 @@ public class Template_list {
 
     private int status;
     private List<TemplateListBean> template_list;
+
+    @Override
+    public String toString() {
+        return "Template_list{" +
+                "status=" + status +
+                ", template_list=" + template_list +
+                '}';
+    }
 
     public int getStatus() {
         return status;

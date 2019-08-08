@@ -1,46 +1,29 @@
 package com.coahr.thoughtrui.widgets.AltDialog;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
+import androidx.appcompat.app.AppCompatDialogFragment;
+
 import com.coahr.thoughtrui.DBbean.UsersDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
-import com.coahr.thoughtrui.Utils.Permission.OnRequestPermissionListener;
-import com.coahr.thoughtrui.Utils.Permission.RequestPermissionUtils;
 import com.coahr.thoughtrui.Utils.PreferenceUtils;
-import com.coahr.thoughtrui.Utils.ScreenUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseDialogFragment;
 import com.coahr.thoughtrui.mvp.constract.LoginFragmentC;
-import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_LoginSuccess;
 import com.coahr.thoughtrui.mvp.model.Bean.LoginBean;
 import com.coahr.thoughtrui.mvp.presenter.LoginFragmentP;
-import com.coahr.thoughtrui.mvp.view.MainActivity;
 import com.socks.library.KLog;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
 import java.util.List;
@@ -49,9 +32,6 @@ import java.util.Random;
 
 import javax.inject.Inject;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatDialogFragment;
-import androidx.fragment.app.DialogFragment;
 import butterknife.BindView;
 
 /**
@@ -124,15 +104,16 @@ public class Login_DialogFragment extends BaseDialogFragment<LoginFragmentC.Pres
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (TextUtils.isEmpty(user_account.getText()) || user_account.getText().toString().length() < 4) {
+                if (TextUtils.isEmpty(user_account.getText().toString().trim()) /*|| user_account.getText().toString().trim().length() < 4*/) {
                     ToastUtils.showLong(getString(R.string.toast_1));
                     return;
                 }
-                if (TextUtils.isEmpty(user_password.getText()) || user_password.getText().toString().length() < 4) {
-                    ToastUtils.showLong(getString(R.string.toast_1));
+                if (TextUtils.isEmpty(user_password.getText().toString().trim()) || user_password.getText().toString().trim().length() < 6) {
+                    ToastUtils.showLong(getString(R.string.toast_2));
                     return;
                 }
                 String prefString = PreferenceUtils.getPrefString(BaseApplication.mContext, Constants.devicestoken_key, "");
+                KLog.e("测试代码", "prefString == " + prefString);
                 if (prefString != null && !prefString.equals("")) {
                     token = prefString;
                 } else {

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
     <!--数据库名-->
-    <dbname value="ThoughtRui"></dbname>
+    <dbname value="ThoughtRui"/>
     <!--数据库版本号-->
-    <version value="15"></version>
+    <version value="23"></version>
     <!--映射模型，稍后用到-->
     <list>
-        <mapping class="com.coahr.thoughtrui.DBbean.UsersDB"></mapping>
-        <mapping class="com.coahr.thoughtrui.DBbean.ProjectsDB"></mapping>
-        <mapping class="com.coahr.thoughtrui.DBbean.SubjectsDB"></mapping>
-        <mapping class="com.coahr.thoughtrui.DBbean.ImagesDB"></mapping>
-        <mapping class="com.coahr.thoughtrui.DBbean.AnswersDB"></mapping>
+        <mapping class="com.coahr.thoughtrui.DBbean.UsersDB"/>
+        <mapping class="com.coahr.thoughtrui.DBbean.ProjectsDB"/>
+        <mapping class="com.coahr.thoughtrui.DBbean.SubjectsDB"/>
+        <mapping class="com.coahr.thoughtrui.DBbean.ImagesDB"/>
+        <mapping class="com.coahr.thoughtrui.DBbean.AnswersDB"/>
+        <mapping class="com.coahr.thoughtrui.DBbean.TemplateDB"/>
     </list>
 </litepal>

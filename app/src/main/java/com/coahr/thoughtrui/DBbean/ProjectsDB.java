@@ -50,6 +50,72 @@ public class ProjectsDB extends DataSupport {
     private long uploadTime;
     //所属User
     private UsersDB user;
+    //所属城市
+    private String city;
+    //模板id
+    private String templateId;
+    //消息中心获取此数据时，可否展示在消息中心
+    private boolean isHideInMessageCenter;
+
+    @Override
+    public String toString() {
+        return "ProjectsDB{" +
+                "id=" + id +
+                ", Pid='" + Pid + '\'' +
+                ", progress='" + progress + '\'' +
+                ", Cname='" + Cname + '\'' +
+                ", Pname='" + Pname + '\'' +
+                ", Dname='" + Dname + '\'' +
+                ", grade='" + grade + '\'' +
+                ", address='" + address + '\'' +
+                ", location='" + location + '\'' +
+                ", code='" + code + '\'' +
+                ", completeStatus=" + completeStatus +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", modifyTime=" + modifyTime +
+                ", pUploadStatus=" + pUploadStatus +
+                ", isComplete=" + isComplete +
+                ", stage='" + stage + '\'' +
+                ", notice='" + notice + '\'' +
+                ", downloadTime=" + downloadTime +
+                ", isDeletes=" + isDeletes +
+                ", manager='" + manager + '\'' +
+                ", sale_code='" + sale_code + '\'' +
+                ", service_code='" + service_code + '\'' +
+                ", uploadTime=" + uploadTime +
+                ", user=" + user +
+                ", city='" + city + '\'' +
+                ", templateId='" + templateId + '\'' +
+                ", isHideInMessageCenter=" + isHideInMessageCenter +
+                ", subjectsDBList=" + subjectsDBList +
+                '}';
+    }
+
+    public boolean isHideInMessageCenter() {
+        return isHideInMessageCenter;
+    }
+
+    public void setHideInMessageCenter(boolean hideInMessageCenter) {
+        isHideInMessageCenter = hideInMessageCenter;
+    }
+
+    public String getTemplateId() {
+        return templateId;
+    }
+
+    public void setTemplateId(String templateId) {
+        this.templateId = templateId;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
     //包含多个题目
     private List<SubjectsDB> subjectsDBList =new ArrayList<>();
     public int getId() {

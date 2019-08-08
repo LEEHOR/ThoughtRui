@@ -62,4 +62,17 @@
         <item name="android:maxHeight">@dimen/dp_40</item>
     </style>
 
+    <style name="NoTitleDialog" parent="android:style/Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <!--&lt;!&ndash;<item name="android:windowIsTranslucent">false</item>&ndash;&gt;是否半透明-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+    <style name="PopupWindowAnimation">
+        <item name="android:windowEnterAnimation">@anim/push_bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/push_bottom_out</item>
+    </style>
+
 </resources>

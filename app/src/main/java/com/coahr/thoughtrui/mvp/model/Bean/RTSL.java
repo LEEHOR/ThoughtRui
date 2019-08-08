@@ -16,6 +16,14 @@ public class RTSL {
     private String msg;
     private int result;
 
+    @Override
+    public String toString() {
+        return "RTSL{" +
+                "msg='" + msg + '\'' +
+                ", result=" + result +
+                '}';
+    }
+
     public String getMsg() {
         return msg;
     }

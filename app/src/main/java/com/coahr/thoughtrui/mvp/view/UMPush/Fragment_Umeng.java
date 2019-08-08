@@ -1,24 +1,31 @@
 package com.coahr.thoughtrui.mvp.view.UMPush;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.coahr.thoughtrui.DBbean.ProjectsDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.DensityUtils;
+import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
+import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
-import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
-import com.coahr.thoughtrui.mvp.Base.BaseLazyFragment;
 import com.coahr.thoughtrui.mvp.constract.Fragment_Umeng_C;
 import com.coahr.thoughtrui.mvp.model.Bean.CensorBean;
 import com.coahr.thoughtrui.mvp.model.Bean.NotificationBean;
 import com.coahr.thoughtrui.mvp.presenter.Fragment_UmengP;
-import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
 import com.coahr.thoughtrui.mvp.view.MainActivity;
 import com.coahr.thoughtrui.mvp.view.UMPush.adapter.NotificationAdapter;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
@@ -28,19 +35,12 @@ import com.coahr.thoughtrui.mvp.view.upload.UploadFragment;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
 import com.socks.library.KLog;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import butterknife.BindView;
-import me.yokeyword.fragmentation.SupportFragment;
 
 /**
  * @author Leehor
@@ -56,6 +56,8 @@ public class Fragment_Umeng extends BaseFragment<Fragment_UmengP> implements Fra
     @BindView(R.id.umeng_rcyv)
     RecyclerView umeng_rcyv;
     private NotificationAdapter notificationAdapter;
+    private View emptyView;
+    private TextView tv_infos;
 
     public static Fragment_Umeng newInstance() {
         return new Fragment_Umeng();
@@ -79,11 +81,15 @@ public class Fragment_Umeng extends BaseFragment<Fragment_UmengP> implements Fra
                 _mActivity.onBackPressed();
             }
         });
+
         if (!Constants.isOpenMessage) {
             Constants.isOpenMessage = true;
             getDateBy_net();
         }
 
+        emptyView = getLayoutInflater().inflate(R.layout.recycler_empty_view_1, (ViewGroup) umeng_rcyv.getParent(), false);
+        tv_infos = emptyView.findViewById(R.id.tv_infos);
+        tv_infos.setText(getString(R.string.toast_36));
     }
 
     @Override
@@ -101,7 +107,11 @@ public class Fragment_Umeng extends BaseFragment<Fragment_UmengP> implements Fra
         if (Constants.isOpenMessage) {
             if (Constants.notificationList.size() > 0) {
                 notificationAdapter.setNewData(Constants.notificationList);
+
+            } else {
+                notificationAdapter.setEmptyView(emptyView);
             }
+            PreferenceUtils.setPrefInt(_mActivity, Constants.messageNum, Constants.notificationList.size());
         }
         notificationAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
@@ -136,8 +146,17 @@ public class Fragment_Umeng extends BaseFragment<Fragment_UmengP> implements Fra
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 if (Constants.notificationList != null) {
+                                    /**
+                                     * 需要更改为消息已删除的状态
+                                     */
+                                    NotificationBean.Notification notification = Constants.notificationList.get(position);
+                                    ContentValues values = new ContentValues();
+                                    values.put("ishideinmessagecenter", true);
+                                    int update = DataBaseWork.DBUpdateById(ProjectsDB.class, values, (long) notification.getProjectId());
+
                                     Constants.notificationList.remove(position);
-                                    notificationAdapter.notifyItemRemoved(position);
+//                                    notificationAdapter.notifyItemRemoved(position);
+                                    notificationAdapter.notifyDataSetChanged();
                                 }
                                 dialog.dismiss();
                             }
@@ -158,15 +177,20 @@ public class Fragment_Umeng extends BaseFragment<Fragment_UmengP> implements Fra
 
         if (Constants.notificationList.size() > 0) {
             notificationAdapter.setNewData(Constants.notificationList);
+        } else {
+            notificationAdapter.setEmptyView(emptyView);
         }
-
+        PreferenceUtils.setPrefInt(_mActivity, Constants.messageNum, Constants.notificationList.size());
     }
 
     @Override
     public void getNotification_DbFailure(String failure) {
         if (Constants.notificationList.size() > 0) {
             notificationAdapter.setNewData(Constants.notificationList);
+        } else {
+            notificationAdapter.setEmptyView(emptyView);
         }
+        PreferenceUtils.setPrefInt(_mActivity, Constants.messageNum, Constants.notificationList.size());
     }
 
     @Override
@@ -182,6 +206,7 @@ public class Fragment_Umeng extends BaseFragment<Fragment_UmengP> implements Fra
                 Constants.notificationList.add(notification);
             }
         }
+
         p.getNotification_Db(Constants.sessionId);
     }
 

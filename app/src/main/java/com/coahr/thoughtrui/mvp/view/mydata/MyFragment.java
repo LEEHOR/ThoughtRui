@@ -28,6 +28,7 @@ import com.coahr.thoughtrui.mvp.Base.BaseFragment_not_padding;
 import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
 import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
 import com.coahr.thoughtrui.widgets.CircularImageView;
+import com.socks.library.KLog;
 
 import java.io.File;
 import java.math.RoundingMode;
@@ -108,6 +109,8 @@ public class MyFragment extends BaseFragment_not_padding implements View.OnClick
 
     @Override
     public void initView() {
+        /*tv_xx_count.setVisibility(PreferenceUtils.getPrefInt(_mActivity, Constants.messageNum, 0) > 0? View.VISIBLE: View.INVISIBLE);*/
+
         ScreenUtils.setMargins(re_mytop, 20, ScreenUtils.getStatusBarHeight(BaseApplication.mContext), 20, 0);
         re_message_center.setOnClickListener(this);
         re_upload_options.setOnClickListener(this);
@@ -281,7 +284,7 @@ public class MyFragment extends BaseFragment_not_padding implements View.OnClick
         upload.setText(String.valueOf(unUpload));
         complete.setText(String.valueOf(unComplete));
         star.setText(String.valueOf(unStart));
-        if (!Constants.isOpenMessage) {
+        /*if (!Constants.isOpenMessage) {
             if (unLoad + unComplete + unStart + unUpload > 0) {
                 tv_xx_count.setVisibility(View.VISIBLE);
               //  tv_xx_count.setText((unLoad + unComplete + unStart + unUpload) + "");
@@ -295,8 +298,10 @@ public class MyFragment extends BaseFragment_not_padding implements View.OnClick
             } else {
                 tv_xx_count.setVisibility(View.INVISIBLE);
             }
-        }
+        }*/
 
+        KLog.e("测试代码", "messageNum == " + PreferenceUtils.getPrefInt(_mActivity, Constants.messageNum, 0));
+        tv_xx_count.setVisibility(PreferenceUtils.getPrefInt(_mActivity, Constants.messageNum, 0) > 0? View.VISIBLE: View.INVISIBLE);
     }
 
     /**

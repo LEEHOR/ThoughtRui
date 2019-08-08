@@ -28,7 +28,9 @@ public interface StartProjectActivity_C {
 
         void getOfflineFailure(int failure);
 
+        void saveAnswersSuccess(int type);
 
+        void saveAnswersFailure(int type);
 
         void sendRtslSuccess(String success,int result);
 
@@ -62,7 +64,11 @@ public interface StartProjectActivity_C {
 
         void sendRtslFail(String fail,int result);
 
+        void saveAnswers(String answers, String remark, String ht_ProjectId, int number, String ht_id, int type);
 
+        void saveAnswersSuccess(int type);
+
+        void saveAnswersFailure(int type);
     }
 
     interface Model extends BaseContract.Model {
@@ -75,6 +81,8 @@ public interface StartProjectActivity_C {
         void getOfflineDate( String ht_projectId);
 
         void sendRtsl(Map<String,Object> map);
+
+        void saveAnswers(String answers, String remark, String ht_ProjectId, int number, String ht_id, int type);
 
     }
 }

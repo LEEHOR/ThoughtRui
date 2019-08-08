@@ -6,34 +6,17 @@ package com.coahr.thoughtrui.mvp.model.Bean;
  */
 
 public class UpdateBean {
-
-
-    /**
-     * isnew : 1
-     * msg : 请求成功！
-     * result : 1
-     * url : http://android.woyaokanche.com:8082/51kanche/wykc.apk
-     */
-
-    private int isnew;
-    private String msg;
     private int result;
-    private String url;
+    private String msg;
+    private DataBean data;
 
-    public int getIsnew() {
-        return isnew;
-    }
-
-    public void setIsnew(int isnew) {
-        this.isnew = isnew;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
+    @Override
+    public String toString() {
+        return "UpdateBean{" +
+                "result=" + result +
+                ", msg='" + msg + '\'' +
+                ", data=" + data +
+                '}';
     }
 
     public int getResult() {
@@ -44,11 +27,48 @@ public class UpdateBean {
         this.result = result;
     }
 
-    public String getUrl() {
-        return url;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public DataBean getData() {
+        return data;
+    }
+
+    public void setData(DataBean data) {
+        this.data = data;
+    }
+
+    public static class DataBean {
+        private String version;
+        private String url;
+
+        public String getVersion() {
+            return version;
+        }
+
+        public void setVersion(String version) {
+            this.version = version;
+        }
+
+        @Override
+        public String toString() {
+            return "DataBean{" +
+                    "version='" + version + '\'' +
+                    ", url='" + url + '\'' +
+                    '}';
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
     }
 }

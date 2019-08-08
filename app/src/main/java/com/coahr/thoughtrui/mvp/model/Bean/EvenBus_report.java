@@ -9,6 +9,13 @@ package com.coahr.thoughtrui.mvp.model.Bean;
 public class EvenBus_report {
     private boolean isCanReport;
 
+    @Override
+    public String toString() {
+        return "EvenBus_report{" +
+                "isCanReport=" + isCanReport +
+                '}';
+    }
+
     public EvenBus_report() {
     }
 

@@ -1,19 +1,12 @@
 package com.coahr.thoughtrui.mvp.view.startProject;
 
+import android.content.ContentValues;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.media.AudioFormat;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentManager;
-import androidx.appcompat.app.AppCompatDialogFragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -27,6 +20,13 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -47,11 +47,8 @@ import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
-import com.coahr.thoughtrui.mvp.Base.BaseChildFragment;
-import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment_not_padding;
 import com.coahr.thoughtrui.mvp.constract.PagerFragment_aC;
-import com.coahr.thoughtrui.mvp.model.ApiContact;
 import com.coahr.thoughtrui.mvp.model.Bean.AliyunOss;
 import com.coahr.thoughtrui.mvp.model.Bean.UpLoadCallBack;
 import com.coahr.thoughtrui.mvp.model.Bean.isCompleteBean;
@@ -84,8 +81,6 @@ import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultDisposable;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
-
-import cn.finalteam.rxgalleryfinal.utils.BitmapUtils;
 import omrecorder.AudioChunk;
 import omrecorder.AudioRecordConfig;
 import omrecorder.OmRecorder;
@@ -152,8 +147,10 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
     private String ht_projectId;
     //题目个数
     private int countSize;
-    //题目Id
+    //题目Id（非主鍵）
     private String ht_id;
+    //项目数据库表題目主鍵Id
+    private int id;
     //数据库题目序号
     private int number;
     private SpacesItemDecoration spacesItemDecoration;
@@ -181,7 +178,7 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
     private String standard_score;
     private PhotoAlbumDialogFragment photoAlbumDialogFragment;
     //评论输入窗口
-    EvaluateInputDialogFragment dialogFragment = EvaluateInputDialogFragment.newInstance(30);
+    EvaluateInputDialogFragment dialogFragment = EvaluateInputDialogFragment.newInstance(100);
     //录音播放按钮Ui
     private Drawable imgs[] = {BaseApplication.mContext.getResources().getDrawable(R.mipmap.ico_recorder, null)
             , BaseApplication.mContext.getResources().getDrawable(R.mipmap.recordering, null)
@@ -273,6 +270,7 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
             List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectBy_Where(SubjectsDB.class, new String[]{"number"}, "ht_id=?", ht_id);
             if (subjectsDBS != null && subjectsDBS.size() > 0) {
                 number = subjectsDBS.get(0).getNumber();
+                id = subjectsDBS.get(0).getId();
             }
             List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", ht_projectId);
             if (projectsDBS != null && projectsDBS.size() > 0) {
@@ -346,6 +344,9 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
                     if (Double.parseDouble(text) <= Double.parseDouble(standard_score) && Double.parseDouble(text) >= 0) {
                         ed_score.setText(text);
                         p.saveAnswers(text, remark, ht_projectId, number, ht_id, 1);
+
+                        //保存题目分数到数据库
+                        saveSubjectScore(text);
                     } else {
                         ToastUtils.showLong(getResources().getString(R.string.toast_16));
                     }
@@ -623,6 +624,7 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
 
     @Override
     public void getAnswerSuccess(String Massage) {
+        KLog.e("lizhiguo", "subjectsDBType == " + subjectsDBType);
         if (Massage != null) {
             if (subjectsDBType == 0) { //判断题
                 String[] split = Massage.split("&");
@@ -631,6 +633,7 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
                         if (i == 0) {
                             String s = split[0];
                             String string = SaveOrGetAnswers.getString(s, ":");
+                            KLog.e("lizhiguo", "string == " + string + " -- isAnswer = true");
                             if (string != null && !string.equals("") && !string.equals("null")) {
                                 answers = string;
                                 isAnswer = true;
@@ -662,6 +665,7 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
                         if (i == 0) {
                             String s = split[0];
                             String string = SaveOrGetAnswers.getString(s, ":");
+                            KLog.e("lizhiguo", "string == " + string + " -- isAnswer = true");
                             if (string != null && !string.equals("") && !string.equals("null")) {
                                 answers = string;
                                 isAnswer = true;
@@ -1001,7 +1005,22 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
                 answers = rb_no.getText().toString();
             }
             p.saveAnswers(answers, remark, ht_projectId, number, ht_id, 1);
+            ed_score.setText(answers);
+
+            //保存题目分数到数据库
+            saveSubjectScore(answers);
         }
+    }
+
+    /**
+     * 保存分数到题目数据库
+     * @param score
+     */
+    private void saveSubjectScore(String score) {
+        ContentValues values = new ContentValues();
+        values.put("answer", score);
+        //根据项目id，保存答案
+        int update = DataBaseWork.DBUpdateById(SubjectsDB.class, values, (long)id);
     }
 
     /**
@@ -1097,7 +1116,9 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
 
     @NonNull
     private File file() {
-        File file = new File(Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id);
+//        File file = new File(Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + "audio" + "/" + number + "_" + ht_id);
+        File file = new File(Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id + "/" + "audio" );
+
         if (!file.exists()) {
             file.mkdirs();
         }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,9 +22,11 @@ import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.coahr.thoughtrui.DBbean.ProjectsDB;
+import com.coahr.thoughtrui.DBbean.SubjectsDB;
+import com.coahr.thoughtrui.DBbean.TemplateDB;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.DensityUtils;
-import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
+import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.Utils.LoadCity.JsonBean;
 import com.coahr.thoughtrui.Utils.LoadCity.JsonFileReader;
 import com.coahr.thoughtrui.Utils.PreferenceUtils;
@@ -33,33 +36,41 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.Fragment_action_plan_pre_1_c;
-import com.coahr.thoughtrui.mvp.model.ApiContact;
 import com.coahr.thoughtrui.mvp.model.Bean.AliyunOss;
 import com.coahr.thoughtrui.mvp.model.Bean.ReportList;
 import com.coahr.thoughtrui.mvp.model.Bean.Template_list;
 import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
+import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectQuotaLevel1;
+import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectQuotaLevel2;
 import com.coahr.thoughtrui.mvp.presenter.Fragment_action_plan_pre_1_P;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
 import com.coahr.thoughtrui.mvp.view.startProject.adapter.PagerFragmentPhotoAdapter;
 import com.coahr.thoughtrui.mvp.view.startProject.adapter.PagerFragmentPhotoListener;
+import com.coahr.thoughtrui.widgets.AltDialog.EvaluateInputDialogFragment;
 import com.coahr.thoughtrui.widgets.AltDialog.PhotoAlbumDialogFragment;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
 import com.google.gson.Gson;
 import com.socks.library.KLog;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import javax.inject.Inject;
 
+import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -108,6 +119,8 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
     LinearLayout planPhotoView;
     @BindView(R.id.plan_tv_6)
     TextView planTv6;
+    @BindView(R.id.et_plan_status)
+    TextView etPlanStatus;
     /**
      * 经销商名称
      */
@@ -178,7 +191,9 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
     private OSSClient ossClient;
     private OSSAuthCredentialsProvider credentialProvider;
     private String projectId;  //项目Id
+    private String projectIds;  //当前店铺的所有项目Id（可能不同模板）
     private String levelId;
+    private String beforeDesc;
     private int type;  //判断是否为更新操作 1.首次 2.更新
     private String executor;  //监督人
     private String address; //省份
@@ -187,6 +202,19 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
     private String quota1;
     private String quota2;
     private String targetDate;
+    //某经销商下所有模板id的拼接字符串
+    private String templateId;
+    //某经销商下所有模板id的集合
+    private List<String> templateIds;
+
+    //未得满分的题目集合
+    private List<SubjectsDB> noStandardSubjects = new ArrayList<>();
+    //一级指标数据集合
+    private List<SubjectQuotaLevel1> quotaList1 = new ArrayList<>();
+    //二级指标数据集合
+    List<SubjectQuotaLevel2> quotaList2 = new ArrayList<>();
+    //被选中的一级指标
+    private SubjectQuotaLevel1 selectedQuotaLevel1;
 
     @Override
     public Fragment_action_plan_pre_1_c.Presenter getPresenter() {
@@ -209,6 +237,8 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
 
     @Override
     public void initView() {
+        EventBus.getDefault().register(this);
+
         planTv6.setText(getResources().getString(R.string.plan_1_8));
         planPhotoView.setVisibility(View.VISIBLE);
         if (getArguments() != null) {
@@ -222,6 +252,8 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
             select_city = address;
             projectId = reportList.getProjectId();
             levelId = reportList.getLevelId();
+            KLog.e("测试代码", "levelId == " + levelId);
+            beforeDesc = reportList.getBeforeDesc();
 
             name = reportList.getName();
             dname = reportList.getDname();
@@ -236,6 +268,7 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
             planTemplet.setText(name);
             planQuota1.setText(quota1);
             planQuota2.setText(quota2 != null ? quota2 : "");
+            etPlanStatus.setText(beforeDesc == null ? "" : beforeDesc);
         } else {
             planPlanTime.setText(TimeUtils.getStingYMD(System.currentTimeMillis()));
             planPlaner.setText(Constants.user_name);
@@ -276,6 +309,16 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
         });
     }
 
+    /**
+     * Evenbus,提交后，自动关闭
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void EvenBus(Boolean isFinish) {
+        if (isFinish) {
+            _mActivity.onBackPressed();
+        }
+    }
+
     @Override
     public void initData() {
         if (reportList != null) {
@@ -288,11 +331,13 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
             planQuota2.setText(reportList.getQuota2() != null ? reportList.getQuota2() : "");
             projectId = reportList.getProjectId();
             levelId = reportList.getLevelId();
+            KLog.e("测试代码", "levelId == " + levelId);
+            etPlanStatus.setText(beforeDesc == null ? "" : beforeDesc);
         }
 
         //判断令牌有无过期
-        if (Constants.Expiration>System.currentTimeMillis()){
-            getSTS_OSS(Constants.AK,Constants.SK,Constants.STOKEN,Constants.ENDPOINT);
+        if (Constants.Expiration > System.currentTimeMillis()) {
+            getSTS_OSS(Constants.AK, Constants.SK, Constants.STOKEN, Constants.ENDPOINT);
         } else {
             getAliyunOss();
         }
@@ -302,10 +347,11 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
             planDealerName.setEnabled(false);
             planTemplet.setEnabled(false);
             planQuota1.setEnabled(false);
+            etPlanStatus.setEnabled(false);
         }
     }
 
-    @OnClick({R.id.plan_province, R.id.plan_dealer_name, R.id.plan_templet, R.id.plan_quota_1, R.id.plan_quota_2, R.id.plan_take_photo, R.id.plan_1_next})
+    @OnClick({R.id.plan_province, R.id.plan_dealer_name, R.id.plan_templet, R.id.plan_quota_1, R.id.plan_quota_2, R.id.plan_take_photo, R.id.plan_1_next, R.id.et_plan_status})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.plan_province:  //城市选择
@@ -315,30 +361,67 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
                 p.getProjectName(Constants.sessionId);
                 break;
             case R.id.plan_templet:
-                getTemplateList();
+//                getTemplateList();'
+                if (TextUtils.isEmpty(templateId)) {
+                    ToastUtils.showShort("选择项目模块失败！"/*请重新开始检核该项目！*/);
+                    return;
+                }
+
+                templateIds = Arrays.asList(templateId.split(","));
+
+                //初始化模板数据
+                initTemplateDataAndShow();
                 break;
             case R.id.plan_quota_1:
-                if (projectId != null) {
-                    getQuota();
-                } else {
+                if (TextUtils.isEmpty(projectId)) {
                     ToastUtils.showLong(getResources().getString(R.string.toast_37));
+                    return;
                 }
+                if (TextUtils.isEmpty(planTemplet.getText().toString())) {
+                    ToastUtils.showLong("请选择所属检核模板！");
+                    return;
+                }
+
+                //获取后台指标数据
+                getQuota();
+
+                //获取本项目指标数据
+                initLocalQuotaDataAndShow();
                 break;
             case R.id.plan_quota_2:
+                quotaList2.clear();
+                quotaList2 = getNoStandardQuota2List();
+
+                if (quotaList2.size() > 0) {
+                    showLocalNoStandardQuota2();
+                }
                 break;
             case R.id.plan_take_photo:
                 openMulti(10 - adapter.getData().size());
                 break;
             case R.id.plan_1_next:
                 before_up.addAll(adapter.getData());
+
+                //指标Id
+                if (TextUtils.isEmpty(levelId)) {
+                    levelId = initLevelId();
+                }
+                KLog.e("测试代码", "levelId == " + levelId);
+
                 if (select_city == null) {
                     ToastUtils.showLong(getResources().getString(R.string.toast_7));
-                } else if (projectId == null) {
+                } else if (TextUtils.isEmpty(projectIds) && TextUtils.isEmpty(projectId)) {
                     ToastUtils.showLong(getResources().getString(R.string.toast_37));
-                } else if (levelId == null) {
+                } else if (TextUtils.isEmpty(planTemplet.getText().toString())) {
+                    ToastUtils.showLong("请选择所属检核模板");
+                    return;
+                } else if (TextUtils.isEmpty(levelId)) {
                     ToastUtils.showLong(getResources().getString(R.string.toast_38));
-                } else if (before_up.size() <= 0) {
+                } /*else if (before_up.size() <= 0) {
                     ToastUtils.showLong(getResources().getString(R.string.toast_28));
+                } */ else if (TextUtils.isEmpty(etPlanStatus.getText().toString().trim())) {
+                    Toast.makeText(getActivity(), "请输入改善前状态描述", Toast.LENGTH_LONG).show();
+                    return;
                 } else {
                     Iterator<String> before_it = before_up.iterator();
                     while (before_it.hasNext()) {
@@ -347,19 +430,335 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
                             before_it.remove();
                         }
                     }
-                    if (before_up.size() > 0) {
-                        start(Fragment_Action_plan_presentation_2.newInstance(reportList, projectId, levelId, before_up, type));
-                    } else {
-                        ToastUtils.showLong(getResources().getString(R.string.toast_28));
-                    }
+
+//                    if (before_up.size() > 0) {
+                    start(Fragment_Action_plan_presentation_2.newInstance(reportList, projectId, levelId, before_up, type, etPlanStatus.getText().toString().trim()));
+//                    } else {
+//                        ToastUtils.showLong(getResources().getString(R.string.toast_28));
+//                    }
                 }
                 break;
+            case R.id.et_plan_status:
+                EvaluateInputDialogFragment desc_Input = EvaluateInputDialogFragment.newInstance(300);
+                desc_Input.show(_mActivity.getSupportFragmentManager(), TAG);
+                //未完成原因
+                desc_Input.setOnInputCallback(new EvaluateInputDialogFragment.InputCallback() {
+                    @Override
+                    public void onInputSend(String input, AppCompatDialogFragment dialog) {
+                        if (input != null && !input.equals("")) {
+                            etPlanStatus.setText(input);
+                            dialog.dismiss();
+                        }
+                    }
+                });
+                break;
+        }
+    }
+
+    private String initLevelId() {
+        String tempLevelId = "";
+        if (subjectListBean != null) {
+            List<SubjectListBean.DataBean.QuestionListRoot> questionList = subjectListBean.getData().getQuestionList();
+            if (questionList != null && questionList.size() > 0) {
+                for (int i = 0; i < questionList.size(); i++) {
+                    SubjectListBean.DataBean.QuestionListRoot questionListRoot = questionList.get(i);
+                    if (questionList != null && questionListRoot.getName().equals(planQuota1.getText().toString().trim())) {
+                        tempLevelId = questionListRoot.getId();
+                    }
+                    List<SubjectListBean.DataBean.QuestionListRoot.valueBean> questionListItem = questionListRoot.getValue();
+                    if (questionListItem != null && questionListItem.size() > 0) {
+                        for (int j = 0; j < questionListItem.size(); j++) {
+                            SubjectListBean.DataBean.QuestionListRoot.valueBean valueBean = questionListItem.get(j);
+                            if (valueBean != null && valueBean.getName().equals(planQuota2.getText().toString().trim())) {
+                                tempLevelId = valueBean.getId();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return tempLevelId;
+    }
+
+    /**
+     * 获取本项目本地存储指标
+     */
+    private void initLocalQuotaDataAndShow() {
+        //根据projectId获取题目指标
+        List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", projectId);
+        if (projectsDBS != null && projectsDBS.size() > 0) {
+            //获取未达标的题目集合
+            noStandardSubjects = getNoStandardSubjects(projectsDBS);
+
+            quotaList1.clear();
+
+            if (noStandardSubjects.size() > 0) {
+                quotaList1 = getNoStandardQuota1List();
+            } else {
+                ToastUtils.showShort("请开始检核该项目");
+                return;
+            }
+
+            KLog.e("测试代码", "quotaList1 == " + quotaList1.toString());
+            KLog.e("测试代码", "quotaList2 == " + quotaList2.toString());
+            if (quotaList1.size() > 0) {
+                showLocalNoStandardQuota1();
+            }
+        }
+    }
+
+    /**
+     * 获取二级指标数据集合
+     */
+    private List<SubjectQuotaLevel2> getNoStandardQuota2List() {
+        //一级指标数据
+        if (selectedQuotaLevel1 != null) {
+            //3,获取二级指标数据
+            for (int i = 0; i < noStandardSubjects.size(); i++) {
+                SubjectsDB subjectsDB = noStandardSubjects.get(i);
+                boolean isQuota2Added = false;
+
+                //保存后的一级指标与每一题的指标名称比较
+                if (selectedQuotaLevel1.getName().equals(subjectsDB.getQuota2())) {
+                    //同一个一级指标，处理二级指标是否已添加
+                    for (int k = 0; k < quotaList2.size(); k++) {
+                        SubjectQuotaLevel2 subjectQuotaLevel2 = quotaList2.get(k);
+
+                        //如果二级指标与该题目二级指标相同
+//                                    if (subjectQuotaLevel2.getName().equals(subjectsDB.getQuota2())) {
+                        if (subjectQuotaLevel2.getName().equals(subjectsDB.getQuota3())) {
+                            isQuota2Added = true;
+                            break;
+                        }
+                    }
+
+                    //没有添加过,添加过不用再添加
+                    if (isQuota2Added == false) {
+                        SubjectQuotaLevel2 tempSubjectQuota = new SubjectQuotaLevel2();
+                        tempSubjectQuota.setId("");
+//                                    tempSubjectQuota.setName(subjectsDB.getQuota2());
+                        tempSubjectQuota.setName(subjectsDB.getQuota3());
+                        quotaList2.add(tempSubjectQuota);
+                    }
+                }
+            }
+        }
+
+        return quotaList2;
+    }
+
+    /**
+     * 获取未达标一级指标集合
+     */
+    private List<SubjectQuotaLevel1> getNoStandardQuota1List() {
+        //2,获取一级指标数据
+        for (int i = 0; i < noStandardSubjects.size(); i++) {
+            //每一题
+            SubjectsDB filterSubjectsDB = noStandardSubjects.get(i);
+            boolean isQuota1Added = false;
+
+            for (int j = 0; j < quotaList1.size(); j++) {
+                SubjectQuotaLevel1 subjectQuota1 = quotaList1.get(j);
+                //每一题的指标名称与保存后的指标比较
+                if (subjectQuota1.getName().equals(filterSubjectsDB.getQuota2())) {
+                    isQuota1Added = true;
+                    break;
+                }
+            }
+
+            //没有添加过,添加过不用再添加
+            if (isQuota1Added == false) {
+                SubjectQuotaLevel1 tempSubjectQuota = new SubjectQuotaLevel1();
+                tempSubjectQuota.setId("");
+//                            tempSubjectQuota.setName(filterSubjectsDB.getQuota1());
+                tempSubjectQuota.setName(filterSubjectsDB.getQuota2());
+                quotaList1.add(tempSubjectQuota);
+            }
+        }
+        return quotaList1;
+    }
+
+    /**
+     * 获取未达标的题目集合
+     */
+    private List<SubjectsDB> getNoStandardSubjects(List<ProjectsDB> projectsDBS) {
+        ProjectsDB projectsDB = projectsDBS.get(0);
+
+        //数据库所有题目
+        List<SubjectsDB> subjectsDBList = projectsDB.getSubjectsDBList();
+//        List<SubjectsDB> subjectsDBList = DataBaseWork.DBSelectByTogether_order(SubjectsDB.class, new String[]{"projectsdb_id=?", String.valueOf(projectsDBS.get(0).getId())}, "number");
+//        List<SubjectsDB> subjectsDBList = DataBaseWork.DBSelectByTogether_Where(SubjectsDB.class, "projectsdb_id=? ",projectsDB.getPid());
+
+        noStandardSubjects.clear();
+
+        //1,获取非满分的题目，筛选
+        if (subjectsDBList != null && subjectsDBList.size() > 0) {
+            for (int i = 0; i < subjectsDBList.size(); i++) {
+                //每一题
+                SubjectsDB subjectsDB = subjectsDBList.get(i);
+                if (subjectsDB.getType() == 0) {  //选择题
+                    String options = subjectsDB.getOptions();//标准
+                    String[] split = options.split("&");
+                    if (split != null && split.length > 0) {
+                        if(subjectsDB.getAnswer() == null){
+                            continue;
+                        }
+                        int score = Integer.parseInt(subjectsDB.getAnswer());
+                        int standard = Integer.parseInt(split[1]);
+                        if (score < standard) {
+                            noStandardSubjects.add(subjectsDB);
+                        }
+                    }
+                } else if (subjectsDB.getType() == 1) { //填空题
+                    if (subjectsDB.getAnswer() == null){
+                        continue;
+                    }
+                    int score = Integer.parseInt(subjectsDB.getAnswer());
+                    int standard = Integer.parseInt(subjectsDB.getOptions());
+                    if (score < standard) {
+                        noStandardSubjects.add(subjectsDB);
+                    }
+                }
+            }
+        }
+
+        KLog.e("测试代码", "filterSubjects == " + noStandardSubjects.toString());
+        return noStandardSubjects;
+    }
+
+    /**
+     * 展示本地未达标的二级指标
+     */
+    private void showLocalNoStandardQuota2() {
+        OptionsPickerView pvOption_quota = new OptionsPickerBuilder(_mActivity, new OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                planQuota2.setText(quotaList2.get(options1).getPickerViewText());
+//                levelId = quotaList2.get(options1).getId();
+            }
+        })
+                .setTitleText(getResources().getString(R.string.phrases_28))
+                .setDividerColor(Color.BLACK)
+                .setTextColorCenter(Color.BLACK) //设置选中项文字颜色
+                .setContentTextSize(18)
+                .build();
+
+        if (quotaList2.size() > 0) {
+            pvOption_quota.setPicker(quotaList2);
+        }
+        pvOption_quota.show();
+    }
+
+    /**
+     * 展示本地未达标的一级指标
+     */
+    private void showLocalNoStandardQuota1() {
+
+        OptionsPickerView pvOption_quota = new OptionsPickerBuilder(_mActivity, new OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                selectedQuotaLevel1 = quotaList1.get(options1);
+                planQuota1.setText(selectedQuotaLevel1.getPickerViewText());
+//                levelId = selectedQuotaLevel1.getId();
+
+                //一级指标重选后，重置二级指标
+                planQuota2.setText("");
+            }
+        })
+                .setTitleText(getResources().getString(R.string.phrases_28))
+                .setDividerColor(Color.BLACK)
+                .setTextColorCenter(Color.BLACK) //设置选中项文字颜色
+                .setContentTextSize(18)
+                .build();
+
+        pvOption_quota.setPicker(quotaList1);
+        pvOption_quota.show();
+    }
+
+    /**
+     * 初始化模板数据和展示
+     */
+    private void initTemplateDataAndShow() {
+        List<TemplateDB> templateDBS = new ArrayList<>();
+        for (int i = 0; i < templateIds.size(); i++) {
+            List<TemplateDB> templateDbs = DataBaseWork.DBSelectByTogether_Where(TemplateDB.class, "templateId=?", templateIds.get(i));
+            if (templateDbs != null && templateDbs.size() > 0) {
+                templateDBS.add(templateDbs.get(0));
+            }
+        }
+
+        if (templateDBS.size() > 0) {
+            List<Template_list.TemplateListBean> template_list = new ArrayList<>();
+            for (int i = 0; i < templateDBS.size(); i++) {
+                TemplateDB templateDB = templateDBS.get(i);
+
+                Template_list.TemplateListBean templateListBean = new Template_list.TemplateListBean();
+                templateListBean.setId(templateDB.getTemplateId());
+                templateListBean.setModify_time(templateDB.getModify_time());
+                templateListBean.setName(templateDB.getName());
+
+                template_list.add(templateListBean);
+            }
+
+            showTemplateView(template_list);
+        } else {
+            KLog.e("提报中", "没有数据");
         }
     }
 
     @Override
     public void getProjectNameSuccess(List<ProjectsDB> projectsDBList) {
-        showProjectName(projectsDBList);
+        List<ProjectsDB> selectCityProjectsDBList = new ArrayList<>();
+
+        if (projectsDBList != null && projectsDBList.size() > 0) {
+            for (ProjectsDB projectsDB : projectsDBList) {
+                String city = projectsDB.getCity();
+                if (city != null && city.equals(select_city)) {
+                    //初始化经销商数据
+                    initProjectDelearName(selectCityProjectsDBList, projectsDB);
+                }
+            }
+
+            if (selectCityProjectsDBList.size() > 0) {
+                //展示筛选后的项目列表
+                showProjectName(selectCityProjectsDBList);
+            } else {
+                ToastUtils.showLong("未搜索到" + (select_city == null?"":select_city) + "经销商检核数据");
+            }
+        } else {
+            ToastUtils.showLong("未搜索到" + (select_city == null?"":select_city) + "经销商检核数据");
+        }
+    }
+
+    /**
+     * 初始化经销商数据
+     */
+    private void initProjectDelearName(List<ProjectsDB> selectCityProjectsDBList, ProjectsDB projectsDB) {
+        ProjectsDB tempProjectsDB = null;
+
+        ListIterator<ProjectsDB> projectsDBListIterator = selectCityProjectsDBList.listIterator();
+        while (projectsDBListIterator.hasNext()) {
+            ProjectsDB next = projectsDBListIterator.next();
+            if (next.getDname().equals(projectsDB.getDname())) {
+                tempProjectsDB = next;
+                break;
+            }
+        }
+
+        if (tempProjectsDB == null) {
+            //同经销商只添加一次
+            selectCityProjectsDBList.add(projectsDB);
+        } else {
+            //之前没有该模板id
+            if (!tempProjectsDB.getTemplateId().contains(projectsDB.getTemplateId()) /*&& projectsDB.getCompleteStatus() != 3*/) {
+                tempProjectsDB.setTemplateId(tempProjectsDB.getTemplateId().concat("," + projectsDB.getTemplateId()));
+            }
+            //之前没有该项目id
+            if (!tempProjectsDB.getPid().contains(projectsDB.getPid()) /*&& projectsDB.getCompleteStatus() != 3*/) {
+                //不是已完成
+                tempProjectsDB.setPid(tempProjectsDB.getPid().concat("," + projectsDB.getPid()));
+            }
+        }
     }
 
     @Override
@@ -367,12 +766,15 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
         ToastUtils.showLong(fail);
     }
 
+    private SubjectListBean subjectListBean;
+
     @Override
     public void getSubjectListSuccess(SubjectListBean subjectListBean) {
         if (subjectListBean != null
                 && subjectListBean.getData().getQuestionList() != null
                 && subjectListBean.getData().getQuestionList().size() > 0) {
-            showQuota(subjectListBean.getData().getQuestionList());
+            this.subjectListBean = subjectListBean;
+//            showQuota(subjectListBean.getData().getQuestionList());
         }
     }
 
@@ -493,8 +895,21 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
         OptionsPickerView pvOption_project = new OptionsPickerBuilder(_mActivity, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
-                projectId = projectsDBList.get(options1).getPid();
+                //获取相同经销商不同模板下的所有id
+                projectIds = projectsDBList.get(options1).getPid();
+//                projectId = projectsDBList.get(options1).getPid();
+//                KLog.e("测试代码", "projectId == " + projectId);
+                KLog.e("测试代码", "projectIds == " + projectIds);
                 planDealerName.setText(project_name.get(options1));
+                //经销商重选后，重置模板
+                planTemplet.setText("");
+                //经销商重选后，重置指标
+                planQuota1.setText("");
+                planQuota2.setText("");
+                levelId = null;
+
+                //获取选中的模板数据
+                templateId = projectsDBList.get(options1).getTemplateId();
             }
         })
                 .setTitleText(getResources().getString(R.string.phrases_3))
@@ -518,7 +933,7 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
         p.getSubjectList(map);
     }
 
-    private void showQuota(List<SubjectListBean.DataBean.QuestionListRoot> questionListRootList) {
+    /*private void showQuota(List<SubjectListBean.DataBean.QuestionListRoot> questionListRootList) {
         quotaList_1.clear();
         quotaList_2.clear();
         quotaList_1.addAll(questionListRootList);
@@ -554,7 +969,7 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
             pvOption_quota.setPicker(quotaList_1);
         }
         pvOption_quota.show();
-    }
+    }*/
 
     //=============================================模板选择器==================================================
 
@@ -567,16 +982,31 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
         p.getProjectTemplates(map);
     }
 
-    // 弹出选择器
+    /**
+     * 弹出模板选择器
+     */
     private void showTemplateView(List<Template_list.TemplateListBean> templateListBeanList) {
         OptionsPickerView pvOptions = new OptionsPickerBuilder(_mActivity, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
                 //返回的分别是三个级别的选中位置
                 planTemplet.setText(templateListBeanList.get(options1).getPickerViewText());
+
+                String[] split = null;
+                if (!TextUtils.isEmpty(projectIds)) {
+                    split = projectIds.split(",");
+                }
+
+                KLog.e("测试代码", "templateIds == " + templateIds);
+                KLog.e("测试代码", "templateListBeanList.get(options1).getId() == " + templateListBeanList.get(options1).getId());
+                if (split != null && split.length > 0) {
+//                该模板下的项目id
+                    projectId = split[templateIds.indexOf(templateListBeanList.get(options1).getId())];
+                }
+                KLog.e("测试代码", "projectId == " + projectId);
             }
         })
-                .setTitleText(getResources().getString(R.string.phrases_2))
+                .setTitleText(getResources().getString(R.string.checking_template))
                 .setDividerColor(Color.BLACK)
                 .setTextColorCenter(Color.BLACK) //设置选中项文字颜色
                 .setContentTextSize(20)
@@ -602,6 +1032,15 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
                         options2Items.get(options1).get(options2);
                 planProvince.setText(tx);
 
+                //城市重选后，其他项全部重选
+                projectId = "";
+                projectIds = "";
+                planDealerName.setText("");
+                planTemplet.setText("");
+                //经销商重选后，重置指标
+                planQuota1.setText("");
+                planQuota2.setText("");
+                levelId = null;
             }
         })
                 .setTitleText(getResources().getString(R.string.phrases_2))
@@ -642,14 +1081,12 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
         /**
          * 注意：assets 目录下的Json文件仅供参考，实际使用可自行替换文件
          * 关键逻辑在于循环体
-         *
-         * */
+         */
         String JsonData = JsonFileReader.getJson(BaseApplication.mContext, "province.json");//获取assets目录下的json文件数据
         ArrayList<JsonBean> jsonBean = parseData(JsonData);//用Gson 转成实体
 
         /**
          * 添加省份数据
-         *
          * 注意：如果是添加的JavaBean实体，则实体类需要实现 IPickerViewData 接口，
          * PickerView会通过getPickerViewText方法获取字符串显示出来。
          */
@@ -695,6 +1132,9 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
         super.onDestroy();
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
+        }
+        if (EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().unregister(this);
         }
     }
 
@@ -758,10 +1198,9 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
                 OSSCredentialProvider credentialProvider = new OSSStsTokenCredentialProvider(ak, sk, stoken);
                 ossClient = new OSSClient(_mActivity, endpoint, credentialProvider, conf);
                 mHandler.sendEmptyMessage(MSG_LOAD_OSS);
-               // p.getBeforePic(ossClient, projectId, levelId);
+                // p.getBeforePic(ossClient, projectId, levelId);
             }
         }).start();
-
     }
 
     /**

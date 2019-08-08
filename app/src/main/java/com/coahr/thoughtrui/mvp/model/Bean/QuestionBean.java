@@ -49,49 +49,57 @@ public class QuestionBean {
 
         public static class QuestionListBean {
             /**
-             * describeStatus : 1    是否说明
-             * description : dsadas  题目描述
-             * id : 4
-             * quota1   指标
-             * name : 汉口  指标
-             * options : 是&否  答案
-             * photoStatus : 1  拍照
-             * recordStatus : 1 录音
-             * title : dasd    标题
-             * type : 0    题目类型
+             * answer : 2
+             * censor : 1
+             * describeStatus : -1
+             * describes : 现场观察
+             * id : c0dde6cc69f54f92be22ae0850bc4897
+             * number : 1
+             * options : 0&2
+             * photoStatus : -1
+             * quota2 : 停车场
+             * quota3 : 停车场环境
+             * recordStatus : -1
+             * title : 【停车场-停车场环境】
+             停车场地面整洁，无垃圾杂物
+             * type : 0
              */
-//"censor":2,
-//        "describeStatus":-1,
-//        "description":"",
-//        "id":"5a399f74604541caa0ed9bd3a3215efe",
-//        "number":18,
-//        "options":"是&否",
-//        "photoStatus":1,
-//        "quota1":"日常运营",
-//        "quota2":"客户回访",
-//        "quota3":"客户回访管理",
-//        "recordStatus":1,
-//        "title":"有录音设备支持回访工作，并对回访录音按照日期、回访内容分类存档管理。",
-//        "type":0
-            private Integer censor;
-            private Integer describeStatus;
+
+            private String answer;
+            private int censor;
+            private int describeStatus;
             private String describes;
             private String id;
             private int number;
             private String options;
-            private Integer photoStatus;
-            private String quota1;
+            private int photoStatus;
             private String quota2;
             private String quota3;
-            private Integer recordStatus;
+            private int recordStatus;
             private String title;
-            private Integer type;
+            private int type;
 
-            public Integer getDescribeStatus() {
+            public String getAnswer() {
+                return answer;
+            }
+
+            public void setAnswer(String answer) {
+                this.answer = answer;
+            }
+
+            public int getCensor() {
+                return censor;
+            }
+
+            public void setCensor(int censor) {
+                this.censor = censor;
+            }
+
+            public int getDescribeStatus() {
                 return describeStatus;
             }
 
-            public void setDescribeStatus(Integer describeStatus) {
+            public void setDescribeStatus(int describeStatus) {
                 this.describeStatus = describeStatus;
             }
 
@@ -111,12 +119,28 @@ public class QuestionBean {
                 this.id = id;
             }
 
-            public String getQuota1() {
-                return quota1;
+            public int getNumber() {
+                return number;
             }
 
-            public void setQuota1(String quota1) {
-                this.quota1 = quota1;
+            public void setNumber(int number) {
+                this.number = number;
+            }
+
+            public String getOptions() {
+                return options;
+            }
+
+            public void setOptions(String options) {
+                this.options = options;
+            }
+
+            public int getPhotoStatus() {
+                return photoStatus;
+            }
+
+            public void setPhotoStatus(int photoStatus) {
+                this.photoStatus = photoStatus;
             }
 
             public String getQuota2() {
@@ -135,22 +159,13 @@ public class QuestionBean {
                 this.quota3 = quota3;
             }
 
-            public String getOptions() {
-                return options;
+            public int getRecordStatus() {
+                return recordStatus;
             }
 
-            public void setOptions(String options) {
-                this.options = options;
+            public void setRecordStatus(int recordStatus) {
+                this.recordStatus = recordStatus;
             }
-
-            public Integer getPhotoStatus() {
-                return photoStatus;
-            }
-
-            public void setPhotoStatus(Integer photoStatus) {
-                this.photoStatus = photoStatus;
-            }
-
 
             public String getTitle() {
                 return title;
@@ -160,36 +175,12 @@ public class QuestionBean {
                 this.title = title;
             }
 
-            public Integer getType() {
+            public int getType() {
                 return type;
             }
 
-            public void setType(Integer type) {
+            public void setType(int type) {
                 this.type = type;
-            }
-
-            public Integer getCensor() {
-                return censor;
-            }
-
-            public void setCensor(Integer censor) {
-                this.censor = censor;
-            }
-
-            public int getNumber() {
-                return number;
-            }
-
-            public void setNumber(int number) {
-                this.number = number;
-            }
-
-            public Integer getRecordStatus() {
-                return recordStatus;
-            }
-
-            public void setRecordStatus(Integer recordStatus) {
-                this.recordStatus = recordStatus;
             }
         }
     }

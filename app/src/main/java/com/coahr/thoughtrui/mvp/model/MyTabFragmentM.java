@@ -6,8 +6,10 @@ import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.MyTabFragmentC;
+import com.coahr.thoughtrui.mvp.model.Bean.DeleteProjectBean;
 import com.coahr.thoughtrui.mvp.model.Bean.HomeDataList;
 import com.coahr.thoughtrui.mvp.model.Bean.UnDownLoad;
+import com.socks.library.KLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +34,26 @@ public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implemen
     @Inject
     public MyTabFragmentM() {
         super();
+    }
+
+    /**
+     * 删除成功
+     */
+    @Override
+    public void deleteProject(Map<String, Object> map) {
+            mRxManager.add(createFlowable(new SimpleFlowableOnSubscribe<DeleteProjectBean>(getApiService().deleteProject(map)))
+                .subscribeWith(new SimpleDisposableSubscriber<DeleteProjectBean>() {
+                    @Override
+                    public void _onNext(DeleteProjectBean deleteProjectBean) {
+                        if (getPresenter() != null) {
+                            if (deleteProjectBean.getResult() == 1) {
+                                getPresenter().deleteProjectSuccess(deleteProjectBean.getMsg());
+                            } else {
+                                getPresenter().deleteProjectFailure(deleteProjectBean.getMsg());
+                            }
+                        }
+                    }
+                }));
     }
 
     @Override
@@ -124,7 +146,8 @@ public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implemen
     private void SaveProject(String Pid, HomeDataList.DataBean.AllListBean listBean) {
         //查询数据库有没有当前项目
         List<ProjectsDB> ProjectDBList = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", Pid);
-        if (ProjectDBList != null && !ProjectDBList.isEmpty() && ProjectDBList.size() > 0) {
+
+        if (ProjectDBList != null && ProjectDBList.size() > 0) {
             ProjectsDB projectsDB = new ProjectsDB();
             // projectsDB.setDownloadTime(listBean.getDownloadTime());
             projectsDB.setCompleteStatus(listBean.getCompleteStatus());

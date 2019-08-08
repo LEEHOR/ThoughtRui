@@ -157,10 +157,15 @@ public class Constants {
     public static String uid_key = "uid";
     //devicestoken
     public static String devicestoken_key = "devicestoken";
-//是否单次打开消息中心;
+    //是否单次打开消息中心;
     public static boolean isOpenMessage;
     //消息中心列表;
-    public  static ArrayList<NotificationBean.Notification> notificationList = new ArrayList<>();
+    public static ArrayList<NotificationBean.Notification> notificationList = new ArrayList<>();
+    //消息中心数量
+    public static int notificationNum = 0;
+
+    //Wifi链接后，上传文件
+    public static final String WIFI_CONNECTED_UPLOAD_KEY = "WIFI_CONNECTED_UPLOAD_KEY";
 
     //阿里云
     public static String AK_KEY = "AK";
@@ -183,5 +188,8 @@ public class Constants {
     public static boolean isNetWorkConnect;
     //网络类型
     public static String NetWorkType;
-
+    //网络提示弹框是否已提示
+    public static boolean isWifiDialogAlreadyShow;
+    //消息数量
+    public static String messageNum = "messageNum";
 }

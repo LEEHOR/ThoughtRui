@@ -3,18 +3,16 @@ package com.coahr.thoughtrui.Utils.UpdateVersion;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.GravityEnum;
 import com.afollestad.materialdialogs.MaterialDialog;
-
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.commom.Constants;
-import com.coahr.thoughtrui.dagger.modules.retrofit.OkHttpModule;
-import com.coahr.thoughtrui.dagger.modules.retrofit.RetrofitModule;
 import com.coahr.thoughtrui.mvp.model.ApiContact;
 import com.coahr.thoughtrui.mvp.model.ApiService;
 import com.coahr.thoughtrui.mvp.model.Bean.UpdateBean;
@@ -24,9 +22,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Inject;
-
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,6 +30,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class CheckVersion {
+    private static final int PHONE_TYPE_ANDROID = 0;
 
     private volatile Retrofit retrofit;
 
@@ -83,19 +79,17 @@ public class CheckVersion {
      * 执行版本更新检查
      */
     public void check() {
-        params.put("dsad", "android");
-        params.put("", getAppInfo());
+        params.put("type", PHONE_TYPE_ANDROID);
+//        params.put("", getAppInfo());
         KLog.d("版本", getAppInfo());
         getApiService().updatecheck(params).enqueue(new Callback<UpdateBean>() {
             @Override
             public void onResponse(Call<UpdateBean> call, Response<UpdateBean> response) {
-                KLog.d("版本", "1111111111111111111111");
+                KLog.d("版本", "1111111111111111111111 === " + response.isSuccessful());
                 if (response.isSuccessful()) {
                     UpdateBean updateBean = response.body();
-                    if (updateBean.getResult() == 1 && updateBean.getIsnew() == 1) {
-                        downloadUrl = updateBean.getUrl();
-                        showMaterialDialog();
-                    }
+                    KLog.d("版本", "updateBean === " + updateBean.toString());
+                    getDownLoadUrlAndShowDialog(updateBean);
                 }
             }
 
@@ -108,8 +102,26 @@ public class CheckVersion {
 
     }
 
+    /**
+     * 获取下载资源并展示弹框
+     * @param updateBean
+     */
+    private void getDownLoadUrlAndShowDialog(UpdateBean updateBean) {
+        if (updateBean != null && updateBean.getResult() == 1) {
+            UpdateBean.DataBean data = updateBean.getData();
+            if (data != null && !TextUtils.isEmpty(data.getVersion()) && !data.getVersion().equals(getAppInfo())){
+                downloadUrl = TextUtils.isEmpty(data.getUrl())?"":data.getUrl();
+                KLog.e("版本", "downloadUrl == " + downloadUrl);
+                showMaterialDialog();
+            }
+        }
+    }
+
 
     public void downloadApk() {
+        if (TextUtils.isEmpty(downloadUrl)){
+            return;
+        }
         File file = new File(Constants.SAVE_DIR_BASE, downloadUrl.substring(downloadUrl.lastIndexOf("/") + 1));
         Uri uri = Uri.fromFile(file);
         if (file.exists()) {

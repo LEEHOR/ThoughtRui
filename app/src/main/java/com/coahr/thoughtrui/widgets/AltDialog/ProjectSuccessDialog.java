@@ -29,7 +29,7 @@ import butterknife.BindView;
  * 创建日期：2019/1/17
  * 描述：答题完成弹框
  */
-public class ProjectSuccessDialog extends BaseDialogFragment<ProjectSuccessDialog_C.Presenter> implements ProjectSuccessDialog_C.View,View.OnClickListener {
+public class ProjectSuccessDialog extends BaseDialogFragment<ProjectSuccessDialog_C.Presenter> implements ProjectSuccessDialog_C.View, View.OnClickListener {
     @Inject
     ProjectSuccessDialog_P p;
     @BindView(R.id.tv_start_time)
@@ -49,7 +49,7 @@ public class ProjectSuccessDialog extends BaseDialogFragment<ProjectSuccessDialo
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.tv_submit:
                 dismiss();
                 break;
@@ -58,10 +58,10 @@ public class ProjectSuccessDialog extends BaseDialogFragment<ProjectSuccessDialo
 
     public static ProjectSuccessDialog newInstance(String projectId) {
         ProjectSuccessDialog projectSuccessDialog = new ProjectSuccessDialog();
-        Bundle bundle=new Bundle();
-        bundle.putString("projectId",projectId);
+        Bundle bundle = new Bundle();
+        bundle.putString("projectId", projectId);
         projectSuccessDialog.setArguments(bundle);
-        return  projectSuccessDialog;
+        return projectSuccessDialog;
     }
 
     @Override
@@ -102,17 +102,31 @@ public class ProjectSuccessDialog extends BaseDialogFragment<ProjectSuccessDialo
     }
 
     @Override
-    public void getSubjectListSuccess(List<SubjectsDB> subjectsDBList,ProjectsDB projectsDB,int totalSize) {
-        String format_checking = getResources().getString(R.string.success_dialog_checking);
-        String format = String.format(format_checking, subjectsDBList.size(), totalSize);
-        tv_project_prograss.setText(format);
-            p.getDateSize(subjectsDBList,projectsDB);
+    public void getSubjectListSuccess(List<SubjectsDB> subjectsDBList, ProjectsDB projectsDB, int totalSize) {
+//        String format_checking = getResources().getString(R.string.success_dialog_checking);
+//        String format = String.format(format_checking, subjectsDBList.size(), totalSize);
+//        tv_project_prograss.setText(format);
+
+        //完成数量
+        int subjects = 0;
+        if (subjectsDBList != null && subjectsDBList.size() > 0) {
+            subjects = subjectsDBList.size();
+        }
+        if (subjects >= totalSize) {
+            tv_project_prograss.setText("已完成");
+        } else {
+            String format_checking = getResources().getString(R.string.string_3);
+            String format = String.format(format_checking, subjectsDBList.size(), totalSize);
+            tv_project_prograss.setText(format);
+        }
+
+        p.getDateSize(subjectsDBList, projectsDB);
     }
 
 
     @Override
     public void getSubjectListFailure(String failure) {
-         tv_project_prograss.setText(getResources().getString(R.string.success_dialog_date));
+        tv_project_prograss.setText(getResources().getString(R.string.success_dialog_date));
         tv_upload_status.setText(getResources().getString(R.string.success_dialog_date));
     }
 
@@ -128,18 +142,18 @@ public class ProjectSuccessDialog extends BaseDialogFragment<ProjectSuccessDialo
         tv_upload_status.setText(getString(R.string.success_dialog_date));
     }
 
-    private  void getSubjectList(){
-        if (projectsDBS != null && projectsDBS.size()>0) {
-          //  long startTime = projectsDBS.get(0).getStartTime();
-          //  String stingYMDHM = TimeUtils.getStingYMDHM(startTime);
-          //  tv_start_time.setText("始于"+stingYMDHM);
+    private void getSubjectList() {
+        if (projectsDBS != null && projectsDBS.size() > 0) {
+            //  long startTime = projectsDBS.get(0).getStartTime();
+            //  String stingYMDHM = TimeUtils.getStingYMDHM(startTime);
+            //  tv_start_time.setText("始于"+stingYMDHM);
 
             String stingYMDHM1 = TimeUtils.getStingYMDHM(System.currentTimeMillis());
             String format = getResources().getString(R.string.success_dialog_end);
             String format1 = String.format(format, stingYMDHM1);
             tv_end_time.setText(format1);
         }
-            p.getSubjectList(projectsDBS.get(0));
+        p.getSubjectList(projectsDBS.get(0));
 
     }
 }

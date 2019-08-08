@@ -1,132 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorWhite"
-    android:orientation="vertical">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="false"
-            android:scaleType="fitXY"
-            android:src="@mipmap/bg_maininfo" />
-
-        <ImageView
-            android:id="@+id/iv_massage_center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="@dimen/dp_30"
-            android:layout_marginRight="15dp"
-            android:src="@mipmap/news" />
-    </RelativeLayout>
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="false"
+                android:scaleType="fitXY"
+                android:src="@mipmap/bg_maininfo" />
+
+            <ImageView
+                android:id="@+id/iv_massage_center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="@dimen/dp_30"
+                android:layout_marginRight="15dp"
+                android:src="@mipmap/news" />
+        </RelativeLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="top"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/dp_20"
-            android:paddingRight="@dimen/dp_20">
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_30"
-                android:layout_marginRight="@dimen/dp_30"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/bg_blue_rectangle">
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/card_start"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="top"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/dp_20"
+                android:paddingRight="@dimen/dp_20">
+
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardBackgroundColor="#3A80FF"
-                    app:cardCornerRadius="@dimen/dp_5">
+                    android:layout_marginLeft="@dimen/dp_30"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="@dimen/dp_30"
+                    android:background="@drawable/bg_blue_rectangle">
 
-                    <RelativeLayout
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/card_start"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        app:cardBackgroundColor="#3A80FF"
+                        app:cardCornerRadius="@dimen/dp_5">
 
-                        <ImageView
-                            android:id="@+id/check_bg"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:paddingTop="25dp"
-                            android:paddingBottom="@dimen/dp_20"
-                            android:src="@mipmap/s_check" />
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/check_bg"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginBottom="@dimen/dp_10"
-                            android:text="@string/start_checking"
-                            android:textColor="@color/colorWhite"
-                            android:textSize="@dimen/dp_16" />
-                    </RelativeLayout>
-                </androidx.cardview.widget.CardView>
-            </FrameLayout>
+                            <ImageView
+                                android:id="@+id/check_bg"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:paddingTop="25dp"
+                                android:paddingBottom="@dimen/dp_20"
+                                android:src="@mipmap/s_check" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/check_bg"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginBottom="@dimen/dp_10"
+                                android:text="@string/start_checking"
+                                android:textColor="@color/colorWhite"
+                                android:textSize="@dimen/dp_16" />
+                        </RelativeLayout>
+                    </androidx.cardview.widget.CardView>
+                </FrameLayout>
 
 
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_30"
-                android:layout_marginTop="@dimen/dp_20"
-                android:layout_marginRight="@dimen/dp_30"
-                android:background="@drawable/bg_blue_rectangle">
-
-                <androidx.cardview.widget.CardView
-                    android:visibility="visible"
-                    android:id="@+id/card_histore"
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardBackgroundColor="#3A80FF"
-                    app:cardCornerRadius="@dimen/dp_5">
-                    <RelativeLayout
+                    android:layout_marginLeft="@dimen/dp_30"
+                    android:layout_marginTop="@dimen/dp_20"
+                    android:layout_marginRight="@dimen/dp_30"
+                    android:background="@drawable/bg_blue_rectangle">
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/card_histore"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <ImageView
-                            android:textColor="@color/colorWhite"
-                            android:id="@+id/iv_project_tag"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentTop="true"
-                            android:layout_alignParentRight="true"
-                            android:src="@mipmap/home_unfinished" />
-                        <ImageView
-                            android:id="@+id/histore_bg"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:paddingTop="25dp"
-                            android:paddingBottom="@dimen/dp_20"
-                            android:src="@mipmap/historelist" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/histore_bg"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginBottom="@dimen/dp_10"
-                            android:text="@string/history_list"
-                            android:textColor="@color/colorWhite"
-                            android:textSize="@dimen/dp_16" />
-                    </RelativeLayout>
-                </androidx.cardview.widget.CardView>
-            </FrameLayout>
+                        android:layout_height="wrap_content"
+                        android:visibility="visible"
+                        app:cardBackgroundColor="#3A80FF"
+                        app:cardCornerRadius="@dimen/dp_5">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/iv_project_tag"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentTop="true"
+                                android:layout_alignParentRight="true"
+                                android:src="@mipmap/home_unfinished"
+                                android:textColor="@color/colorWhite" />
+
+                            <ImageView
+                                android:id="@+id/histore_bg"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:paddingTop="25dp"
+                                android:paddingBottom="@dimen/dp_20"
+                                android:src="@mipmap/historelist" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/histore_bg"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginBottom="@dimen/dp_10"
+                                android:text="@string/history_list"
+                                android:textColor="@color/colorWhite"
+                                android:textSize="@dimen/dp_16" />
+                        </RelativeLayout>
+                    </androidx.cardview.widget.CardView>
+                </FrameLayout>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</ScrollView>

@@ -9,7 +9,9 @@ import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
 
 import com.coahr.thoughtrui.R;
+import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
+import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.Base.BaseLazyFragment;
 import com.coahr.thoughtrui.mvp.constract.MyMainFragmentC;
@@ -18,6 +20,7 @@ import com.coahr.thoughtrui.mvp.view.UMPush.Fragment_Umeng;
 import com.coahr.thoughtrui.mvp.view.home.adapter.MainFragmentViewPageAdapter;
 import com.coahr.thoughtrui.mvp.view.search.SearchFragment;
 import com.google.android.material.tabs.TabLayout;
+import com.socks.library.KLog;
 
 import javax.inject.Inject;
 
@@ -95,6 +98,10 @@ public class MainFragment extends BaseLazyFragment<MyMainFragmentC.Presenter> im
                 _mActivity.onBackPressed();
             }
         });
+
+        KLog.e("测试代码", "messageNum == " + PreferenceUtils.getPrefInt(_mActivity, Constants.messageNum, 0));
+        iv_message.setImageResource(PreferenceUtils.getPrefInt(_mActivity, Constants.messageNum, 0) > 0? R.mipmap.news: R.mipmap.no_news);
+
     }
 
     @Override

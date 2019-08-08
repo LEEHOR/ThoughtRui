@@ -13,6 +13,7 @@ import com.coahr.thoughtrui.mvp.constract.Fragment_Umeng_C;
 import com.coahr.thoughtrui.mvp.constract.MyFragment_C;
 import com.coahr.thoughtrui.mvp.model.Bean.CensorBean;
 import com.coahr.thoughtrui.mvp.model.Bean.NotificationBean;
+import com.socks.library.KLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,6 @@ import javax.inject.Inject;
  */
 public class Fragment_Umeng_M extends BaseModel<Fragment_Umeng_C.Presenter> implements Fragment_Umeng_C.Model {
     private List<NotificationBean.Notification> notificationList = new ArrayList<>();
-    ;
 
     @Inject
     public Fragment_Umeng_M() {
@@ -55,27 +55,35 @@ public class Fragment_Umeng_M extends BaseModel<Fragment_Umeng_C.Presenter> impl
     @Override
     public void getNotification_Db(String sessionId) {
         List<UsersDB> usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", sessionId);
-        NotificationBean notificationBean=new NotificationBean();
+        NotificationBean notificationBean = new NotificationBean();
         notificationList.clear();
         if (usersDBS != null && usersDBS.size() > 0) {
             List<ProjectsDB> projectsDBSList = usersDBS.get(0).getProjectsDBSList();
             if (projectsDBSList != null && projectsDBSList.size() > 0) {
                 for (int i = 0; i < projectsDBSList.size(); i++) {
-                    if (projectsDBSList.get(i).getIsComplete() == 1 && projectsDBSList.get(i).getpUploadStatus() == 0) {
-                        NotificationBean.Notification notification = new NotificationBean.Notification();
-                        notification.setType(1);
-                        notification.setNotificationTittle(BaseApplication.mContext.getResources().getString(R.string.umeng_fragment_upload));
-                        notification.setNotificationContent(BaseApplication.mContext.getResources().getString(R.string.umeng_fragment_upload_detail) + (projectsDBSList.get(i).getSale_code() !=null?projectsDBSList.get(i).getSale_code():projectsDBSList.get(i).getService_code()));
-                        notification.setNotificationTime(System.currentTimeMillis());
-                        notificationList.add(notification);
-                    }
-                    if (projectsDBSList.get(i).getModifyTime()<=System.currentTimeMillis()){
-                        NotificationBean.Notification notification = new NotificationBean.Notification();
-                        notification.setType(2);
-                        notification.setNotificationTittle(BaseApplication.mContext.getResources().getString(R.string.umeng_fragment_overdue_reminder));
-                        notification.setNotificationContent(BaseApplication.mContext.getResources().getString(R.string.umeng_fragment_overdue_reminder_detail)+ (projectsDBSList.get(i).getSale_code() !=null?projectsDBSList.get(i).getSale_code():projectsDBSList.get(i).getService_code()));
-                        notification.setNotificationTime(System.currentTimeMillis());
-                        notificationList.add(notification);
+                    //可以展示在消息中心，才添加数据
+                    if (!projectsDBSList.get(i).isHideInMessageCenter()) {
+                        if (projectsDBSList.get(i).getIsComplete() == 1 && projectsDBSList.get(i).getpUploadStatus() == 0) {
+                            NotificationBean.Notification notification = new NotificationBean.Notification();
+                            notification.setType(1);
+                            notification.setNotificationTittle(BaseApplication.mContext.getResources().getString(R.string.umeng_fragment_upload));
+                            notification.setNotificationContent(BaseApplication.mContext.getResources().getString(R.string.umeng_fragment_upload_detail) + (projectsDBSList.get(i).getSale_code() != null ? projectsDBSList.get(i).getSale_code() : projectsDBSList.get(i).getService_code()));
+                            notification.setNotificationTime(System.currentTimeMillis());
+                            //设置项目id，用于更改显示在消息中心
+                            notification.setProjectId(projectsDBSList.get(i).getId());
+                            notificationList.add(notification);
+                        }
+
+                        KLog.e("测试代码", "UploadTime == " + projectsDBSList.get(i).getUploadTime() + " -- currentTimeMillis == " + System.currentTimeMillis());
+                        if (projectsDBSList.get(i).getUploadTime() <= System.currentTimeMillis()) {
+                            NotificationBean.Notification notification = new NotificationBean.Notification();
+                            notification.setType(2);
+                            notification.setNotificationTittle(BaseApplication.mContext.getResources().getString(R.string.umeng_fragment_overdue_reminder));
+                            notification.setNotificationContent(BaseApplication.mContext.getResources().getString(R.string.umeng_fragment_overdue_reminder_detail) + (projectsDBSList.get(i).getSale_code() != null ? projectsDBSList.get(i).getSale_code() : projectsDBSList.get(i).getService_code()));
+                            notification.setNotificationTime(System.currentTimeMillis());
+                            notification.setProjectId(projectsDBSList.get(i).getId());
+                            notificationList.add(notification);
+                        }
                     }
                 }
                 notificationBean.setNotificationList(notificationList);

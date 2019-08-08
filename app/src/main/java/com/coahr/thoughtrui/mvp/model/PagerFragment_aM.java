@@ -1,8 +1,6 @@
 package com.coahr.thoughtrui.mvp.model;
 
 import android.app.Activity;
-import android.content.Context;
-import android.provider.SyncStateContract;
 import android.util.Log;
 
 import com.alibaba.sdk.android.oss.ClientConfiguration;
@@ -11,10 +9,6 @@ import com.alibaba.sdk.android.oss.OSS;
 import com.alibaba.sdk.android.oss.OSSClient;
 import com.alibaba.sdk.android.oss.ServiceException;
 import com.alibaba.sdk.android.oss.callback.OSSCompletedCallback;
-import com.alibaba.sdk.android.oss.callback.OSSProgressCallback;
-import com.alibaba.sdk.android.oss.common.OSSLog;
-import com.alibaba.sdk.android.oss.common.auth.OSSAuthCredentialsProvider;
-import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
 import com.alibaba.sdk.android.oss.internal.OSSAsyncTask;
 import com.alibaba.sdk.android.oss.model.OSSRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
@@ -25,8 +19,6 @@ import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
 import com.coahr.thoughtrui.Utils.FileIoUtils.SaveOrGetAnswers;
 import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
-import com.coahr.thoughtrui.Utils.StoreSpaceUtils;
-import com.coahr.thoughtrui.Utils.ToastUtils;
 import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseModel;
@@ -45,7 +37,6 @@ import java.util.concurrent.Executors;
 import javax.inject.Inject;
 
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
-import io.reactivex.internal.operators.observable.ObservableScalarXMap;
 
 /**
  * Created by Leehor
@@ -53,7 +44,6 @@ import io.reactivex.internal.operators.observable.ObservableScalarXMap;
  * on 23:04
  */
 public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> implements PagerFragment_aC.Model {
-
     private ClientConfiguration conf;
     private OSSClient ossClient;
     private int update1;
@@ -87,7 +77,8 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
     @Override
     public void getImage(final String ht_ProjectId, Activity activity, final int number, final String ht_id) {
         //获取当前题目下的图片
-        List<String> picturesList = FileIOUtils.getPictures(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id);
+//        List<String> picturesList = FileIOUtils.getPictures(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id);
+        List<String> picturesList = FileIOUtils.getPictures(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id + "/" + "picture");
         if (picturesList != null) {
             getPresenter().getImageSuccess(picturesList);
         } else {
@@ -105,7 +96,6 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
         } else {
             getPresenter().getAnswerFailure();
         }
-
     }
 
     @Override
@@ -135,7 +125,7 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
         int count = 0;
         for (int i = 0; i < mediaBeanList.size(); i++) {
             String originalPath = mediaBeanList.get(i).getOriginalPath();
-            boolean b = FileIOUtils.copyFile(originalPath, Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id + "/", FileIOUtils.getE(originalPath, "/"));
+            boolean b = FileIOUtils.copyFile(originalPath, Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/"  + number + "_" + ht_id + "/" + "picture" + "/", FileIOUtils.getE(originalPath, "/"));
             count++;
         }
         if (count == mediaBeanList.size()) {
@@ -147,9 +137,8 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
 
     @Override
     public void getAudio(final String ht_ProjectId, Activity activity, final int number, final String ht_id) {
-
-
-        List<String> audiosList = FileIOUtils.getAudios(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id);
+        List<String> audiosList = FileIOUtils.getAudios(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id + "/" + "audio" );
+//                                                                Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + "audio" + "/" + number + "_" + ht_id
         if (audiosList != null && audiosList.size() > 0) {
             getPresenter().getAudioSuccess(audiosList);
         } else {
@@ -159,7 +148,8 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
 
     @Override
     public void UpLoadFileList(String projectsDB_id, SubjectsDB subjectsDB) {
-        List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + projectsDB_id + "/" + subjectsDB.getNumber() + "_" + subjectsDB.getHt_id());
+//        List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + projectsDB_id + "/" + subjectsDB.getNumber() + "_" + subjectsDB.getHt_id());
+        List<String> fileList = FileIOUtils.getAllFileList(Constants.SAVE_DIR_PROJECT_Document + projectsDB_id + "/" + subjectsDB.getNumber() + "_" + subjectsDB.getHt_id());
         if (fileList != null && fileList.size() > 0) {
             getPresenter().getUpLoadFileListSuccess(fileList, projectsDB_id, subjectsDB);
         } else {
@@ -211,11 +201,11 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
             if (upList != null && upList.size() > 0) {
                 for (int i = 0; i < upList.size(); i++) {
                     OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
-                            upList.get(i), CountSize, projectsDB, subjectsDB, list,  i + 1);
+                            upList.get(i), CountSize, projectsDB, subjectsDB, list, i + 1);
                 }
             }
 
-            if (upList != null && upList.size()==0) {
+            if (upList != null && upList.size() == 0) {
                 if (getPresenter() != null) {
                     getPresenter().Pic_CompulsoryC(list, projectsDB, subjectsDB);
                 }
@@ -233,9 +223,9 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
                     public void _onNext(UpLoadCallBack upLoadCallBack) {
                         if (getPresenter() != null) {
                             if (upLoadCallBack.getResult() == 1) {
-                                getPresenter().CallBackSuccess(projectsDB, subjectsDB,upLoadCallBack);
+                                getPresenter().CallBackSuccess(projectsDB, subjectsDB, upLoadCallBack);
                             } else {
-                                getPresenter().CallBackFailure(projectsDB, subjectsDB,upLoadCallBack);
+                                getPresenter().CallBackFailure(projectsDB, subjectsDB, upLoadCallBack);
                             }
                         }
                     }
@@ -297,7 +287,7 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
                 String name = getName(localFile, "/");
                 String object = null;
                 if (getName(localFile, ".").toLowerCase().endsWith("wav")) {
-                    String audioName = subjectsDB.getNumber()+".wav";
+                    String audioName = subjectsDB.getNumber() + ".wav";
                     object = projectsDB.getPid() + "/audios/" + audioName;
                 } else {
                     String picName = getName(localFile, ".").toLowerCase().equals("png") ? subjectsDB.getNumber() + "_" + picPosition + ".png"

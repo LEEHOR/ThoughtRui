@@ -130,4 +130,25 @@ public class MyTabFragmentP extends BasePresenter<MyTabFragmentC.View,MyTabFragm
             getView().getUnDownLoadFailure(failure);
         }
     }
+
+    @Override
+    public void deleteProject(Map<String, Object> map) {
+        if (mModle != null) {
+            mModle.deleteProject(map);
+        }
+    }
+
+    @Override
+    public void deleteProjectSuccess(String success) {
+        if (getView() != null) {
+            getView().deleteProjectSuccess(success);
+        }
+    }
+
+    @Override
+    public void deleteProjectFailure(String failure) {
+        if (getView() != null) {
+            getView().deleteProjectFailure(failure);
+        }
+    }
 }

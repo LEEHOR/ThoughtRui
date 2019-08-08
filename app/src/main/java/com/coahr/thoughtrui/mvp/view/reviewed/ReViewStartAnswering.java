@@ -155,7 +155,7 @@ public class ReViewStartAnswering extends BaseFragment_not_padding<ReViewStartAn
     private String remark;
     private PhotoAlbumDialogFragment photoAlbumDialogFragment;
     //评论输入窗口
-    EvaluateInputDialogFragment dialogFragment = EvaluateInputDialogFragment.newInstance(30);
+    EvaluateInputDialogFragment dialogFragment = EvaluateInputDialogFragment.newInstance(100);
     //是否处于删除
     private boolean isDeletePic;
     private boolean isPhotos;
@@ -860,7 +860,8 @@ public class ReViewStartAnswering extends BaseFragment_not_padding<ReViewStartAn
 
     @NonNull
     private File file() {
-        File file = new File(Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id);
+        File file = new File(Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id + "/" + "audio" );
+//        File file = new File(Constants.SAVE_DIR_PROJECT_Document + ht_projectId + "/" + number + "_" + ht_id);
         if (!file.exists()) {
             file.mkdirs();
         }

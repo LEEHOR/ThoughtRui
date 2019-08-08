@@ -172,7 +172,6 @@ public class ReviewStartViewPager extends BaseFragment {
                 ToastUtils.showLong(getResources().getString(R.string.phrases_9));
             }
         }
-
     }
 
     @Override

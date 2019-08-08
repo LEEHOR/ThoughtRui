@@ -37,6 +37,7 @@ import com.coahr.thoughtrui.mvp.view.reviewed.ReviewedFragment;
 import com.coahr.thoughtrui.mvp.view.upload.UploadFragment;
 import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
 import com.coahr.thoughtrui.widgets.MyBottomNavigation.MyBottomNavigation;
+import com.socks.library.KLog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -48,6 +49,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import butterknife.BindView;
@@ -78,6 +80,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
     };
     private Login_DialogFragment login_dialogFragment;
     private CheckVersion checkVersion;
+    private static final int INSTALL_PERMISSION_SETTING = 1;
 
     @Override
     public MainActivityC.Presenter getPresenter() {
@@ -112,12 +115,39 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
             startService(intents);
         }*/
         EventBus.getDefault().register(this);
-        checkVersion();
+
+        //登录了，再弹出版本更新
+        if (haslogin()) {
+            //兼容8.0
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                boolean hasInstallPermission = getPackageManager().canRequestPackageInstalls();
+                if (!hasInstallPermission) {
+                    //开启权限页面
+                    startInstallPermissionSettingActivity();
+                    return;
+                }
+            }
+
+            checkVersion();
+        }
     }
 
+
     private void checkVersion() {
-        checkVersion =new CheckVersion(this);
+        KLog.e("版本", "checkVersion");
+        checkVersion = new CheckVersion(this);
         checkVersion.check();
+    }
+
+    /**
+     * 跳转到设置-允许安装未知来源-页面
+     */
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void startInstallPermissionSettingActivity() {
+        //注意这个是8.0新API
+        Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivityForResult(intent, INSTALL_PERMISSION_SETTING);
     }
 
     @Override
@@ -158,7 +188,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
         if (!haslogin()) {
             loginDialog();
         }
-       // CrashReport.testJavaCrash();
+        // CrashReport.testJavaCrash();
         myBottomNavigation.setOnTabPositionListener(new MyBottomNavigation.OnTabPositionListener() {
             @Override
             public void onPositionTab(int position) {
@@ -172,7 +202,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
         p.getLocation(1);
     }
 
-    private void showFragment(int position) {
+    public void showFragment(int position) {
         page = position;
         if (!haslogin()) {
             loginDialog();
@@ -181,7 +211,6 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
             myBottomNavigation.beanSelect(position);
             bottomNavigationPreposition = position;
         }
-
     }
 
     @Override
@@ -260,11 +289,26 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
                     dialogFragment.dismiss();
                     login_dialogFragment = null;
                     showFragment(0);
+                    //登录了，再弹出版本更新
+                    if (haslogin()){
+                        //兼容8.0
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            boolean hasInstallPermission = getPackageManager().canRequestPackageInstalls();
+                            if (!hasInstallPermission) {
+                                //开启权限页面
+                                startInstallPermissionSettingActivity();
+                                return;
+                            }
+                        }
+
+                        checkVersion();
+                    }
                 }
             });
             login_dialogFragment.show(getSupportFragmentManager(), TAG);
         }
     }
+
 
 
     @Override
@@ -276,10 +320,12 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
         mHandker.postDelayed(new Runnable() {
             @Override
             public void run() {
-                sendRTSL(location.getLongitude(), location.getLatitude());
+//                sendRTSL(location.getLongitude(), location.getLatitude());
                 p.getLocation(1);
             }
         }, TIMES);
+        KLog.e("测试代码", "定位成功 == sendRTSL" );
+        sendRTSL(location.getLongitude(), location.getLatitude());
     }
 
     @Override
@@ -291,11 +337,12 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
 
     @Override
     public void sendRtslSuccess(String success, int result) {
-
+        KLog.e("测试代码", "success == " + success + " -- result == " + result);
     }
 
     @Override
     public void sendRtslFail(String fail, int result) {
+        KLog.e("测试代码", "fail == " + fail + " -- result == " + result);
         if (result == -1) {
             loginDialog();
         }
@@ -307,6 +354,7 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
         map.put("token", Constants.devicestoken);
         map.put("longitude", String.valueOf(lon));
         map.put("latitude", String.valueOf(lat));
+        KLog.e("测试代码", "Constants.devicestoken == " + Constants.devicestoken);
         p.sendRtsl(map);
     }
 
@@ -317,14 +365,15 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
         showFragment(page);
     }
 
+    private int countTime = 0;
     @Override
     protected void onResume() {
         super.onResume();
         if (gaodeMapLocationHelper_s != null) {
             gaodeMapLocationHelper_s.stopLocation();
             p.getLocation(1);
+            KLog.e("测试代码", "onResume == " + countTime++);
         }
-
     }
 
     @Override

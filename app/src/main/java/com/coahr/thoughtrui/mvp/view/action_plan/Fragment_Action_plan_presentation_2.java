@@ -1,6 +1,7 @@
 package com.coahr.thoughtrui.mvp.view.action_plan;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -27,6 +29,7 @@ import com.alibaba.sdk.android.oss.model.OSSObjectSummary;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.DensityUtils;
 import com.coahr.thoughtrui.Utils.FileIoUtils.FileIOUtils;
+import com.coahr.thoughtrui.Utils.OnFastClickListener;
 import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.Utils.TimeUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
@@ -34,11 +37,11 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.Fragment_action_plan_pre_2_c;
-import com.coahr.thoughtrui.mvp.model.ApiContact;
 import com.coahr.thoughtrui.mvp.model.Bean.AliyunOss;
 import com.coahr.thoughtrui.mvp.model.Bean.ReportList;
 import com.coahr.thoughtrui.mvp.model.Bean.SubmitReport;
 import com.coahr.thoughtrui.mvp.presenter.Fragment_action_plan_pre_2_P;
+import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
 import com.coahr.thoughtrui.mvp.view.action_plan.Adapter.item_plan_2_history_reason;
 import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
 import com.coahr.thoughtrui.mvp.view.startProject.adapter.PagerFragmentPhotoAdapter;
@@ -69,6 +72,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
@@ -97,8 +102,8 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
     TextView plan2TvTime;     //计划完成日期
     @BindView(R.id.plan_2_tv_time_count)
     TextView plan2TvTimeCount;  //计划持续时间
-    @BindView(R.id.plan_2_tv_executor)
-    TextView plan2TvExecutor;      //执行人
+    @BindView(R.id.plan_2_et_executor)
+    TextView plan2EtExecutor;      //执行人
     @BindView(R.id.plan_2_sp_finished)
     Spinner plan2SpFinished;
     @BindView(R.id.plan_take_photo)
@@ -111,12 +116,16 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
     LinearLayout planPhotoView;
     @BindView(R.id.plan_recycler_view)
     LinearLayout planRecyclerView;
+    @BindView(R.id.ll_plan_status_content)
+    LinearLayout ll_plan_status_content;
     @BindView(R.id.plan_2_tv_reason)
     TextView plan2TvReason;
     @BindView(R.id.plan_2_tv_submit)
     TextView plan2TvSubmit;
     @BindView(R.id.plan_tv_6)
     TextView planTv6;
+    @BindView(R.id.et_plan_status)
+    TextView planEt2Status;
     private ReportList.DataBean.AllListBean report;
     private String projectId;
     private String levelId;
@@ -172,13 +181,17 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
     private long newestTime;
     private int type;
     private String firstTime;
+    //改善前状态
+    private String planPreviousStatus;
+    //进度回调Dialog
+//    private MaterialDialog materialDialog;
 
     @Override
     public Fragment_action_plan_pre_2_c.Presenter getPresenter() {
         return p;
     }
 
-    public static Fragment_Action_plan_presentation_2 newInstance(ReportList.DataBean.AllListBean allListBean, String projectId, String levelId, ArrayList<String> beforeImageList, int type) {
+    public static Fragment_Action_plan_presentation_2 newInstance(ReportList.DataBean.AllListBean allListBean, String projectId, String levelId, ArrayList<String> beforeImageList, int type, String planPreviousStatus) {
         Fragment_Action_plan_presentation_2 fragmentActionPlanPresentation2 = new Fragment_Action_plan_presentation_2();
         Bundle bundle = new Bundle();
         bundle.putParcelable("report", allListBean);
@@ -186,6 +199,7 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
         bundle.putString("levelId", levelId);
         bundle.putStringArrayList("beforeImage", beforeImageList);
         bundle.putInt("type", type);
+        bundle.putString("planPreviousStatus", planPreviousStatus);
         fragmentActionPlanPresentation2.setArguments(bundle);
         return fragmentActionPlanPresentation2;
     }
@@ -209,6 +223,7 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
             levelId = getArguments().getString("levelId");
             beforeImage = getArguments().getStringArrayList("beforeImage");
             type = getArguments().getInt("type");
+            planPreviousStatus = getArguments().getString("planPreviousStatus");
             if (report != null) {
                 projectId = report.getProjectId();
                 duration = report.getDuration();
@@ -224,10 +239,10 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
                 plan2TvCorrectiveActions.setText(measures);
                 plan2TvTime.setText(targetDate);
                 plan2TvTimeCount.setText(String.format(getResources().getString(R.string.plan_2_11), duration));
-                plan2TvExecutor.setText(executor);
+                plan2EtExecutor.setText(executor);
 
             } else {
-                plan2TvExecutor.setText(Constants.user_name);
+                plan2EtExecutor.setText(Constants.user_name);
             }
         }
 
@@ -238,10 +253,12 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
         }
         if (status == 1) {
             planPhotoView.setVisibility(View.VISIBLE);
+            ll_plan_status_content.setVisibility(View.VISIBLE);
             planRecyclerView.setVisibility(View.GONE);
             plan2SpFinished.setSelection(0, true);
         } else {
             planPhotoView.setVisibility(View.GONE);
+            ll_plan_status_content.setVisibility(View.GONE);
             planRecyclerView.setVisibility(View.VISIBLE);
             plan2SpFinished.setSelection(1, true);
         }
@@ -260,6 +277,39 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
             @Override
             public void onClick(View view) {
                 _mActivity.onBackPressed();
+            }
+        });
+
+        //设置提报事件
+        submitPlan();
+    }
+
+    //设置提报事件
+    private void submitPlan() {
+        plan2TvSubmit.setOnClickListener(new OnFastClickListener() {
+            @Override
+            public void onFastClick(View v) {
+                after_Up.clear();
+                after_Up.addAll(adapter_photo.getData());
+                if (TextUtils.isEmpty(plan2TvCauseDiagnosis.getText())) {
+                    ToastUtils.showLong(getResources().getString(R.string.plan_2_13));
+                } else if (TextUtils.isEmpty(plan2TvCorrectiveActions.getText().toString().trim())) {
+                    ToastUtils.showLong(getResources().getString(R.string.plan_2_14));
+                } else if (TextUtils.isEmpty(plan2TvTime.getText())) {
+                    ToastUtils.showLong(getResources().getString(R.string.plan_2_15));
+                } else if (status == -1) {
+                    if (TextUtils.isEmpty(plan2TvReason.getText().toString().trim())) {
+                        ToastUtils.showLong("请输入未完成原因");
+                        return;
+                    }
+                    uploadImages();
+                } else if (status == 1) {
+                    if (TextUtils.isEmpty(planEt2Status.getText().toString().trim())) {
+                        ToastUtils.showLong("请输入改善后状态描述");
+                        return;
+                    }
+                    uploadImages();
+                }
             }
         });
     }
@@ -315,10 +365,12 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
                 if (i == 0) {
                     status = 1;
                     planPhotoView.setVisibility(View.VISIBLE);
+                    ll_plan_status_content.setVisibility(View.VISIBLE);
                     planRecyclerView.setVisibility(View.GONE);
                 } else {
                     status = -1;
                     planPhotoView.setVisibility(View.GONE);
+                    ll_plan_status_content.setVisibility(View.GONE);
                     planRecyclerView.setVisibility(View.VISIBLE);
                 }
             }
@@ -431,12 +483,20 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
 
     @Override
     public void SubmitReportSuccess(SubmitReport submitReport) {
-        ToastUtils.showLong(submitReport.getMsg());
+        ToastUtils.showLong("提交成功");
+        KLog.e("SubmitReportSuccess == " + submitReport.getMsg());
+//        materialDialog.dismiss();
+
+        _mActivity.onBackPressed();
+        EventBus.getDefault().post(true);
     }
 
     @Override
     public void SubmitReportFailure(String failure) {
-        ToastUtils.showLong(failure);
+        ToastUtils.showLong("提交失败");
+        KLog.e("SubmitReportFailure == " + failure);
+//        materialDialog.dismiss();
+//        start(Fragment_action_projects.newInstance());
     }
 
     @Override
@@ -446,7 +506,6 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
         mes.arg2 = (int) totalSize;
         mes.sendToTarget();
     }
-
 
     /**
      * OSS对象实例
@@ -515,8 +574,8 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
     }
 
     @OnClick({R.id.plan_2_tv_cause_diagnosis, R.id.plan_2_tv_corrective_actions
-            , R.id.plan_2_tv_reason, R.id.plan_take_photo, R.id.plan_2_tv_submit
-            , R.id.plan_2_tv_time})
+            , R.id.plan_2_tv_reason, R.id.plan_take_photo/*, R.id.plan_2_tv_submit*/
+            , R.id.plan_2_tv_time, R.id.et_plan_status, R.id.plan_2_et_executor})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.plan_2_tv_cause_diagnosis:
@@ -561,31 +620,66 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
                     }
                 });
                 break;
+            case R.id.et_plan_status:
+                EvaluateInputDialogFragment desc_Input = EvaluateInputDialogFragment.newInstance(300);
+                desc_Input.show(_mActivity.getSupportFragmentManager(), TAG);
+                //未完成原因
+                desc_Input.setOnInputCallback(new EvaluateInputDialogFragment.InputCallback() {
+                    @Override
+                    public void onInputSend(String input, AppCompatDialogFragment dialog) {
+                        if (input != null && !input.equals("")) {
+                            planEt2Status.setText(input);
+                            dialog.dismiss();
+                        }
+                    }
+                });
+                break;
             case R.id.plan_take_photo:
                 openMulti(10 - adapter_photo.getData().size());
                 break;
-            case R.id.plan_2_tv_submit:
+            /*case R.id.plan_2_tv_submit:
                 after_Up.clear();
                 after_Up.addAll(adapter_photo.getData());
                 if (TextUtils.isEmpty(plan2TvCauseDiagnosis.getText())) {
                     ToastUtils.showLong(getResources().getString(R.string.plan_2_13));
-                } else if (TextUtils.isEmpty(plan2TvCorrectiveActions.getText())) {
+                } else if (TextUtils.isEmpty(plan2TvCorrectiveActions.getText().toString().trim())) {
                     ToastUtils.showLong(getResources().getString(R.string.plan_2_14));
                 } else if (TextUtils.isEmpty(plan2TvTime.getText())) {
                     ToastUtils.showLong(getResources().getString(R.string.plan_2_15));
-                } else if (status == -1) {
+                } *//*else if (TextUtils.isEmpty(planEt2Status.getText().toString().trim())) {
+                    ToastUtils.showLong("请输入改善后状态描述");
+                } *//*else if (status == -1) {
                     uploadImages();
                 } else if (status == 1) {
-                    if (after_Up.size() <= 0) {
-                        ToastUtils.showLong(getResources().getString(R.string.toast_28));
-                    } else {
-                        uploadImages();
-                    }
+//                    if (after_Up.size() <= 0) {
+//                        ToastUtils.showLong(getResources().getString(R.string.toast_28));
+//                    } else {
+//                    uploadImages();
+//                    }
 
+                    if (TextUtils.isEmpty(planEt2Status.getText().toString().trim())) {
+                        ToastUtils.showLong("请输入改善后状态描述");
+                        return;
+                    }
+                    uploadImages();
                 }
-                break;
+                break;*/
             case R.id.plan_2_tv_time:
                 datePickerDialog.show(getChildFragmentManager(), TAG);
+                break;
+            case R.id.plan_2_et_executor:
+                EvaluateInputDialogFragment executor_Input = EvaluateInputDialogFragment.newInstance(300);
+                executor_Input.show(_mActivity.getSupportFragmentManager(), TAG);
+                //执行人
+                executor_Input.setOnInputCallback(new EvaluateInputDialogFragment.InputCallback() {
+                    @Override
+                    public void onInputSend(String input, AppCompatDialogFragment dialog) {
+                        if (input != null && !input.equals("")) {
+                            plan2EtExecutor.setText(input);
+                            dialog.dismiss();
+                        }
+                    }
+                });
                 break;
         }
     }
@@ -593,9 +687,8 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
     /**
      * 上传进度回调
      */
-    private void showProgressDialog() {
-
-        new MaterialDialog.Builder(_mActivity)
+    /*private void showProgressDialog() {
+        materialDialog = new MaterialDialog.Builder(_mActivity)
                 .customView(inflate, false)
                 .cancelable(false)
                 .canceledOnTouchOutside(false)
@@ -613,8 +706,9 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
 
                         dialog.dismiss();
                     }
-                }).build().show();
-    }
+                }).build();
+        materialDialog.show();
+    }*/
 
 
     /**
@@ -654,7 +748,7 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
 
         Map map = new HashMap();
         map.put("projectId", projectId);
-        map.put("levelId", levelId);
+        map.put("levelId", levelId == null ? "" : levelId);
         map.put("diagnosis", plan2TvCauseDiagnosis.getText().toString().trim());
         map.put("measures", plan2TvCorrectiveActions.getText().toString().trim());
         map.put("targetDate", plan2TvTime.getText().toString().trim());
@@ -662,9 +756,19 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
         map.put("incompleteReason", status == 1 ? "" : status == -1 ? plan2TvReason.getText().toString().trim() : "");
         map.put("beforePicture", before_buffer.toString().trim());
         map.put("afterPicture", after_buffer.toString().trim());
-        map.put("executor", plan2TvExecutor.getText().toString().trim());
+        map.put("beforeDesc", planPreviousStatus);
+        map.put("afterDesc", planEt2Status.getText().toString().trim());
+        map.put("executor", plan2EtExecutor.getText().toString().trim());
         map.put("sessionId", Constants.sessionId);
         map.put("duration", String.valueOf(duration));
+
+
+        /**
+         * 改善前后状态参数
+         */
+//        map.put("duration", String.valueOf(duration));
+//        map.put("duration", String.valueOf(duration));
+
         mHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -728,7 +832,7 @@ public class Fragment_Action_plan_presentation_2 extends BaseFragment<Fragment_a
      * 上传图片
      */
     private void uploadImages() {
-        showProgressDialog();
+//        showProgressDialog();
         Iterator<String> after_it = after_Up.iterator();
         while (after_it.hasNext()) {
             String x = after_it.next();

@@ -458,15 +458,9 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
             case R.id.tv_all_upload:
                 //getOSS();
                 type = 1;
-                if (Constants.isNetWorkConnect) {
-                    if (Constants.NetWorkType != null && Constants.NetWorkType.equals("WIFI")) {
-                        NetWorkDialog(getResources().getString(R.string.dialog_tittle_7), getResources().getString(R.string.dialog_content_5), 1);
-                    } else if (Constants.NetWorkType != null && Constants.NetWorkType.equals("MOBILE")) {
-                        NetWorkDialog(getResources().getString(R.string.dialog_tittle_7), getResources().getString(R.string.dialog_content_6), 2);
-                    }
-                } else {
-                    NetWorkDialog(getResources().getString(R.string.dialog_tittle_7), getResources().getString(R.string.dialog_content_7), 3);
-                }
+
+
+
 
                 break;
             case R.id.tv_Batch_UpLoad:

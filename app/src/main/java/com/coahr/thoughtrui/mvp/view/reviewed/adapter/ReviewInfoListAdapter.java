@@ -30,6 +30,7 @@ public class ReviewInfoListAdapter extends BaseQuickAdapter<CensorInfoList.DataB
         this.tag_s = tag;
     }
 
+
     private OnClickListener listener;
 
     @Override

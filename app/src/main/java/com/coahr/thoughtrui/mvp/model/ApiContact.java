@@ -50,6 +50,8 @@ public class ApiContact {
     public static final String Rtsl = "app/rta/send.htm";
     //通知
     public static final String notification = "app/censor/list.htm";
+    //刪除工程
+    public static final String delete_project = "app/home/delete.htm";
     //提报列表
     public static final String plan_report_list = "app/report/list.htm";
     //提报提交
@@ -58,5 +60,6 @@ public class ApiContact {
     public static final String getOss = "http://leinuo.coahr.com:8085/research/app/answer/oss/token.htm";
 
     //版本更新检测
-    public static final String getVersion="app/version.htm";
+//    public static final String getVersion="app/version.htm";
+    public static final String getVersion="app/version/new.htm";
 }

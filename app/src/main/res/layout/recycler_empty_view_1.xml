@@ -4,8 +4,9 @@
     android:layout_height="match_parent"
     android:id="@+id/recycler_empty">
         <TextView
+            android:id="@+id/tv_infos"
             android:gravity="center"
-            android:textSize="@dimen/dp_14"
+            android:textSize="@dimen/dp_18"
             android:textColor="#999999"
             android:text="@string/phrases_9"
             android:layout_centerInParent="true"

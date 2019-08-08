@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -177,6 +178,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
             if (questionList != null && questionList.size() > 0) {
                 for (int i = 0; i < questionList.size(); i++) {
                     List<SubjectsDB> subjectsDBS = DataBaseWork.DBSelectBy_Where(SubjectsDB.class, new String[]{"ht_id"}, "ht_id=?", questionList.get(i).getId());
+                    KLog.e("lizhiguo", "题目已存在？？？ == " + (subjectsDBS != null && subjectsDBS.size() > 0));
                     if (subjectsDBS != null && subjectsDBS.size() > 0) {
                         for (int j = 0; j < subjectsDBS.size(); j++) {
                             SubjectsDB subjectsDB = new SubjectsDB();
@@ -185,15 +187,15 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                             subjectsDB.setNumber(questionList.get(i).getNumber());
                            // subjectsDB.setStage(1);
                             subjectsDB.setRecordStatus(questionList.get(i).getRecordStatus());
-                            if (questionList.get(i).getQuota1() != null) {
-                                subjectsDB.setQuota1(questionList.get(i).getQuota1());
-                            }
                             if (questionList.get(i).getQuota2() != null) {
                                 subjectsDB.setQuota2(questionList.get(i).getQuota2());
                             }
                             if (questionList.get(i).getQuota3() != null) {
                                 subjectsDB.setQuota3(questionList.get(i).getQuota3());
                             }
+                            /*if (questionList.get(i).getQuota1() != null) {
+                                subjectsDB.setQuota1(questionList.get(i).getQuota1());
+                            }*/
                             subjectsDB.update(subjectsDBS.get(0).getId());
                         }
                     } else {
@@ -205,21 +207,19 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                         subjectsDB.setDescription(questionList.get(i).getDescribes());
                         subjectsDB.setPhotoStatus(questionList.get(i).getPhotoStatus());
                         subjectsDB.setDescribeStatus(questionList.get(i).getDescribeStatus());
-                        if (questionList.get(i).getRecordStatus() != null) {
+//                        if (questionList.get(i).getRecordStatus() != null) {
                             subjectsDB.setRecordStatus(questionList.get(i).getRecordStatus());
-                        } else {
-                            subjectsDB.setRecordStatus(-1);
-                        }
+//                        } else {
+//                            subjectsDB.setRecordStatus(-1);
+//                        }
 
                         subjectsDB.setStage(1);
-                        subjectsDB.setIsComplete(0);
                         subjectsDB.setType(questionList.get(i).getType());
                         subjectsDB.setDh("0");
                         subjectsDB.setNumber(questionList.get(i).getNumber());
-                        subjectsDB.setsUploadStatus(0);
-                        if (questionList.get(i).getQuota1() != null) {
+                        /*if (questionList.get(i).getQuota1() != null) {
                             subjectsDB.setQuota1(questionList.get(i).getQuota1());
-                        }
+                        }*/
                         if (questionList.get(i).getQuota2() != null) {
                             subjectsDB.setQuota2(questionList.get(i).getQuota2());
                         }
@@ -227,7 +227,15 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                             subjectsDB.setQuota3(questionList.get(i).getQuota3());
                         }
                         subjectsDB.setProjectsDB(projectsDBS.get(0));
+                        //分数和备注未保存到本地时，用于历史页面列表总分的计算
+                        subjectsDB.setAnswer(questionList.get(i).getAnswer());
+                        //后台有题目分数，即完成且上传成功
+                        subjectsDB.setsUploadStatus(TextUtils.isEmpty(questionList.get(i).getAnswer())? 0: 1);
+                        subjectsDB.setIsComplete(TextUtils.isEmpty(questionList.get(i).getAnswer())? 0: 1);
                         subjectsDB.save();
+                        //保存答案分数到本地文件
+                        p.saveAnswers(questionList.get(i).getAnswer(), "", Constants.ht_ProjectId, questionList.get(i).getNumber(), questionList.get(i).getId(), questionList.get(i).getType());
+                        KLog.e("lizhiguo", "answer == " + questionList.get(i).getAnswer());
                     }
                 }
             }
@@ -246,6 +254,18 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
             loginDialog();
         }
 
+    }
+
+    @Override
+    public void saveAnswersSuccess(int type) {
+        ToastUtils.showLong(getResources().getString(R.string.toast_22));
+        KLog.e("lizhiguo", "答案保存成功了");
+    }
+
+    @Override
+    public void saveAnswersFailure(int type) {
+        ToastUtils.showLong(getResources().getString(R.string.toast_23));
+        KLog.e("lizhiguo", "答案保存失败了");
     }
 
     @Override

@@ -88,7 +88,8 @@ public class BaseApplication extends MultiDexApplication implements HasActivityI
         strategy.setUploadProcess(processName == null || processName.equals(packageName));
         CrashReport.setIsDevelopmentDevice(mContext, BuildConfig.DEBUG);
         // 初始化Bugly
-        CrashReport.initCrashReport(mContext, "e056cf4e34", true, strategy);
+//        CrashReport.initCrashReport(mContext, "e056cf4e34", true, strategy);
+        CrashReport.initCrashReport(mContext, "5dde2dddaa", true, strategy);
 
 
         if (PreferenceUtils.contains(mContext, Constants.user_key)) {

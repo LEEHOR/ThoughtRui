@@ -9,6 +9,7 @@ import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.ProjectDetailFragment_C;
 import com.coahr.thoughtrui.mvp.constract.ProjectSuccessDialog_C;
 import com.coahr.thoughtrui.mvp.model.Bean.ProjectDetail;
+import com.socks.library.KLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,8 @@ public class ProjectDetailFragment_M extends BaseModel<ProjectDetailFragment_C.P
         if (subjectsDBList != null && subjectsDBList.size()>0) {
 
             for (int i = 0; i < subjectsDBList.size(); i++) {
-                if (subjectsDBList.get(i).getIsComplete()==1){
+                //本地完成  /*，且上传成功*/
+                if (subjectsDBList.get(i).getIsComplete()==1 /*&& subjectsDBList.get(i).getsUploadStatus() == 1*/){
                     list.add(subjectsDBList.get(i));
                 }
             }
@@ -48,10 +50,13 @@ public class ProjectDetailFragment_M extends BaseModel<ProjectDetailFragment_C.P
     public void getDateSize(List<SubjectsDB> subjectsDBList,ProjectsDB projectsDB) {
         int unComplete=0;
         int file_lists=0;
+        KLog.e("测试代码", "subjectsDBList.size() == " + subjectsDBList.size());
         for (int i = 0; i < subjectsDBList.size(); i++) {
             unComplete++;
+            //未上传
             if (subjectsDBList.get(i).getIsComplete() == 1 && subjectsDBList.get(i).getsUploadStatus() == 0){
-                List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + projectsDB.getPid() + "/" + subjectsDBList.get(i).getNumber() + "_" + subjectsDBList.get(i).getHt_id());
+//                List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + projectsDB.getPid() + "/" + subjectsDBList.get(i).getNumber() + "_" + subjectsDBList.get(i).getHt_id());
+                List<String> fileList = FileIOUtils.getAllFileList(Constants.SAVE_DIR_PROJECT_Document + projectsDB.getPid() + "/" + subjectsDBList.get(i).getNumber() + "_" + subjectsDBList.get(i).getHt_id());
                 if (fileList != null && fileList.size()>0) {
                     for (int j = 0; j <fileList.size() ; j++) {
                         if (!fileList.get(j).endsWith("txt")){
@@ -62,7 +67,7 @@ public class ProjectDetailFragment_M extends BaseModel<ProjectDetailFragment_C.P
             }
         }
         getPresenter().getDateSizeSuccess(unComplete,file_lists);
-
+        KLog.e("测试代码", "unComplete == " + unComplete + " -- file_lists == " + file_lists);
     }
 
     @Override

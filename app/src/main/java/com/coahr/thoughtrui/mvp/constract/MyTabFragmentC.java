@@ -31,6 +31,10 @@ public interface MyTabFragmentC {
         void getSaveDbSuccess(List<String> dbList);
 
         void getSaveDbFailure();
+
+        void deleteProjectSuccess(String success);
+
+        void deleteProjectFailure(String failure);
     }
 
     interface Presenter extends BaseContract.Presenter {
@@ -54,16 +58,24 @@ public interface MyTabFragmentC {
 
         void getTypeDateFailure(int fail);
 
-
         //假下载
         void getUnDownLoadProject(Map<String, Object> map);
 
         void getUnDownLoadSuccess(UnDownLoad unDownLoad);
 
         void getUnDownLoadFailure(String failure);
+
+        //删除工程
+        void deleteProject(Map<String, Object> map);
+
+        void deleteProjectSuccess(String success);
+
+        void deleteProjectFailure(String failure);
     }
 
     interface Model extends BaseContract.Model {
+
+        void deleteProject(Map<String, Object> map);
 
         void getUnDownLoadProject(Map<String, Object> map);
 

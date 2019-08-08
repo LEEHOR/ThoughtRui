@@ -107,4 +107,25 @@ public class StartProjectActivity_P extends BasePresenter<StartProjectActivity_C
             getView().sendRtslFail(fail,result);
         }
     }
+
+    @Override
+    public void saveAnswers(String answers, String remark, String ht_ProjectId, int number, String ht_id, int type) {
+        if (mModle != null) {
+            mModle.saveAnswers(answers, remark, ht_ProjectId, number, ht_id, type);
+        }
+    }
+
+    @Override
+    public void saveAnswersSuccess(int type) {
+        if (getView() != null) {
+            getView().saveAnswersSuccess(type);
+        }
+    }
+
+    @Override
+    public void saveAnswersFailure(int type) {
+        if (getView() != null) {
+            getView().saveAnswersFailure(type);
+        }
+    }
 }

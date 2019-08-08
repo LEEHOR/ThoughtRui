@@ -46,6 +46,43 @@ public class SubjectsDB extends DataSupport {
     private int Stage;
     private String dh;
     private long times;
+    private String answer;
+
+    @Override
+    public String toString() {
+        return "SubjectsDB{" +
+                "id=" + id +
+                ", ht_id='" + ht_id + '\'' +
+//                ", title='" + title + '\'' +
+                ", type=" + type +
+                ", options='" + options + '\'' +
+//                ", description='" + description + '\'' +
+//                ", photoStatus=" + photoStatus +
+//                ", recordStatus=" + recordStatus +
+//                ", describeStatus=" + describeStatus +
+                ", quota1='" + quota1 + '\'' +
+                ", quota2='" + quota2 + '\'' +
+                ", quota3='" + quota3 + '\'' +
+//                ", sUploadStatus=" + sUploadStatus +
+//                ", isComplete=" + isComplete +
+                ", number=" + number +
+//                ", Stage=" + Stage +
+                ", dh='" + dh + '\'' +
+//                ", times=" + times +
+                ", answer='" + answer + '\'' +
+//                ", projectsDB=" + projectsDB +
+//                ", imagesDBList=" + imagesDBList +
+//                ", answersDB=" + answersDB +
+                '}';
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
 
     //项目类
     private ProjectsDB projectsDB;

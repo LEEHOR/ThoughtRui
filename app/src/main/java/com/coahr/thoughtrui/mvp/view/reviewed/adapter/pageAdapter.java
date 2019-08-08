@@ -4,11 +4,16 @@ import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.coahr.thoughtrui.DBbean.ProjectsDB;
+import com.coahr.thoughtrui.DBbean.SubjectsDB;
 import com.coahr.thoughtrui.R;
+import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
+import com.coahr.thoughtrui.Utils.ReviewScoreUtil;
 import com.coahr.thoughtrui.Utils.TimeUtils;
-import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.model.Bean.CensorBean;
+
+import java.util.List;
 
 
 /**
@@ -50,8 +55,15 @@ public class pageAdapter extends BaseQuickAdapter<CensorBean.DataBean.ListBean, 
                     }
                 }
             });
-        }
 
+            List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", item.getId());
+            int totalScore = 0;
+            if (projectsDBS != null && projectsDBS.size() > 0) {
+                List<SubjectsDB> subjectsDBS = projectsDBS.get(0).getSubjectsDBList();
+                totalScore = ReviewScoreUtil.getTotalScore(subjectsDBS);
+            }
+            helper.setText(R.id.tv_project_score, "检核得分：" + totalScore + "分");
+        }
     }
 
     public interface OnItemClick {

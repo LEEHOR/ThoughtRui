@@ -1,11 +1,16 @@
 package com.coahr.thoughtrui.mvp.view.mydata;
 
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import com.coahr.thoughtrui.R;
+import com.coahr.thoughtrui.Utils.PreferenceUtils;
+import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseContract;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
+import com.socks.library.KLog;
 
 import butterknife.BindView;
 
@@ -18,6 +23,9 @@ import butterknife.BindView;
 public class UploadOptions extends BaseFragment {
     @BindView(R.id.upload_options_tittle)
     MyTittleBar upload_options_tittle;
+    @BindView(R.id.cbWifiUpload)
+    CheckBox cbWifiUpload;
+
     @Override
     public BaseContract.Presenter getPresenter() {
         return null;
@@ -44,6 +52,12 @@ public class UploadOptions extends BaseFragment {
 
     @Override
     public void initData() {
-
+        cbWifiUpload.setChecked(PreferenceUtils.getPrefBoolean(_mActivity, Constants.WIFI_CONNECTED_UPLOAD_KEY, false));
+        cbWifiUpload.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                PreferenceUtils.setPrefBoolean(_mActivity, Constants.WIFI_CONNECTED_UPLOAD_KEY, isChecked);
+            }
+        });
     }
 }

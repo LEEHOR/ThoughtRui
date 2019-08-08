@@ -51,7 +51,8 @@ public class ProjectSuccessDialog_M extends BaseModel<ProjectSuccessDialog_C.Pre
         for (int i = 0; i < subjectsDBList.size(); i++) {
             if (subjectsDBList.get(i).getsUploadStatus()==0){
                 unComplete++;
-                List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + projectsDB.getPid() + "/" + subjectsDBList.get(i).getNumber() + "_" + subjectsDBList.get(i).getHt_id());
+//                List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + projectsDB.getPid() + "/" + subjectsDBList.get(i).getNumber() + "_" + subjectsDBList.get(i).getHt_id());
+                List<String> fileList = FileIOUtils.getAllFileList(Constants.SAVE_DIR_PROJECT_Document + projectsDB.getPid() + "/" + subjectsDBList.get(i).getNumber() + "_" + subjectsDBList.get(i).getHt_id());
                 if (fileList != null && fileList.size()>0) {
                     for (int j = 0; j <fileList.size() ; j++) {
                         if (!fileList.get(j).endsWith("txt")){

@@ -16,6 +16,14 @@ public class SubmitReport {
     private String msg;
     private int result;
 
+    @Override
+    public String toString() {
+        return "SubmitReport{" +
+                "msg='" + msg + '\'' +
+                ", result=" + result +
+                '}';
+    }
+
     public String getMsg() {
         return msg;
     }

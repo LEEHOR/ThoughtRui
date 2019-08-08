@@ -9,7 +9,6 @@ import com.coahr.thoughtrui.mvp.Base.BaseModel;
 import com.coahr.thoughtrui.mvp.constract.FragmentAnnex_C;
 import com.coahr.thoughtrui.mvp.model.Bean.AnnexDate;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -21,8 +20,6 @@ import javax.inject.Inject;
  * 描述：
  */
 public class FragmentAnnex_M extends BaseModel<FragmentAnnex_C.Presenter> implements FragmentAnnex_C.Model {
-
-
 
     @Inject
     public FragmentAnnex_M() {
@@ -44,7 +41,8 @@ public class FragmentAnnex_M extends BaseModel<FragmentAnnex_C.Presenter> implem
     public void getFileList(final List<SubjectsDB> subjectsDBList, final ProjectsDB projectsDB) {
         annexDate.getListList().clear();
                     for (int i = 0; i < subjectsDBList.size(); i++) {
-                        List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + projectsDB.getPid() + "/" + subjectsDBList.get(i).getNumber() + "_" + subjectsDBList.get(i).getHt_id());
+//                        List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + projectsDB.getPid() + "/" + subjectsDBList.get(i).getNumber() + "_" + subjectsDBList.get(i).getHt_id());
+                        List<String> fileList = FileIOUtils.getAllFileList(Constants.SAVE_DIR_PROJECT_Document + projectsDB.getPid() + "/" + subjectsDBList.get(i).getNumber() + "_" + subjectsDBList.get(i).getHt_id());
                         AnnexDate.AnnexFileList annexFileList=new AnnexDate.AnnexFileList();
                         annexFileList.setShow(false);
                         if (fileList != null && fileList.size()>0) {

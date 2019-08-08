@@ -38,6 +38,26 @@ public class NotificationBean  {
         private String NotificationTittle;
         private String NotificationContent;
         private long NotificationTime;
+        private int projectId;
+
+        @Override
+        public String toString() {
+            return "Notification{" +
+                    "type=" + type +
+                    ", NotificationTittle='" + NotificationTittle + '\'' +
+                    ", NotificationContent='" + NotificationContent + '\'' +
+                    ", NotificationTime=" + NotificationTime +
+                    ", projectId=" + projectId +
+                    '}';
+        }
+
+        public int getProjectId() {
+            return projectId;
+        }
+
+        public void setProjectId(int projectId) {
+            this.projectId = projectId;
+        }
 
         public Notification() {
         }

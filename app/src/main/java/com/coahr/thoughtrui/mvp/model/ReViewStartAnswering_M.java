@@ -75,7 +75,7 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
 
     @Override
     public void getImage(final String ht_ProjectId, Activity activity, final int number, final String ht_id) {
-        List<String> picturesList = FileIOUtils.getPictures(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id);
+        List<String> picturesList = FileIOUtils.getPictures(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id  + "/" + "picture");
         if (picturesList != null && picturesList.size() > 0) {
             if (getPresenter() != null) {
                 getPresenter().getImageSuccess(picturesList);
@@ -124,7 +124,7 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
 
         for (int i = 0; i < mediaBeanList.size(); i++) {
             String originalPath = mediaBeanList.get(i).getOriginalPath();
-            boolean b = FileIOUtils.copyFile(originalPath, Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id + "/", FileIOUtils.getE(originalPath, "/"));
+            boolean b = FileIOUtils.copyFile(originalPath, Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id + "/" + "picture" + "/" , FileIOUtils.getE(originalPath, "/"));
             if (b) {
                 getPresenter().SaveImagesSuccess();
             } else {
@@ -135,7 +135,7 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
 
     @Override
     public void getAudio(String ht_ProjectId, Activity activity, int number, String ht_id) {
-        List<String> audiosList = FileIOUtils.getAudios(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id);
+        List<String> audiosList = FileIOUtils.getAudios(Constants.SAVE_DIR_PROJECT_Document + ht_ProjectId + "/" + number + "_" + ht_id + "/" + "audio" );
         if (audiosList != null && audiosList.size()>0) {
             getPresenter().getAudioSuccess(audiosList);
         } else {
@@ -145,7 +145,8 @@ public class ReViewStartAnswering_M extends BaseModel<ReViewStartAnswering_C.Pre
 
     @Override
     public void UpLoadFileList(String projectsDB_id, SubjectsDB subjectsDB) {
-        List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + projectsDB_id + "/" + subjectsDB.getNumber() + "_" + subjectsDB.getHt_id());
+//        List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + projectsDB_id + "/" + subjectsDB.getNumber() + "_" + subjectsDB.getHt_id());
+        List<String> fileList = FileIOUtils.getAllFileList(Constants.SAVE_DIR_PROJECT_Document + projectsDB_id + "/" + subjectsDB.getNumber() + "_" + subjectsDB.getHt_id());
         if (fileList != null && fileList.size() > 0) {
             getPresenter().getUpLoadFileListSuccess(fileList, projectsDB_id, subjectsDB);
         } else {

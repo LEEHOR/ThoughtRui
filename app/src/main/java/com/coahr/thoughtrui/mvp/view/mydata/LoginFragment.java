@@ -1,35 +1,18 @@
 package com.coahr.thoughtrui.mvp.view.mydata;
 
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.coahr.thoughtrui.DBbean.UsersDB;
 import com.coahr.thoughtrui.R;
-import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
-import com.coahr.thoughtrui.Utils.PreferenceUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
-import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.LoginFragmentC;
-import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_LoginSuccess;
-import com.coahr.thoughtrui.mvp.model.Bean.LoginBean;
-import com.coahr.thoughtrui.mvp.presenter.LoginFragmentP;
-import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
-import com.socks.library.KLog;
-
-import org.greenrobot.eventbus.EventBus;
-import org.litepal.crud.callback.SaveCallback;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 

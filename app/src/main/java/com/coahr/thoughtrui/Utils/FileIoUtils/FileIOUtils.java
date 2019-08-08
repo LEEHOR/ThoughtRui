@@ -30,7 +30,7 @@ public class FileIOUtils {
      * @Param name      String   复制后名字
      */
     public static boolean copyFile(String oldPath, String newPath, String name) {
-        boolean Success=false;
+        boolean Success = false;
         if (oldPath == null || newPath == null) {
             return false;
         }
@@ -67,7 +67,7 @@ public class FileIOUtils {
         } catch (Exception e) {
             e.printStackTrace();
             KLog.e(e.toString());
-            return  false;
+            return false;
         }
         return false;
     }
@@ -233,7 +233,6 @@ public class FileIOUtils {
 
     /**
      * 读取文件夹文件（图片）
-     *
      * @param strPath
      * @return
      */
@@ -260,16 +259,16 @@ public class FileIOUtils {
                         suffix.toLowerCase().equals(".jpeg") ||
                         suffix.toLowerCase().equals(".bmp") ||
                         suffix.toLowerCase().equals(".png") ||
-                suffix.toLowerCase().equals(".gif")) {
+                        suffix.toLowerCase().equals(".gif")) {
                     list.add(fi.getPath());
                 }
             }
         }
         return list;
     }
+
     /**
      * 读取文件夹文件（录音）
-     *
      * @param strPath
      * @return
      */
@@ -306,8 +305,8 @@ public class FileIOUtils {
      * @param path
      * @return
      */
-    public static List<String> getFileList(String path){
-        List<String> fileList=new ArrayList<>();
+    /*public static List<String> getFileList(String path) {
+        List<String> fileList = new ArrayList<>();
         if (path == null) {
             return null;
         }
@@ -316,9 +315,41 @@ public class FileIOUtils {
             return null;
         }
         File[] files = file.listFiles();
-        for (int i = 0; i <files.length ; i++) {
-            if (files[i].exists()){
+        for (int i = 0; i < files.length; i++) {
+            if (files[i].exists()) {
                 fileList.add(files[i].getAbsolutePath());
+            }
+        }
+        return fileList;
+    }*/
+
+    /**
+     * 获取文件夹下的所有文件
+     * @param path
+     * @return
+     */
+    public static List<String> getAllFileList(String path) {
+        List<String> fileList = new ArrayList<>();
+        if (path == null) {
+            return null;
+        }
+        File file = new File(path);
+        if (!file.exists()) {
+            return null;
+        }
+        fileList = getAllFiles(fileList, file);
+        return fileList;
+    }
+
+    private static List<String> getAllFiles(List<String> fileList, File file) {
+        File[] files = file.listFiles();
+        for (int i = 0; i < files.length; i++) {
+            if (files[i].exists()) {
+                if (files[i].isFile()) {
+                    fileList.add(files[i].getAbsolutePath());
+                } else if (files[i].isDirectory()){
+                    fileList = getAllFiles(fileList, files[i]);
+                }
             }
         }
         return fileList;

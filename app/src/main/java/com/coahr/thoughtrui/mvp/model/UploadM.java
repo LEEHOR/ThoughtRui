@@ -101,7 +101,8 @@ public class UploadM extends BaseModel<UploadC.Presenter> implements UploadC.Mod
 
     @Override
     public void UpLoadFileList(List<SubjectsDB> subjectsDBList, List<ProjectsDB> projectsDBS, int project_position, int subject_position) {
-        List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + projectsDBS.get(project_position).getPid() + "/" + subjectsDBList.get(subject_position).getNumber() + "_" + subjectsDBList.get(subject_position).getHt_id());
+//        List<String> fileList = FileIOUtils.getFileList(Constants.SAVE_DIR_PROJECT_Document + projectsDBS.get(project_position).getPid() + "/" + subjectsDBList.get(subject_position).getNumber() + "_" + subjectsDBList.get(subject_position).getHt_id());
+        List<String> fileList = FileIOUtils.getAllFileList(Constants.SAVE_DIR_PROJECT_Document + projectsDBS.get(project_position).getPid() + "/" + subjectsDBList.get(subject_position).getNumber() + "_" + subjectsDBList.get(subject_position).getHt_id());
         if (fileList != null && fileList.size() > 0) {
             getPresenter().getUpLoadFileListSuccess(fileList, subjectsDBList, projectsDBS, project_position, subject_position);
         } else {

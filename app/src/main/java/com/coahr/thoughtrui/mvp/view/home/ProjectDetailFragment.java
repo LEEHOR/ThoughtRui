@@ -31,6 +31,7 @@ import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.ProjectDetailFragment_C;
 import com.coahr.thoughtrui.mvp.model.Bean.ProjectDetail;
+import com.coahr.thoughtrui.mvp.model.Bean.Template_list;
 import com.coahr.thoughtrui.mvp.presenter.ProjectDetailFragment_P;
 import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
 import com.coahr.thoughtrui.mvp.view.StartProjectActivity;
@@ -39,7 +40,9 @@ import com.coahr.thoughtrui.mvp.view.projectAnnex.FragmentAnnexViewPager;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
 import com.socks.library.KLog;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.IllegalFormatCodePointException;
 import java.util.List;
 import java.util.Map;
 
@@ -100,7 +103,11 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
     private String templateId;
     private String dealerId;
     private int type;
+    //公司所属所属城市
+    private String city;
     private boolean isHaveProject;
+    //是否已加载过
+    private boolean isLoaded = false;
 
     public static ProjectDetailFragment newInstance(String projectId, String templateId, String dealerId, int type) {
         ProjectDetailFragment projectDetailFragment = new ProjectDetailFragment();
@@ -109,6 +116,18 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
         bundle.putString("templateId", templateId);
         bundle.putString("dealerId", dealerId);
         bundle.putInt("type", type);
+        projectDetailFragment.setArguments(bundle);
+        return projectDetailFragment;
+    }
+
+    public static ProjectDetailFragment newInstance(String projectId, String templateId, String dealerId, int type, String city) {
+        ProjectDetailFragment projectDetailFragment = new ProjectDetailFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("projectId", projectId);
+        bundle.putString("templateId", templateId);
+        bundle.putString("dealerId", dealerId);
+        bundle.putInt("type", type);
+        bundle.putString("city", city);
         projectDetailFragment.setArguments(bundle);
         return projectDetailFragment;
     }
@@ -130,6 +149,7 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
             templateId = getArguments().getString("templateId");
             dealerId = getArguments().getString("dealerId");
             type = getArguments().getInt("type");
+            city = getArguments().getString("city");
         }
         kaoqing.setOnClickListener(this);
         fangwen.setOnClickListener(this);
@@ -164,6 +184,20 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (isLoaded = true){
+            initData();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        isLoaded = false;
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.kaoqing:
@@ -181,12 +215,6 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
                 JumpToProjectAnnex();
                 break;
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
     }
 
     /**
@@ -235,8 +263,6 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
         } else {
             ToastUtils.showLong(getResources().getString(R.string.toast_9));
         }
-
-
     }
 
     /**
@@ -268,7 +294,16 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
 
     @Override
     public void getSubjectListSuccess(List<SubjectsDB> subjectsDBList, ProjectsDB projectsDB, int totalSize) {
-        tv_fstatus.setText(subjectsDBList != null && subjectsDBList.size() != 0 && subjectsDBList.size() == totalSize ? "已完成" : "未完成" + "(" + subjectsDBList.size() + "/" + totalSize + ")");
+        isLoaded = true;
+        List<SubjectsDB> tempList = new ArrayList<>();
+        //subjectsDBList是已筛选完成的数据
+        for (int i = 0; i < subjectsDBList.size(); i++) {
+            //本地完成，且上传成功
+            if (/*subjectsDBList.get(i).getIsComplete()==1 &&*/ subjectsDBList.get(i).getsUploadStatus() == 1){
+                tempList.add(subjectsDBList.get(i));
+            }
+        }
+        tv_fstatus.setText(tempList != null && tempList.size() != 0 && tempList.size() == totalSize ? "已完成" : "未完成" + "(" + tempList.size() + "/" + totalSize + ")");
         p.getDateSize(subjectsDBList, projectsDB);
     }
 
@@ -293,21 +328,22 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
     public void getProjectDetailSuccess(ProjectDetail projectDetail) {
         if (projectDetail.getData() != null) {
             isHaveProject = true;
-            int id = 0;
             List<ProjectsDB> projectsDBS = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", projectDetail.getData().getId());
             if (projectsDBS != null && projectsDBS.size() > 0) {
-                id = projectsDBS.get(0).getId();
                 ProjectsDB projectsDB = new ProjectsDB();
                 projectsDB.setDownloadTime(projectDetail.getData().getUploadTime());
                 projectsDB.setProgress(projectDetail.getData().getProgress());
-                int update = projectsDB.update(projectsDBS.get(0).getId());
+
+                projectsDB.update(projectsDBS.get(0).getId());
+
                 Constants.ht_ProjectId = projectDetail.getData().getId();
                 Constants.name_Project = projectDetail.getData().getPname();
-                projectId=projectDetail.getData().getId();
+                projectId = projectDetail.getData().getId();
                 //获取数据
                 p.getSubjectList(projectsDBS.get(0));
             } else {
                 List<UsersDB> usersDBS = DataBaseWork.DBSelectByTogether_Where(UsersDB.class, "sessionid=?", Constants.sessionId);
+
                 ProjectsDB projectsDB = new ProjectsDB();
                 //  projectsDB.setcName(projectDetail.getData().getCname());
                 projectsDB.setProgress(projectDetail.getData().getProgress());
@@ -330,7 +366,16 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
                 if (usersDBS != null && usersDBS.size() > 0) {
                     projectsDB.setUser(usersDBS.get(0));
                 }
-                projectsDB.save();
+                //保存项目所属公司的city
+                projectsDB.setCity(city);
+                //保存所属模板
+                projectsDB.setTemplateId(templateId);
+                boolean save = projectsDB.save();
+                KLog.e("测试代码", "save == " + save);
+                KLog.e("测试代码", "projectId == " + projectDetail.getData().getId());
+                KLog.e("测试代码", "templateId == " + templateId);
+                KLog.e("测试代码", "city == " + city);
+
                 String sAgeFormat1 = getResources().getString(R.string.string_1);
                 String sFinal1 = String.format(sAgeFormat1, 0, 0);
                 tv_upload_status.setText(sFinal1);
@@ -374,7 +419,8 @@ public class ProjectDetailFragment extends BaseFragment<ProjectDetailFragment_C.
             }
 
         }
-        projectId=projectDetail.getData().getId();
+        projectId = projectDetail.getData().getId();
+        isLoaded = true;
     }
 
     @Override

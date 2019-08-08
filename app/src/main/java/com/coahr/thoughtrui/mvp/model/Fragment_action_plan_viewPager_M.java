@@ -11,6 +11,7 @@ import com.coahr.thoughtrui.mvp.constract.Fragment_action_plan_viewPager_c;
 import com.coahr.thoughtrui.mvp.model.Bean.CensorBean;
 import com.coahr.thoughtrui.mvp.model.Bean.ReportList;
 import com.coahr.thoughtrui.mvp.model.Bean.ThreeAdapter.SubjectListBean;
+import com.socks.library.KLog;
 
 import java.util.List;
 import java.util.Map;
@@ -45,5 +46,4 @@ public class Fragment_action_plan_viewPager_M extends BaseModel<Fragment_action_
                     }
                 }));
     }
-
 }

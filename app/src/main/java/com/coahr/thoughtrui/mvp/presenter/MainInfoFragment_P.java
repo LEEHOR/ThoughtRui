@@ -2,6 +2,8 @@ package com.coahr.thoughtrui.mvp.presenter;
 
 import com.coahr.thoughtrui.mvp.Base.BasePresenter;
 import com.coahr.thoughtrui.mvp.constract.MainInfoFragment_C;
+import com.coahr.thoughtrui.mvp.model.Bean.CensorBean;
+import com.coahr.thoughtrui.mvp.model.Bean.NotificationBean;
 import com.coahr.thoughtrui.mvp.model.MainInfoFragment_M;
 import com.coahr.thoughtrui.mvp.view.home.MainInfoFragment;
 
@@ -39,6 +41,48 @@ public class MainInfoFragment_P extends BasePresenter<MainInfoFragment_C.View,Ma
     public void getProjectFailure(String failure) {
         if (getView() != null) {
             getView().getProjectFailure(failure);
+        }
+    }
+
+    @Override
+    public void getNotification_net(Map<String, Object> map) {
+        if (mModle != null) {
+            mModle.getNotification_net(map);
+        }
+    }
+
+    @Override
+    public void getNotification_netSuccess(CensorBean censorBean) {
+        if (getView() != null) {
+            getView().getNotification_netSuccess(censorBean);
+        }
+    }
+
+    @Override
+    public void getNotification_netFailure(String failure) {
+        if (getView() != null) {
+            getView().getNotification_netFailure(failure);
+        }
+    }
+
+    @Override
+    public void getNotification_Db(String sessionId) {
+        if (mModle != null) {
+            mModle.getNotification_Db(sessionId);
+        }
+    }
+
+    @Override
+    public void getNotification_DbSuccess(NotificationBean notificationBean, int notificationNum) {
+        if (getView() != null) {
+            getView().getNotification_DbSuccess(notificationBean, notificationNum);
+        }
+    }
+
+    @Override
+    public void getNotification_DbFailure(String failure) {
+        if (getView() != null) {
+            getView().getNotification_DbFailure(failure);
         }
     }
 }

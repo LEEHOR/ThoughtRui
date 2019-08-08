@@ -24,25 +24,24 @@ public interface Fragment_Umeng_C {
         void getNotification_netFailure(String failure);
     }
 
-     interface Presenter extends BaseContract.Presenter {
-        void getNotification_net(Map<String,Object> map);
+    interface Presenter extends BaseContract.Presenter {
+        void getNotification_net(Map<String, Object> map);
 
-         void getNotification_netSuccess(CensorBean censorBean);
+        void getNotification_netSuccess(CensorBean censorBean);
 
-         void getNotification_netFailure(String failure);
+        void getNotification_netFailure(String failure);
 
-         void  getNotification_Db(String sessionId);
+        void getNotification_Db(String sessionId);
 
-         void getNotification_DbSuccess(NotificationBean notificationBean);
+        void getNotification_DbSuccess(NotificationBean notificationBean);
 
-         void getNotification_DbFailure(String failure);
+        void getNotification_DbFailure(String failure);
 
     }
 
-     interface Model extends BaseContract.Model {
+    interface Model extends BaseContract.Model {
+        void getNotification_net(Map<String, Object> map);
 
-         void getNotification_net(Map<String,Object> map);
-
-         void  getNotification_Db(String sessionId);
+        void getNotification_Db(String sessionId);
     }
 }

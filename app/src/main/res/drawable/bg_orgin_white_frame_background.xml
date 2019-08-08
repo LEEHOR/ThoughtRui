@@ -5,9 +5,9 @@
         android:width="1dip"
         android:color="#FD8317" />
     <corners android:radius="1dp" />
-    <padding
+    <!--<padding
         android:left="15dp"
         android:right="15dp"
         android:top="5dp"
-        android:bottom="5dp"/>
+        android:bottom="5dp"/>-->
 </shape>

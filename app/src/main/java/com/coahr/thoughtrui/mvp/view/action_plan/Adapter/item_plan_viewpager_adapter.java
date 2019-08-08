@@ -4,6 +4,11 @@ import android.text.TextUtils;
 
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.chad.library.adapter.base.BaseItemDraggableAdapter;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseSectionMultiItemQuickAdapter;
+import com.chad.library.adapter.base.BaseSectionQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.TimeUtils;
 import com.coahr.thoughtrui.mvp.Base.BaseActivity;

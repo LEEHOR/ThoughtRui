@@ -21,10 +21,12 @@ import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.ProjectDealer_c;
 import com.coahr.thoughtrui.mvp.model.Bean.Dealer_List;
+import com.coahr.thoughtrui.mvp.model.Bean.Template_list;
 import com.coahr.thoughtrui.mvp.presenter.ProjectDealer_P;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
 import com.google.gson.Gson;
 import com.gyf.barlibrary.ImmersionBar;
+import com.socks.library.KLog;
 
 import org.json.JSONArray;
 
@@ -82,7 +84,7 @@ public class DealerFragment extends BaseFragment<ProjectDealer_c.Presenter> impl
             switch (msg.what) {
                 case MSG_LOAD_DATA:
                     if (!isLoaded) {
-                        if (thread == null) {//如果已创建就不再重新创建子线程了
+                        if (thread == null) {//如果已创建就不再重新创建子线dealer_Tittle程了
                             thread = new Thread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -177,7 +179,7 @@ public class DealerFragment extends BaseFragment<ProjectDealer_c.Presenter> impl
                     ToastUtils.showLong(getResources().getString(R.string.toast_7));
                     return;
                 }
-                getDealerList(city);
+                getDealerList(city, Constants.user_type);
                 break;
             case R.id.tv_submit:
                 if (TextUtils.isEmpty(tv_select_address.getText()) || tv_select_address.getText().equals("")) {
@@ -188,7 +190,7 @@ public class DealerFragment extends BaseFragment<ProjectDealer_c.Presenter> impl
                     ToastUtils.showLong(getResources().getString(R.string.toast_8));
                     return;
                 }
-                start(ProjectDetailFragment.newInstance(null, template_id, Dealer_id, 1));
+                start(ProjectDetailFragment.newInstance(null, template_id, Dealer_id, 1, city));
                 break;
         }
     }
@@ -196,9 +198,10 @@ public class DealerFragment extends BaseFragment<ProjectDealer_c.Presenter> impl
     /**
      * 获取经销商列表
      */
-    private void getDealerList(String city) {
+    private void getDealerList(String city, int type) {
         Map map = new HashMap();
         map.put("city", city);
+        map.put("type", type);
         p.getProjectDealer(map);
     }
 

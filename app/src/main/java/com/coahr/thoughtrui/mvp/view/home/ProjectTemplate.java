@@ -1,35 +1,7 @@
 package com.coahr.thoughtrui.mvp.view.home;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.view.View;
-
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.coahr.thoughtrui.R;
-import com.coahr.thoughtrui.Utils.DensityUtils;
-import com.coahr.thoughtrui.Utils.ScreenUtils;
-import com.coahr.thoughtrui.Utils.ToastUtils;
-import com.coahr.thoughtrui.commom.Constants;
-import com.coahr.thoughtrui.mvp.Base.BaseApplication;
-import com.coahr.thoughtrui.mvp.Base.BaseFragment;
-import com.coahr.thoughtrui.mvp.constract.ProjectTemplate_c;
-import com.coahr.thoughtrui.mvp.model.Bean.Dealer_List;
-import com.coahr.thoughtrui.mvp.model.Bean.Template_list;
-import com.coahr.thoughtrui.mvp.presenter.ProjectTemplate_P;
-import com.coahr.thoughtrui.mvp.view.ConstantsActivity;
-import com.coahr.thoughtrui.mvp.view.decoration.SpacesItemDecoration;
-import com.coahr.thoughtrui.mvp.view.home.adapter.ProjectTemplateAdapter;
-import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
-import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
-import com.gyf.barlibrary.ImmersionBar;
-import com.socks.library.KLog;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,6 +9,32 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.coahr.thoughtrui.DBbean.TemplateDB;
+import com.coahr.thoughtrui.R;
+import com.coahr.thoughtrui.Utils.JDBC.DataBaseWork;
+import com.coahr.thoughtrui.Utils.ToastUtils;
+import com.coahr.thoughtrui.commom.Constants;
+import com.coahr.thoughtrui.mvp.Base.BaseApplication;
+import com.coahr.thoughtrui.mvp.Base.BaseFragment;
+import com.coahr.thoughtrui.mvp.constract.ProjectTemplate_c;
+import com.coahr.thoughtrui.mvp.model.Bean.Template_list;
+import com.coahr.thoughtrui.mvp.presenter.ProjectTemplate_P;
+import com.coahr.thoughtrui.mvp.view.home.adapter.ProjectTemplateAdapter;
+import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
+import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
+import com.gyf.barlibrary.ImmersionBar;
+import com.socks.library.KLog;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 
@@ -141,7 +139,15 @@ public class ProjectTemplate extends BaseFragment<ProjectTemplate_c.Presenter> i
         templateAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                JumpToProjectTemplate(((Template_list.TemplateListBean) adapter.getItem(position)).getId());
+                Template_list.TemplateListBean item = (Template_list.TemplateListBean) adapter.getItem(position);
+
+                //保存模板到数据库
+                if (item != null) {
+                    List<TemplateDB> templateDBS = DataBaseWork.DBSelectAll(TemplateDB.class);
+                    saveTemplateDB(item, templateDBS);
+                }
+
+                JumpToProjectTemplate(item.getId());
             }
         });
     /*    templateAdapter.setOnClick(new ProjectTemplateAdapter.OnClick() {
@@ -168,9 +174,31 @@ public class ProjectTemplate extends BaseFragment<ProjectTemplate_c.Presenter> i
     public void getProjectTemplatesSuccess(Template_list template_list) {
         isLoad = false;
         if (template_list != null) {
-            templateAdapter.setNewData(template_list.getTemplate_list());
+            List<Template_list.TemplateListBean> templateListBeans = template_list.getTemplate_list();
+            templateAdapter.setNewData(templateListBeans);
         }
         template_swipe.setRefreshing(false);
+    }
+
+    /**
+     * 保存模板到数据库
+     */
+    private void saveTemplateDB(Template_list.TemplateListBean templateListBean, List<TemplateDB> templateDBS) {
+        boolean isSave = true;
+        for (int i = 0; i < templateDBS.size(); i++) {
+            if (templateListBean.equals(templateDBS.get(i).getTemplateId())) {
+                isSave = false;
+                break;
+            }
+        }
+
+        if (isSave) {
+            TemplateDB templateDB = new TemplateDB();
+            templateDB.setModify_time(templateListBean.getModify_time());
+            templateDB.setName(templateListBean.getName());
+            templateDB.setTemplateId(templateListBean.getId());
+            templateDB.save();
+        }
     }
 
     @Override
