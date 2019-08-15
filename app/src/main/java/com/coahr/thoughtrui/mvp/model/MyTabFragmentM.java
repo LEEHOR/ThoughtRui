@@ -86,6 +86,7 @@ public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implemen
                                 getPresenter().getHomeDataFailure(homeDataList.getMsg(), homeDataList.getResult());
                             }
                         }
+
                     }
                 }));
     }
@@ -146,7 +147,6 @@ public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implemen
     private void SaveProject(String Pid, HomeDataList.DataBean.AllListBean listBean) {
         //查询数据库有没有当前项目
         List<ProjectsDB> ProjectDBList = DataBaseWork.DBSelectByTogether_Where(ProjectsDB.class, "pid=?", Pid);
-
         if (ProjectDBList != null && ProjectDBList.size() > 0) {
             ProjectsDB projectsDB = new ProjectsDB();
             // projectsDB.setDownloadTime(listBean.getDownloadTime());
@@ -191,7 +191,10 @@ public class MyTabFragmentM extends BaseModel<MyTabFragmentC.Presenter> implemen
             projectsDB.setManager(listBean.getManager());
             projectsDB.setService_code(listBean.getService_code());
             projectsDB.setSale_code(listBean.getSale_code());
-            projectsDB.setIsComplete(0);
+            //设置所属城市
+            projectsDB.setCity(listBean.getCity());
+            //设置所属模板
+            projectsDB.setTemplateId(listBean.getTemplateId());
             projectsDB.setStage("1");
             if (usersDBS != null && usersDBS.size() > 0) {
                 projectsDB.setUser(usersDBS.get(0));

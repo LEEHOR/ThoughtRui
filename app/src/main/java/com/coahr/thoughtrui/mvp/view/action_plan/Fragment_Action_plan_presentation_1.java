@@ -349,6 +349,8 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
             planQuota1.setEnabled(false);
             etPlanStatus.setEnabled(false);
         }
+
+        getTemplateList();
     }
 
     @OnClick({R.id.plan_province, R.id.plan_dealer_name, R.id.plan_templet, R.id.plan_quota_1, R.id.plan_quota_2, R.id.plan_take_photo, R.id.plan_1_next, R.id.et_plan_status})
@@ -361,7 +363,7 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
                 p.getProjectName(Constants.sessionId);
                 break;
             case R.id.plan_templet:
-//                getTemplateList();'
+//                getTemplateList();
                 if (TextUtils.isEmpty(templateId)) {
                     ToastUtils.showShort("选择项目模块失败！"/*请重新开始检核该项目！*/);
                     return;
@@ -682,11 +684,13 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
         List<TemplateDB> templateDBS = new ArrayList<>();
         for (int i = 0; i < templateIds.size(); i++) {
             List<TemplateDB> templateDbs = DataBaseWork.DBSelectByTogether_Where(TemplateDB.class, "templateId=?", templateIds.get(i));
-            if (templateDbs != null && templateDbs.size() > 0) {
+            KLog.e("lizhiguo", "templateDbs.size == " + templateDbs.size());
+//            if (templateDbs != null && templateDbs.size() > 0) {
                 templateDBS.add(templateDbs.get(0));
-            }
+//            }
         }
 
+        KLog.e("lizhiguo", "templateDbs.size == " + templateDBS.size());
         if (templateDBS.size() > 0) {
             List<Template_list.TemplateListBean> template_list = new ArrayList<>();
             for (int i = 0; i < templateDBS.size(); i++) {
@@ -713,7 +717,8 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
         if (projectsDBList != null && projectsDBList.size() > 0) {
             for (ProjectsDB projectsDB : projectsDBList) {
                 String city = projectsDB.getCity();
-                if (city != null && city.equals(select_city)) {
+//                if (city != null && city.equals(select_city)) {
+                if (city != null && select_city.contains(city)) {
                     //初始化经销商数据
                     initProjectDelearName(selectCityProjectsDBList, projectsDB);
                 }
@@ -846,10 +851,34 @@ public class Fragment_Action_plan_presentation_1 extends BaseFragment<Fragment_a
 
     @Override
     public void getProjectTemplatesSuccess(Template_list template_list) {
+        List<TemplateDB> templateDBS = DataBaseWork.DBSelectAll(TemplateDB.class);
         if (template_list != null && template_list.getTemplate_list() != null) {
-            showTemplateView(template_list.getTemplate_list());
+            for (Template_list.TemplateListBean templateListBean: template_list.getTemplate_list()) {
+                saveTemplateDB(templateListBean, templateDBS);
+            }
+        }
+        KLog.e("lizhiguo", "templateDBS == " + DataBaseWork.DBSelectAll(TemplateDB.class).size());
+    }
+
+    /**
+     * 保存模板到数据库
+     */
+    private void saveTemplateDB(Template_list.TemplateListBean templateListBean, List<TemplateDB> templateDBS) {
+        boolean toSave = true;
+        for (int i = 0; i < templateDBS.size(); i++) {
+            if (templateListBean.getId().equals(templateDBS.get(i).getTemplateId())) {
+                toSave = false;
+                break;
+            }
         }
 
+        if (toSave) {
+            TemplateDB templateDB = new TemplateDB();
+            templateDB.setModify_time(templateListBean.getModify_time());
+            templateDB.setName(templateListBean.getName());
+            templateDB.setTemplateId(templateListBean.getId());
+            templateDB.save();
+        }
     }
 
     @Override

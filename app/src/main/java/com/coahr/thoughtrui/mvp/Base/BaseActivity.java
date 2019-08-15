@@ -5,6 +5,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,9 +65,11 @@ public abstract class BaseActivity<P extends BaseContract.Presenter> extends Sup
         AndroidInjection.inject(this);  //一处声明，处处依赖注
         super.onCreate(savedInstanceState);
         //手机顶部状态栏颜色适配
-        ImmersionBar.with(this)
-                .statusBarDarkFont(true, 0.2f) //原理：如果当前设备支持状态栏字体变色，会设置状态栏字体为黑色，如果当前设备不支持状态栏字体变色，会使当前状态栏加上透明度，否则不执行透明度
-                .init();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            ImmersionBar.with(this)
+                    .statusBarDarkFont(true, 0.2f) //原理：如果当前设备支持状态栏字体变色，会设置状态栏字体为黑色，如果当前设备不支持状态栏字体变色，会使当前状态栏加上透明度，否则不执行透明度
+                    .init();
+        }
         KeyBoardUtils.UpdateUI(getWindow().getDecorView().getRootView(), this);
         setContentView(binLayout());
         unbinder = ButterKnife.bind(this);
@@ -171,7 +174,9 @@ public abstract class BaseActivity<P extends BaseContract.Presenter> extends Sup
         super.onDestroy();
         unbinder.unbind();
         ActivityManager.getInstance().removeActivity(this);
-        ImmersionBar.with(this).destroy();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            ImmersionBar.with(this).destroy();
+        }
         if (netWorkReceiver != null) {
             this.unregisterReceiver(netWorkReceiver);
         }

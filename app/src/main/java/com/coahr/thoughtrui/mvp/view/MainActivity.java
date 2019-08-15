@@ -240,7 +240,8 @@ public class MainActivity extends BaseActivity<MainActivityC.Presenter> implemen
 
                 @Override
                 public void PermissionFail(List<String> permissions) {
-                    new MaterialDialog.Builder(BaseApplication.mContext)
+//                    new MaterialDialog.Builder(BaseApplication.mContext)
+                    new MaterialDialog.Builder(MainActivity.this)
                             .title(getResources().getString(R.string.message_permission_tittle))
                             .content(getResources().getString(R.string.message_permission_content))
                             .negativeText(getResources().getString(R.string.cancel))

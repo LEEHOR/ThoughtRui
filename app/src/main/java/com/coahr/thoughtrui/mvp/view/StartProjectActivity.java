@@ -230,7 +230,7 @@ public class StartProjectActivity extends BaseActivity<StartProjectActivity_C.Pr
                         //分数和备注未保存到本地时，用于历史页面列表总分的计算
                         subjectsDB.setAnswer(questionList.get(i).getAnswer());
                         //后台有题目分数，即完成且上传成功
-                        subjectsDB.setsUploadStatus(TextUtils.isEmpty(questionList.get(i).getAnswer())? 0: 1);
+//                        subjectsDB.setsUploadStatus(TextUtils.isEmpty(questionList.get(i).getAnswer())? 0: 1);
                         subjectsDB.setIsComplete(TextUtils.isEmpty(questionList.get(i).getAnswer())? 0: 1);
                         subjectsDB.save();
                         //保存答案分数到本地文件

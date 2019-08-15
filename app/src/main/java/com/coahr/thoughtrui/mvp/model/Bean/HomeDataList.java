@@ -9,7 +9,7 @@ import java.util.List;
 public class HomeDataList {
 
     /**
-     * data : {"allList":[{"Cname":"自由班次","Dname":"北京三江慧达汽车销售服务有限公司","Pname":"测试\u2014\u20142","areaAddress":"北京市北京市朝阳区","completeStatus":1,"grade":"授权一级","id":"849431134df3446e98659c651ad4feeb","latitude":40.006458,"location":"北京市朝阳区东辛店村|333号","longitude":116.504593,"manager":"付保东","modifyTime":1553678836706,"notice":"世界冠军就好了经济发达","progress":"0/20","sale_code":"AA11021","totalScore":"0","uploadTime":1553194800000,"service_code":"A10021A43"},{"Cname":"09:00-17:00","Dname":"上海交运明友汽车销售服务有限公司","Pname":"AS-Standard 判断题 华晨雷诺核检系统题目 上传表","areaAddress":"上海市上海市闵行区","completeStatus":1,"id":"c32c2e12e67e40169d3a8f71b5b60ee7","latitude":31.227098,"location":"上海市闵行区华江路|1318号","longitude":121.326415,"manager":"邱纯亮","modifyTime":1554188959800,"notice":"","progress":"0/24","service_code":"A10021A43","totalScore":"0","uploadTime":1555268400000},{"Cname":"09:00-17:00","Dname":"北京三江慧达汽车销售服务有限公司","Pname":"AS-Process华晨雷诺金杯授权经销商及服务站售后检核","areaAddress":"北京市北京市朝阳区","completeStatus":1,"grade":"授权一级","id":"cf0e377de0684914bb5fa1ddd2789ec4","latitude":40.006458,"location":"北京市朝阳区东辛店村|333号","longitude":116.504593,"manager":"付保东","modifyTime":1554275734612,"notice":"","progress":"24/24","sale_code":"AA11021","totalScore":"48","uploadTime":1555268400000}],"completeList":[],"unCompleteList":[{"Cname":"自由班次","Dname":"北京三江慧达汽车销售服务有限公司","Pname":"测试\u2014\u20142","areaAddress":"北京市北京市朝阳区","completeStatus":1,"grade":"授权一级","id":"849431134df3446e98659c651ad4feeb","latitude":40.006458,"location":"北京市朝阳区东辛店村|333号","longitude":116.504593,"manager":"付保东","modifyTime":1553678836706,"notice":"世界冠军就好了经济发达","progress":"0/20","sale_code":"AA11021","totalScore":"0","uploadTime":1553194800000,"service_code":"A10021A43"},{"Cname":"09:00-17:00","Dname":"上海交运明友汽车销售服务有限公司","Pname":"AS-Standard 判断题 华晨雷诺核检系统题目 上传表","areaAddress":"上海市上海市闵行区","completeStatus":1,"id":"c32c2e12e67e40169d3a8f71b5b60ee7","latitude":31.227098,"location":"上海市闵行区华江路|1318号","longitude":121.326415,"manager":"邱纯亮","modifyTime":1554188959800,"notice":"","progress":"0/24","service_code":"A10021A43","totalScore":"0","uploadTime":1555268400000},{"Cname":"09:00-17:00","Dname":"北京三江慧达汽车销售服务有限公司","Pname":"AS-Process华晨雷诺金杯授权经销商及服务站售后检核","areaAddress":"北京市北京市朝阳区","completeStatus":1,"grade":"授权一级","id":"cf0e377de0684914bb5fa1ddd2789ec4","latitude":40.006458,"location":"北京市朝阳区东辛店村|333号","longitude":116.504593,"manager":"付保东","modifyTime":1554275734612,"notice":"","progress":"24/24","sale_code":"AA11021","totalScore":"48","uploadTime":1555268400000}]}
+     * data : {"allList":[{"Cname":"自由班次","Dname":"北京三江慧达汽车销售服务有限公司","Pname":"测试\u2014\u20142","city":"北京","areaAddress":"北京市北京市朝阳区","completeStatus":1,"grade":"授权一级","id":"849431134df3446e98659c651ad4feeb","latitude":40.006458,"location":"北京市朝阳区东辛店村|333号","longitude":116.504593,"manager":"付保东","modifyTime":1553678836706,"notice":"世界冠军就好了经济发达","progress":"0/20","sale_code":"AA11021","templateId":"fb485155f08e46b1b7c6819881812c43","totalScore":"0","uploadTime":1553194800000,"service_code":"A10021A43"},{"Cname":"09:00-17:00","Dname":"上海交运明友汽车销售服务有限公司","Pname":"AS-Standard 判断题 华晨雷诺核检系统题目 上传表","city":"上海","areaAddress":"上海市上海市闵行区","completeStatus":1,"id":"c32c2e12e67e40169d3a8f71b5b60ee7","latitude":31.227098,"location":"上海市闵行区华江路|1318号","longitude":121.326415,"manager":"邱纯亮","modifyTime":1554188959800,"notice":"","progress":"0/24","service_code":"A10021A43","templateId":"fb485155f08e46b1b7c6819881812c43","totalScore":"0","uploadTime":1555268400000},{"Cname":"09:00-17:00","Dname":"北京三江慧达汽车销售服务有限公司","Pname":"AS-Process华晨雷诺金杯授权经销商及服务站售后检核","city":"北京","areaAddress":"北京市北京市朝阳区","completeStatus":1,"grade":"授权一级","id":"cf0e377de0684914bb5fa1ddd2789ec4","latitude":40.006458,"location":"北京市朝阳区东辛店村|333号","longitude":116.504593,"manager":"付保东","modifyTime":1554275734612,"notice":"","progress":"24/24","sale_code":"AA11021","templateId":"fb485155f08e46b1b7c6819881812c43","totalScore":"48","uploadTime":1555268400000}],"completeList":[],"unCompleteList":[{"Cname":"自由班次","Dname":"北京三江慧达汽车销售服务有限公司","Pname":"测试\u2014\u20142","city":"北京","areaAddress":"北京市北京市朝阳区","completeStatus":1,"grade":"授权一级","id":"849431134df3446e98659c651ad4feeb","latitude":40.006458,"location":"北京市朝阳区东辛店村|333号","longitude":116.504593,"manager":"付保东","modifyTime":1553678836706,"notice":"世界冠军就好了经济发达","progress":"0/20","sale_code":"AA11021","templateId":"fb485155f08e46b1b7c6819881812c43","totalScore":"0","uploadTime":1553194800000,"service_code":"A10021A43"},{"Cname":"09:00-17:00","Dname":"上海交运明友汽车销售服务有限公司","Pname":"AS-Standard 判断题 华晨雷诺核检系统题目 上传表","city":"上海","areaAddress":"上海市上海市闵行区","completeStatus":1,"id":"c32c2e12e67e40169d3a8f71b5b60ee7","latitude":31.227098,"location":"上海市闵行区华江路|1318号","longitude":121.326415,"manager":"邱纯亮","modifyTime":1554188959800,"notice":"","progress":"0/24","service_code":"A10021A43","templateId":"fb485155f08e46b1b7c6819881812c43","totalScore":"0","uploadTime":1555268400000},{"Cname":"09:00-17:00","Dname":"北京三江慧达汽车销售服务有限公司","Pname":"AS-Process华晨雷诺金杯授权经销商及服务站售后检核","city":"北京","areaAddress":"北京市北京市朝阳区","completeStatus":1,"grade":"授权一级","id":"cf0e377de0684914bb5fa1ddd2789ec4","latitude":40.006458,"location":"北京市朝阳区东辛店村|333号","longitude":116.504593,"manager":"付保东","modifyTime":1554275734612,"notice":"","progress":"24/24","sale_code":"AA11021","templateId":"fb485155f08e46b1b7c6819881812c43","totalScore":"48","uploadTime":1555268400000}]}
      * msg : 请求成功！
      * result : 1
      */
@@ -76,6 +76,7 @@ public class HomeDataList {
              * Cname : 自由班次
              * Dname : 北京三江慧达汽车销售服务有限公司
              * Pname : 测试——2
+             * city : 北京
              * areaAddress : 北京市北京市朝阳区
              * completeStatus : 1
              * grade : 授权一级
@@ -88,6 +89,7 @@ public class HomeDataList {
              * notice : 世界冠军就好了经济发达
              * progress : 0/20
              * sale_code : AA11021
+             * templateId : fb485155f08e46b1b7c6819881812c43
              * totalScore : 0
              * uploadTime : 1553194800000
              * service_code : A10021A43
@@ -96,6 +98,7 @@ public class HomeDataList {
             private String Cname;
             private String Dname;
             private String Pname;
+            private String city;
             private String areaAddress;
             private int completeStatus;
             private String grade;
@@ -108,6 +111,7 @@ public class HomeDataList {
             private String notice;
             private String progress;
             private String sale_code;
+            private String templateId;
             private String totalScore;
             private long uploadTime;
             private String service_code;
@@ -134,6 +138,14 @@ public class HomeDataList {
 
             public void setPname(String Pname) {
                 this.Pname = Pname;
+            }
+
+            public String getCity() {
+                return city;
+            }
+
+            public void setCity(String city) {
+                this.city = city;
             }
 
             public String getAreaAddress() {
@@ -230,6 +242,14 @@ public class HomeDataList {
 
             public void setSale_code(String sale_code) {
                 this.sale_code = sale_code;
+            }
+
+            public String getTemplateId() {
+                return templateId;
+            }
+
+            public void setTemplateId(String templateId) {
+                this.templateId = templateId;
             }
 
             public String getTotalScore() {
@@ -262,6 +282,7 @@ public class HomeDataList {
              * Cname : 自由班次
              * Dname : 北京三江慧达汽车销售服务有限公司
              * Pname : 测试——2
+             * city : 北京
              * areaAddress : 北京市北京市朝阳区
              * completeStatus : 1
              * grade : 授权一级
@@ -274,6 +295,7 @@ public class HomeDataList {
              * notice : 世界冠军就好了经济发达
              * progress : 0/20
              * sale_code : AA11021
+             * templateId : fb485155f08e46b1b7c6819881812c43
              * totalScore : 0
              * uploadTime : 1553194800000
              * service_code : A10021A43
@@ -282,6 +304,7 @@ public class HomeDataList {
             private String Cname;
             private String Dname;
             private String Pname;
+            private String city;
             private String areaAddress;
             private int completeStatus;
             private String grade;
@@ -294,6 +317,7 @@ public class HomeDataList {
             private String notice;
             private String progress;
             private String sale_code;
+            private String templateId;
             private String totalScore;
             private long uploadTime;
             private String service_code;
@@ -320,6 +344,14 @@ public class HomeDataList {
 
             public void setPname(String Pname) {
                 this.Pname = Pname;
+            }
+
+            public String getCity() {
+                return city;
+            }
+
+            public void setCity(String city) {
+                this.city = city;
             }
 
             public String getAreaAddress() {
@@ -416,6 +448,14 @@ public class HomeDataList {
 
             public void setSale_code(String sale_code) {
                 this.sale_code = sale_code;
+            }
+
+            public String getTemplateId() {
+                return templateId;
+            }
+
+            public void setTemplateId(String templateId) {
+                this.templateId = templateId;
             }
 
             public String getTotalScore() {

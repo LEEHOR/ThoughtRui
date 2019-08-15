@@ -1,7 +1,5 @@
 package com.coahr.thoughtrui.mvp.view.reviewed;
 
-import com.google.android.material.tabs.TabLayout;
-import androidx.viewpager.widget.ViewPager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -11,6 +9,8 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.viewpager.widget.ViewPager;
+
 import com.coahr.thoughtrui.R;
 import com.coahr.thoughtrui.Utils.KeyBoardUtils;
 import com.coahr.thoughtrui.Utils.ToastUtils;
@@ -18,6 +18,7 @@ import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.ReviewMainPagerFragment_C;
 import com.coahr.thoughtrui.mvp.model.Bean.EvenBus_censor;
 import com.coahr.thoughtrui.mvp.view.reviewed.adapter.censor_viewPager_Adapter;
+import com.google.android.material.tabs.TabLayout;
 
 import org.greenrobot.eventbus.EventBus;
 

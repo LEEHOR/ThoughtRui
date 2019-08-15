@@ -1,6 +1,7 @@
 package com.coahr.thoughtrui.mvp.view.home;
 
 import android.graphics.Color;
+import android.os.Build;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -27,9 +28,7 @@ import com.coahr.thoughtrui.mvp.view.home.adapter.ProjectTemplateAdapter;
 import com.coahr.thoughtrui.widgets.AltDialog.Login_DialogFragment;
 import com.coahr.thoughtrui.widgets.TittleBar.MyTittleBar;
 import com.gyf.barlibrary.ImmersionBar;
-import com.socks.library.KLog;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,10 +73,12 @@ public class ProjectTemplate extends BaseFragment<ProjectTemplate_c.Presenter> i
     @Override
     public void initView() {
         //手机顶部状态栏颜色适配
-        ImmersionBar.with(this)
-                .statusBarColor(R.color.material_blue_350)
-                .statusBarDarkFont(false)
-                .init();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            ImmersionBar.with(this)
+                    .statusBarColor(R.color.material_blue_350)
+                    .statusBarDarkFont(false)
+                    .init();
+        }
         template_title.getRoot().setBackgroundColor(Color.rgb(58, 128, 255));
         template_title.getTvTittle().setTextColor(Color.rgb(255, 255, 255));
         template_title.getLeftIcon().setImageResource(R.mipmap.mytab_back);
@@ -184,15 +185,15 @@ public class ProjectTemplate extends BaseFragment<ProjectTemplate_c.Presenter> i
      * 保存模板到数据库
      */
     private void saveTemplateDB(Template_list.TemplateListBean templateListBean, List<TemplateDB> templateDBS) {
-        boolean isSave = true;
+        boolean toSave = true;
         for (int i = 0; i < templateDBS.size(); i++) {
-            if (templateListBean.equals(templateDBS.get(i).getTemplateId())) {
-                isSave = false;
+            if (templateListBean.getId().equals(templateDBS.get(i).getTemplateId())) {
+                toSave = false;
                 break;
             }
         }
 
-        if (isSave) {
+        if (toSave) {
             TemplateDB templateDB = new TemplateDB();
             templateDB.setModify_time(templateListBean.getModify_time());
             templateDB.setName(templateListBean.getName());
@@ -211,7 +212,9 @@ public class ProjectTemplate extends BaseFragment<ProjectTemplate_c.Presenter> i
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ImmersionBar.with(this).destroy();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            ImmersionBar.with(this).destroy();
+        }
     }
 
     /**

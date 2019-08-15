@@ -1339,7 +1339,6 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
 
     /**
      * 网络类型提示
-     *
      * @param title
      * @param Content
      * @param type
@@ -1398,7 +1397,7 @@ public class PagerFragment_a extends BaseFragment_not_padding<PagerFragment_aC.P
                 ClientConfiguration conf = new ClientConfiguration();
                 conf.setConnectionTimeout(10 * 1000); // 连接超时，默认15秒
                 conf.setSocketTimeout(10 * 1000); // socket超时，默认15秒
-                conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
+                conf.setMaxConcurrentRequest(8); // 最大并发请求书，默认5个
                 conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
                 OSSCredentialProvider credentialProvider = new OSSStsTokenCredentialProvider(ak, sk, stoken);
                 ossClient = new OSSClient(_mActivity, endpoint, credentialProvider, conf);

@@ -21,7 +21,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.alibaba.sdk.android.oss.ClientConfiguration;
-import com.alibaba.sdk.android.oss.ClientException;
 import com.alibaba.sdk.android.oss.OSSClient;
 import com.alibaba.sdk.android.oss.common.auth.OSSAuthCredentialsProvider;
 import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
@@ -38,7 +37,6 @@ import com.coahr.thoughtrui.commom.Constants;
 import com.coahr.thoughtrui.mvp.Base.BaseApplication;
 import com.coahr.thoughtrui.mvp.Base.BaseFragment;
 import com.coahr.thoughtrui.mvp.constract.UploadC;
-import com.coahr.thoughtrui.mvp.model.ApiContact;
 import com.coahr.thoughtrui.mvp.model.Bean.AliyunOss;
 import com.coahr.thoughtrui.mvp.model.Bean.UpLoadCallBack;
 import com.coahr.thoughtrui.mvp.presenter.UploadP;
@@ -394,7 +392,6 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
             tv_progress_info.setText(String.format(getResources().getString(R.string.upload_fragment_6), subject_position + 1, subjectsDBList.size()));
             p.UpDataDb(subjectsDBList, projectsDBS, project_position, subject_position, true);
         }
-
     }
 
     @Override
@@ -458,8 +455,19 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
             case R.id.tv_all_upload:
                 //getOSS();
                 type = 1;
-
-
+                if (allProjectList != null && allProjectList.size() > 0) {
+                    if (Constants.isNetWorkConnect) {
+                        if (Constants.NetWorkType != null && Constants.NetWorkType.equals("WIFI")) {
+                            NetWorkDialog(getResources().getString(R.string.dialog_tittle_7), getResources().getString(R.string.dialog_content_5), 1);
+                        } else if (Constants.NetWorkType != null && Constants.NetWorkType.equals("MOBILE")) {
+                            NetWorkDialog(getResources().getString(R.string.dialog_tittle_7), getResources().getString(R.string.dialog_content_6), 2);
+                        }
+                    } else {
+                        NetWorkDialog(getResources().getString(R.string.dialog_tittle_7), getResources().getString(R.string.dialog_content_7), 3);
+                    }
+                } else {
+                    ToastUtils.showLong(getResources().getString(R.string.toast_42));
+                }
 
 
                 break;
@@ -541,6 +549,7 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        //有网络
                         if (types == 1 || types == 2) {
                             //getSubjectListByOne();
 
@@ -701,16 +710,13 @@ public class UploadFragment extends BaseFragment<UploadC.Presenter> implements U
             map.put("pictureCount", 0);
         }
 
-
         mHandler.post(new Runnable() {
             @Override
             public void run() {
                 p.CallBackServer(map, subjectsDB, projectsDB, project_position, subject_position);
             }
         });
-
     }
-
 
     /**
      * 获取阿里云Oss

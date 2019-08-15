@@ -9,7 +9,6 @@ import com.alibaba.sdk.android.oss.OSS;
 import com.alibaba.sdk.android.oss.OSSClient;
 import com.alibaba.sdk.android.oss.ServiceException;
 import com.alibaba.sdk.android.oss.callback.OSSCompletedCallback;
-import com.alibaba.sdk.android.oss.internal.OSSAsyncTask;
 import com.alibaba.sdk.android.oss.model.OSSRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
@@ -177,7 +176,6 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
     @Override
     public void startUpload(OSSClient ossClient, List<String> list, ProjectsDB projectsDB, SubjectsDB subjectsDB) {
         upList.clear();
-        String audioPath = null;
         int CountSize = 0;
         if (list != null && list.size() > 0) {
             if (fixedThreadPool == null) {
@@ -200,7 +198,7 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
 
             if (upList != null && upList.size() > 0) {
                 for (int i = 0; i < upList.size(); i++) {
-                    OSSAsyncTask ossAsyncTask = asyncPutImage(ossClient,
+                    asyncPutImage(ossClient,
                             upList.get(i), CountSize, projectsDB, subjectsDB, list, i + 1);
                 }
             }
@@ -273,13 +271,13 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
      * @param localFile 文件
      * @param count     总大小
      */
-    public OSSAsyncTask asyncPutImage(OSS oss, String localFile, final int count, final ProjectsDB projectsDB, final SubjectsDB subjectsDB, final List<String> list, int picPosition) {
+    public void asyncPutImage(OSS oss, String localFile, final int count, final ProjectsDB projectsDB, final SubjectsDB subjectsDB, final List<String> list, int picPosition) {
         if (localFile.equals("")) {
-            return null;
+            return;
         }
         File file = new File(localFile);
         if (!file.exists()) {
-            return null;
+            return;
         }
         fixedThreadPool.execute(new Runnable() {
             @Override
@@ -308,7 +306,7 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
                     }
                 });*/
                 put.setCRC64(OSSRequest.CRC64Config.YES);
-                OSSAsyncTask task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
+                oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
                     @Override
                     public void onSuccess(PutObjectRequest request, PutObjectResult result) {
                         uploadSuccess++;
@@ -345,13 +343,10 @@ public class PagerFragment_aM extends BaseModel<PagerFragment_aC.Presenter> impl
 
             }
         });
-
-        return null;
     }
 
     /**
      * 获取字符串
-     *
      * @param path
      * @param flag
      * @return

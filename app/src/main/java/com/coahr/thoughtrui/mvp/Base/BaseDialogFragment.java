@@ -4,8 +4,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
+
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -38,6 +40,7 @@ public abstract class BaseDialogFragment<P extends BaseContract.Presenter> exten
     protected View addFootView;
     private View view;
     public P mPresenter;
+
     public abstract P getPresenter();
 
     public abstract int bindLayout();
@@ -53,9 +56,9 @@ public abstract class BaseDialogFragment<P extends BaseContract.Presenter> exten
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-       // getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
+        // getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-        mPresenter=getPresenter();
+        mPresenter = getPresenter();
     }
 
     @Override
@@ -85,9 +88,11 @@ public abstract class BaseDialogFragment<P extends BaseContract.Presenter> exten
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-        ImmersionBar.with(this, dialog)
-                .statusBarDarkFont(true, 0.2f) //原理：如果当前设备支持状态栏字体变色，会设置状态栏字体为黑色，如果当前设备不支持状态栏字体变色，会使当前状态栏加上透明度，否则不执行透明度
-                .init();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            ImmersionBar.with(this, dialog)
+                    .statusBarDarkFont(true, 0.2f) //原理：如果当前设备支持状态栏字体变色，会设置状态栏字体为黑色，如果当前设备不支持状态栏字体变色，会使当前状态栏加上透明度，否则不执行透明度
+                    .init();
+        }
       /*  Window window = dialog.getWindow();
         if (window != null) {
             window.getDecorView().setPadding(0, 0, 0, 0);
@@ -95,7 +100,7 @@ public abstract class BaseDialogFragment<P extends BaseContract.Presenter> exten
             window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
             window.setWindowAnimations(animate_style);
         }*/
-       iniWidow(dialog.getWindow());
+        iniWidow(dialog.getWindow());
         return dialog;
     }
 
@@ -133,6 +138,9 @@ public abstract class BaseDialogFragment<P extends BaseContract.Presenter> exten
     public void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+            ImmersionBar.with(this).destroy();
+        }
 //        EventBus.getDefault().unregister(this);
         if (getPresenter() != null) {
             getPresenter().detachView();
@@ -161,8 +169,8 @@ public abstract class BaseDialogFragment<P extends BaseContract.Presenter> exten
     /**
      * 设置头部下沉
      */
-    public  void setToolBarPadding(){
-    View tittleView = ((ViewGroup) view.getRootView()).getChildAt(0);
-    tittleView.setPadding(tittleView.getPaddingLeft(), ScreenUtils.getStatusBarHeight(BaseApplication.mContext), tittleView.getPaddingRight(), tittleView.getPaddingBottom());
-}
+    public void setToolBarPadding() {
+        View tittleView = ((ViewGroup) view.getRootView()).getChildAt(0);
+        tittleView.setPadding(tittleView.getPaddingLeft(), ScreenUtils.getStatusBarHeight(BaseApplication.mContext), tittleView.getPaddingRight(), tittleView.getPaddingBottom());
+    }
 }
